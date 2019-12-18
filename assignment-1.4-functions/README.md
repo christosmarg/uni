@@ -33,7 +33,7 @@ __Requirements:__ MinGW gcc compiler
 1. Open Command Prompt, or the integrated terminal of your editor.
 2. Move to the ```src``` directory of the program: ```$ cd full_path/assignment-1.4-functions/program_name/src```
 3. Compile ```main.c``` and ```program_name-libs.c```: ```$ gcc -c main.c program_name-libs.c && mv main.o program_name-libs.o ../obj && cd ../obj```
-4. Link ```main.o``` and ```program_name-libs.o```: ```$ gcc main.o program_name-libs.o -lm && mv a.out ../exec && cd ../exec```
+4. Link ```main.o``` and ```program_name-libs.o```: ```$ gcc main.o program_name-libs.o -lm && mv a.exe ../exec && cd ../exec```
 5. Execute program: ```$ a.exe```
 
 ### Method 2
