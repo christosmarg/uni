@@ -1,5 +1,5 @@
-#ifndef HEADER_FILE
-#define HEADER_FILE
+#ifndef SINE_COS_TAYLOR_H
+#define SINE_COS_TAYLOR_H
 
 double input();
 double rads_conv(double);
