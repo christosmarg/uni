@@ -1,19 +1,21 @@
-# Execution steps
+# Assignment 1.4: Functions
+
+## Execution
 
 * ```program_name``` = program's name
 * ```full_path/``` = full path
 * ```$``` = terminal command (__don't__ copy it)
 
-## Linux
+### Linux
 
 ```shell
-$ cd full_path/assignment-1.4-functions/program_name
+$ cd full_path/assignment-1.4-functions/program_name # hanoi-tower / menu / sine-cos-taylor
 $ make
 $ make run
-$ make clean #optional
+$ make clean # optional
 ```
 
-## Windows
+### Windows
 
 __Requirements:__ MinGW gcc compiler
 
