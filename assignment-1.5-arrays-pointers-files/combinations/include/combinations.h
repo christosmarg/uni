@@ -3,27 +3,25 @@
 
 #include <stdbool.h>
 
-int get_n(const char *);
-int combinations_count(int);
-int factorial(int);
-int sum_calc();
-int sum_comb_calc();
-int even_calc();
-int not_printed();
-
+int get_val(const char *);
 int *fill_array(int);
-
-float frequency();
-
-char *get_filename();
-
 bool exists_in_array(int *, int, int);
-bool is_subset();
 
 void x_pair(int *, int *);
 void y_pair(int *, int *);
+
 void combinations(int *);
+int even_calc();
+int sum_calc();
 void print_combs();
+int combinations_count(int);
+int factorial(int);
+int sum_comb_calc();
+int not_printed();
+float frequency();
+
+char *get_filename();
+bool is_subset();
 void read_file();
 
 #endif

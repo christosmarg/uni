@@ -6,7 +6,7 @@
 #define COMBSN 6
 
 
-int get_n(const char *varName)
+int get_val(const char *varName)
 {
     int num;
 
@@ -117,12 +117,6 @@ void combinations(int *arr)
             *(arr + j + 1) = temp;
 	    }
     }
-}
-
-
-int find_even()
-{
-
 }
 
 
