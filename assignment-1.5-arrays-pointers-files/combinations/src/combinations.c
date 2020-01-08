@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include "combinations.h"
 
 #define COMBSN 6
@@ -104,7 +105,7 @@ void y_pair(int *y1, int *y2)
 }
 
 
-void combinations(int *arr)
+void combinations(int *arr, int x1, int x2, int y1, int y2)
 {
     int i, j, temp;
 
@@ -115,26 +116,64 @@ void combinations(int *arr)
             temp = *(arr + j);
             *(arr + j) = *(arr + j + 1);
             *(arr + j + 1) = temp;
+
+            if (belongs_x(even_calc(arr), x1, x2) && belongs_y(even_calc(arr), x1, x2))
+                print_combs(arr);
 	    }
     }
 }
 
 
-int even_calc()
+int even_calc(int *arr)
 {
+    int i, numEven;
 
+    for (i = 0; i < COMBSN; i++)
+    {
+        if (*(arr + i) % 2 == 0)
+            numEven++;
+    }
+
+    return numEven;
 }
 
 
-int sum_calc()
+bool belongs_x(int numEven, int x1, int x2)
 {
-
+    if (numEven >= x1 && numEven <= x2)
+        return true;
+    else
+        return false;
 }
 
 
-void print_combs()
+int sum_calc(int *arr)
 {
+    int i, sum = 0;
 
+    for (i = 0; i < COMBSN; i++)
+        sum += *(arr + i);
+
+    return sum;
+}
+
+
+bool belongs_y(int sumNums, int y1, int y2)
+{
+    if (sumNums >= y1 && sumNums <= y2)
+        return true;
+    else
+        return false;    
+}
+
+
+void print_combs(int *arr)
+{
+    int i;
+
+    for (i = 0; i < COMBSN; i++)
+        printf("%d", *(arr + i));
+    printf("\n");
 }
 
 
@@ -179,7 +218,14 @@ float frequency()
 
 char *get_filename()
 {
+    char buffer[1000];
+    char *fileName;
 
+    fgets(buffer, 1000, stdin);
+    fileName = (char *)malloc(strlen(buffer) + 1);
+    strcpy(fileName, buffer);
+
+    return fileName;
 }
 
 
@@ -189,7 +235,7 @@ bool is_subset()
 }
 
 
-void read_file()
+void read_file(char *fileName)
 {
-
+    
 }
