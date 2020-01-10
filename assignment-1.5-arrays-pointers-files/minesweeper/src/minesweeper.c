@@ -108,6 +108,7 @@ void init_dispboard(WINDOW *gameWin, int WIDTH, int HEIGHT)
 
     fill_dispboard(dispboard, WIDTH, HEIGHT);
     print(gameWin, dispboard, WIDTH, HEIGHT);
+    getchar();
     
     free(dispboard);
 }
@@ -130,7 +131,8 @@ void init_mineboard(WINDOW *gameWin, int WIDTH, int HEIGHT, int MINES)
         *(mineboard + i) = (char *)malloc(HEIGHT);
 
     fill_spaces(mineboard, WIDTH, HEIGHT, MINES);
-    fill_mineboard(mineboard, WIDTH, HEIGHT, MINES);
+    place_mines(mineboard, WIDTH, HEIGHT, MINES);
+    adj_mines(mineboard, WIDTH, HEIGHT);
 
     print(gameWin, mineboard, WIDTH, HEIGHT);
     
@@ -138,7 +140,7 @@ void init_mineboard(WINDOW *gameWin, int WIDTH, int HEIGHT, int MINES)
 }
 
 
-void fill_mineboard(char **mineboard, int WIDTH, int HEIGHT, int MINES)
+void place_mines(char **mineboard, int WIDTH, int HEIGHT, int MINES)
 {
     int i, wRand, hRand;
 
@@ -146,13 +148,9 @@ void fill_mineboard(char **mineboard, int WIDTH, int HEIGHT, int MINES)
 
     for (i = 0; i < MINES; i++)
     {
-        for (int j = 0; j < MINES; j++)
-        {
-            wRand = rand() % WIDTH;
-            hRand = rand() % HEIGHT;
-            *(*(mineboard + wRand) + hRand) = '*';
-            //adj_mines(mineboard, i, j);
-        }
+        wRand = rand() % WIDTH;
+        hRand = rand() % HEIGHT;
+        *(*(mineboard + wRand) + hRand) = '*';
     }
 }
 
@@ -174,11 +172,19 @@ void fill_mineboard(char **mineboard, int WIDTH, int HEIGHT, int MINES)
     [x-1, y+1][x, y+1][x+1, y+1]
     */
 
-void adj_mines(char **mineboard, int row, int col)
+void adj_mines(char **mineboard, int WIDTH, int HEIGHT)
 {
-    int numAdj = 0;
+    int row, col, numAdj = 0;
 
-    if (*(*(mineboard + (row - 1)) + col) != '*');
+    for (row = 1; row <= WIDTH; row++)
+    {
+        for (col = 1; col <= HEIGHT; col++)
+        {
+            if (*(*(mineboard + (row - 1)) + col) != '*')
+                numAdj++;
+        }
+    }
+
 }
 
 
