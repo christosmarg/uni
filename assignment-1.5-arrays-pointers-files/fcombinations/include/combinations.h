@@ -3,6 +3,8 @@
 
 #include <stdbool.h>
 
+void read_file();
+
 int get_n();
 int get_k();
 int *fill_array(int);
