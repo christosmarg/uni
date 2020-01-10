@@ -30,3 +30,9 @@
     // Write to file
 
 // free()
+
+```c
+pin = (char **)malloc(M*sizeof(char *));
+for (int i = 0; i < M; i++)
+    *(pin + i) = (char *)malloc(N);
+```
