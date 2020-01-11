@@ -4,24 +4,13 @@
 #include <pdcurses.h>
 #endif
 
-#include <stdbool.h>
 #include "minesweeper.h"
 
 
 int main(int argc, char **argv)
 {
-    initscr();
-    noecho();
-    cbreak();
-    
-    WINDOW *mainWin = newwin(0, 0, 0, 0);
-    box(mainWin, 0, 0);
-    refresh();
-    wrefresh(mainWin);
-    keypad(mainWin, true);
-
+    main_win();
     start();
-
     endwin();
 
     return 0;
