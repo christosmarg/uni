@@ -1,6 +1,5 @@
 * limits
 * resizing
-* ```fill_adj()```
 * ```selection()```
 * ```transfer()```
 * ```reveal()```
@@ -8,6 +7,7 @@
 * ```game_over()```
 * Game over menu
   * Press key to continue
+  * Dialog menu
 
 * Export to text
 

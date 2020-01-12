@@ -28,7 +28,8 @@ void init_mineboard(struct _win_st*, int, int, int);
 void place_mines(char **, int, int, int);
 void add_adj(char **, int, int);
 bool is_mine(char **, int, int);
-uint8_t adj_mines(char **, int, int); // uint8_t so it has the same range as char
+bool outof_bounds(int, int, int, int);
+int8_t adj_mines(char **, int, int, int, int);
 
 void fill_spaces(char **, int, int, int);
 
