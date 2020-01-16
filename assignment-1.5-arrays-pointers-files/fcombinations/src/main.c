@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "combinations.h"
+#include "fcombinations.h"
+#include "arrhandler.h"
 
 
 int main(int argc, char **argv)
