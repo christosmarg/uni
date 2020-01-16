@@ -1,12 +1,4 @@
-#if defined linux || defined __unix__
-#include <ncurses.h>
-#elif defined _WIN32 || defined _WIN64
-#include <pdcurses.h>
-#include <stdint.h>
-#endif
-
 #include <stdlib.h>
-#include <stdbool.h>
 #include <string.h>
 #include <time.h>
 #include "minesweeper.h"
