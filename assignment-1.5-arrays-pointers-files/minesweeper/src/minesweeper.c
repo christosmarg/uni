@@ -2,8 +2,7 @@
 #include <string.h>
 #include <time.h>
 #include "minesweeper.h"
-#include "gamelogic.h"
-
+#include "gameplay.h"
 
 void main_win()
 {
@@ -137,7 +136,6 @@ void game_win(int WIDTH, int HEIGHT, int NMINES)
     char **mineboard = init_mineboard(gameWin, WIDTH, HEIGHT, NMINES);
 
     selection(gameWin, dispboard, mineboard, WIDTH, HEIGHT);
-    filewrite(mineboard, WIDTH, HEIGHT);
 
     free(dispboard);
     free(mineboard);
@@ -159,7 +157,7 @@ char **init_dispboard(WINDOW *gameWin, int WIDTH, int HEIGHT)
     else
     {
         fill_dispboard(dispboard, WIDTH, HEIGHT);
-        print(gameWin, dispboard, WIDTH, HEIGHT);
+        print_board(gameWin, dispboard, WIDTH, HEIGHT);
         getchar();
     }
     
@@ -265,7 +263,7 @@ void fill_spaces(char **mineboard, int WIDTH, int HEIGHT, int NMINES)
 }
 
 
-void print(WINDOW *gameWin, char **mineboard, int WIDTH, int HEIGHT)
+void print_board(WINDOW *gameWin, char **mineboard, int WIDTH, int HEIGHT)
 {    
     int i, j;
 
@@ -274,16 +272,16 @@ void print(WINDOW *gameWin, char **mineboard, int WIDTH, int HEIGHT)
         for (j = 0; j < HEIGHT; j++)
         {
             mvwaddch(gameWin, j + 1, i + 1, mineboard[i][j]);
-            wrefresh(gameWin);        
+            wrefresh(gameWin);
         }
     }
 }
 
 
-void filewrite(char **mineboard, int WIDTH, int HEIGHT)
+void filewrite(char **mineboard, int WIDTH, int HEIGHT, int hitrow, int hitcol)
 {
-    FILE *mnsOut = fopen("mnsout.txt", "w");
     int i, j;
+    FILE *mnsOut = fopen("mnsout.txt", "w");
 
     if (mnsOut == NULL)
     {
@@ -292,7 +290,7 @@ void filewrite(char **mineboard, int WIDTH, int HEIGHT)
     }
     else
     {
-        fprintf(mnsOut, "Mine hit at position (%d, %d)\n\n", 1, 2); // add actual position
+        fprintf(mnsOut, "Mine hit at position (%d, %d)\n\n", hitrow, hitcol); // add actual position
         fprintf(mnsOut, "Board overview\n\n");
 
         for (i = 0; i < WIDTH; i++)

@@ -33,7 +33,7 @@ bool outof_bounds(int, int, int, int);
 int8_t adj_mines(char **, int, int, int, int);
 void fill_spaces(char **, int, int, int);
 
-void print(struct _win_st*, char **, int, int);
-void filewrite(char **, int, int);
+void print_board(struct _win_st*, char **, int, int);
+void filewrite(char **, int, int, int, int);
 
 #endif
