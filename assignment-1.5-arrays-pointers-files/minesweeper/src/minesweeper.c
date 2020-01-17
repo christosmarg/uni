@@ -2,6 +2,7 @@
 #include <string.h>
 #include <time.h>
 #include "minesweeper.h"
+#include "gamelogic.h"
 
 
 void main_win()
@@ -30,7 +31,7 @@ void start()
     wrefresh(menuWin);
     keypad(menuWin, true);
 
-    //set_mode(menuWin);
+    set_mode(menuWin);
 
     int WIDTH = set_width(menuWin, xMax);
     int HEIGHT = set_height(menuWin, yMax);
@@ -49,8 +50,10 @@ void set_mode(WINDOW *menuWin) // later
     scanw("%c", &mode);
     mvwprintw(menuWin, 1, strlen("Keyboard or text mode (k/t): ") + 1, "%c", mode);
     wrefresh(menuWin);
+    mvwprintw(menuWin, 1, 1, CLEAR); // thanks stefastra && spyrosROUM!!!! :-DDDD
+    wrefresh(menuWin);
 
-    switch (mode) // clear contents first
+    switch (mode)
     {
         case 'k':
         case 'K':
@@ -108,12 +111,12 @@ int set_nmines(WINDOW *menuWin, int DIMENSIONS)
 
     do
     {
-        mvwprintw(menuWin, 3, 1, "Mines (Max = %d): ", DIMENSIONS-600); // -500 so the player has a chance to win
+        mvwprintw(menuWin, 3, 1, "Mines (Max = %d): ", DIMENSIONS-10); // -10 so the player has a chance to win
         wrefresh(menuWin);
         scanw("%d", &NMINES);
         mvwprintw(menuWin, 3, strlen("Mines (Max = MMMM): ") + 1, "%d", NMINES);
         wrefresh(menuWin);
-    } while (NMINES < 1 || NMINES > DIMENSIONS-500);
+    } while (NMINES < 1 || NMINES > DIMENSIONS-10);
     
     return NMINES;
 }
@@ -130,12 +133,18 @@ void game_win(int WIDTH, int HEIGHT, int NMINES)
     wrefresh(gameWin);
     keypad(gameWin, true);
 
-    init_dispboard(gameWin, WIDTH, HEIGHT);
-    init_mineboard(gameWin, WIDTH, HEIGHT, NMINES);
+    char **dispboard = init_dispboard(gameWin, WIDTH, HEIGHT);
+    char **mineboard = init_mineboard(gameWin, WIDTH, HEIGHT, NMINES);
+
+    selection(gameWin, dispboard, mineboard, WIDTH, HEIGHT);
+    filewrite(mineboard, WIDTH, HEIGHT);
+
+    free(dispboard);
+    free(mineboard);
 }
 
 
-void init_dispboard(WINDOW *gameWin, int WIDTH, int HEIGHT)
+char **init_dispboard(WINDOW *gameWin, int WIDTH, int HEIGHT)
 {
     int i;
     char **dispboard = (char **)malloc(WIDTH * sizeof(char *));
@@ -154,7 +163,7 @@ void init_dispboard(WINDOW *gameWin, int WIDTH, int HEIGHT)
         getchar();
     }
     
-    free(dispboard);
+    return dispboard;
 }
 
 void fill_dispboard(char **dispboard, int WIDTH, int HEIGHT)
@@ -167,7 +176,7 @@ void fill_dispboard(char **dispboard, int WIDTH, int HEIGHT)
 }
 
 
-void init_mineboard(WINDOW *gameWin, int WIDTH, int HEIGHT, int NMINES)
+char **init_mineboard(WINDOW *gameWin, int WIDTH, int HEIGHT, int NMINES)
 {
     int i;
     char **mineboard = (char **)malloc(WIDTH * sizeof(char *));
@@ -181,15 +190,12 @@ void init_mineboard(WINDOW *gameWin, int WIDTH, int HEIGHT, int NMINES)
     }
     else
     {
-        fill_spaces(mineboard, WIDTH, HEIGHT, NMINES);
         place_mines(mineboard, WIDTH, HEIGHT, NMINES);
         add_adj(mineboard, WIDTH, HEIGHT);
-        
-        print(gameWin, mineboard, WIDTH, HEIGHT);
-        filewrite(mineboard, WIDTH, HEIGHT);
+        fill_spaces(mineboard, WIDTH, HEIGHT, NMINES);
     }
     
-    free(mineboard);
+    return mineboard;
 }
 
 
@@ -226,8 +232,9 @@ bool is_mine(char **mineboard, int row, int col)
 
 bool outof_bounds(int row, int col, int WIDTH, int HEIGHT)
 {
-    return (row < 0 || row > WIDTH || col < 0 || col > HEIGHT) ? true : false;
+    return (row < 0 || row > WIDTH-1 || col < 0 || col > HEIGHT-1) ? true : false;
 }
+
 
 
 int8_t adj_mines(char **mineboard, int row, int col, int WIDTH, int HEIGHT)
@@ -253,7 +260,7 @@ void fill_spaces(char **mineboard, int WIDTH, int HEIGHT, int NMINES)
 
     for (i = 0; i < WIDTH; i++)
         for (j = 0; j < HEIGHT; j++)
-            if (mineboard[i][j] != MINE)
+            if (mineboard[i][j] != MINE && mineboard[i][j] == '0')
                 mineboard[i][j] = '-';
 }
 
