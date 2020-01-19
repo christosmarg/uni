@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "combinations.h"
+#include "kcombinations.h"
 #include "arrhandler.h"
 
 
@@ -16,9 +16,23 @@ int get_n()
         scanf("%d", &N);
     } while (N <= 6 || N > 49);
 
-    system("clear||cls");
-
     return N;
+}
+
+
+int get_k(int N)
+{
+    int K;
+
+    do
+    {
+        printf("K (K < N <= 49): ");
+        scanf("%d", &K);
+    } while (K >= N || K > 49);
+
+    system("clear||cls");
+    
+    return K;
 }
 
 
@@ -46,7 +60,7 @@ void y_pair(int *y1, int *y2)
 }
 
 
-void print_combs(int *arr, int N, int x1, int x2, int y1, int y2)
+void print_combs(int *arr, int N, int K, int x1, int x2, int y1, int y2)
 {
     int *currComb = (int *)malloc(N * sizeof(int));
     int unFrstCond = 0, unScndCondOnly = 0, printed = 0;
@@ -58,57 +72,57 @@ void print_combs(int *arr, int N, int x1, int x2, int y1, int y2)
     }
     else
     {    
-        combinations(arr, currComb, 0, N-1, 0, &printed, &unFrstCond, &unScndCondOnly, x1, x2, y1, y2);
-        print_other(N, unFrstCond, unScndCondOnly, printed);
+        combinations(arr, currComb, 0, N-1, 0, K, &printed, &unFrstCond, &unScndCondOnly, x1, x2, y1, y2);
+        print_other(N, K, unFrstCond, unScndCondOnly, printed);
     }
 
     free(currComb);
 }
 
 
-void combinations(int *arr, int *currComb, int start, int end, int index, int *printed, int *unFrstCond, int *unScndCondOnly, int x1, int x2, int y1, int y2) 
+void combinations(int *arr, int *currComb, int start, int end, int index, int K, int *printed, int *unFrstCond, int *unScndCondOnly, int x1, int x2, int y1, int y2) 
 {
     int i, j;
     
-    if (index == COMBSN) 
+    if (index == K) 
     { 
-        for (j = 0; j < COMBSN; j++) 
+        for (j = 0; j < K; j++) 
         {
-            if (even_calc(currComb, x1, x2) && sum_comb_calc(currComb, y1, y2))
+            if (even_calc(currComb, K, x1, x2) && sum_comb_calc(currComb, K, y1, y2))
             {
                 printf("%d ", *(currComb + j));
-                if (j == COMBSN - 1) { (*printed)++; printf("\n"); }
+                if (j == K - 1) { (*printed)++; printf("\n"); }
             } // add freq
         }
-        if (!even_calc(currComb, x1, x2) && sum_comb_calc(currComb, y1, y2)) (*unFrstCond)++;
-        if (!sum_comb_calc(currComb, y1, y2)) (*unScndCondOnly)++;
+        if (!even_calc(currComb, K, x1, x2) && sum_comb_calc(currComb, K, y1, y2)) (*unFrstCond)++;
+        if (!sum_comb_calc(currComb, K, y1, y2)) (*unScndCondOnly)++;
         return;
     } 
 
-    for (i = start; i <= end && end-i+1 >= COMBSN-index; i++) 
+    for (i = start; i <= end && end-i+1 >= K-index; i++) 
     { 
         *(currComb + index) = *(arr + i);
-        combinations(arr, currComb, i+1, end, index+1, printed, unFrstCond, unScndCondOnly, x1, x2, y1, y2); 
+        combinations(arr, currComb, i+1, end, index+1, K, printed, unFrstCond, unScndCondOnly, x1, x2, y1, y2); 
     }
 }
 
 
-bool even_calc(int *arr, int x1, int x2)
+bool even_calc(int *arr, int K, int x1, int x2)
 {
     int numEven = 0, i;
 
-    for (i = 0; i < COMBSN; i++)
+    for (i = 0; i < K; i++)
         if (*(arr + i) % 2 == 0) numEven++;
 
     return (numEven >= x1 && numEven <= x2) ? true : false;
 }
 
 
-bool sum_comb_calc(int *arr, int y1, int y2)
+bool sum_comb_calc(int *arr, int K, int y1, int y2)
 {
     int sumNums = 0, i;
 
-    for (i = 0; i < COMBSN; i++)
+    for (i = 0; i < K; i++)
         sumNums += *(arr + i);
     
     return (sumNums >= y1 && sumNums <= y2) ? true : false;
@@ -121,9 +135,9 @@ int frequency()
 }
 
 
-long int combinations_count(int N) // wtf ???????
+long int combinations_count(int N, int K) // wtf ???????
 {
-    return (factorial(N) / (factorial(COMBSN) * factorial(N - COMBSN)));
+    return (factorial(N) / (factorial(K) * factorial(N - K)));
 }
 
 
@@ -137,9 +151,9 @@ long double factorial(int num)
 }
 
 
-void print_other(int N, int unFrstCond, int unScndCondOnly, int printed)
+void print_other(int N, int K, int unFrstCond, int unScndCondOnly, int printed)
 {
-    printf("\nTotal number of combinations %d to %d: %ld\n", N, COMBSN, combinations_count(N));
+    printf("\nTotal number of combinations %d to %d: %ld\n", N, K, combinations_count(N, K));
     printf("Number of combinations not satisfying the first condition: %d\n", unFrstCond);
     printf("Number of combinations not satisfying the second condition only: %d\n", unScndCondOnly);
     printf("Printed combinations: %d\n", printed);
