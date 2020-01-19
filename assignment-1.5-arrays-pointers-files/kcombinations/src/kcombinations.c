@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include "kcombinations.h"
 #include "arrhandler.h"
+#include "ccolors.h"
 
 
 int get_n()
@@ -67,8 +68,10 @@ void print_combs(int *arr, int N, int K, int x1, int x2, int y1, int y2)
 
     if (currComb == NULL)
     {
+        set_color(BOLD_RED);
         printf("Error! Not enough memory, exiting...\n");
         exit(EXIT_FAILURE);
+        set_color(STANDARD);
     }
     else
     {    
