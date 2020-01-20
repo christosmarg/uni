@@ -20,9 +20,7 @@
 #define MINE '*'
 #define CLEAR "                                                                  "
 
-void main_win();
 void start();
-
 void game_win(int, int, int);
 char **init_dispboard(struct _win_st*, int, int);
 void fill_dispboard(char **, int, int);
