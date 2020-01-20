@@ -9,7 +9,5 @@ void selection(struct _win_st*, char **, char **, int, int, int);
 bool transfer(char **, char **, int, int, int, int *);
 void reveal(struct _win_st*, char **, int, int);
 bool defused(char **, char **, int, int, int, int *);
-void game_won(struct _win_st*, char **, int, int);
-void game_over(struct _win_st*, char **, int, int);
 
 #endif

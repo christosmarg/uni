@@ -1,9 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "arrhandler.h"
-#include "kcombinations.h"
-#include "ccolors.h"
-
 
 int *fill_array(int N)
 {

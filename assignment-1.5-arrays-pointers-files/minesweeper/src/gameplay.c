@@ -68,23 +68,3 @@ void reveal(WINDOW *gameWin, char **dispboard, int chCol, int chRow)
     mvwaddch(gameWin, chRow+1, chCol+1, dispboard[chCol][chRow]);
     wrefresh(gameWin);
 }
-
-
-void game_won(WINDOW *gameWin, char **mineboard, int yMiddle, int xMiddle)
-{
-    wclear(gameWin);
-    mvwprintw(gameWin, yMiddle-11, xMiddle-18, "You defused all the mines!");
-    mvwprintw(gameWin, yMiddle-10, xMiddle-10, "You won :)");
-    wrefresh(gameWin);
-    wclear(gameWin);
-}
-
-
-void game_over(WINDOW *gameWin, char **mineboard, int yMiddle, int xMiddle)
-{
-    wclear(gameWin);
-    mvwprintw(gameWin, yMiddle-11, xMiddle-11, "You hit a mine!");
-    mvwprintw(gameWin, yMiddle-10, xMiddle-10, "Game over :(");
-    wrefresh(gameWin);
-    wclear(gameWin);
-}
