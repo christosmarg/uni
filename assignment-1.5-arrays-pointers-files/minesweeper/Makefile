@@ -7,14 +7,32 @@ BIN_DIR = bin
 SRC = $(wildcard $(SRC_DIR)/*.c)
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
-MOVE = mv
-MKDIR_P = mkdir -p
-
 CC = gcc
 CPPFLAGS += -Iinclude
-CFLAGS += -Wall
+CFLAGS += -Wall 
 LDFLAGS += -Llib
-LDLIBS += -lm -lncurses
+
+ifeq ($(OS),Windows_NT)
+    detected_OS := Windows
+else
+    detected_OS := $(shell uname)
+endif
+ifeq ($(OS),Linux)
+    detected_OS := Linux
+else
+    detected_OS := $(shell uname)
+endif
+
+ifeq ($(detected_OS),Linux)
+	LDLIBS += -lm -lncurses 
+	MOVE = mv
+	MKDIR_P = mkdir -p
+endif
+ifeq ($(detected_OS),Windows)
+	LDLIBS += -lm -LC:\PDCurses\wincon -lpdcurses
+	MOVE = move
+	MKDIR_P = md
+endif
 
 .PHONY: all clean
 
