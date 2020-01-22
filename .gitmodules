@@ -1,0 +1,3 @@
+[submodule "assignment-1.5-arrays-pointers-files/ncurses-minesweeper"]
+	path = assignment-1.5-arrays-pointers-files/ncurses-minesweeper
+	url = https://github.com/christosmarg/ncurses-minesweeper
