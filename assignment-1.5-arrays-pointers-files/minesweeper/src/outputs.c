@@ -11,6 +11,7 @@ void print_board(WINDOW *gameWin, char **board, int COLS, int ROWS)
         x = 2; 
         for (j = 0; j < COLS; j++)
         {
+            wattron(gameWin, A_BOLD);
             mvwaddch(gameWin, y, x, board[i][j]);
             x += 3;
         }
@@ -18,6 +19,7 @@ void print_board(WINDOW *gameWin, char **board, int COLS, int ROWS)
     }
 
     wrefresh(gameWin);
+    wattron(gameWin, A_BOLD);
 }
 
 
@@ -35,7 +37,7 @@ void print_grid(WINDOW *gameWin, int ROWS, int COLS)
     wrefresh(gameWin);
 }
 
-// fix
+
 void filewrite(char **mineboard, int COLS, int ROWS, int hitRow, int hitCol, const char *status)
 {
     int i, j;
@@ -73,10 +75,12 @@ void game_won(WINDOW *gameWin, int yMiddle, int xMiddle)
 {
     wclear(gameWin);
     wrefresh(gameWin);
-    mvwprintw(stdscr, yMiddle-2, xMiddle-7, "You defused all the mines!");
-    mvwprintw(stdscr, yMiddle-1, xMiddle-6, "You won :)");
+    wattron(stdscr, A_BOLD);
+    mvwprintw(stdscr, yMiddle-2, xMiddle-11, "You defused all the mines!");
+    mvwprintw(stdscr, yMiddle-1, xMiddle-3, "You won :)");
     mvwprintw(stdscr, yMiddle, xMiddle-11, "Press any key to continue");
     refresh();
+    wattroff(stdscr, A_BOLD);
 }
 
 
@@ -84,8 +88,10 @@ void game_over(WINDOW *gameWin, char **mineboard, int yMiddle, int xMiddle)
 {
     wclear(gameWin);
     wrefresh(gameWin);
+    wattron(stdscr, A_BOLD);
     mvwprintw(stdscr, yMiddle-2, xMiddle-6, "You hit a mine!");
     mvwprintw(stdscr, yMiddle-1, xMiddle-4, "Game over :(");
     mvwprintw(stdscr, yMiddle, xMiddle-11, "Press any key to continue");
     refresh();
+    wattroff(stdscr, A_BOLD);
 }

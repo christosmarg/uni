@@ -9,6 +9,21 @@
 * fcombinations
 * minesweeper
 
+## Minesweeper
+
+![MinesweeperSCR](uni/uni-assignments/assignment-1.5-arrays-pointers-files/minesweeper/sample.png "MinesweeperSCR")
+
+### How to play
+
+* Enter number of columns
+* Enter number of rows
+* Enter number of mines
+* Move with `w`/`s`/`a`/`d` or Vim keys (`k`/`j`/`h`/`l`)
+* Open cell with `[ENTER]` or `o`
+* Flag cell with `f`
+* Defuse mine (if flagged) with `g`
+* Quit with `q`
+
 ## Execution
 
 * ```program_name``` = program's name
