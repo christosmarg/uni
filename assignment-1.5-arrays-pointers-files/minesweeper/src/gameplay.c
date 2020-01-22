@@ -4,7 +4,7 @@ void play_minesweeper(WINDOW *gameWin, char **dispboard, char **mineboard, int C
 {
     int mboardXLoc = 0, mboardYLoc = 0;
     bool gameOver = false, cantFlag = false;
-    int numDefused = 0, numFlagged = 0;
+    int numDefused = 0;
     int yMax, xMax, yMiddle, xMiddle;
     char move;
     getmaxyx(stdscr, yMax, xMax);
@@ -19,16 +19,14 @@ void play_minesweeper(WINDOW *gameWin, char **dispboard, char **mineboard, int C
         {
             transfer(dispboard, mineboard, mboardYLoc, mboardXLoc);
             reveal(gameWin, dispboard, mboardYLoc, mboardXLoc, mboardYLoc + 1, 3*mboardXLoc + 2);
-            //cantFlag = true;
+            cantFlag = true;
             if (dispboard[mboardYLoc][mboardXLoc] == MINE) gameOver = true;
         }
         else if (move == 'f' || move == 'F') // handle falgs
         {
-            if (dispboard[mboardYLoc][mboardXLoc] == 'F') // undo flag
-                dispboard[mboardYLoc][mboardXLoc] = ' ';
-            else
-                dispboard[mboardYLoc][mboardXLoc] = 'F';
-                // handle already defused mine 
+            if (dispboard[mboardYLoc][mboardXLoc] == 'F') dispboard[mboardYLoc][mboardXLoc] = ' '; // undo flag 
+            else if (dispboard[mboardYLoc][mboardXLoc] != 'F' && dispboard[mboardYLoc][mboardXLoc] != ' ') continue; // dont flag an already opened mine
+            else dispboard[mboardYLoc][mboardXLoc] = 'F'; // flag if not flagged already
             reveal(gameWin, dispboard, mboardYLoc, mboardXLoc, mboardYLoc + 1, 3*mboardXLoc + 2);
         }
         else if (move == 'g' || move == 'G') // check for defuse
@@ -40,8 +38,7 @@ void play_minesweeper(WINDOW *gameWin, char **dispboard, char **mineboard, int C
                 dispboard[mboardYLoc][mboardXLoc] = mineboard[mboardYLoc][mboardXLoc] = 'D';
                 reveal(gameWin, dispboard, mboardYLoc, mboardXLoc, mboardYLoc + 1, 3*mboardXLoc + 2);
             }
-            // handle false defusal
-            // handle already defused mine           
+            else if (dispboard[mboardYLoc][mboardXLoc] == 'F' && mineboard[mboardYLoc][mboardXLoc] != MINE) gameOver = true; // handle false defusal               
         }
 
         mvprintw(1, xMiddle-8, "Defused mines: %d/%d", numDefused, NMINES);
