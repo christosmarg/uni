@@ -14,14 +14,14 @@
 
 #include "settings.h"
 #include "gameplay.h"
+#include "navigation.h"
 #include "outputs.h"
+#include "wins.h"
 
-#define HIDDEN '#'
+#define BLANK ' '
 #define MINE '*'
 #define CLEAR "                                                                  "
 
-void start();
-void game_win(int, int, int);
 char **init_dispboard(struct _win_st*, int, int);
 void fill_dispboard(char **, int, int);
 char **init_mineboard(struct _win_st*, int, int, int);

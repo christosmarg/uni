@@ -1,70 +1,72 @@
 #include "gameplay.h"
 
-void selection(WINDOW *gameWin, char **dispboard, char **mineboard, int COLS, int ROWS, int NMINES)
+void play_minesweeper(WINDOW *gameWin, char **dispboard, char **mineboard, int COLS, int ROWS, int NMINES)
 {
-    int chRow, chCol;
-    bool gameOver;
-    int numDefused = 0;
+    int mboardXLoc = 0, mboardYLoc = 0;
+    bool gameOver = false;
+    int numDefused = 0, numFlagged = 0;
     int yMax, xMax, yMiddle, xMiddle;
+    char move;
     getmaxyx(stdscr, yMax, xMax);
     yMiddle = yMax / 2;
     xMiddle = xMax / 2;
 
     do
     {
-        mvprintw(1, 1, "Choice (col, row): ");
-        scanw("%d %d", &chCol, &chRow);
-        mvprintw(1, strlen("Choice (col, row): ") + 1, "(%d,%d)", chCol, chRow);
-        refresh();
-        mvprintw(1, 1, CLEAR);
-        gameOver = transfer(dispboard, mineboard, chCol, chRow, NMINES, &numDefused);
-        mvprintw(1, xMiddle-9, "Defused mines: %d/%d", numDefused, NMINES);
-        reveal(gameWin, dispboard, chCol, chRow);
-        getchar();
-    } while (((chCol >= 0 && chCol < COLS) && (chRow >= 0 && chRow < ROWS)) && numDefused < NMINES && !gameOver);
+        navigate(gameWin, dispboard, &move, &mboardXLoc, &mboardYLoc);
+        
+        if (move == '\n')
+        {
+            transfer(dispboard, mineboard, mboardYLoc, mboardXLoc, NMINES, &numDefused);
+            reveal(gameWin, dispboard, mboardYLoc, mboardXLoc, mboardYLoc + 1, 3*mboardXLoc + 2);
+            if (dispboard[mboardYLoc][mboardXLoc] == MINE) gameOver = true;
+        }
+    } while (((mboardYLoc >= 0 && mboardYLoc < COLS) && (mboardXLoc >= 0 && mboardXLoc < ROWS))
+            && numDefused < NMINES && !gameOver && move != 'q');
     
     if (gameOver == true)
     {
         game_over(gameWin, mineboard, yMiddle, xMiddle);
         getchar();
         print_board(gameWin, mineboard, COLS, ROWS);
-        filewrite(mineboard, COLS, ROWS, chCol, chRow, "lost");
+        filewrite(mineboard, COLS, ROWS, mboardXLoc, mboardYLoc, "lost");
     }
 
     if (numDefused == NMINES)
     {
-        game_won(gameWin, mineboard, yMiddle, xMiddle);
+        game_won(gameWin, yMiddle, xMiddle);
         getchar();
-        filewrite(mineboard, COLS, ROWS, chCol, chRow, "won");
+        filewrite(mineboard, COLS, ROWS, mboardXLoc, mboardYLoc, "won");
     }
 }
 
 
-bool transfer(char **dispboard, char **mineboard, int chCol, int chRow, int NMINES, int *numDefused)
+void transfer(char **dispboard, char **mineboard, int mboardYLoc, int mboardXLoc, int NMINES, int *numDefused)
 {
-    dispboard[chCol][chRow] = mineboard[chCol][chRow];
-    return (!defused(dispboard, mineboard, chCol, chRow, NMINES, numDefused)) ? true : false;
-}
-
-bool defused(char **dispboard, char **mineboard, int chCol, int chRow, int NMINES, int *numDefused)
-{
-    char c = getchar();
-
-    if (dispboard[chCol][chRow] == MINE)
-    {
-        if (c == DEFUSEKEY)
-        {
-            dispboard[chCol][chRow] = mineboard[chCol][chRow] = 'D';
-            (*numDefused)++;
-            return true;
-        }
-        else return false;
-    }
+    dispboard[mboardYLoc][mboardXLoc] = mineboard[mboardYLoc][mboardXLoc];
 }
 
 
-void reveal(WINDOW *gameWin, char **dispboard, int chCol, int chRow)
+void reveal(WINDOW *gameWin, char **dispboard, int mboardYLoc, int mboardXLoc, int yLoc, int xLoc)
 {
-    mvwaddch(gameWin, chRow+1, chCol+1, dispboard[chCol][chRow]);
+    mvwaddch(gameWin, yLoc, xLoc, dispboard[mboardYLoc][mboardXLoc]);
     wrefresh(gameWin);
+}
+
+
+void flag_handler()
+{
+
+}
+
+
+bool is_flagged()
+{
+
+}
+
+
+bool is_defused(char **dispboard, char **mineboard, int mboardYLoc, int mboardXLoc)
+{
+    return ((dispboard[mboardYLoc][mboardXLoc] == 'D')) ? true : false;
 }
