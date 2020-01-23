@@ -7,8 +7,6 @@ int get_n(FILE *dataFile)
     do
     {
         fscanf(dataFile, "%d\n", &N);
-
-        printf("%d\n", N);
     } while (N <= 6 || N > 49);
 
     return N;
