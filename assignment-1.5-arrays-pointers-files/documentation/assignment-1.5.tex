@@ -89,6 +89,13 @@ $ make clean #optional
 
     \subsection{Δομή φακέλων}
 
+    Το κάθε πρόγραμμα, είναι δομημένο ως εξής: Υπάρχουν πέντε φάκελοι, καθώς και ένα Makefile
+    στο top directory. Στον φάκελο src βρίσκονται οι πηγαίοι κώδικες, στον include τα header
+    files, στον οbj τα object files και στον bin το εκτελέσιμο αρχείο. Στον φάκελο txt
+    υπάρχουν τα text files που διαβάζονται οι γράφονται από το κάθε πρόγραμμα.
+    Το Makefile είναι υπεύθυνο για την μεταγλώττιση όλων των αρχείων μαζί, και την τοποθέτησή
+    τους στους κατάλληλους φακέλους, την εκτέλεση των προγραμμάτων, καθώς και τον καθαρισμό των
+    φακέλων (διαγράφει τα object files και το εκτελέσιμο με την εντολή make clean).
 
 \section{combinations - συνδυασμοί}
 
@@ -159,35 +166,84 @@ $ make clean #optional
 \section{minesweeper - ναρκαλιευτής}
 
     \subsection{main.c}
-        \lstinputlisting[language=C]{../minesweeper/src/main.c}
+        \lstinputlisting[language=C]{../ncurses-minesweeper/src/main.c}
 
     \subsection{minesweeper.c}
-        \lstinputlisting[language=C]{../minesweeper/src/minesweeper.c}
+        \lstinputlisting[language=C]{../ncurses-minesweeper/src/minesweeper.c}
 
     \subsection{minesweeper.h}
-        \lstinputlisting[language=C]{../minesweeper/include/minesweeper.h}
+        \lstinputlisting[language=C]{../ncurses-minesweeper/include/minesweeper.h}
 
     \subsection{gameplay.c}
-        \lstinputlisting[language=C]{../minesweeper/src/minesweeper.c}
+        \lstinputlisting[language=C]{../ncurses-minesweeper/src/minesweeper.c}
 
     \subsection{gameplay.h}
-        \lstinputlisting[language=C]{../minesweeper/include/gameplay.h}
+        \lstinputlisting[language=C]{../ncurses-minesweeper/include/gameplay.h}
+
+    \subsection{navigation.c}
+        \lstinputlisting[language=C]{../ncurses-minesweeper/src/navigation.c}
+
+    \subsection{navigation.h}
+        \lstinputlisting[language=C]{../ncurses-minesweeper/include/navigation.h}
 
     \subsection{settings.c}
-        \lstinputlisting[language=C]{../minesweeper/src/settings.c}
+        \lstinputlisting[language=C]{../ncurses-minesweeper/src/settings.c}
 
     \subsection{settings.h}
-        \lstinputlisting[language=C]{../minesweeper/include/settings.h}
+        \lstinputlisting[language=C]{../ncurses-minesweeper/include/settings.h}
 
     \subsection{outputs.c}
-        \lstinputlisting[language=C]{../minesweeper/src/outputs.c}
+        \lstinputlisting[language=C]{../ncurses-minesweeper/src/outputs.c}
 
     \subsection{outputs.h}
-        \lstinputlisting[language=C]{../minesweeper/include/outputs.h}
+        \lstinputlisting[language=C]{../ncurses-minesweeper/include/outputs.h}
+
+    \subsection{wins.c}
+        \lstinputlisting[language=C]{../ncurses-minesweeper/src/wins.c}
+
+    \subsection{wins.h}
+        \lstinputlisting[language=C]{../ncurses-minesweeper/include/wins.h}
 
     \subsection{Διάγραμμα ροής}
 
     \subsection{Περιγραφή υλοποιήσης}
+
+    Ο ναρκαλιευτής αυτός χρησιμοποιεί την βιβλιοθήκη ncurses και είναι δομημένος ως εξής:
+    Από το main.c καλούνται αρχικά οι συναρτήσεις δημιουργίας των παραθύρων που θα εμφανιστούν
+    στην οθόνη και στην συνέχεια καλούνται οι συναρτήσεις δημιουργίας των πινάκων $Μ \times N$,
+    για το ναρκοπέδιο και για τον πίνακα που έχει "κρυμμένα" τα κελιά αντίστοιχα.
+    Τέλος από την main καλείται η συνάρτηση που θα ξεκινήσει το παιχνίδι.  
+
+    Οι συναρτήσεις για τις στήλες, γραμμές, και αριθμό των ναρκών βρίσκονται στο settings.h  
+    % όρια διαστάσεων κλπ
+
+    Στο minesweeper.c εκτελούνται όλες οι συναρτήσεις δημιουργίας πινάκων, τοποθέτησεις ναρκών,
+    μέτρημα των βομβών στα γειτονικά κελιά, καθώς και γέμισμα των κενών θέσεων τους.  
+
+    Έπειτα, στο gameplay.c εκτελείται το παιχνίδι - αρχικά τυπώνεται ο πίνακας και το περίγραμμα που
+    υπάρχει ανάμεσα σε κάθε κελί ώστε να είναι πιο εμφανίσιμο και πιο εύχρηστο το παιχνίδι. Προκειμένου
+    τα κελιά να τοποθετηθούν στις κατάλληλες θέσεις στον πίνακα, δηλαδή να είναι ανάμεσα στα [ ],
+    τα στοιχεία των πινάκων τοποθετούνται κάθε φορά με απόσταση 2 στον κάθετο άξονα και 3 στον οριζόντιο
+    το ένα από το άλλο. Με αυτά τα 2 νούμερα προκύπτουν και 2 τύποι, οι οποίοι βοηθάνε στην σωστή
+    προσπέλαση των στοιχείων των πινάκων κατά την διάρκεια του παιχνιδιού, και στον υπολογισμό των
+    διαστάσεων του παραθύρου που εμφανίζεται το πεδίο. Οι τύποι είναι οι εξής
+
+    \begin{equation}
+        x = rows + 2
+    \end{equation}
+    \begin{equation}
+        y = columns \times 3 + 2
+    \end{equation}
+
+    Αφού τυπωθεί στην οθόνη ο πίνακας με κρυμμένα τα στοιχεία του, το οποίο είναι στην ουσία ένας 
+    $Μ \times N$ πίνακας γεμισμένος με κενά, ξεκινάει το βασικό loop του παιχνιδιού, στο οποίο
+    ο χρήστης μετακινείται από κελί σε κελί, επιλέγει την κίνηση που θέλει να κάνει πάνω σε κάθε κελί,
+    και είτε χάνει ή νικάει. Προκειμένου να λειτουργήσει κάτι τέτοιο, μέσα στο loop γίνονται οι εξής
+    λειτουργίες: Αρχικά ο κέρσορας μετακίνεται κάθε φορά που ο και χρήστης μετακινείται ώστε να μπορεί να δει 
+    σε ποιο κελί βρίσκεται και ο χρήστης πρέπει έχει % επιλογές κλπ
+
+    Λόγω του ότι το πρόγραμμα περιέχει πολλές μεταβλητές θεώρησα καλύτερο να εστιάσω
+    στην λειτουργία του προγράμματος και όχι τόσο στο τι συμβολίζει η κάθε μεταβλητή.
     
 
 \section{Διευκρινήσεις}
@@ -197,7 +253,7 @@ $ make clean #optional
 \section{Εργαλεία}
 
     \begin{itemize}
-        \item Editors: Visual Studio Code, Vim
+        \item Editors: Visual Studio Code, NVim
         \item Compiler: gcc
         \item Shell: zsh
         \item OS: Arch Linux
