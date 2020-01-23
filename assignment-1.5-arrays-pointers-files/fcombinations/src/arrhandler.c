@@ -1,6 +1,6 @@
 #include "arrhandler.h"
 
-int *fill_array(int N)
+int *fill_array(int N, FILE *dataFile)
 {
     int num, i = 0;
     int *arr = (int *)malloc(N * sizeof(int));
@@ -16,19 +16,13 @@ int *fill_array(int N)
     {    
         do
         {
-            printf("arr[%d]: ", i);
-            scanf("%d", &num);
+            fscanf(dataFile, "%d\n", &num);
 
             if (num >= 1 && num <= 49)
             {
                 if (i == 0) { *(arr + i) = num; i++; }
-                else
-                {
-                    if (!exists_in_array(arr, N, num)) { *(arr + i) = num; i++; }
-                    else printf("Give a different number.\n");
-                }
+                else if (!exists_in_array(arr, N, num)) { *(arr + i) = num; i++; }
             }
-            else printf("Give a number in [1, 49].\n");
         } while (i < N);
     }
 
@@ -74,4 +68,16 @@ void swap(int *a, int *b)
     int temp = *a;
     *a = *b;
     *b = temp;
+}
+
+
+int find_pos(int *arr, int numIter, int val)
+{
+	int pos, i;
+
+	for (i = 0; i < numIter; i++)
+		if (val == *(arr + i))
+			pos = i;
+
+	return pos;
 }
