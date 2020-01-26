@@ -17,7 +17,7 @@ void combinations(int *, int *, int *, int, int, int, int, int, int *, int *, in
 bool even_calc(int *, int, int, int);
 bool sum_comb_calc(int *, int, int, int);
 
-int frequency(int *, int *, int *, int);
+void frequency(int *, int *, int *, int, int);
 long int combinations_count(int, int);
 long double factorial(int);
 void print_other(int, int, int, int, int, int *, int *);
