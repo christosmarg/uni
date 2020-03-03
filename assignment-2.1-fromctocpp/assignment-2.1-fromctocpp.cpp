@@ -22,8 +22,17 @@ std::string defaultargs(std::string = "No");
 int main(int argc, char **argv)
 {
 	// Ερώτημα 1 
+
+	// Τρόπος 1
 	const int x = 10;
+	std::cout << "First way" << std::endl;
 	std::cout << "Old const value: " << x << std::endl << "New const value: " << modconst((int *)&x, 15) << std::endl << std::endl;
+	
+	// Τρόπος 2
+	int *p = (int *)&x;
+	*p = 35;
+	std::cout << "Second way" << std::endl;
+	std::cout << "Old const value: " << x << std::endl << "New const value: " << *p << std::endl << std::endl;
 
 	// Ερώτημα 2
 	Human *human = new Human("Christos");
