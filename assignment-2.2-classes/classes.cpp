@@ -26,7 +26,15 @@ class Student
 			:AM(convert_AM(AM)), name(name), semester(semester), psubj(psubj), grades(convert_PSG(grades)) {}
 
 		Student(const Student& s)
-			:AM(s.AM), name(s.name), semester(s.semester), psubj(s.psubj), grades(s.grades) {}
+			:name(s.name), semester(s.semester), psubj(s.psubj)
+		{
+			int sl = strlen(s.AM);
+			AM = new char[sl + 1];
+			std::copy(s.AM, s.AM+sl, AM);
+
+			grades = new float[psubj];
+			std::copy(s.grades, s.grades+psubj, grades);
+		}
 		
 		~Student()
 		{
@@ -117,6 +125,7 @@ int main(int argc, char **argv)
 	std::cout << "copystud->get_name(): " << copystud->get_name() << std::endl;
 	std::cout << "copystud->get_semester(): " << copystud->get_semester() << std::endl;
 	std::cout << "copystud->get_psubj(): " << copystud->get_psubj() << std::endl << std::endl;
+	delete copystud;
 	delete s2;
 
 	float grd[4] = {9.4f, 8.4f, 5.5f, 6.3f};
@@ -132,9 +141,8 @@ int main(int argc, char **argv)
 	std::cout << "s3->get_grades(): ";
 	for (int i = 0; i < s3->get_psubj(); i++)
 	{
-		std::cout << gr[i] << ", ";
-		if (i == s3->get_psubj()-1)
-			std::cout << gr[i] << std::endl << std::endl;
+		if (i != s3->get_psubj()-1) std::cout << gr[i] << ", ";
+		else std::cout << gr[i] << std::endl << std::endl;
 	}
 
 	std::cout << "Detailed print of s3's grades" << std::endl;
@@ -165,9 +173,8 @@ int main(int argc, char **argv)
 	std::cout << "Output: s3->get_grades(): ";
 	for (int i = 0; i < s3->get_psubj(); i++)
 	{
-		std::cout << gr[i] << ", ";
-		if (i == s3->get_psubj()-1)
-			std::cout << gr[i] << std::endl;
+		if (i != s3->get_psubj()-1)	std::cout << gr[i] << ", ";
+		else std::cout << gr[i] << std::endl;
 	}
 
 	s3->add_grade(7.5f);
@@ -176,9 +183,8 @@ int main(int argc, char **argv)
 	std::cout << "Output: s3->get_grades(): ";
 	for (int i = 0; i < s3->get_psubj(); i++)
 	{
-		std::cout << gr[i] << ", ";
-		if (i == s3->get_psubj()-1)
-			std::cout << gr[i] << std::endl;
+		if (i != s3->get_psubj()-1) std::cout << gr[i] << ", ";
+		else std::cout << gr[i] << std::endl;
 	}
 	delete s3;
 
