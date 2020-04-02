@@ -42,6 +42,8 @@ class Student
 			delete[] this->grades;
 		}
 
+		friend std::ostream& operator<< (std::ostream& stream, const Student& s); 
+
 		inline const char *get_AM() const {return AM;}
 		inline const std::string& get_name() const {return name;}
 		inline unsigned int get_semester() const {return semester;}
@@ -138,7 +140,7 @@ int main(int argc, char **argv)
 	ostream_overload(*s1); cont();
 	delete s1;
 
-	Student *s2 = new Student("12345678", "Name Surname", 2);
+	Student *s2 = new Student("92345678", "Name Surname", 2);
 	constructor2(*s2); cont();
 
 	Student *copystud = new Student(*s2);
@@ -147,7 +149,7 @@ int main(int argc, char **argv)
 	delete s2;
 
 	float grd[4] = {9.4f, 8.4f, 5.5f, 6.3f};
-	Student *s3 = new Student("12345678", "Name Surname", 2, 4, grd);
+	Student *s3 = new Student("72345678", "Name Surname", 2, 4, grd);
 	constructor3(*s3); cont();
 	detprint(*s3); cont();
 	setters(*s3);
@@ -168,10 +170,10 @@ void constructor1(const Student& s1)
 {
 	std::cout << "Constructor for s1 (AM, Name)" << std::endl;
 	std::cout << "----------------------------" << std::endl;
-	std::cout << "s1.get_AM(): " << s1.get_AM() << std::endl;
-	std::cout << "s1.get_name(): " << s1.get_name() << std::endl;
-	std::cout << "s1.get_semester(): " << s1.get_semester() << std::endl;
-	std::cout << "s1.get_psubj(): " << s1.get_psubj() << std::endl << std::endl;
+	std::cout << "AM: " << s1.get_AM() << std::endl;
+	std::cout << "Name: " << s1.get_name() << std::endl;
+	std::cout << "Semester (default value): " << s1.get_semester() << std::endl;
+	std::cout << "Subjects passed (default value): " << s1.get_psubj() << std::endl << std::endl;
 }
 
 void ostream_overload(const Student& s1)
@@ -185,38 +187,40 @@ void constructor2(const Student& s2)
 {
 	std::cout << "Constructor for s2 (AM, Name, Semester)" << std::endl;
 	std::cout << "----------------------------" << std::endl;
-	std::cout << "s2.get_AM(): " << s2.get_AM() << std::endl;
-	std::cout << "s2.get_name(): " << s2.get_name() << std::endl;
-	std::cout << "s2.get_semester(): " << s2.get_semester() << std::endl;
-	std::cout << "s2.get_psubj(): " << s2.get_psubj() << std::endl << std::endl;
+	std::cout << "AM: " << s2.get_AM() << std::endl;
+	std::cout << "Name: " << s2.get_name() << std::endl;
+	std::cout << "Semester: " << s2.get_semester() << std::endl;
+	std::cout << "Subjects passed (default value): " << s2.get_psubj() << std::endl << std::endl;
 }
 
 void copy_constructor(const Student& copystud)
 {
 	std::cout << "Copy Constructor using copystud object as a copy of s2" << std::endl;
 	std::cout << "----------------------------" << std::endl;
-	std::cout << "copystud.get_AM(): " << copystud.get_AM() << std::endl;
-	std::cout << "copystud.get_name(): " << copystud.get_name() << std::endl;
-	std::cout << "copystud.get_semester(): " << copystud.get_semester() << std::endl;
-	std::cout << "copystud.get_psubj(): " << copystud.get_psubj() << std::endl << std::endl;
+	std::cout << "AM: " << copystud.get_AM() << std::endl;
+	std::cout << "Name: " << copystud.get_name() << std::endl;
+	std::cout << "Semester: " << copystud.get_semester() << std::endl;
+	std::cout << "Subjects passed (default value): " << copystud.get_psubj() << std::endl << std::endl;
 }
 
 void constructor3(const Student& s3)
 {
 	std::cout << "Constructor for s3 (AM, Name, Semester, Subjects Passed, Grades)" << std::endl;
 	std::cout << "----------------------------" << std::endl;
-	std::cout << "s3.get_AM(): " << s3.get_AM() << std::endl;
-	std::cout << "s3.get_name(): " << s3.get_name() << std::endl;
-	std::cout << "s3.get_semester(): " << s3.get_semester() << std::endl;
-	std::cout << "s3.get_psubj(): " << s3.get_psubj() << std::endl;
+	std::cout << "AM: " << s3.get_AM() << std::endl;
+	std::cout << "Name: " << s3.get_name() << std::endl;
+	std::cout << "Semester: " << s3.get_semester() << std::endl;
+	std::cout << "Subjects passed: " << s3.get_psubj() << std::endl;
 
-	float *gr = s3.get_grades();
-	std::cout << "s3.get_grades(): ";
+	float *gr = new float[s3.get_psubj()];
+	gr = s3.get_grades();
+	std::cout << "Grades: ";
 	for (unsigned int i = 0; i < s3.get_psubj(); i++)
 	{
 		if (i != s3.get_psubj()-1) std::cout << gr[i] << ", ";
 		else std::cout << gr[i] << std::endl << std::endl;
 	}
+	delete[] gr;
 }
 
 void detprint (const Student& s3)
@@ -238,24 +242,23 @@ void setters(Student& s3)
 	std::cout << "Setters example using s3" << std::endl;
 	std::cout << "----------------------------" << std::endl;
 	std::cout << "Input: s3.set_AM(\"01010101\")" << '\t';
-	std::cout << "Output: s3.get_AM(): " << s3.get_AM() << std::endl;
+	std::cout << "New AM: " << s3.get_AM() << std::endl;
 	std::cout << "Input: s3.set_name(\"AAAAAAA\")" << '\t';
-	std::cout << "Output: s3.get_name(): " << s3.get_name() << std::endl;
+	std::cout << "New name: " << s3.get_name() << std::endl;
 	std::cout << "Input: s3.set_semester(100):" << '\t';
-	std::cout << "Output: s3.get_semester(): " << s3.get_semester() << std::endl;
-	std::cout << "Input: s3.set_psubj(2):" << '\t';
-	std::cout << "Output: s3.get_psubj(): " << s3.get_psubj() << std::endl;
+	std::cout << "New semester: " << s3.get_semester() << std::endl;
+	std::cout << "Input: s3.set_psubj(2):" << '\t' << '\t';
+	std::cout << "New subjects passed: " << s3.get_psubj() << std::endl;
 
 	float *gr = new float[s3.get_psubj()];
 	gr = s3.get_grades();
 	std::cout << "Input: {0.1f, 2.2f}" << '\t' << '\t';
-	std::cout << "Output: s3.get_grades(): ";
+	std::cout << "New grades: ";
 	for (unsigned int i = 0; i < s3.get_psubj(); i++)
 	{
 		if (i != s3.get_psubj()-1)	std::cout << gr[i] << ", ";
 		else std::cout << gr[i] << std::endl;
 	}
-
 	delete[] gr;
 }
 
@@ -265,12 +268,11 @@ void addgrd(Student& s3)
 	float *gr = new float[s3.get_psubj()];
 	gr = s3.get_grades();
 	std::cout << "Input: s3.add_grade(7.5f)" << '\t';
-	std::cout << "Output: s3.get_grades(): ";
+	std::cout << "Updated grades: ";
 	for (unsigned int i = 0; i < s3.get_psubj(); i++)
 	{
 		if (i != s3.get_psubj()-1) std::cout << gr[i] << ", ";
 		else std::cout << gr[i] << std::endl;
 	}
-	
 	delete[] gr;
 }

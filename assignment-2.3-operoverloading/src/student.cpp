@@ -47,17 +47,17 @@ float *Student::get_grades() const
 	return ret;
 }
 
-void Student::set_submitted_subjects(std::string* submittedSubjects)
-{
-	this->submittedSubjects = new std::string[numSubmittedSubjects];
-	std::copy(submittedSubjects, submittedSubjects+numSubmittedSubjects, this->submittedSubjects);
-}
-
 std::string *Student::get_submitted_subjects() const
 {
 	std::string *ret = new std::string[numSubmittedSubjects];
 	std::copy(submittedSubjects, submittedSubjects+numSubmittedSubjects, ret);
 	return ret;
+}
+
+void Student::set_submitted_subjects(std::string* submittedSubjects)
+{
+	this->submittedSubjects = new std::string[numSubmittedSubjects];
+	std::copy(submittedSubjects, submittedSubjects+numSubmittedSubjects, this->submittedSubjects);
 }
 
 char *Student::convert_AM(const char *AM)
