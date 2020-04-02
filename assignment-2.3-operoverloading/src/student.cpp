@@ -25,6 +25,39 @@ Student::~Student()
 {
 	delete[] this->AM;
 	delete[] this->grades;
+	delete[] this->submittedSubjects;
+}
+
+void Student::operator+= (const std::string& s)
+{
+	std::string *tmp = new std::string[numSubmittedSubjects+1];
+	std::copy(submittedSubjects, submittedSubjects+numSubmittedSubjects, tmp);
+	tmp[numSubmittedSubjects] = s;
+	delete[] submittedSubjects;
+	submittedSubjects = new std::string[numSubmittedSubjects+1];
+	std::copy(tmp, tmp+numSubmittedSubjects+1, submittedSubjects);
+	numSubmittedSubjects++;
+	delete[] tmp;
+}
+
+float *Student::get_grades() const
+{
+	float *ret = new float[psubj];
+	std::copy(grades, grades+psubj, ret);
+	return ret;
+}
+
+void Student::set_submitted_subjects(std::string* submittedSubjects)
+{
+	this->submittedSubjects = new std::string[numSubmittedSubjects];
+	std::copy(submittedSubjects, submittedSubjects+numSubmittedSubjects, this->submittedSubjects);
+}
+
+std::string *Student::get_submitted_subjects() const
+{
+	std::string *ret = new std::string[numSubmittedSubjects];
+	std::copy(submittedSubjects, submittedSubjects+numSubmittedSubjects, ret);
+	return ret;
 }
 
 char *Student::convert_AM(const char *AM)

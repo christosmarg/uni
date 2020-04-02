@@ -24,7 +24,7 @@ class Student
 		Student(const Student& s);
 		~Student();
 
-		// += overload
+		void operator+= (const std::string& s);
 		// = overload
 
 		inline bool operator== (const Student& s) const	{return (this->semester == s.semester)	? true : false;}
@@ -38,9 +38,9 @@ class Student
 		inline const std::string& get_name() const {return this->name;}
 		inline unsigned int get_semester() const {return this->semester;}
 		inline unsigned int get_psubj() const {return this->psubj;}
-		inline float *get_grades() const {return this->grades;}
+		float *get_grades() const;
 		inline unsigned int get_num_submitted_subjects() const {return this->numSubmittedSubjects;}
-		inline std::string *get_submitted_subjects() const {return this->submittedSubjects;}
+		std::string *get_submitted_subjects() const;
 
 		inline void set_AM(const char *AM) {this->AM = convert_AM(AM);}
 		inline void set_name(const std::string& name) {this->name = name;}
@@ -48,7 +48,7 @@ class Student
 		inline void set_psubj(unsigned int psubj) {this->psubj = psubj;}
 		inline void set_grades(float *grades) {this->grades = convert_PSG(grades);}
 		inline void set_num_submitted_subjects(unsigned int numSubmittedSubjects) {this->numSubmittedSubjects = numSubmittedSubjects;}
-		inline void set_submitted_subjects(std::string* submittedSubjects) {this->submittedSubjects = submittedSubjects;}
+		void set_submitted_subjects(std::string* submittedSubjects);
 
 		char *convert_AM(const char *AM);
 		float *convert_PSG(const float *grades);
