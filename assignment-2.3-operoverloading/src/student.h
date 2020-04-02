@@ -40,7 +40,7 @@ class Student
 		inline unsigned int get_psubj() const {return this->psubj;}
 		inline float *get_grades() const {return this->grades;}
 		inline unsigned int get_num_submitted_subjects() const {return this->numSubmittedSubjects;}
-		inline std::string *get_submitted_subjects() const {return this->submittedSubjects;}  // const?
+		inline std::string *get_submitted_subjects() const {return this->submittedSubjects;}
 
 		inline void set_AM(const char *AM) {this->AM = convert_AM(AM);}
 		inline void set_name(const std::string& name) {this->name = name;}
@@ -48,7 +48,7 @@ class Student
 		inline void set_psubj(unsigned int psubj) {this->psubj = psubj;}
 		inline void set_grades(float *grades) {this->grades = convert_PSG(grades);}
 		inline void set_num_submitted_subjects(unsigned int numSubmittedSubjects) {this->numSubmittedSubjects = numSubmittedSubjects;}
-		inline void set_submitted_subjects(std::string* submittedSubjects) {this->submittedSubjects = submittedSubjects;} // reference??
+		inline void set_submitted_subjects(std::string* submittedSubjects) {this->submittedSubjects = submittedSubjects;}
 		inline void print_3first() const {std::cout << this->AM << " " << this->name << " " << this->semester << std::endl;}
 
 		char *convert_AM(const char *AM);
