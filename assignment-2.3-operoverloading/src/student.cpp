@@ -40,6 +40,22 @@ void Student::operator+= (const std::string& s)
 	delete[] tmp;
 }
 
+Student& Student::operator= (const Student& s)
+{
+	if (this == &s) return *this;
+	this->AM = convert_AM(s.AM);
+	this->name = s.name;
+	this->semester = s.semester;
+	this->psubj = s.psubj;
+	if (s.grades != nullptr) this->grades = convert_PSG(s.grades);
+	if (s.submittedSubjects != nullptr)
+	{
+		this->numSubmittedSubjects = s.numSubmittedSubjects;
+		this->submittedSubjects = s.submittedSubjects;
+	}
+	return *this;
+}
+
 float *Student::get_grades() const
 {
 	float *ret = new float[psubj];
