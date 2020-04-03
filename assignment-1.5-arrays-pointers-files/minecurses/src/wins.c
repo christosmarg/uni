@@ -6,31 +6,31 @@ void main_win()
     noecho();
     cbreak();
     
-    WINDOW *mainWin = newwin(0, 0, 0, 0);
-    wattron(mainWin, A_BOLD);
-    box(mainWin, 0, 0);
+    WINDOW *mainw = newwin(0, 0, 0, 0);
+    wattron(mainw, A_BOLD);
+    box(mainw, 0, 0);
     refresh();
-    wrefresh(mainWin);
-    wattroff(mainWin, A_BOLD);
+    wrefresh(mainw);
+    wattroff(mainw, A_BOLD);
 }
 
-WINDOW *menu_win(int *yMax, int *xMax)
+WINDOW *menu_win(int *ymax, int *xmax)
 {
     int numSettings = 3;
-	getmaxyx(stdscr, *yMax, *xMax);
-    WINDOW *menuWin = newwin(numSettings+2, *xMax-8, *yMax-8, 4);
-    wattron(menuWin, A_BOLD);
-    box(menuWin, 0, 0);
-    wrefresh(menuWin);
-    wattroff(menuWin, A_BOLD);
-    return menuWin;
+	getmaxyx(stdscr, *ymax, *xmax);
+    WINDOW *menuw = newwin(numSettings+2, *xmax-8, *ymax-8, 4);
+    wattron(menuw, A_BOLD);
+    box(menuw, 0, 0);
+    wrefresh(menuw);
+    wattroff(menuw, A_BOLD);
+    return menuw;
 }
 
 WINDOW *game_win(int COLS, int ROWS, int NMINES)
 {
-    int winRows = ROWS+2;
-    int winCols = COLS*3+2;
-    WINDOW *gameWin = newwin(winRows, winCols, 2, 4);
+    int wrows = ROWS+2;
+    int wcols = COLS*3+2;
+    WINDOW *gameWin = newwin(wrows, wcols, 2, 4);
     wattron(gameWin, A_BOLD);
     box(gameWin, 0, 0);
     wrefresh(gameWin);
@@ -40,8 +40,8 @@ WINDOW *game_win(int COLS, int ROWS, int NMINES)
 
 void options_menu()
 {
-    int yMax = getmaxy(stdscr);
-    mvprintw(yMax-3, 5, "q Quit          w/k Move up     s/j Move down       a/h Move Left       d/l Move Right      [ENTER]/o Open cell");
-    mvprintw(yMax-2, 5, "f Flag cell     g Defuse (if flagged only)          p Pause music       + Volume up         - Volume down");
+    int ymax = getmaxy(stdscr);
+    mvprintw(ymax-3, 5, "q Quit          w/k Move up     s/j Move down       a/h Move Left       d/l Move Right      [ENTER]/o Open cell");
+    mvprintw(ymax-2, 5, "f Flag cell     g Defuse (if flagged only)          p Pause music       + Volume up         - Volume down");
     refresh();
 }

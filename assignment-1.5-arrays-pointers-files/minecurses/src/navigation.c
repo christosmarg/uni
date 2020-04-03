@@ -1,68 +1,68 @@
 #include "navigation.h"
 
-void navigate(WINDOW *gameWin, char **mineboard, char *move, int *mboardXLoc, int *mboardYLoc)
+void navigate(WINDOW *gamew, char **mineboard, char *move, int *mboardx, int *mboardy)
 {
-    int yMax, xMax;
-    static int yLoc = 1, xLoc = 2;
-    getmaxyx(gameWin, yMax, xMax);
+    int ymax, xmax;
+    static int y = 1, x = 2;
+    getmaxyx(gamew, ymax, xmax);
 
-    update_curs(gameWin, yLoc, xLoc);
-    *mboardXLoc = (xLoc-2)/3;
-    *mboardYLoc = yLoc-1;
-    mvprintw(1, 1, "Current position: (%d, %d) ", *mboardXLoc, *mboardYLoc);
+    update_curs(gamew, y, x);
+    *mboardx = (x-2)/3;
+    *mboardy = y-1;
+    mvprintw(1, 1, "Current position: (%d, %d) ", *mboardx, *mboardy);
     refresh();
-    getmv(gameWin, move, &yLoc, &xLoc, yMax, xMax);
+    getmv(gamew, move, &y, &x, ymax, xmax);
 }
 
-void getmv(WINDOW *gameWin, char *move, int *yLoc, int *xLoc, int yMax, int xMax)
+void getmv(WINDOW *gamew, char *move, int *y, int *x, int ymax, int xmax)
 {
-    *move = wgetch(gameWin);
+    *move = wgetch(gamew);
     switch (*move) // vim keys support!!
     {
         case 'k': case 'K':
         case 'w': case 'W':
-            mvup(yLoc);
+            mvup(y);
             break;
         case 'j': case 'J':
         case 's': case 'S':
-            mvdown(yLoc, yMax);
+            mvdown(y, ymax);
             break;
         case 'h': case 'H':
         case 'a': case 'A':
-            mvleft(xLoc);
+            mvleft(x);
             break;
         case 'l': case 'L':
         case 'd': case 'D':
-            mvright(xLoc, xMax);
+            mvright(x, xmax);
             break;
     }
 }
 
-void mvup(int *yLoc)
+void mvup(int *y)
 {
-    (*yLoc)--;
-    if (*yLoc < 1) *yLoc = 1;
+    (*y)--;
+    if (*y < 1) *y = 1;
 }
 
-void mvdown(int *yLoc, int yMax)
+void mvdown(int *y, int ymax)
 {
-    (*yLoc)++;
-    if (*yLoc > yMax-2) *yLoc = yMax-2;
+    (*y)++;
+    if (*y > ymax-2) *y = ymax-2;
 }
 
-void mvleft(int *xLoc)
+void mvleft(int *x)
 {
-    *xLoc -= 3;
-    if (*xLoc < 2) *xLoc = 2;
+    *x -= 3;
+    if (*x < 2) *x = 2;
 }
 
-void mvright(int *xLoc, int xMax)
+void mvright(int *x, int xmax)
 {
-    *xLoc += 3;
-    if (*xLoc > xMax-3) *xLoc = xMax-3;
+    *x += 3;
+    if (*x > xmax-3) *x = xmax-3;
 }
 
-void update_curs(WINDOW *gameWin, int yLoc, int xLoc)
+void update_curs(WINDOW *gamew, int y, int x)
 {
-    wmove(gameWin, yLoc, xLoc);
+    wmove(gamew, y, x);
 }

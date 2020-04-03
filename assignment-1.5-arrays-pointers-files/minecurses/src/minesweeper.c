@@ -1,6 +1,6 @@
 #include "minesweeper.h"
 
-char **init_dispboard(WINDOW *gameWin, int COLS, int ROWS)
+char **init_dispboard(WINDOW *gamew, int COLS, int ROWS)
 {
     int i;
     char **dispboard = (char **)malloc(ROWS * sizeof(char *));
@@ -27,7 +27,7 @@ void fill_dispboard(char **dispboard, int COLS, int ROWS)
             dispboard[i][j] = BLANK;
 }
 
-char **init_mineboard(WINDOW *gameWin, int COLS, int ROWS, int NMINES)
+char **init_mineboard(WINDOW *gamew, int COLS, int ROWS, int NMINES)
 {
     int i;
     char **mineboard = (char **)malloc(ROWS * sizeof(char *));

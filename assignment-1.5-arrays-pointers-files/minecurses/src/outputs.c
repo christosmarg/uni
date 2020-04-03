@@ -1,39 +1,39 @@
 #include "outputs.h"
 
-void print_board(WINDOW *gameWin, char **board, int COLS, int ROWS)
+void print_board(WINDOW *gamew, char **board, int COLS, int ROWS)
 {    
     int i, j, x, y = 1;
 
-    print_grid(gameWin, ROWS, COLS);
+    print_grid(gamew, ROWS, COLS);
 
     for (i = 0; i < ROWS; i++)
     {
         x = 2; 
         for (j = 0; j < COLS; j++)
         {
-            wattron(gameWin, A_BOLD);
-            mvwaddch(gameWin, y, x, board[i][j]);
+            wattron(gamew, A_BOLD);
+            mvwaddch(gamew, y, x, board[i][j]);
             x += 3;
         }
         y++;
     }
 
-    wrefresh(gameWin);
-    wattron(gameWin, A_BOLD);
+    wrefresh(gamew);
+    wattron(gamew, A_BOLD);
 }
 
-void print_grid(WINDOW *gameWin, int ROWS, int COLS)
+void print_grid(WINDOW *gamew, int ROWS, int COLS)
 {
     int i, j;
 
     for (i = 1; i <= ROWS; i++)
     {
-        wmove(gameWin, i, 1);
+        wmove(gamew, i, 1);
         for (j = 0; j < COLS; j++)
-            wprintw(gameWin, "[ ]");
+            wprintw(gamew, "[ ]");
     }
 
-    wrefresh(gameWin);
+    wrefresh(gamew);
 }
 
 void session_write(char **mineboard, int COLS, int ROWS, int hitRow, int hitCol, const char *status)
@@ -118,26 +118,26 @@ void sort_scorelog(FILE *scoreLog)
 
 }
 
-void game_won(WINDOW *gameWin, int yMiddle, int xMiddle)
+void game_won(WINDOW *gamew, int ymid, int xmid)
 {
-    wclear(gameWin);
-    wrefresh(gameWin);
+    wclear(gamew);
+    wrefresh(gamew);
     wattron(stdscr, A_BOLD);
-    mvwprintw(stdscr, yMiddle-2, xMiddle-11, "You defused all the mines!");
-    mvwprintw(stdscr, yMiddle-1, xMiddle-3, "You won :)");
-    mvwprintw(stdscr, yMiddle, xMiddle-11, "Press any key to continue");
+    mvwprintw(stdscr, ymid-2, xmid-11, "You defused all the mines!");
+    mvwprintw(stdscr, ymid-1, xmid-3, "You won :)");
+    mvwprintw(stdscr, ymid, xmid-11, "Press any key to continue");
     refresh();
     wattroff(stdscr, A_BOLD);
 }
 
-void game_over(WINDOW *gameWin, char **mineboard, int yMiddle, int xMiddle)
+void game_over(WINDOW *gamew, char **mineboard, int ymid, int xmid)
 {
-    wclear(gameWin);
-    wrefresh(gameWin);
+    wclear(gamew);
+    wrefresh(gamew);
     wattron(stdscr, A_BOLD);
-    mvwprintw(stdscr, yMiddle-2, xMiddle-24, "You hit a mine! (or tried to defuse the wrong cell)");
-    mvwprintw(stdscr, yMiddle-1, xMiddle-4, "Game over :(");
-    mvwprintw(stdscr, yMiddle, xMiddle-11, "Press any key to continue");
+    mvwprintw(stdscr, ymid-2, xmid-24, "You hit a mine! (or tried to defuse the wrong cell)");
+    mvwprintw(stdscr, ymid-1, xmid-4, "Game over :(");
+    mvwprintw(stdscr, ymid, xmid-11, "Press any key to continue");
     refresh();
     wattroff(stdscr, A_BOLD);
 }
