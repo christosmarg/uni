@@ -7,8 +7,8 @@
 
 #define AUDIO_PATH "audio/detective-8bit.wav"
 
-void *play_audio(void *);
-void volume(char);
-void pause_audio();
+void *play_audio(void *threadid);
+void volume		(char);
+void pause_audio(void);
 
-#endif
+#endif /* AUDIO_H */

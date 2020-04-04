@@ -1,6 +1,6 @@
 #include "wins.h"
 
-void main_win()
+void main_win(void)
 {
     initscr();
     noecho();
@@ -16,9 +16,9 @@ void main_win()
 
 WINDOW *menu_win(int *ymax, int *xmax)
 {
-    int numSettings = 3;
+    int nsettings = 3;
 	getmaxyx(stdscr, *ymax, *xmax);
-    WINDOW *menuw = newwin(numSettings+2, *xmax-8, *ymax-8, 4);
+    WINDOW *menuw = newwin(nsettings+2, *xmax-8, *ymax-8, 4);
     wattron(menuw, A_BOLD);
     box(menuw, 0, 0);
     wrefresh(menuw);
@@ -38,7 +38,7 @@ WINDOW *game_win(int COLS, int ROWS, int NMINES)
     return gameWin;
 }
 
-void options_menu()
+void options_menu(void)
 {
     int ymax = getmaxy(stdscr);
     mvprintw(ymax-3, 5, "q Quit          w/k Move up     s/j Move down       a/h Move Left       d/l Move Right      [ENTER]/o Open cell");

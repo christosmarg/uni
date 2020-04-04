@@ -1,100 +1,100 @@
 #include "gameplay.h"
 
-void play_minesweeper(WINDOW *gameWin, char **dispboard, char **mineboard, int COLS, int ROWS, int NMINES)
+void play_minesweeper(WINDOW *gamew, char **dboard, char **mboard, int COLS, int ROWS, int NMINES)
 {
     int mbx = 0, mby = 0;
-    bool gameOver = false;
-    int numDefused = 0;
+    bool gameover = false;
+    int ndefused = 0;
     int ymax, xmax, ymid, xmid;
     char move;
     getmaxyx(stdscr, ymax, xmax);
     ymid = ymax/2;
     xmid = xmax/2;
 
-	print_board(gameWin, dispboard, COLS, ROWS);
+	print_board(gamew, dboard, COLS, ROWS);
     
     do
     {
-        navigate(gameWin, dispboard, &move, &mbx, &mby);
+        navigate(gamew, dboard, &move, &mbx, &mby);
         
 		if (move == ENTER || move == OPEN_LOWER || move == OPEN_UPPER) // handle cell opening
-			gameOver = open_cell(gameWin, dispboard, mineboard, mby, mbx, gameOver);
+			gameover = open_cell(gamew, dboard, mboard, mby, mbx, gameover);
         else if (move == FLAG_LOWER || move == FLAG_UPPER) // handle falgs
-			handle_flags(gameWin, dispboard, mineboard, mby, mbx);
+			handle_flags(gamew, dboard, mboard, mby, mbx);
         else if (move == DEFUSE_LOWER || move == DEFUSE_UPPER) // check for defuse
         {
-			if (dispboard[mby][mbx] == FLAG && mineboard[mby][mbx] == MINE)
+			if (dboard[mby][mbx] == FLAG && mboard[mby][mbx] == MINE)
             {
-				numDefused++;
-				defuse_mine(gameWin, dispboard, mineboard, mby, mbx);
+				ndefused++;
+				defuse_mine(gamew, dboard, mboard, mby, mbx);
             }
-            else if (dispboard[mby][mbx] == FLAG && mineboard[mby][mbx] != MINE) gameOver = true;              
+            else if (dboard[mby][mbx] == FLAG && mboard[mby][mbx] != MINE) gameover = true;              
         }
         else if (move == PAUSE_AUDIO) pause_audio(); // handle audio
         else if (move == VOLUME_UP || move == VOLUME_DOWN) volume(move);
 
-        mvprintw(1, xmid-8, "Defused mines: %d/%d", numDefused, NMINES);
+        mvprintw(1, xmid-8, "Defused mines: %d/%d", ndefused, NMINES);
         
     } while (((mby >= 0 && mby < ROWS) && (mbx >= 0 && mbx < COLS)) &&
-             numDefused < NMINES && !gameOver && move != QUIT);	
+             ndefused < NMINES && !gameover && move != QUIT);	
 
-    if (gameOver == true)
-		handle_gameover(gameWin, mineboard, ymid, xmid, COLS, ROWS, mby, mbx);
-    if (numDefused == NMINES)
-		handle_win(gameWin, mineboard, ymid, xmid, COLS, ROWS, mby, mbx, numDefused);
+    if (gameover == true)
+		handle_gameover(gamew, mboard, ymid, xmid, COLS, ROWS, mby, mbx);
+    if (ndefused == NMINES)
+		handle_win(gamew, mboard, ymid, xmid, COLS, ROWS, mby, mbx, ndefused);
 }
 
-bool open_cell(WINDOW *gameWin, char **dispboard, char **mineboard, int mby, int mbx, bool gameOver)
+bool open_cell(WINDOW *gamew, char **dboard, char **mboard, int mby, int mbx, bool gameover)
 {
-	transfer(dispboard, mineboard, mby, mbx);
-	reveal(gameWin, dispboard, mby, mbx, mby+1, 3*mbx+2);
-	if (dispboard[mby][mbx] == MINE) gameOver = true;
-	return gameOver;
+	transfer(dboard, mboard, mby, mbx);
+	reveal(gamew, dboard, mby, mbx, mby+1, 3*mbx+2);
+	if (dboard[mby][mbx] == MINE) gameover = true;
+	return gameover;
 }
 
-void handle_flags(WINDOW *gameWin, char **dispboard, char **mineboard, int mby, int mbx)
+void handle_flags(WINDOW *gamew, char **dboard, char **mboard, int mby, int mbx)
 {
-	if (dispboard[mby][mbx] == FLAG) dispboard[mby][mbx] = BLANK; // undo flag 
-	else if (dispboard[mby][mbx] != FLAG && dispboard[mby][mbx] != BLANK) return; // dont flag an already opened mine
-	else dispboard[mby][mbx] = FLAG; // flag if not flagged already
-	reveal(gameWin, dispboard, mby, mbx, mby+1, 3*mbx+2);
+	if (dboard[mby][mbx] == FLAG) dboard[mby][mbx] = BLANK; // undo flag 
+	else if (dboard[mby][mbx] != FLAG && dboard[mby][mbx] != BLANK) return; // dont flag an already opened mine
+	else dboard[mby][mbx] = FLAG; // flag if not flagged already
+	reveal(gamew, dboard, mby, mbx, mby+1, 3*mbx+2);
 }
 
-void defuse_mine(WINDOW *gameWin, char **dispboard, char **mineboard, int mby, int mbx)
+void defuse_mine(WINDOW *gamew, char **dboard, char **mboard, int mby, int mbx)
 {
 	refresh();
-	dispboard[mby][mbx] = mineboard[mby][mbx] = DEFUSED;
-	reveal(gameWin, dispboard, mby, mbx, mby+1, 3*mbx+2);
+	dboard[mby][mbx] = mboard[mby][mbx] = DEFUSED;
+	reveal(gamew, dboard, mby, mbx, mby+1, 3*mbx+2);
 }
 
-void transfer(char **dispboard, char **mineboard, int mby, int mbx)
+void transfer(char **dboard, char **mboard, int mby, int mbx)
 {
-    dispboard[mby][mbx] = mineboard[mby][mbx];
+    dboard[mby][mbx] = mboard[mby][mbx];
 }
 
-void reveal(WINDOW *gameWin, char **dispboard, int mby, int mbx, int yLoc, int xLoc)
+void reveal(WINDOW *gamew, char **dboard, int mby, int mbx, int y, int x)
 {
-    mvwaddch(gameWin, yLoc, xLoc, dispboard[mby][mbx]);
-    wrefresh(gameWin);
+    mvwaddch(gamew, y, x, dboard[mby][mbx]);
+    wrefresh(gamew);
 }
 
-bool is_defused(char **dispboard, char **mineboard, int mby, int mbx)
+bool is_defused(char **dboard, char **mboard, int mby, int mbx)
 {
-    return ((dispboard[mby][mbx] == DEFUSED)) ? true : false;
+    return ((dboard[mby][mbx] == DEFUSED)) ? true : false;
 }
 
-void handle_gameover(WINDOW *gameWin, char **mineboard, int ymid, int xmid, int COLS, int ROWS, int mby, int mbx)
+void handle_gameover(WINDOW *gamew, char **mboard, int ymid, int xmid, int COLS, int ROWS, int mby, int mbx)
 {
-	game_over(gameWin, mineboard, ymid, xmid);
+	game_over(gamew, mboard, ymid, xmid);
 	getchar();
-	print_board(gameWin, mineboard, COLS, ROWS);
-	session_write(mineboard, COLS, ROWS, mbx, mby, "lost");
+	print_board(gamew, mboard, COLS, ROWS);
+	session_write(mboard, COLS, ROWS, mbx, mby, "lost");
 }
 
-void handle_win(WINDOW *gameWin, char **mineboard, int ymid, int xmid, int COLS, int ROWS, int mby, int mbx, int numDefused)
+void handle_win(WINDOW *gamew, char **mboard, int ymid, int xmid, int COLS, int ROWS, int mby, int mbx, int ndefused)
 {
-	game_won(gameWin, ymid, xmid);
+	game_won(gamew, ymid, xmid);
 	getchar();
-	session_write(mineboard, COLS, ROWS, mbx, mby, "won");
-	score_write(numDefused, COLS, ROWS);
+	session_write(mboard, COLS, ROWS, mbx, mby, "won");
+	score_write(ndefused, COLS, ROWS);
 }

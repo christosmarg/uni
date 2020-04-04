@@ -7,7 +7,7 @@ std::ostream& operator<< (std::ostream& stream, const Student& s)
 		<< "Semester: " << s.get_semester() << std::endl;
 }
 
-static void cont();
+static void cont(void);
 static void constructor1(const Student& s1);
 static void ostream_overload(const Student& s1);
 static void constructor2(const Student& s2);
@@ -59,7 +59,7 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-static void cont()
+static void cont(void)
 {
 	std::cout << std::endl;
 	std::cout << "Press <ENTER> to continue. . .";

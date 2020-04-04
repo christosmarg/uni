@@ -3,10 +3,10 @@
 
 #include "minesweeper.h"
 
-void main_win();
-WINDOW *menu_win(int *, int *);
-WINDOW *game_win(int, int, int);
-void options_menu();
-void options_win();
+void main_win		(void);
+WINDOW *menu_win	(int *ymax, int *xmax);
+WINDOW *game_win	(int COLS, int ROWS, int NMINES);
+void options_menu	(void);
+void options_win	(void);
 
-#endif
+#endif /* WINS_H */

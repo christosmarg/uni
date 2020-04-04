@@ -33,15 +33,14 @@
 #define VOLUME_DOWN '-'
 #define QUIT 'q'
 
-char **init_dispboard(struct _win_st*, int, int);
-void fill_dispboard(char **, int, int);
-char **init_mineboard(struct _win_st*, int, int, int);
+char **init_dboard	(struct _win_st* gamew, int COLS, int ROWS);
+void fill_dboard	(char **dboard, int COLS, int ROWS);
+char **init_mboard	(struct _win_st* gamew, int COLS, int ROWS, int NMINES);
+void place_mines	(char **mboard, int COLS, int ROWS, int NMINES);
+void add_adj		(char **mboard, int COLS, int ROWS);
+bool is_mine		(char **mboard, int row, int col);
+bool outof_bounds	(int row, int col, int ROWS, int COLS);
+int8_t adj_mines	(char **mboard, int row, int col, int COLS, int ROWS);
+void fill_spaces	(char **mboard, int COLS, int ROWS, int NMINES);
 
-void place_mines(char **, int, int, int);
-void add_adj(char **, int, int);
-bool is_mine(char **, int, int);
-bool outof_bounds(int, int, int, int);
-int8_t adj_mines(char **, int, int, int, int);
-void fill_spaces(char **, int, int, int);
-
-#endif
+#endif /* MINESWEEPER_H */
