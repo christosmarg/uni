@@ -9,12 +9,12 @@
 #include <string.h>
 #include <time.h>
 
-#include "settings.h"
+#include "audio.h"
 #include "gameplay.h"
 #include "navigation.h"
 #include "outputs.h"
+#include "settings.h"
 #include "wins.h"
-#include "audio.h"
 
 #define BLANK ' '
 #define MINE '*'
@@ -38,9 +38,9 @@ void fill_dboard	(char **dboard, int COLS, int ROWS);
 char **init_mboard	(struct _win_st* gamew, int COLS, int ROWS, int NMINES);
 void place_mines	(char **mboard, int COLS, int ROWS, int NMINES);
 void add_adj		(char **mboard, int COLS, int ROWS);
-bool is_mine		(char **mboard, int row, int col);
-bool outof_bounds	(int row, int col, int ROWS, int COLS);
-int8_t adj_mines	(char **mboard, int row, int col, int COLS, int ROWS);
+int is_mine			(char **mboard, int row, int col);
+int outof_bounds	(int row, int col, int ROWS, int COLS);
+uint8_t adj_mines	(char **mboard, int row, int col, int COLS, int ROWS);
 void fill_spaces	(char **mboard, int COLS, int ROWS, int NMINES);
 
 #endif /* MINESWEEPER_H */

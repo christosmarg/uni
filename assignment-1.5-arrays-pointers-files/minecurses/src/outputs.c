@@ -3,37 +3,38 @@
 void print_board(WINDOW *gamew, char **dboard, int COLS, int ROWS)
 {    
     int i, j, x, y = 1;
-
     print_grid(gamew, ROWS, COLS);
-
+	wattron(gamew, A_BOLD);
     for (i = 0; i < ROWS; i++)
     {
         x = 2; 
         for (j = 0; j < COLS; j++)
         {
-            wattron(gamew, A_BOLD);
             mvwaddch(gamew, y, x, dboard[i][j]);
             x += 3;
         }
         y++;
     }
-
-    wrefresh(gamew);
-    wattron(gamew, A_BOLD);
 }
 
 void print_grid(WINDOW *gamew, int ROWS, int COLS)
 {
     int i, j;
-
+    wattroff(gamew, A_BOLD);
     for (i = 1; i <= ROWS; i++)
     {
         wmove(gamew, i, 1);
         for (j = 0; j < COLS; j++)
             wprintw(gamew, "[ ]");
     }
-
     wrefresh(gamew);
+}
+
+void session_info(int mbx, int mby, int xmax, int xmid, int ndefused, int NMINES)
+{
+	mvprintw(0, 0, "Current position: (%d, %d) ", mbx, mby);
+	mvprintw(0, xmid-strlen("Defused mines: x/x")/2, "Defused mines: %d/%d", ndefused, NMINES);
+	mvprintw(0, xmax-strlen("m Controls"), "m Controls");
 }
 
 void session_write(char **mboard, int COLS, int ROWS, int hitrow, int hitcol, const char *status)
@@ -43,7 +44,7 @@ void session_write(char **mboard, int COLS, int ROWS, int hitrow, int hitcol, co
 
     if (mnsout == NULL)
     {
-        mvprintw(1, 1, "Error opening file, exiting...");
+        mvprintw(0, 0, "Error opening file, exiting...");
         refresh();
         exit(EXIT_FAILURE);
     }
@@ -61,7 +62,7 @@ void session_write(char **mboard, int COLS, int ROWS, int hitrow, int hitcol, co
             fprintf(mnsout, "\n");
         }           
 
-        mvprintw(1, 1, "Session written to file       ");
+        mvprintw(0, 0, "Session written to file       ");
         refresh();
         getchar();
     }
@@ -78,7 +79,7 @@ void score_write(int ndefused, int COLS, int ROWS)
 
     if (scorelog == NULL)
     {
-        mvprintw(1, 1, "Error opening file, exiting...");
+        mvprintw(0, 0, "Error opening file, exiting...");
         refresh();
         exit(EXIT_FAILURE);
     }
@@ -86,7 +87,7 @@ void score_write(int ndefused, int COLS, int ROWS)
     {
         fprintf(scorelog, "\n%s\t\t\t\t%d\t\t\t\t\t%dx%d", playername, ndefused, COLS, ROWS);
         sort_scorelog(scorelog); // pending
-        mvprintw(1, 1, "New score written to score log");
+        mvprintw(0, 0, "New score written to score log");
         refresh();
         getchar();
     }
@@ -100,7 +101,7 @@ char *get_pname(void)
     char buffer[20];
     char *playername;
 
-    move(1, 1);
+    move(0, 0);
     echo();
     clrtoeol();
     printw("Your name: ");
@@ -122,22 +123,22 @@ void game_won(WINDOW *gamew, int ymid, int xmid)
 {
     wclear(gamew);
     wrefresh(gamew);
-    wattron(stdscr, A_BOLD);
-    mvwprintw(stdscr, ymid-2, xmid-11, "You defused all the mines!");
-    mvwprintw(stdscr, ymid-1, xmid-3, "You won :)");
-    mvwprintw(stdscr, ymid, xmid-11, "Press any key to continue");
+    attron(A_BOLD);
+    mvprintw(ymid-2, xmid-11, "You defused all the mines!");
+    mvprintw(ymid-1, xmid-3, "You won :)");
+    mvprintw(ymid, xmid-11, "Press any key to continue");
     refresh();
-    wattroff(stdscr, A_BOLD);
+    attroff(A_BOLD);
 }
 
 void game_over(WINDOW *gamew, char **mboard, int ymid, int xmid)
 {
     wclear(gamew);
     wrefresh(gamew);
-    wattron(stdscr, A_BOLD);
-    mvwprintw(stdscr, ymid-2, xmid-24, "You hit a mine! (or tried to defuse the wrong cell)");
-    mvwprintw(stdscr, ymid-1, xmid-4, "Game over :(");
-    mvwprintw(stdscr, ymid, xmid-11, "Press any key to continue");
+    attron(A_BOLD);
+    mvprintw(ymid-2, xmid-24, "You hit a mine! (or tried to defuse the wrong cell)");
+    mvprintw(ymid-1, xmid-4, "Game over :(");
+    mvprintw(ymid, xmid-11, "Press any key to continue");
     refresh();
-    wattroff(stdscr, A_BOLD);
+    attroff(A_BOLD);
 }

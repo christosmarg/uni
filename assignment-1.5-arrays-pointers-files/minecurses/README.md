@@ -4,6 +4,8 @@ A minesweeper game using the `ncurses` and `SDL2` libraries. The game was origin
 
 ## How to play
 
+The objective is to simply find and defuse all the mines.  
+
 * Enter number of columns
 * Enter number of rows
 * Enter number of mines
@@ -16,6 +18,7 @@ A minesweeper game using the `ncurses` and `SDL2` libraries. The game was origin
 
 Additional controls
 
+* `m`: Open control menu
 * `p`: Pause audio
 * `+`: Volume up
 * `-`: Volume down
@@ -30,8 +33,6 @@ Additional controls
 * Improve score log
 * Add macros for the scaled board dimensions
 * Add colors
-* Fix curs_set
-* Add echo during setup
 * Add unicode support
 
 ## Execution
@@ -53,4 +54,7 @@ $ make clean # optional
 
 ## Preview
 
-![MinesweeperScr](https://user-images.githubusercontent.com/54286563/73931645-4d4db080-48e1-11ea-981b-e9b028d34c41.png)
+### Start screen
+![startmenu](https://user-images.githubusercontent.com/54286563/78460772-52a25e00-76cc-11ea-976b-10212e228ca0.png)
+### Gameplay
+![gameplay](https://user-images.githubusercontent.com/54286563/78460709-bc6e3800-76cb-11ea-92f4-ab58e141e9be.png)

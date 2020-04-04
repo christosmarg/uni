@@ -21,7 +21,6 @@ char **init_dboard(WINDOW *gamew, int COLS, int ROWS)
 void fill_dboard(char **dboard, int COLS, int ROWS)
 {
     int i, j;
-
     for (i = 0; i < ROWS; i++)
         for (j = 0; j < COLS; j++)
             dboard[i][j] = BLANK;
@@ -36,7 +35,7 @@ char **init_mboard(WINDOW *gamew, int COLS, int ROWS, int NMINES)
 
     if (mboard == NULL)
     {
-        mvprintw(1, 1, "Error, not enough memory, exiting...");
+        mvprintw(0, 0, "Error, not enough memory, exiting...");
         refresh();
         exit(EXIT_FAILURE);
     }
@@ -53,9 +52,7 @@ char **init_mboard(WINDOW *gamew, int COLS, int ROWS, int NMINES)
 void place_mines(char **mboard, int COLS, int ROWS, int NMINES)
 {
     int i, wrand, hrand;
-
     srand(time(NULL));
-
     for (i = 0; i < NMINES; i++)
     {
         wrand = rand() % ROWS;
@@ -67,24 +64,23 @@ void place_mines(char **mboard, int COLS, int ROWS, int NMINES)
 void add_adj(char **mboard, int COLS, int ROWS)
 {
     int i, j;
-
     for (i = 0; i < ROWS; i++)
         for (j = 0; j < COLS; j++)
             if (!is_mine(mboard, i, j))
                 mboard[i][j] = adj_mines(mboard, i, j, COLS, ROWS) + '0';                
 }
 
-bool is_mine(char **mboard, int row, int col)
+int is_mine(char **mboard, int row, int col)
 {
-    return (mboard[row][col] == MINE) ? true : false;
+    return (mboard[row][col] == MINE) ? TRUE : FALSE;
 }
 
-bool outof_bounds(int row, int col, int COLS, int ROWS)
+int outof_bounds(int row, int col, int COLS, int ROWS)
 {
-    return (row < 0 || row > ROWS-1 || col < 0 || col > COLS-1) ? true : false;
+    return (row < 0 || row > ROWS-1 || col < 0 || col > COLS-1) ? TRUE : FALSE;
 }
 
-int8_t adj_mines(char **mboard, int row, int col, int COLS, int ROWS)
+uint8_t adj_mines(char **mboard, int row, int col, int COLS, int ROWS)
 {
     int8_t nadj = 0;
 
@@ -103,7 +99,6 @@ int8_t adj_mines(char **mboard, int row, int col, int COLS, int ROWS)
 void fill_spaces(char **mboard, int COLS, int ROWS, int NMINES)
 {
     int i, j;
-
     for (i = 0; i < ROWS; i++)
         for (j = 0; j < COLS; j++)
             if (mboard[i][j] != MINE && mboard[i][j] == '0')

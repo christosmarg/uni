@@ -5,11 +5,9 @@ void navigate(WINDOW *gamew, char **mboard, char *move, int *mbx, int *mby)
     int ymax, xmax;
     static int y = 1, x = 2;
     getmaxyx(gamew, ymax, xmax);
-
     update_curs(gamew, y, x);
     *mbx = (x-2)/3;
     *mby = y-1;
-    mvprintw(1, 1, "Current position: (%d, %d) ", *mbx, *mby);
     refresh();
     getmv(gamew, move, &y, &x, ymax, xmax);
 }

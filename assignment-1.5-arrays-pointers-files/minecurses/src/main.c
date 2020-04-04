@@ -3,14 +3,17 @@
 
 int main(int argc, char **argv)
 {	
-	main_win();
-	options_menu();
-
 	int ymax, xmax;
-	WINDOW *menuw = menu_win(&ymax, &xmax);
-	int COLS = set_cols(menuw, xmax);
-	int ROWS = set_rows(menuw, ymax);
-	int NMINES = set_nmines(menuw, COLS*ROWS);
+	init_curses();
+	getmaxyx(stdscr, ymax, xmax);
+	echo();
+	int COLS = set_cols(ymax, xmax);
+	int ROWS = set_rows(ymax);
+	int NMINES = set_nmines(ymax, COLS*ROWS);
+	noecho();
+	options_menu();
+	erase();
+	refresh();
 
 	WINDOW *gamew = game_win(COLS, ROWS, NMINES);
 	char **dboard = init_dboard(gamew, COLS, ROWS);
