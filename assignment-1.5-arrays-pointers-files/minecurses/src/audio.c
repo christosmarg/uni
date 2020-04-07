@@ -2,7 +2,7 @@
 
 void *play_audio(void *threadid)
 {
-    int tid = (long)threadid;
+    /*int tid = (long)threadid;*/
     Mix_Music *music = NULL;
     SDL_Init(SDL_INIT_AUDIO);
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 1, 4096);
@@ -33,6 +33,5 @@ void volume(char option)
 
 void pause_audio(void)
 {
-    if(Mix_PausedMusic() == 1) Mix_ResumeMusic();
-    else Mix_PauseMusic();
+	(Mix_PausedMusic() == 1) ? Mix_ResumeMusic() : Mix_PauseMusic();
 }

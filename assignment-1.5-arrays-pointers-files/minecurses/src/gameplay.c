@@ -10,32 +10,39 @@ void play_minesweeper(WINDOW *gamew, char **dboard, char **mboard, int COLS, int
     getmaxyx(stdscr, ymax, xmax);
     ymid = ymax/2;
     xmid = xmax/2;
-
 	print_board(gamew, dboard, COLS, ROWS);
 
     do
     {
 		session_info(mbx, mby, xmax, xmid, ndefused, NMINES);
         navigate(gamew, dboard, &move, &mbx, &mby);
-        
-		if (move == ENTER || move == OPEN_LOWER || move == OPEN_UPPER)
-			gameover = open_cell(gamew, dboard, mboard, mby, mbx, gameover);
-        else if (move == FLAG_LOWER || move == FLAG_UPPER)
-			handle_flags(gamew, dboard, mboard, mby, mbx);
-        else if (move == DEFUSE_LOWER || move == DEFUSE_UPPER)
-        {
-			if (dboard[mby][mbx] == FLAG && mboard[mby][mbx] == MINE)
-            {
-				ndefused++;
-				defuse_mine(gamew, dboard, mboard, mby, mbx);
-            }
-            else if (dboard[mby][mbx] == FLAG && mboard[mby][mbx] != MINE) gameover = TRUE;              
-        }
-        else if (move == PAUSE_AUDIO) pause_audio();
-        else if (move == VOLUME_UP || move == VOLUME_DOWN) volume(move);
-		else if (move == 'm') handle_menu(gamew, dboard, COLS, ROWS);
-
-        
+		switch (move)
+		{
+			case ENTER: case OPEN_LOWER: case OPEN_UPPER:
+				gameover = open_cell(gamew, dboard, mboard, mby, mbx, gameover);
+				break;
+			case FLAG_LOWER: case FLAG_UPPER:
+				handle_flags(gamew, dboard, mboard, mby, mbx);
+				break;
+			case DEFUSE_LOWER: case DEFUSE_UPPER:
+				if (dboard[mby][mbx] == FLAG && mboard[mby][mbx] == MINE)
+				{
+					ndefused++;
+					defuse_mine(gamew, dboard, mboard, mby, mbx);
+				}
+				else if (dboard[mby][mbx] == FLAG && mboard[mby][mbx] != MINE) gameover = TRUE;              
+				break;
+			case PAUSE_AUDIO:
+				pause_audio();
+				break;
+			case VOLUME_UP: case VOLUME_DOWN:
+				volume(move);
+				break;
+			case 'm':
+				handle_menu(gamew, dboard, COLS, ROWS);
+				break;
+			default: break;
+		}
     } while (((mby >= 0 && mby < ROWS) && (mbx >= 0 && mbx < COLS)) &&
              ndefused < NMINES && !gameover && move != QUIT);	
 

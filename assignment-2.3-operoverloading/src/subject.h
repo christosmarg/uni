@@ -1,3 +1,6 @@
+#ifndef SUBJECT_H
+#define SUBJECT_H
+
 #include <iostream>
 #include <string>
 
@@ -9,7 +12,10 @@ class Subject
 		unsigned int subjsemester;
 
 	public:
+		Subject();
 		Subject(const std::string& code, const std::string& sname, unsigned int subjsemester);
+		Subject(const Subject& s);
+		~Subject();
 
 		inline const std::string& get_code(void) const {return this->code;}
 		inline const std::string& get_sname(void) const {return this->sname;}
@@ -19,3 +25,5 @@ class Subject
 		inline void set_sname(const std::string& sname) {this->sname = sname;}
 		inline void set_subjsemester(unsigned int subjsemester) {this->subjsemester = subjsemester;}
 };
+
+#endif /* SUBJECT_H */

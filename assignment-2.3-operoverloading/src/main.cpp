@@ -1,5 +1,4 @@
 #include "student.h"
-#include "subject.h"
 
 std::ostream& operator<< (std::ostream& stream, const Student& s)
 {
@@ -19,18 +18,22 @@ static void detprint (const Student& s3);
 static void setters(Student& s3);
 static void addgrd(Student& s3);
 static void submsubj(Student& s3);
-static void plusequals_overload(Student& s3);
+static void plusequals_overload(Student& s3, const Subject& s);
 static void getters(const Subject& s3);
 static void setters(Subject& sb);
 
 int main(int argc, char **argv)
 {
-	Student *s1 = new Student("12345678", "Name Surname");
+	std::string n1 = "Name Surname";
+	std::string n2 = "Name Surnamington";
+	std::string n3 = "Name Surnaming";
+
+	Student *s1 = new Student("12345678", n1);
 	system("clear");
 	constructor1(*s1); cont();
 	ostream_overload(*s1); cont();
-
-	Student *s2 = new Student("92345678", "Name Surnamington", 2);
+	
+	Student *s2 = new Student("92345678", n2, 2);
 	constructor2(*s2); cont();
 
 	Student *copystud = new Student(*s2);
@@ -41,20 +44,25 @@ int main(int argc, char **argv)
 	delete copystud;
 	delete s2;
 
-	float grd[4] = {9.4f, 8.4f, 5.5f, 6.3f};
-	Student *s3 = new Student("72345678", "Name Surnaming", 2, 4, grd);
+	float *grd = new float[4]{9.4f, 8.4f, 5.5f, 6.3f};
+	Student *s3 = new Student("72345678", n3, 2, 4, grd);
+	delete[] grd;
 	constructor3(*s3); cont();
 	detprint(*s3); cont();
 	setters(*s3);
 	addgrd(*s3); cont();
 	submsubj(*s3); cont();
-	plusequals_overload(*s3); cont();
-	delete s3;
 
-	Subject *sb = new Subject("35643", "OOP", 2);
-	getters(*sb); cont();
-	setters(*sb); 
-	delete sb;
+	std::string c = "356431";
+	std::string n = "OOP";
+	Subject *oop = new Subject(c, n, 2);
+	plusequals_overload(*s3, *oop); cont();
+
+	getters(*oop); cont();
+	setters(*oop); 
+
+	delete s3;
+	delete oop;
 
 	return 0;
 }
@@ -136,15 +144,13 @@ static void constructor3(const Student& s3)
 	std::cout << "Semester: " << s3.get_semester() << std::endl;
 	std::cout << "Subjects passed: " << s3.get_psubj() << std::endl;
 
-	float *gr = new float[s3.get_psubj()];
-	gr = s3.get_grades();
+	float *gr = s3.get_grades();
 	std::cout << "Grades: ";
 	for (unsigned int i = 0; i < s3.get_psubj(); i++)
 	{
 		if (i != s3.get_psubj()-1) std::cout << gr[i] << ", ";
 		else std::cout << gr[i] << std::endl << std::endl;
 	}
-	delete[] gr;
 }
 
 static void detprint (const Student& s3)
@@ -160,8 +166,9 @@ static void setters(Student& s3)
 	s3.set_name("AAAAAAA");
 	s3.set_semester(100);
 	s3.set_psubj(2); // πρώτα η set_psubj() και μετα η set_grades() !!!!!
-	float gg[2] = {0.1f, 2.2f};
+	float *gg = new float[2]{0.1f, 2.2f};
 	s3.set_grades(gg);
+	delete[] gg;
 
 	std::cout << "Setters example using s3" << std::endl;
 	std::cout << "----------------------------" << std::endl;
@@ -174,8 +181,7 @@ static void setters(Student& s3)
 	std::cout << "Input: s3.set_psubj(2):" << '\t' << '\t';
 	std::cout << "New subjects passed: " << s3.get_psubj() << std::endl;
 
-	float *gr = new float[s3.get_psubj()];
-	gr = s3.get_grades();
+	float *gr = s3.get_grades();
 	std::cout << "Input: {0.1f, 2.2f}" << '\t' << '\t';
 	std::cout << "New grades: ";
 	for (unsigned int i = 0; i < s3.get_psubj(); i++)
@@ -183,14 +189,12 @@ static void setters(Student& s3)
 		if (i != s3.get_psubj()-1)	std::cout << gr[i] << ", ";
 		else std::cout << gr[i] << std::endl;
 	}
-	delete[] gr;
 }
 
 static void addgrd(Student& s3)
 {
 	s3.add_grade(7.5f);
-	float *gr = new float[s3.get_psubj()];
-	gr = s3.get_grades();
+	float *gr = s3.get_grades();
 	std::cout << "Input: s3.add_grade(7.5f)" << '\t';
 	std::cout << "Updated grades: ";
 	for (unsigned int i = 0; i < s3.get_psubj(); i++)
@@ -198,54 +202,65 @@ static void addgrd(Student& s3)
 		if (i != s3.get_psubj()-1) std::cout << gr[i] << ", ";
 		else std::cout << gr[i] << std::endl;
 	}
-	delete[] gr;
 }
 
 static void submsubj(Student& s3)
 {
-	std::string ss[3] = {"Math", "Physics", "Programming"};
-	s3.set_num_submitted_subjects(3);
-	s3.set_submitted_subjects(ss);
-
-	std::cout << "Submitted subjects example" << std::endl;
-	std::cout << "----------------------------" << std::endl;
-	std::cout << "Input: s3.set_num_submitted_subjects(3)" << std::endl;;
-	std::cout << "Number of submitted subjects: " << s3.get_num_submitted_subjects() << std::endl << std::endl;
+	std::string c1 = "11231";
+	std::string c2 = "56562";
+	std::string n1 = "Discrete Math";
+	std::string n2 = "Physics";
 	
-	std::string *ssj = new std::string[s3.get_num_submitted_subjects()];
-	ssj = s3.get_submitted_subjects();
-	std::cout << "Input: {\"Math\", \"Physics\", \"Programming\"}" << std::endl;;
-	std::cout << "Submitted subjects: ";
-	for (unsigned int i = 0; i < s3.get_num_submitted_subjects(); i++)
-	{
-		if (i != s3.get_num_submitted_subjects()-1) std::cout << ssj[i] << ", ";
-		else std::cout << ssj[i] << std::endl;
-	}
-	delete[] ssj;
+	Subject *a = new Subject{c1, n1, 1};
+	Subject *b = new Subject{c2, n2, 1};
+	Subject **sb = new Subject *[2];
+	sb[0] = a;
+	sb[1] = b;
+	s3.set_num_submitted_subjects(2);
+	s3.set_submitted_subjects(sb);
+
+	delete a;
+	delete b;
+
+	//std::cout << "Submitted subjects example" << std::endl;
+	//std::cout << "----------------------------" << std::endl;
+	//std::cout << "Input: s3.set_num_submitted_subjects(2)" << std::endl;
+	//std::cout << "Number of submitted subjects: " << s3.get_num_submitted_subjects() << std::endl << std::endl;
+	
+	//Subject **ssj = s3.get_submitted_subjects();
+	//std::cout << "Input: {\"Discrete Math\", \"Physics\"}" << std::endl;
+	//std::cout << "Submitted subjects: ";
+	//for (unsigned int i = 0; i < s3.get_num_submitted_subjects(); i++)
+	//{
+		//if (i != s3.get_num_submitted_subjects()-1) std::cout << ssj[i].get_sname() << ", ";
+		//else std::cout << ssj[i].get_sname() << std::endl;
+	//}
+
+	for (int i = 0; i < 2; i++)
+		delete[] sb[i];
+	delete[] sb;
 }
 
-static void plusequals_overload(Student& s3)
+static void plusequals_overload(Student& s3, const Subject& s)
 {
-	s3 += "Discrete Maths";
-	std::string *ssj = new std::string[s3.get_num_submitted_subjects()];
-	ssj = s3.get_submitted_subjects();
-	std::cout << "+= operator overload" << std::endl;
-	std::cout << "----------------------------" << std::endl;
-	std::cout << "Input: s3 += \"Discrete Maths\"" << std::endl;;
-	std::cout << "Updated submitted subjects: ";
-	for (unsigned int i = 0; i < s3.get_num_submitted_subjects(); i++)
-	{
-		if (i != s3.get_num_submitted_subjects()-1) std::cout << ssj[i] << ", ";
-		else std::cout << ssj[i] << std::endl;
-	}
-	delete[] ssj;
+	//s3 += s;
+	//Subject **ssj = s3.get_submitted_subjects();
+	//std::cout << "+= operator overload" << std::endl;
+	//std::cout << "----------------------------" << std::endl;
+	//std::cout << "Input: s3 += \"OOP\"" << std::endl;;
+	//std::cout << "Updated submitted subjects: ";
+	//for (unsigned int i = 0; i < s3.get_num_submitted_subjects(); i++)
+	//{
+		//if (i != s3.get_num_submitted_subjects()-1) std::cout << ssj[i].get_sname() << ", ";
+		//else std::cout << ssj[i].get_sname() << std::endl;
+	//}
 }
 
 static void getters(const Subject& sb)
 {
 	std::cout << "Getters example using Subject object" << std::endl;
 	std::cout << "----------------------------" << std::endl;
-	std::cout << "Constructor: Subject(\"35643\", \"OOP\", 2)" << std::endl;
+	std::cout << "Constructor: Subject(\"356431\", \"OOP\", 2)" << std::endl;
 	std::cout << "Code: " << sb.get_code() << std::endl;
 	std::cout << "Subject name: " << sb.get_sname() << std::endl;
 	std::cout << "Subject semester: " << sb.get_subjsemester() << std::endl;
@@ -253,8 +268,11 @@ static void getters(const Subject& sb)
 
 static void setters(Subject& sb)
 {
-	sb.set_code("14556");
-	sb.set_sname("Calculus I");
+	std::string c = "14556";
+	std::string n = "Calculus I";
+
+	sb.set_code(c);
+	sb.set_sname(n);
 	sb.set_subjsemester(1);
 
 	std::cout << "Setters example using Subject object" << std::endl;
