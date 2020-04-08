@@ -30,7 +30,7 @@ class Student
 		~Student();
 
 		friend std::ostream& operator<< (std::ostream& stream, const Student& s);
-		void operator+= (const Subject& s);
+		Student& operator+= (Subject *s);
 		Student& operator= (const Student& s);
 
 		inline bool operator== (const Student& s) const	{return (this->semester == s.semester)	? true : false;}
@@ -54,8 +54,8 @@ class Student
 		inline void set_psubj(unsigned int psubj) {this->psubj = psubj;}
 		inline void set_grades(float *grades) {this->grades = convert_PSG(grades);}
 		inline void set_num_submitted_subjects(unsigned int numSubmittedSubjects) {this->numSubmittedSubjects = numSubmittedSubjects;}
-		void set_submitted_subjects(Subject **submittedSubjects);
 
+		void set_submitted_subjects(Subject **submittedSubjects);
 		char *convert_AM(const char *AM);
 		float *convert_PSG(const float *grades);
 		void add_grade(float grade);

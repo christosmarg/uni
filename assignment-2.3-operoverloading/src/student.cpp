@@ -28,10 +28,14 @@ Student::Student(const Student& s)
 	int sl = strlen(s.AM);
 	this->AM = new char[sl + 1];
 	memcpy(AM, s.AM, sizeof(s.AM) + (sl+1));
-	this->grades = new float[psubj];
-	memcpy(grades, s.grades, sizeof(s.grades) * psubj);
+	this->grades = new float[s.psubj];
+	memcpy(grades, s.grades, sizeof(s.grades) * s.psubj);
 
-	if (numSubmittedSubjects <= 0) submittedSubjects = nullptr;
+	if (s.numSubmittedSubjects <= 0)
+	{
+		numSubmittedSubjects = 0;
+		submittedSubjects = nullptr;
+	}
 	else memcpy(submittedSubjects, s.submittedSubjects, sizeof(s.submittedSubjects) * s.numSubmittedSubjects);
 }
 
@@ -39,25 +43,18 @@ Student::~Student()
 {
 	delete[] this->AM;
 	delete[] this->grades;
-
-	for (int i = 0; i < numSubmittedSubjects; i++)
-		delete[] this->submittedSubjects[i];
 	delete[] this->submittedSubjects;
 }
 
-void Student::operator+= (const Subject& s)
+Student& Student::operator+= (Subject* s)
 {
-	Subject **tmp = new Subject *[numSubmittedSubjects+1];
-	memcpy(tmp, submittedSubjects, sizeof(Subject) * numSubmittedSubjects);
-	tmp[numSubmittedSubjects][0] = s;
-	if (submittedSubjects != nullptr)
-	{
-		for (int i = 0; i < numSubmittedSubjects; i++)
-			delete[] submittedSubjects[i];
-		delete[] submittedSubjects;
-	}
+	Subject **tmp = new Subject *[numSubmittedSubjects];
+	memcpy(tmp, submittedSubjects, sizeof(Subject *) * numSubmittedSubjects);
+	tmp[numSubmittedSubjects] = s;
+	if (submittedSubjects != nullptr) delete[] submittedSubjects;
 	submittedSubjects = tmp;
 	numSubmittedSubjects++;
+	return *this;
 }
 
 Student& Student::operator= (const Student& s)
@@ -80,7 +77,7 @@ void Student::set_submitted_subjects(Subject **submittedSubjects)
 {
 	// handle 0 subj
 	this->submittedSubjects = new Subject *[numSubmittedSubjects];
-	memcpy(this->submittedSubjects, submittedSubjects, sizeof(Subject) * numSubmittedSubjects);
+	memcpy(this->submittedSubjects, submittedSubjects, sizeof(Subject *) * numSubmittedSubjects);
 }
 
 char *Student::convert_AM(const char *AM)
