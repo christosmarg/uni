@@ -29,14 +29,18 @@ Student::Student(const Student& s)
 	this->AM = new char[sl + 1];
 	memcpy(AM, s.AM, sizeof(s.AM) + (sl+1));
 	this->grades = new float[s.psubj];
-	memcpy(grades, s.grades, sizeof(s.grades) * s.psubj);
+	memcpy(grades, s.grades, sizeof(float) * s.psubj);
 
 	if (s.numSubmittedSubjects <= 0)
 	{
 		numSubmittedSubjects = 0;
 		submittedSubjects = nullptr;
 	}
-	else memcpy(submittedSubjects, s.submittedSubjects, sizeof(s.submittedSubjects) * s.numSubmittedSubjects);
+	else
+	{
+		this->submittedSubjects = new Subject *[s.numSubmittedSubjects];
+		memcpy(submittedSubjects, s.submittedSubjects, sizeof(s.submittedSubjects) * s.numSubmittedSubjects);
+	}
 }
 
 Student::~Student()
@@ -46,18 +50,20 @@ Student::~Student()
 	delete[] this->submittedSubjects;
 }
 
-Student& Student::operator+= (Subject* s)
+void Student::operator+= (Subject *s)
 {
-	Subject **tmp = new Subject *[numSubmittedSubjects];
-	memcpy(tmp, submittedSubjects, sizeof(Subject *) * numSubmittedSubjects);
+	Subject **tmp = new Subject *[numSubmittedSubjects+1];
+	if (submittedSubjects != nullptr)
+	{
+		memcpy(tmp, submittedSubjects, sizeof(Subject *) * numSubmittedSubjects);
+		delete[] submittedSubjects;
+	}
 	tmp[numSubmittedSubjects] = s;
-	if (submittedSubjects != nullptr) delete[] submittedSubjects;
 	submittedSubjects = tmp;
 	numSubmittedSubjects++;
-	return *this;
 }
 
-Student& Student::operator= (const Student& s)
+Student Student::operator= (const Student& s)
 {
 	if (this == &s) return *this;
 	this->AM = convert_AM(s.AM);
@@ -93,7 +99,7 @@ float *Student::convert_PSG(const float *grades)
 	if (psubj > 0)
 	{
 		float *tmp = new float[psubj];
-		memcpy(tmp, grades, sizeof(grades) * psubj);
+		memcpy(tmp, grades, sizeof(float) * psubj);
 		return tmp;
 	}
 	else return nullptr;
@@ -102,9 +108,12 @@ float *Student::convert_PSG(const float *grades)
 void Student::add_grade(float grade)
 {
 	float *tmp = new float[psubj+1];
-	memcpy(tmp, grades, sizeof(grades) * psubj);
+	if (grades != nullptr)
+	{
+		memcpy(tmp, grades, sizeof(float) * psubj);
+		delete[] grades;
+	}
 	tmp[psubj] = grade;
-	if (grades != nullptr) delete[] grades;
 	grades = tmp;
 	psubj++;
 }
