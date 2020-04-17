@@ -3,23 +3,23 @@
 Student::Student(const char *AM, const std::string& name)
 	:AM(convert_AM(AM)), name(name), semester(1), psubj(0)
 {
-	numSubmittedSubjects = 0;
-	submittedSubjects = nullptr;
+	nssubj = 0;
+	ssubj = nullptr;
 }
 
 Student::Student(const char *AM, const std::string& name, unsigned int semester)
 	:AM(convert_AM(AM)), name(name), semester(semester), psubj(0)
 {
-	numSubmittedSubjects = 0;
-	submittedSubjects = nullptr;
+	nssubj = 0;
+	ssubj = nullptr;
 }
 
 Student::Student(const char *AM, const std::string& name, unsigned int semester,
 			    unsigned int psubj, const float *grades)
 	:AM(convert_AM(AM)), name(name), semester(semester), psubj(psubj), grades(convert_PSG(grades))
 {
-	numSubmittedSubjects = 0;
-	submittedSubjects = nullptr;
+	nssubj = 0;
+	ssubj = nullptr;
 }
 
 Student::Student(const Student& s)
@@ -31,15 +31,15 @@ Student::Student(const Student& s)
 	this->grades = new float[s.psubj];
 	memcpy(grades, s.grades, sizeof(float) * s.psubj);
 
-	if (s.numSubmittedSubjects <= 0)
+	if (s.nssubj <= 0)
 	{
-		numSubmittedSubjects = 0;
-		submittedSubjects = nullptr;
+		nssubj = 0;
+		ssubj = nullptr;
 	}
 	else
 	{
-		this->submittedSubjects = new Subject *[s.numSubmittedSubjects];
-		memcpy(submittedSubjects, s.submittedSubjects, sizeof(s.submittedSubjects) * s.numSubmittedSubjects);
+		this->ssubj = new Subject *[s.nssubj];
+		memcpy(ssubj, s.ssubj, sizeof(s.ssubj) * s.nssubj);
 	}
 }
 
@@ -47,20 +47,20 @@ Student::~Student()
 {
 	delete[] this->AM;
 	delete[] this->grades;
-	delete[] this->submittedSubjects;
+	delete[] this->ssubj;
 }
 
 void Student::operator+= (Subject *s)
 {
-	Subject **tmp = new Subject *[numSubmittedSubjects+1];
-	if (submittedSubjects != nullptr)
+	Subject **tmp = new Subject *[nssubj+1];
+	if (ssubj != nullptr)
 	{
-		memcpy(tmp, submittedSubjects, sizeof(Subject *) * numSubmittedSubjects);
-		delete[] submittedSubjects;
+		memcpy(tmp, ssubj, sizeof(Subject *) * nssubj);
+		delete[] ssubj;
 	}
-	tmp[numSubmittedSubjects] = s;
-	submittedSubjects = tmp;
-	numSubmittedSubjects++;
+	tmp[nssubj] = s;
+	ssubj = tmp;
+	nssubj++;
 }
 
 Student Student::operator= (const Student& s)
@@ -71,19 +71,19 @@ Student Student::operator= (const Student& s)
 	this->semester = s.semester;
 	this->psubj = s.psubj;
 	if (s.grades != nullptr) this->grades = convert_PSG(s.grades);
-	if (s.submittedSubjects != nullptr)
+	if (s.ssubj != nullptr)
 	{
-		this->numSubmittedSubjects = s.numSubmittedSubjects;
-		this->submittedSubjects = s.submittedSubjects;
+		this->nssubj = s.nssubj;
+		this->ssubj = s.ssubj;
 	}
 	return *this;
 }
 
-void Student::set_submitted_subjects(Subject **submittedSubjects)
+void Student::set_submitted_subjects(Subject **ssubj)
 {
 	// handle 0 subj
-	this->submittedSubjects = new Subject *[numSubmittedSubjects];
-	memcpy(this->submittedSubjects, submittedSubjects, sizeof(Subject *) * numSubmittedSubjects);
+	this->ssubj = new Subject *[nssubj];
+	memcpy(this->ssubj, ssubj, sizeof(Subject *) * nssubj);
 }
 
 char *Student::convert_AM(const char *AM)

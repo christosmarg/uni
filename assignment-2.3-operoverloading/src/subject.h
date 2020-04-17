@@ -7,9 +7,9 @@
 class Subject
 {
 	private:
-		std::string code;
-		std::string sname; 
-		unsigned int subjsemester;
+		std::string code;			// Subject code
+		std::string sname;			// Subject name
+		unsigned int subjsemester;	// Corresponding semester of subject
 
 	public:
 		Subject();
