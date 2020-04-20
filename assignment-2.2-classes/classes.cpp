@@ -15,43 +15,24 @@ class Student
 		int size;
 
 	public:
-		Student(const char *AM, const std::string& name)
-			:AM(convert_AM(AM)), name(name), semester(1), psubj(0) {}
-
-		Student(const char *AM, const std::string& name, unsigned int semester)
-			:AM(convert_AM(AM)), name(name), semester(semester), psubj(0) {}
-
+		Student(const char *AM, const std::string& name);
+		Student(const char *AM, const std::string& name, unsigned int semester);
 		Student(const char *AM, const std::string& name, unsigned int semester,
-				unsigned int psubj, const float *grades)
-			:AM(convert_AM(AM)), name(name), semester(semester), psubj(psubj), grades(convert_PSG(grades)) {}
+				unsigned int psubj, const float *grades);
+		Student(const Student& s);
+		~Student();
 
-		Student(const Student& s)
-			:name(s.name), semester(s.semester), psubj(s.psubj)
-		{
-			int sl = strlen(s.AM);
-			AM = new char[sl + 1];
-			memcpy(AM, s.AM, sizeof(s.AM) + (sl+1));
-			this->grades = new float[s.psubj];
-			memcpy(grades, s.grades, sizeof(float) * s.psubj);
-		}
-		
-		~Student()
-		{
-			delete[] this->AM;
-			delete[] this->grades;
-		}
+		const char *get_AM() const;
+		const std::string& get_name() const;
+		unsigned int get_semester() const;
+		unsigned int get_psubj() const;
+		float *get_grades() const;
 
-		inline const char *get_AM() const {return this->AM;}
-		inline const std::string& get_name() const {return this->name;}
-		inline unsigned int get_semester() const {return this->semester;}
-		inline unsigned int get_psubj() const {return this->psubj;}
-		float *get_grades() const {return this->grades;}
-
-		inline void set_AM(const char *AM) {this->AM = convert_AM(AM);}
-		inline void set_name(const std::string& name) {this->name = name;}
-		inline void set_semester(unsigned int semester) {this->semester = semester;}
-		inline void set_psubj(unsigned int psubj) {this->psubj = psubj;}
-		inline void set_grades(float *grades) {this->grades = convert_PSG(grades);}
+		void set_AM(const char *AM);
+		void set_name(const std::string& name);
+		void set_semester(unsigned int semester);
+		void set_psubj(unsigned int psubj);
+		void set_grades(float *grades);
 
 		char *convert_AM(const char *AM);
 		float *convert_PSG(const float *grades);
@@ -59,6 +40,82 @@ class Student
 		void detailed_print() const;
 		float calc_average() const;
 };
+
+Student::Student(const char *AM, const std::string& name)
+	:AM(convert_AM(AM)), name(name), semester(1), psubj(0) {}
+
+Student::Student(const char *AM, const std::string& name, unsigned int semester)
+	:AM(convert_AM(AM)), name(name), semester(semester), psubj(0) {}
+
+Student::Student(const char *AM, const std::string& name, unsigned int semester,
+		unsigned int psubj, const float *grades)
+	:AM(convert_AM(AM)), name(name), semester(semester), psubj(psubj), grades(convert_PSG(grades)) {}
+
+Student::Student(const Student& s)
+	:name(s.name), semester(s.semester), psubj(s.psubj)
+{
+	int sl = strlen(s.AM);
+	AM = new char[sl + 1];
+	memcpy(AM, s.AM, sizeof(s.AM) + (sl+1));
+	this->grades = new float[s.psubj];
+	memcpy(grades, s.grades, sizeof(float) * s.psubj);
+}
+
+Student::~Student()
+{
+	delete[] this->AM;
+	delete[] this->grades;
+}
+
+const char *Student::get_AM() const
+{
+	return this->AM;
+}
+
+const std::string& Student::get_name() const
+{
+	return this->name;
+}
+
+unsigned int Student::get_semester() const
+{
+	return this->semester;
+}
+
+unsigned int Student::get_psubj() const
+{
+	return this->psubj;
+}
+
+float *Student::get_grades() const
+{
+	return this->grades;
+}
+
+void Student::set_AM(const char *AM)
+{
+	this->AM = convert_AM(AM);
+}
+
+void Student::set_name(const std::string& name)
+{
+	this->name = name;
+}
+
+void Student::set_semester(unsigned int semester)
+{
+	this->semester = semester;
+}
+
+void Student::set_psubj(unsigned int psubj)
+{
+	this->psubj = psubj;
+}
+
+void Student::set_grades(float *grades)
+{
+	this->grades = convert_PSG(grades);
+}
 
 char *Student::convert_AM(const char *AM)
 {
