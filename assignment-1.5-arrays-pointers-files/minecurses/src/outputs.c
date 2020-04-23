@@ -30,19 +30,18 @@ void print_grid(WINDOW *gamew, int ROWS, int COLS)
     wrefresh(gamew);
 }
 
-void session_info(int mbx, int mby, int xmax, int xmid, int ndefused, int NMINES)
+void session_info(int mbx, int mby, int xmid, int ndefused, int NMINES)
 {
 	mvprintw(0, 0, "Current position: (%d, %d) ", mbx, mby);
 	mvprintw(0, xmid-strlen("Defused mines: x/x")/2, "Defused mines: %d/%d", ndefused, NMINES);
-	mvprintw(0, xmax-strlen("m Controls"), "m Controls");
+	mvprintw(0, XMAX-strlen("m Controls"), "m Controls");
 }
 
 void session_write(char **mboard, int COLS, int ROWS, int hitrow, int hitcol, const char *status)
 {
     int i, j;
-    FILE *mnsout = fopen(SESSION_PATH, "w");
-
-    if (mnsout == NULL)
+    FILE *fsession = fopen(SESSION_PATH, "w");
+    if (fsession == NULL)
     {
         mvprintw(0, 0, "Error opening file, exiting...");
         refresh();
@@ -51,32 +50,23 @@ void session_write(char **mboard, int COLS, int ROWS, int hitrow, int hitcol, co
     else
     {
         strcmp(status, "won")
-            ? fprintf(mnsout, "Mine hit at position (%d, %d)\n\n", hitrow+1, hitcol+1)
-            : fprintf(mnsout, "Last mine defused at position (%d, %d)\n\n", hitrow+1, hitcol+1);
-        fprintf(mnsout, "Board overview\n\n");
-
+            ? fprintf(fsession, "Mine hit at position (%d, %d)\n\n", hitrow+1, hitcol+1)
+            : fprintf(fsession, "Last mine defused at position (%d, %d)\n\n", hitrow+1, hitcol+1);
+        fprintf(fsession, "Board overview\n\n");
         for (i = 0; i < ROWS; i++)
         {
             for (j = 0; j < COLS; j++)
-                fprintf(mnsout, "%c ", mboard[i][j]);
-            fprintf(mnsout, "\n");
+                fprintf(fsession, "%c ", mboard[i][j]);
+            fprintf(fsession, "\n");
         }           
-
-        mvprintw(0, 0, "Session written to file       ");
-        refresh();
-        getchar();
     }
-
-    fclose(mnsout);
+    fclose(fsession);
 }
 
 void score_write(int ndefused, int COLS, int ROWS)
 {
     FILE *scorelog = fopen(SCORE_LOG_PATH, "a");
     char *playername = get_pname();
-
-    // add titles etc
-
     if (scorelog == NULL)
     {
         mvprintw(0, 0, "Error opening file, exiting...");
@@ -85,13 +75,14 @@ void score_write(int ndefused, int COLS, int ROWS)
     }
     else
     {
-        fprintf(scorelog, "\n%s\t\t\t\t%d\t\t\t\t\t%dx%d", playername, ndefused, COLS, ROWS);
+        fprintf(scorelog, "%s,%d,%dx%d\n", playername, ndefused, COLS, ROWS);
         sort_scorelog(scorelog); // pending
+		clrtoeol();
+		show_scorelog(scorelog);
         mvprintw(0, 0, "New score written to score log");
         refresh();
         getchar();
     }
-    
     fclose(scorelog);
     free(playername);
 }
@@ -100,7 +91,6 @@ char *get_pname(void)
 {   
     char buffer[20];
     char *playername;
-
     move(0, 0);
     echo();
     clrtoeol();
@@ -109,12 +99,21 @@ char *get_pname(void)
     scanw("%s", buffer);
     noecho();
     refresh();
-
     playername = (char *)malloc(strlen(buffer) + 1);
     return (strcpy(playername, buffer));
 }
 
 void sort_scorelog(FILE *scorelog)
+{
+
+}
+
+void show_scorelog(FILE *scorelog)
+{
+
+}
+
+void parse_data(FILE *scorelog)
 {
 
 }

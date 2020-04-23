@@ -9,12 +9,10 @@ void init_curses(void)
 
 WINDOW *game_win(int COLS, int ROWS, int NMINES)
 {
-	int ymax, xmax;
-	getmaxyx(stdscr, ymax, xmax);
     int wrows = ROWS+2;
     int wcols = COLS*3+2;
-	int wy = ymax/2 - wrows/2;
-	int wx = xmax/2 - wcols/2;
+	int wy = YMAX/2 - wrows/2;
+	int wx = XMAX/2 - wcols/2;
     WINDOW *gamew = newwin(wrows, wcols, wy, wx);
 	wattron(gamew, A_BOLD);
     box(gamew, 0, 0);
@@ -25,11 +23,9 @@ WINDOW *game_win(int COLS, int ROWS, int NMINES)
 
 void options_menu(void)
 {
-	int ymax, xmax;
-	getmaxyx(stdscr, ymax, xmax);
 	int w = 33, h = 15;
-	int wy = ymax/2 - h/2;
-	int wx = xmax/2 - w/2;
+	int wy = YMAX/2 - h/2;
+	int wx = XMAX/2 - w/2;
 	WINDOW *opts = newwin(h, w, wy, wx);
 	werase(opts);
 	box(opts, 0, 0);
