@@ -3,7 +3,6 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
-#include "minesweeper.h"
 
 #define AUDIO_PATH "res/detective-8bit.wav"
 

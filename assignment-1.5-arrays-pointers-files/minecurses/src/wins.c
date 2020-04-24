@@ -7,18 +7,18 @@ void init_curses(void)
     cbreak();
 }
 
-WINDOW *game_win(int COLS, int ROWS, int NMINES)
+WINDOW *game_win(int rows, int cols)
 {
-    int wrows = ROWS+2;
-    int wcols = COLS*3+2;
+	int wrows = rows+2;
+	int wcols = cols*3+2;
 	int wy = YMAX/2 - wrows/2;
 	int wx = XMAX/2 - wcols/2;
-    WINDOW *gamew = newwin(wrows, wcols, wy, wx);
+	WINDOW *gamew = newwin(wrows, wcols, wy, wx);
 	wattron(gamew, A_BOLD);
-    box(gamew, 0, 0);
-    wrefresh(gamew);
-    wattroff(gamew, A_BOLD);
-    return gamew;
+	box(gamew, 0, 0);
+	wrefresh(gamew);
+	wattroff(gamew, A_BOLD);
+	return gamew;
 }
 
 void options_menu(void)
