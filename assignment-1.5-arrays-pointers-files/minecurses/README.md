@@ -26,16 +26,12 @@ Additional controls
 
 ## To Do
 
-* ~~Handle resizing~~
 * Add restart option
 * Add quit option right when game opens
 * Load score log to ui
-* ~~Improve score log~~
 * Add colors
 * Add UTF-8 support
 * Fix wrong mine spawning bug
-* ~~Pack board info into a `struct`~~
-* Fix `delwin(gamew)` bug
 
 ## Execution
 

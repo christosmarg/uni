@@ -1,6 +1,6 @@
 #include "navigation.h"
 
-void navigate(WINDOW *gamew, char *move, int *mbx, int *mby)
+void navigate(WINDOW *gamew, int *move, int *mbx, int *mby)
 {
 	int ymax, xmax;
 	getmaxyx(gamew, ymax, xmax);
@@ -12,7 +12,7 @@ void navigate(WINDOW *gamew, char *move, int *mbx, int *mby)
 	getmv(gamew, move, &y, &x, ymax, xmax);
 }
 
-void getmv(WINDOW *gamew, char *move, int *y, int *x, int ymax, int xmax)
+void getmv(WINDOW *gamew, int *move, int *y, int *x, int ymax, int xmax)
 {
 	*move = wgetch(gamew);
 	switch (*move) // vim keys support!!

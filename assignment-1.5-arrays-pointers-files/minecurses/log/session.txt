@@ -1,9 +1,9 @@
-Last mine defused at position (2, 2)
+Mine hit at position (3, 1)
 
 Board overview
 
-1 1 1 - - 
-1 D 1 - - 
-1 1 1 - - 
+- 1 * 1 - 
+- 1 1 1 - 
+- - - - - 
 - - - - - 
 - - - - - 
