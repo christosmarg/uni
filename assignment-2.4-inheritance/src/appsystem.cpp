@@ -36,7 +36,7 @@ bool AppSystem::read_data(const char *fpath)
 	//f.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 	try
 	{
-		f.open(fpath, std::ios::in);
+		f.open(fpath);
 		if (f.is_open())
 		{
 			std::string skip;
@@ -46,7 +46,7 @@ bool AppSystem::read_data(const char *fpath)
 				std::string sn, name, email;
 				std::getline(f, sn, ',');
 				std::getline(f, name, ',');
-				std::getline(f, email, ',');
+				std::getline(f, email);
 				if (f.eof()) break;
 				std::cout << sn << " " << name << " " << email << std::endl;
 				manfs.push_back(new Manufacturer(sn.c_str(), name.c_str(), email));	
@@ -194,11 +194,8 @@ const std::vector<Game *> AppSystem::get_goodgames() const
 			int sum = 0, count = 0;	
 			for (auto& rev : revs)
 			{
-				if (rev->get_stars() > 4)
-				{
-					sum += rev->get_stars();
-					count++;
-				}
+				sum += rev->get_stars();
+				count++;
 			}
 			if (sum / count > 4) ggames.push_back(o);
 		}
