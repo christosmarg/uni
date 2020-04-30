@@ -20,3 +20,18 @@ const std::string& Review::get_comment() const
 {
 	return comment;
 }
+
+void Review::set_stars(int stars)
+{
+	this->stars = stars;
+}
+
+void Review::set_username(const std::string& username)
+{
+	this->username = username;
+}
+
+void Review::set_comment(const std::string& comment)
+{
+	this->comment = comment;
+}

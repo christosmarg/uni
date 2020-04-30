@@ -38,3 +38,20 @@ const std::string& Manufacturer::get_email() const
 {
 	return email;
 }
+
+void Manufacturer::set_serialnum(const char *serialnum)
+{
+	if (this->serialnum != nullptr) delete[] serialnum;
+	this->serialnum = convstr(serialnum);
+}
+
+void Manufacturer::set_name(const char *name)
+{
+	if (this->name != nullptr) delete[] name;
+	this->name = convstr(name);
+}
+
+void Manufacturer::set_email(const std::string& email)
+{
+	this->email = email;
+}

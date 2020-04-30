@@ -17,3 +17,13 @@ bool Game::get_online() const
 {
 	return online;
 }
+
+void Game::set_genre(const std::string& genre)
+{
+	this->genre = genre;
+}
+
+void Game::set_online(bool online)
+{
+	this->online = online;
+}

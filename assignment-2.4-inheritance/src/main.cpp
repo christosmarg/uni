@@ -1,5 +1,5 @@
-#include "appsystem.h"
 #include <iostream>
+#include "appsystem.h"
 
 std::ostream& operator<< (std::ostream& stream, const AppSystem& sys)
 {
@@ -53,14 +53,24 @@ int main(int argc, char **argv)
 	sys += cm;
 	if (!sys.read_data("res/data.csv")) return -1;
 	std::vector<std::string> ext = {".doc", ".xls", ".ppt"};
-	sys += new Office("132456", "LibreOffice", "Linux 2.2", gnu, 15, ext);
+	sys += new Office("132456", "LibreOffice", "Linux 2.2", gnu, 0, ext);
 	sys += new Game("731234", "minecurses", "Linux 4.5", cm, 0, "Puzzle", false);
+
+	Review rev(6, "Name Surnaming", "Good");
+	sys.newrev("minecurses", &rev);
 	std::cout << sys << std::endl;
 
 	sys.removebad(cm);
-	Review rev(4, "Name Naming", "Very good");
-	sys.newrev("LibreOffice", &rev);
 	std::cout << sys << std::endl;
+
+	std::vector<Office *> fapps = sys.get_freeapps();
+	std::vector<Game *> ggames = sys.get_goodgames();
+	for (auto& fapp : fapps)
+		std::cout << fapp->get_name() << std::endl;
+	for (auto& ggame : ggames)
+		std::cout << ggame->get_name() << std::endl;
+
+	if (!sys.export_data("res/output.csv")) return -1;
 
 	return 0;
 }
