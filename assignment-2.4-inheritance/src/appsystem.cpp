@@ -130,22 +130,25 @@ void AppSystem::chprice(const std::string& appname, int price)
 void AppSystem::chgenre(const std::string& appname, const std::string& genre)
 {
 	for (auto& app : apps)
-		if (app->get_name() == appname)
-			app->set_genre(genre);
+		if (Game *o = dynamic_cast<Game *>(app))
+			if (o->get_name() == appname)
+				o->set_genre(genre);
 }
 
 void AppSystem::chonline(const std::string& appname, bool online)
 {
 	for (auto& app : apps)
-		if (app->get_name() == appname)
-			app->set_online(online);
+		if (Game *o = dynamic_cast<Game *>(app))
+			if (o->get_name() == appname)
+				o->set_online(online);
 }
 
 void AppSystem::chexts(const std::string& appname, const std::vector<std::string> exts)
 {
 	for (auto& app : apps)
-		if (app->get_name() == appname)
-			app->set_exts(exts);
+		if (Office *o = dynamic_cast<Office *>(app))
+			if (o->get_name() == appname)
+				o->set_exts(exts);
 }
 
 void AppSystem::removebad(Manufacturer *man)

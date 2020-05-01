@@ -39,13 +39,6 @@ class App
 		void set_os(const std::string& os);
 		void set_manf(Manufacturer *manf);
 		void set_price(int price);
-
-		virtual const std::string get_genre() const {return {};} 
-		virtual bool get_online() const {return false;} // not good
-		virtual void set_genre(const std::string& genre) {}
-		virtual void set_online(bool online) {}
-		virtual const std::vector<std::string> get_exts() const {return {};}
-		virtual void set_exts(const std::vector<std::string>& extensions) {}
 };
 
 #endif /* APP_H */
