@@ -12,18 +12,14 @@ std::ostream& operator<< (std::ostream& stream, const AppSystem& sys)
 			app->get_os() << " " <<
 			app->get_price() << " ";
 
-		if (Office *o = dynamic_cast<Office *>(app))
-		{
-			std::vector<std::string> exts = o->get_exts();
+		std::vector<std::string> exts = app->get_exts();
+		if (!exts.empty())
 			for (auto& ext : exts)
 				stream << ext << " ";		
-		}
-		else if (Game *o = dynamic_cast<Game *>(app))
-		{
-			stream <<
-				o->get_genre() << " " <<
-				o->get_online() << " ";
-		}
+
+		stream <<
+			app->get_genre() << " " <<
+			app->get_online() << " ";
 		
 		std::vector<Review *> revs = app->get_revs();
 		if (!revs.empty())

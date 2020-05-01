@@ -8,7 +8,7 @@ Game::Game(const char *serialnum, const std::string& name,
 		const std::string& genre, bool online)
 	:App(serialnum, name, os, manf, price), genre(genre), online(online) {}
 
-const std::string& Game::get_genre() const
+const std::string Game::get_genre() const
 {
 	return genre;
 }

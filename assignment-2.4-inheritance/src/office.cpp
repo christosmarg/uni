@@ -13,7 +13,7 @@ Office::~Office()
 	if (!extensions.empty()) extensions.clear();
 }
 
-const std::vector<std::string>& Office::get_exts() const
+const std::vector<std::string> Office::get_exts() const
 {
 	return extensions;
 }

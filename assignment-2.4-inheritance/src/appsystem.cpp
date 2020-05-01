@@ -131,24 +131,21 @@ void AppSystem::chgenre(const std::string& appname, const std::string& genre)
 {
 	for (auto& app : apps)
 		if (app->get_name() == appname)
-			if (Game *o = dynamic_cast<Game *>(app))
-				o->set_genre(genre);
+			app->set_genre(genre);
 }
 
 void AppSystem::chonline(const std::string& appname, bool online)
 {
 	for (auto& app : apps)
 		if (app->get_name() == appname)
-			if (Game *o = dynamic_cast<Game *>(app))
-				o->set_online(online);
+			app->set_online(online);
 }
 
 void AppSystem::chexts(const std::string& appname, const std::vector<std::string> exts)
 {
 	for (auto& app : apps)
 		if (app->get_name() == appname)
-			if (Office *o = dynamic_cast<Office *>(app))
-				o->set_exts(exts);
+			app->set_exts(exts);
 }
 
 void AppSystem::removebad(Manufacturer *man)
