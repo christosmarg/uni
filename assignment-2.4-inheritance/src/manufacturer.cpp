@@ -5,7 +5,19 @@ Manufacturer::Manufacturer()
 
 Manufacturer::Manufacturer(const char *serialnum, const char *name,
 		const std::string& email)
-	:serialnum(convstr(serialnum)), name(convstr(name)), email(email) {}
+	:serialnum(convstr(serialnum)), name(convstr(name)), email(email)
+{
+	try
+	{
+		if (email.find("@") == std::string::npos)
+			throw email;
+	}
+	catch (const std::string& email)
+	{
+		std::string err = "Invalid email format. (" + email + ")";
+		throw std::runtime_error(err);
+	}
+}
 
 Manufacturer::Manufacturer(const Manufacturer& m)
 	:serialnum(convstr(m.serialnum)), name(convstr(m.name)), email(m.email) {}

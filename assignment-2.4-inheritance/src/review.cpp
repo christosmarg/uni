@@ -4,7 +4,11 @@ Review::Review()
 	:stars(0), username(""), comment("") {}
 
 Review::Review(int stars, const std::string& username, const std::string& comment)
-	:stars(stars), username(username), comment(comment) {}
+	:stars(stars), username(username), comment(comment)
+{
+	try {if (stars < 0 || stars > 5) throw stars;}
+	catch (int stars) {throw std::runtime_error("Wrong star value.");}
+}
 
 int Review::get_stars() const
 {

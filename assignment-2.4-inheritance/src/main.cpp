@@ -15,24 +15,22 @@ std::ostream& operator<< (std::ostream& stream, const AppSystem& sys)
 		if (Office *o = dynamic_cast<Office *>(app))
 		{
 			std::vector<std::string> exts = o->get_exts();
-			if (!exts.empty())
-				for (auto& ext : exts)
-					stream << ext << " ";		
+			for (auto& ext : exts)
+				stream << ext << " ";		
 		}
 		else if (Game *o = dynamic_cast<Game *>(app))
 		{
 			stream <<
 				o->get_genre() << " " <<
-				o->get_online() << " ";
+				(o->get_online() ? "Yes" : "No") << " ";
 		}
 		
 		std::vector<Review *> revs = app->get_revs();
-		if (!revs.empty())
-			for (auto& rev : revs)
-				stream <<
-					rev->get_stars() << " " <<
-					rev->get_username() << " " <<
-					rev->get_comment() <<  " ";
+		for (auto& rev : revs)
+			stream <<
+				rev->get_stars() << " " <<
+				rev->get_username() << " " <<
+				rev->get_comment() <<  " ";
 
 		stream <<
 			m.get_serialnum() << " " <<
@@ -51,12 +49,13 @@ int main(int argc, char **argv)
 	Manufacturer *cm = new Manufacturer("5678", "Chris", "chris@cm.com");
 	sys += gnu;
 	sys += cm;
-	if (!sys.read_data("res/data.csv")) return -1;
+	if (!sys.read_data<Manufacturer>("res/manfdata.csv")) return -1;
+	if (!sys.read_data<App>("res/appdata.csv")) return -1;
 	std::vector<std::string> ext = {".doc", ".xls", ".ppt"};
-	sys += new Office("132456", "LibreOffice", "Linux 2.2", gnu, 0, ext);
-	sys += new Game("731234", "minecurses", "Linux 4.5", cm, 0, "Puzzle", false);
+	sys += new Office("459", "LibreOffice", "Linux 2.2", gnu, 0, ext);
+	sys += new Game("731", "minecurses", "Linux 4.5", cm, 0, "Puzzle", false);
 
-	Review rev(6, "Name Surnaming", "Good");
+	Review rev(4, "Name Surnaming", "Good");
 	sys.newrev("minecurses", &rev);
 	std::cout << sys << std::endl;
 
@@ -70,7 +69,8 @@ int main(int argc, char **argv)
 	for (auto& ggame : ggames)
 		std::cout << ggame->get_name() << std::endl;
 
-	if (!sys.export_data("res/output.csv")) return -1;
+	if (!sys.export_data<Manufacturer>("res/manfout.csv")) return -1;
+	if (!sys.export_data<App>("res/appout.csv")) return -1;
 
 	return 0;
 }

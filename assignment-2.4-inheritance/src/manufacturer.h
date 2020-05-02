@@ -3,6 +3,7 @@
 
 #include <string>
 #include <string.h>
+#include <stdexcept>
 
 class Manufacturer
 {

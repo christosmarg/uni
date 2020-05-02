@@ -20,8 +20,8 @@ class AppSystem
 		AppSystem& operator+= (App *app);
 		AppSystem& operator+= (Manufacturer *manf);
 
-		bool read_data	(const char *fpath);
-		bool export_data(const char *fpath);
+		template<typename T> bool read_data(const char *fpath);
+		template<typename T> bool export_data(const char *fpath);
 		void newrev		(const std::string& appname, Review *rev);
 		void chserialnum(const std::string& appname, const char *serialnum);
 		void chname		(const std::string& appname, const std::string& name);
@@ -38,6 +38,11 @@ class AppSystem
 		const std::vector<Game *> get_goodgames() const;
 		const std::vector<App *>& get_apps() const;
 		const std::vector<Manufacturer *>&	get_manfs() const;
+
+	private:
+		bool read_manf(std::ifstream& f);
+		bool read_game(std::ifstream& f);
+		bool read_office(std::ifstream& f);
 };
 
 #endif /* APPSYSTEM_H */

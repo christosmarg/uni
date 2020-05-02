@@ -236,6 +236,7 @@ void xstring::clear()
 {
 	if (!this->empty()) delete[] str;
 	str = new char[1];
+	*this = "";
 	len = 0;
 }
 
