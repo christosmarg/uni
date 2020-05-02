@@ -45,8 +45,8 @@ std::ostream& operator<< (std::ostream& stream, const AppSystem& sys)
 int main(int argc, char **argv)
 {
 	AppSystem sys;
-	Manufacturer *gnu = new Manufacturer("1234", "GNU", "gnu@gnu.com");
-	Manufacturer *cm = new Manufacturer("5678", "Chris", "chris@cm.com");
+	Manufacturer *gnu = new Manufacturer("124", "GNU", "gnu@gnu.com");
+	Manufacturer *cm = new Manufacturer("568", "Chris", "chris@cm.com");
 	sys += gnu;
 	sys += cm;
 	if (!sys.read_data<Manufacturer>("res/manfdata.csv")) return -1;

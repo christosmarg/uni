@@ -9,12 +9,22 @@ Manufacturer::Manufacturer(const char *serialnum, const char *name,
 {
 	try
 	{
-		if (email.find("@") == std::string::npos)
-			throw email;
+		if (strcmp(serialnum, "") == 0) throw serialnum;
+		if (strcmp(name, "") == 0) throw name;
+		if (email.empty() || email == "" ||
+				email.find("@") == std::string::npos) throw email;
+	}
+	catch (const char *serialnum)
+	{
+		throw std::runtime_error("Empty manufacturer serial number.");
+	}
+	catch (const char *name)
+	{
+		throw std::runtime_error("Empty manufacturer name.");
 	}
 	catch (const std::string& email)
 	{
-		std::string err = "Invalid email format. (" + email + ")";
+		std::string err = "Invalid email. Empty email/Missing \'@\'";
 		throw std::runtime_error(err);
 	}
 }
