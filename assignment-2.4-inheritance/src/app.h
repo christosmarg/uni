@@ -25,8 +25,8 @@ class App
 				const std::string& os, Manufacturer *manf, int price);
 		virtual ~App(); 
 
-		char *convsn(const char *serialnum);
 		void addrev(Review *rev);
+		void addrevs(const std::vector<Review *> revs);
 
 		const char *get_serialnum() const;
 		const std::string& get_name() const;
@@ -40,6 +40,9 @@ class App
 		void set_os(const std::string& os);
 		void set_manf(Manufacturer *manf);
 		void set_price(int price);
+	
+	private:
+		char *convsn(const char *serialnum);
 };
 
 #endif /* APP_H */

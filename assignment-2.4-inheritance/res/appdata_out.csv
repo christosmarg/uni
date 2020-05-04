@@ -1,6 +1,6 @@
 Type,SN,Name,OS,Manf,Price,Genre,Online,Extensions
-Game,123,LoL,Windows,Riot,0,MOBA,No,N/A
-Game,345,CS:GO,Cross,Valve,14,FPS,No,N/A
-Office,567,LibreOffice,Linux,GNU,0,N/A,N/A,.doc|.xls|.odt|.ods|.ppt|
-Office,789,Vim,Linux,GNU,0,N/A,N/A,.txt|.md|.tex|.cpp|.sh|
-Office,459,OpenOffice,Linux 2.2,Company,0,N/A,N/A,.doc|.xls|.ppt|
+Game,0001,LoL,MAD Robot 4.5,Riot,0,MOBA,Yes,N/A
+Game,0002,CS:GO,MAD Robot 3.0,Valve,14,FPS,Yes,N/A
+Office,0003,LibreOffice,MAD Robot 2.0,GNU,0,N/A,N/A,.doc|.xls|.odt|.ods|.ppt|
+Office,0004,Vim,MAD Robot 1.0,GNU,0,N/A,N/A,.txt|.md|.tex|.cpp|.sh|
+Office,0004,OpenOffice,MAD Robot 2.2,Company,0,N/A,N/A,.doc|.xls|.ppt|
