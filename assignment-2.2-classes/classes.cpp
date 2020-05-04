@@ -179,12 +179,7 @@ float Student::calc_average() const
 	else return 0.0f;
 }
 
-std::ostream& operator<< (std::ostream& stream, const Student& s)
-{
-	return stream << "AM: " << s.get_AM() << std::endl << "Name: " << s.get_name() << std::endl 
-		<< "Semester: " << s.get_semester() << std::endl;
-}
-
+std::ostream& operator<< (std::ostream& stream, const Student& s);
 static void cont(void);
 static void constructor1(const Student& s1);
 static void ostream_overload(const Student& s1);
@@ -225,6 +220,14 @@ int main(int argc, char **argv)
 	delete s3;
 
 	return 0;
+}
+
+std::ostream& operator<< (std::ostream& stream, const Student& s)
+{
+	return stream <<
+		"AM: " << s.get_AM() << std::endl <<
+		"Name: " << s.get_name() << std::endl <<
+		"Semester: " << s.get_semester() << std::endl;
 }
 
 static void cont(void)
