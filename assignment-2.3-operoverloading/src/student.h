@@ -6,17 +6,17 @@
 #include <string>
 #include <string.h>
 
-#include "subject.h"
+#include "course.h"
 
 class Student
 {
 	private:
 		char *AM;				// AM
 		std::string name;		// Name
-		Subject **ssubj;		// Submitted subjects
-		unsigned int nssubj;	// Number of submitted subjects
+		Course **sc;			// Submitted courses
+		unsigned int nsc;		// Number of submitted courses 
 		unsigned int semester;	// Current semester
-		unsigned int psubj;		// Passed subjects
+		unsigned int pcourses;	// Passed courses
 		float *grades;			// Grades
 		int size;
 
@@ -24,11 +24,11 @@ class Student
 		Student(const char *AM, const std::string& name);
 		Student(const char *AM, const std::string& name, unsigned int semester);
 		Student(const char *AM, const std::string& name, unsigned int semester,
-				unsigned int psubj, const float *grades);
+				unsigned int pcourses, const float *grades);
 		Student(const Student& s);
 		~Student();
 
-		void operator+= (Subject *s);
+		void operator+= (Course *c);
 		Student operator= (const Student& s);
 
 		bool operator== (const Student& s) const;
@@ -41,18 +41,18 @@ class Student
 		const char *get_AM() const;
 		const std::string& get_name() const;
 		unsigned int get_semester() const;
-		unsigned int get_psubj() const; 
+		unsigned int get_pcourses() const; 
 		float *get_grades() const;
-		Subject **get_submitted_subjects() const; 
-		unsigned int get_num_submitted_subjects() const;
+		Course **get_submitted_courses() const; 
+		unsigned int get_num_submitted_courses() const;
 
 		void set_AM(const char *AM);
 		void set_name(const std::string& name);
 		void set_semester(unsigned int semester);
-		void set_psubj(unsigned int psubj);
+		void set_pcourses(unsigned int pcourses);
 		void set_grades(float *grades);
-		void set_num_submitted_subjects(unsigned int nssubj);
-		void set_submitted_subjects(Subject **ssubj);
+		void set_num_submitted_courses(unsigned int nsc);
+		void set_submitted_courses(Course **sc);
 
 		void add_grade(float grade);
 		void detailed_print() const;

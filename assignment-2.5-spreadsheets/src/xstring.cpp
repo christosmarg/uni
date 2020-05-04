@@ -9,16 +9,8 @@ xstring::xstring(const char *s)
 
 xstring::xstring(const xstring& s)
 {
-	if (!this->empty())
-	{
-		str = conv(s.str);
-		len = size();
-	}
-	else
-	{
-		str = new char[1];
-		len = 0;
-	}
+	this->str = conv(s.str);
+	this->len = s.len;
 }
 
 xstring::~xstring()
@@ -160,11 +152,8 @@ bool xstring::operator>= (const char *s) const
 
 char& xstring::operator[] (std::size_t i) const
 {
-	if (i >= len)
-	{
-		std::cerr << "Out of bounds." << std::endl;
-		exit(1);
-	}
+	try {if (i >= len) throw i;}
+	catch (int i) {throw std::runtime_error("Out of bounds.");}
 	return str[i];	
 }
 
@@ -250,7 +239,6 @@ char *xstring::conv(const char *s)
 
 char *xstring::conv(char c)
 {
-	// 2 for '\0'
 	char *tmp = new char[1];
 	tmp[0] = c;
 	return tmp;
