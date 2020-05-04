@@ -96,6 +96,7 @@ float *Student::get_grades() const
 
 void Student::set_AM(const char *AM)
 {
+	if (this->AM != nullptr) delete[] this->AM;
 	this->AM = convert_AM(AM);
 }
 
@@ -129,10 +130,11 @@ char *Student::convert_AM(const char *AM)
 
 float *Student::convert_PSG(const float *grades)
 {
-	if (psubj > 0)
+	if (psubj > 0 && grades != nullptr)
 	{
 		float *tmp = new float[psubj];
 		memcpy(tmp, grades, sizeof(float) * psubj);
+		if (this->grades != nullptr) delete[] this->grades;
 		return tmp;
 	}
 	else return nullptr;
