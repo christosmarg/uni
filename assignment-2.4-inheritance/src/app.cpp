@@ -10,8 +10,8 @@ App::App(const char *serialnum, const std::string& name,
 	try
 	{
 		if (strcmp(serialnum, "") == 0)	throw serialnum;
-		if (name.empty() || name == "")	throw name;
-		if (os.empty() || os == "") throw os;
+		if (name.empty()) throw name;
+		if (os.empty()) throw os;
 		if (price < 0) throw price;
 	}
 	catch (const char *serialnum)

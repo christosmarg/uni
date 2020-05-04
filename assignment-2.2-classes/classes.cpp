@@ -34,18 +34,20 @@ class Student
 		void set_psubj(unsigned int psubj);
 		void set_grades(float *grades);
 
-		char *convert_AM(const char *AM);
-		float *convert_PSG(const float *grades);
 		void add_grade(float grade);
 		void detailed_print() const;
+
+	private:
+		char *convert_AM(const char *AM);
+		float *convert_PSG(const float *grades);
 		float calc_average() const;
 };
 
 Student::Student(const char *AM, const std::string& name)
-	:AM(convert_AM(AM)), name(name), semester(1), psubj(0) {}
+	:AM(convert_AM(AM)), name(name), semester(1), psubj(0), grades(nullptr) {}
 
 Student::Student(const char *AM, const std::string& name, unsigned int semester)
-	:AM(convert_AM(AM)), name(name), semester(semester), psubj(0) {}
+	:AM(convert_AM(AM)), name(name), semester(semester), psubj(0), grades(nullptr) {}
 
 Student::Student(const char *AM, const std::string& name, unsigned int semester,
 		unsigned int psubj, const float *grades)
@@ -63,8 +65,8 @@ Student::Student(const Student& s)
 
 Student::~Student()
 {
-	delete[] this->AM;
-	delete[] this->grades;
+	if (this->AM != nullptr) delete[] this->AM;
+	if (this->AM != nullptr) delete[] this->grades;
 }
 
 const char *Student::get_AM() const
@@ -151,21 +153,28 @@ void Student::add_grade(float grade)
 
 void Student::detailed_print() const
 {
-	for (unsigned int i = 0; i < psubj; i++)
+	if (grades != nullptr)
 	{
-		std::cout << "Subject " << i+1 << ": ";
-		std::cout << grades[i] << std::endl;		
+		for (unsigned int i = 0; i < psubj; i++)
+		{
+			std::cout << "Subject " << i+1 << ": ";
+			std::cout << grades[i] << std::endl;		
+		}
+		std::cout << "Average grade: " << std::setprecision(2) << calc_average() << std::endl;
 	}
-	std::cout << "Average grade: " << std::setprecision(2) << calc_average() << std::endl;
 }
 
 float Student::calc_average() const
 {
-	float sum = 0;
-	for (unsigned int i = 0; i < psubj; i++)
-		sum += grades[i];
-	float average = sum / psubj;
-	return average;
+	if (grades != nullptr)
+	{
+		float sum = 0;
+		for (unsigned int i = 0; i < psubj; i++)
+			sum += grades[i];
+		float average = sum / psubj;
+		return average;
+	}
+	else return 0.0f;
 }
 
 std::ostream& operator<< (std::ostream& stream, const Student& s)
@@ -270,11 +279,14 @@ static void constructor3(const Student& s3)
 	std::cout << "subjects passed: " << s3.get_psubj() << std::endl;
 
 	float *gr = s3.get_grades();
-	std::cout << "grades: ";
-	for (unsigned int i = 0; i < s3.get_psubj(); i++)
+	if (gr != nullptr)
 	{
-		if (i != s3.get_psubj()-1) std::cout << gr[i] << ", ";
-		else std::cout << gr[i] << std::endl << std::endl;
+		std::cout << "grades: ";
+		for (unsigned int i = 0; i < s3.get_psubj(); i++)
+		{
+			if (i != s3.get_psubj()-1) std::cout << gr[i] << ", ";
+			else std::cout << gr[i] << std::endl << std::endl;
+		}
 	}
 }
 
@@ -307,12 +319,15 @@ static void setters(Student& s3)
 	std::cout << "New subjects passed: " << s3.get_psubj() << std::endl;
 
 	float *gr = s3.get_grades();
-	std::cout << "Input: {0.1f, 2.2f}" << '\t' << '\t';
-	std::cout << "New grades: ";
-	for (unsigned int i = 0; i < s3.get_psubj(); i++)
+	if (gr != nullptr)
 	{
-		if (i != s3.get_psubj()-1)	std::cout << gr[i] << ", ";
-		else std::cout << gr[i] << std::endl;
+		std::cout << "Input: {0.1f, 2.2f}" << '\t' << '\t';
+		std::cout << "New grades: ";
+		for (unsigned int i = 0; i < s3.get_psubj(); i++)
+		{
+			if (i != s3.get_psubj()-1)	std::cout << gr[i] << ", ";
+			else std::cout << gr[i] << std::endl;
+		}
 	}
 }
 
@@ -320,11 +335,14 @@ static void addgrd(Student& s3)
 {
 	s3.add_grade(7.5f);
 	float *gr = s3.get_grades();
-	std::cout << "Input: s3.add_grade(7.5f)" << '\t';
-	std::cout << "Updated grades: ";
-	for (unsigned int i = 0; i < s3.get_psubj(); i++)
+	if (gr != nullptr)
 	{
-		if (i != s3.get_psubj()-1) std::cout << gr[i] << ", ";
-		else std::cout << gr[i] << std::endl;
+		std::cout << "Input: s3.add_grade(7.5f)" << '\t';
+		std::cout << "Updated grades: ";
+		for (unsigned int i = 0; i < s3.get_psubj(); i++)
+		{
+			if (i != s3.get_psubj()-1) std::cout << gr[i] << ", ";
+			else std::cout << gr[i] << std::endl;
+		}
 	}
 }

@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include "game.h"
 #include "office.h"
 
@@ -43,6 +44,8 @@ class AppSystem
 		bool read_manf(std::ifstream& f);
 		bool read_game(std::ifstream& f);
 		bool read_office(std::ifstream& f);
+		const std::vector<std::string> read_office_exts(std::ifstream& f);
+		void write_office_exts(Office *o, std::ofstream& f);
 };
 
 #endif /* APPSYSTEM_H */

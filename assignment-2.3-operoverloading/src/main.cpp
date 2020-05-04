@@ -147,11 +147,14 @@ static void constructor3(const Student& s3)
 	std::cout << "Subjects passed: " << s3.get_psubj() << std::endl;
 
 	float *gr = s3.get_grades();
-	std::cout << "Grades: ";
-	for (unsigned int i = 0; i < s3.get_psubj(); i++)
+	if (gr != nullptr)
 	{
-		if (i != s3.get_psubj()-1) std::cout << gr[i] << ", ";
-		else std::cout << gr[i] << std::endl << std::endl;
+		std::cout << "Grades: ";
+		for (unsigned int i = 0; i < s3.get_psubj(); i++)
+		{
+			if (i != s3.get_psubj()-1) std::cout << gr[i] << ", ";
+			else std::cout << gr[i] << std::endl << std::endl;
+		}
 	}
 }
 
@@ -184,12 +187,15 @@ static void setters(Student& s3)
 	std::cout << "New subjects passed: " << s3.get_psubj() << std::endl;
 
 	float *gr = s3.get_grades();
-	std::cout << "Input: {0.1f, 2.2f}" << '\t' << '\t';
-	std::cout << "New grades: ";
-	for (unsigned int i = 0; i < s3.get_psubj(); i++)
+	if (gr != nullptr)
 	{
-		if (i != s3.get_psubj()-1)	std::cout << gr[i] << ", ";
-		else std::cout << gr[i] << std::endl;
+		std::cout << "Input: {0.1f, 2.2f}" << '\t' << '\t';
+		std::cout << "New grades: ";
+		for (unsigned int i = 0; i < s3.get_psubj(); i++)
+		{
+			if (i != s3.get_psubj()-1)	std::cout << gr[i] << ", ";
+			else std::cout << gr[i] << std::endl;
+		}
 	}
 }
 
@@ -197,12 +203,15 @@ static void addgrd(Student& s3)
 {
 	s3.add_grade(7.5f);
 	float *gr = s3.get_grades();
-	std::cout << "Input: s3.add_grade(7.5f)" << '\t';
-	std::cout << "Updated grades: ";
-	for (unsigned int i = 0; i < s3.get_psubj(); i++)
+	if (gr != nullptr)
 	{
-		if (i != s3.get_psubj()-1) std::cout << gr[i] << ", ";
-		else std::cout << gr[i] << std::endl;
+		std::cout << "Input: s3.add_grade(7.5f)" << '\t';
+		std::cout << "Updated grades: ";
+		for (unsigned int i = 0; i < s3.get_psubj(); i++)
+		{
+			if (i != s3.get_psubj()-1) std::cout << gr[i] << ", ";
+			else std::cout << gr[i] << std::endl;
+		}
 	}
 }
 
@@ -225,12 +234,15 @@ static void submsubj(Student& s3)
 	std::cout << "Number of submitted subjects: " << s3.get_num_submitted_subjects() << std::endl << std::endl;
 	
 	Subject **ssj = s3.get_submitted_subjects();
-	std::cout << "Input: {\"Discrete Math\", \"Physics\"}" << std::endl;
-	std::cout << "Submitted subjects: ";
-	for (unsigned int i = 0; i < s3.get_num_submitted_subjects(); i++)
+	if (ssj != nullptr)
 	{
-		if (i != s3.get_num_submitted_subjects()-1) std::cout << ssj[i][0].get_sname() << ", ";
-		else std::cout << ssj[i][0].get_sname() << std::endl;
+		std::cout << "Input: {\"Discrete Math\", \"Physics\"}" << std::endl;
+		std::cout << "Submitted subjects: ";
+		for (unsigned int i = 0; i < s3.get_num_submitted_subjects(); i++)
+		{
+			if (i != s3.get_num_submitted_subjects()-1) std::cout << ssj[i][0].get_sname() << ", ";
+			else std::cout << ssj[i][0].get_sname() << std::endl;
+		}
 	}
 }
 
@@ -238,14 +250,17 @@ static void plusequals_overload(Student& s3, Subject *s)
 {
 	s3 += s;
 	Subject **ssj = s3.get_submitted_subjects();
-	std::cout << "+= operator overload" << std::endl;
-	std::cout << "----------------------------" << std::endl;
-	std::cout << "Input: s3 += \"OOP\"" << std::endl;;
-	std::cout << "Updated submitted subjects: ";
-	for (unsigned int i = 0; i < s3.get_num_submitted_subjects(); i++)
+	if (ssj != nullptr)
 	{
-		if (i != s3.get_num_submitted_subjects()-1) std::cout << ssj[i][0].get_sname() << ", ";
-		else std::cout << ssj[i][0].get_sname() << std::endl;
+		std::cout << "+= operator overload" << std::endl;
+		std::cout << "----------------------------" << std::endl;
+		std::cout << "Input: s3 += \"OOP\"" << std::endl;;
+		std::cout << "Updated submitted subjects: ";
+		for (unsigned int i = 0; i < s3.get_num_submitted_subjects(); i++)
+		{
+			if (i != s3.get_num_submitted_subjects()-1) std::cout << ssj[i][0].get_sname() << ", ";
+			else std::cout << ssj[i][0].get_sname() << std::endl;
+		}
 	}
 }
 

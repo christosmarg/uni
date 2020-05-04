@@ -11,8 +11,7 @@ Manufacturer::Manufacturer(const char *serialnum, const char *name,
 	{
 		if (strcmp(serialnum, "") == 0) throw serialnum;
 		if (strcmp(name, "") == 0) throw name;
-		if (email.empty() || email == "" ||
-				email.find("@") == std::string::npos) throw email;
+		if (email.empty() || email.find("@") == std::string::npos) throw email;
 	}
 	catch (const char *serialnum)
 	{
