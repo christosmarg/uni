@@ -5,19 +5,17 @@
 #include <cstdlib>
 #include <iostream>
 #include <string.h>
+#include <vector>
 
-// add more '\0' checks
 namespace lab {
 class xstring
 {
 	private:
-		char *str;
-		std::size_t len;
+		std::vector<char> str;
 
 	public:
 		xstring();
 		xstring(const char *s);
-		xstring(const xstring& s);
 		~xstring();
 		
 		xstring	 operator=	(const xstring& s);
@@ -39,7 +37,7 @@ class xstring
 		bool operator>	(const char *s)		const;
 		bool operator>=	(const xstring& s)	const;
 		bool operator>=	(const char *s)		const;
-		char& operator[] (std::size_t i) const;
+		char& operator[] (std::size_t i);
 		friend std::ostream& operator<< (std::ostream& stream, const xstring& s);
 		friend std::istream& operator>> (std::istream& stream, const xstring& s);
 
@@ -50,21 +48,16 @@ class xstring
 		xstring& append(char c);
 
 		char *cstr() const;
-		char& last() const;
-		std::size_t size();
-		bool empty() const;
-		void clear();
+		std::size_t len() const;
+		void strclear();
 	
 	private:
-		char *conv(const char *s);
-		char *conv(char c);
-		void resize(const char *s);
-		void resize(std::size_t n);
+		void store(const char *s);
+		void store(const char *s, std::size_t i);
 		bool strempty(const char *s) const;
 };
 
 std::istream& getline(std::istream& stream, xstring& s, char delim = '\n');
-
 template<typename T> xstring to_xstr(T val);
 template<typename T> xstring to_xstr(const char *fs, T val);
 template<typename T> const char *getformat();

@@ -39,15 +39,13 @@ class AppSystem
 		const std::vector<Office *> get_freeapps() const;
 		const std::vector<Game *> get_goodgames() const;
 		const std::vector<App *>& get_apps() const;
-		const std::vector<Manufacturer *>&	get_manfs() const;
+		const std::vector<Manufacturer *>& get_manfs() const;
 
 	private:
-		bool read_manf(std::ifstream& f);
-		bool read_game(std::ifstream& f);
-		bool read_office(std::ifstream& f);
-		const std::vector<std::string> read_office_exts(std::ifstream& f);
+		template<typename T> bool parse(std::ifstream& f);
+		const std::vector<std::string> parse_office_exts(std::ifstream& f);
 		const std::vector<Review *>
-			read_reviews(const std::string& appname, const char *rpath);
+			parse_reviews(const std::string& appname, const char *rpath);
 		void write_office_exts(Office *of, std::ofstream& f);
 		bool valid_path(const std::string& strpath);
 		const std::string err_csv(const std::string& fpath);
