@@ -23,7 +23,7 @@
 #define VOLUME_DOWN '-'
 #define QUIT 'q'
 
-void play_minesweeper	(struct _win_st* gamew, Board *brd);
+void play				(struct _win_st* gamew, Board *brd);
 int open_cell			(struct _win_st* gamew, Board *brd, int mby, int mbx, int gameover);
 void handle_flags		(struct _win_st* gamew, Board *brd, int mby, int mbx);
 void defuse_mine		(struct _win_st* gamew, Board *brd, int mby, int mbx);

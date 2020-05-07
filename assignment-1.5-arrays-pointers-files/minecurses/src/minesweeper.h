@@ -10,14 +10,14 @@
 #define BLANK ' '
 #define MINE '*'
 
-char **init_dboard	(struct _win_st* gamew, int cols, int rows);
-void fill_dboard	(char **dboard, int cols, int rows);
-char **init_mboard	(struct _win_st* gamew, int cols, int rows, int nmines);
-void place_mines	(char **mboard, int cols, int rows, int nmines);
-void add_adj		(char **mboard, int cols, int rows);
-int is_mine			(char **mboard, int row, int col);
+char **init_db		(struct _win_st* gamew, int cols, int rows);
+void fill_db		(char **db, int cols, int rows);
+char **init_mb		(struct _win_st* gamew, int cols, int rows, int nmines);
+void place_mines	(char **mb, int cols, int rows, int nmines);
+void add_adj		(char **mb, int cols, int rows);
+int is_mine			(char **mb, int row, int col);
 int outof_bounds	(int row, int col, int rows, int cols);
-uint8_t adj_mines	(char **mboard, int row, int col, int cols, int rows);
-void fill_spaces	(char **mboard, int cols, int rows, int nmines);
+uint8_t adj_mines	(char **mb, int row, int col, int cols, int rows);
+void fill_spaces	(char **mb, int cols, int rows, int nmines);
 
 #endif /* MINESWEEPER_H */
