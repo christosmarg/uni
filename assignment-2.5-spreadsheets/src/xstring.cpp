@@ -47,7 +47,7 @@ xstring	xstring::operator= (const char *s)
 {
 	if (!empty()) delete[] str;
 	str = conv(s);
-	len = size();
+	len = length();
 	return *this;
 }
 
@@ -63,38 +63,19 @@ xstring xstring::operator+ (const char *s)
 
 xstring& xstring::operator+= (const xstring& s)
 {
-	if (!this->empty())
-	{
-		resize(s.str);
-		strcat(str, s.str);
-	}
-	else str = conv(s.str);
-	len = size();
+	append(s.str);
 	return *this;	
 }
 
 xstring& xstring::operator+= (const char *s)
 {
-	if (!this->empty())
-	{
-		resize(s);
-		strcat(str, s);
-	}
-	else str = conv(s);
-	len = size();
+	append(s);
 	return *this;
 }
 
 xstring& xstring::operator+= (char c)
 {
-	if (!this->empty())
-	{
-		resize(1);
-		str[len] = c;
-		str[len+1] = '\0';
-	}
-	else str = conv(c);
-	len = size();
+	push_back(c);
 	return *this;
 }
 
@@ -177,7 +158,13 @@ std::istream& operator>> (std::istream& stream, const xstring& s)
 
 xstring& xstring::append(const xstring& s)
 {
-	if (!s.empty()) *this += s;
+	if (!s.empty())
+	{
+		resize(s.str);
+		strcat(str, s.str);
+	}
+	else str = conv(s.str);
+	len = length();
 	return *this;
 }
 
@@ -193,7 +180,7 @@ xstring& xstring::append(const xstring& s, std::size_t i)
 		std::copy(tmp1, tmp1 + i + 1, str);
 		std::copy(s.str, s.str + s.len + 1, str + i);
 		std::copy(tmp2, tmp2 + len - i + 1, str + s.len + i); 
-		len = size();
+		len = length();
 		str[len] = '\0';
 	}
 	return *this;
@@ -201,7 +188,13 @@ xstring& xstring::append(const xstring& s, std::size_t i)
 
 xstring& xstring::append(const char *s)
 {
-	if (!strempty(s)) *this += s;
+	if (!strempty(s))
+	{
+		resize(s);
+		strcat(str, s);
+	}
+	else str = conv(s);
+	len = length();
 	return *this;
 }
 
@@ -217,7 +210,7 @@ xstring& xstring::append(const char *s, std::size_t i)
 		std::copy(tmp1, tmp1 + i + 1, str);
 		std::copy(s, s + strlen(s) + 1, str + i);
 		std::copy(tmp2, tmp2 + len - i + 1, str + strlen(s) + i); 
-		len = size();
+		len = length();
 		str[len] = '\0';
 	}
 	return *this;
@@ -225,8 +218,45 @@ xstring& xstring::append(const char *s, std::size_t i)
 
 xstring& xstring::append(char c)
 {
-	*this += c;
+	push_back(c);
 	return *this;
+}
+
+void xstring::push_back(char c)
+{
+	if (!this->empty())
+	{
+		resize(1);
+		str[len] = c;
+		str[len+1] = '\0';
+	}
+	else str = conv(c);
+	len = length();
+}
+
+void xstring::pop_back()
+{
+	if (len - 1 > 0)
+	{
+		char *tmp = new char[len];
+		std::copy(str, str + len, tmp);
+		delete[] str;
+		tmp[len - 1] = '\0';
+		str = tmp;
+		len--;
+	}
+	else if (len - 1 == 0)
+	{
+		delete[] str;
+		str = new char[1];
+		str[0] = '\0';
+	}
+	else return;
+}
+
+void xstring::replace(std::size_t i, char c)
+{
+	if (i < len) str[i] = c;	
 }
 
 char *xstring::cstr() const
@@ -234,13 +264,18 @@ char *xstring::cstr() const
 	return str;
 }
 
-char& xstring::last() const
+char& xstring::front() const
+{
+	return str[0];
+}
+
+char& xstring::back() const
 {
 	if (!this->empty()) return str[len-1];
 	else return str[0];
 }
 
-std::size_t xstring::size()
+std::size_t xstring::length()
 {
 	len = strlen(str);
 	return len; 
@@ -289,7 +324,7 @@ void xstring::resize(const char *s)
 		std::copy(str, str + len+1, tmp);
 		delete[] str;
 		str = tmp;
-		len = size();
+		len = length();
 	}
 }
 
@@ -302,7 +337,7 @@ void xstring::resize(std::size_t n)
 		std::copy(str, str + len + 1, tmp);
 		delete[] str;
 		str = tmp;
-		len = size();
+		len = length();
 	}
 }
 
@@ -317,16 +352,4 @@ std::istream& getline(std::istream& stream, xstring& s, char delim)
 	}
 	return stream;
 }
-
-template<> const char *getformat<short>()	{return "%hi";}
-template<> const char *getformat<int>()		{return "%d";}
-template<> const char *getformat<long>()	{return "%ld";}
-template<> const char *getformat<long long>() {return "%lld";}
-template<> const char *getformat<unsigned short>()	{return "%hu";}
-template<> const char *getformat<unsigned int>()	{return "%u";}
-template<> const char *getformat<unsigned long>()	{return "%lu";}
-template<> const char *getformat<unsigned long long>() {return "%llu";}
-template<> const char *getformat<float>()	{return "%f";}
-template<> const char *getformat<double>()	{return "%f";}
-template<> const char *getformat<long double>()	{return "%Lf";}
 }

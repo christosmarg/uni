@@ -48,9 +48,13 @@ class xstring
 		xstring& append(const char *s, std::size_t i);
 		xstring& append(char c);
 
+		void push_back(char c);
+		void pop_back();
+		void replace(std::size_t i, char c);
 		char *cstr() const;
-		char& last() const;
-		std::size_t size();
+		char& front() const;
+		char& back() const;
+		std::size_t length();
 		bool empty() const;
 		void clear();
 	
@@ -81,6 +85,22 @@ xstring to_xstr(const char *fs, T val)
 	char buf[25];
 	snprintf(buf, sizeof(buf), fs, val);
 	return xstring(buf);
+}
+
+template<typename T>
+const char *getformat()
+{
+	if (std::is_same<T, short>::value) return "%hi";
+	if (std::is_same<T, int>::value) return "%d";
+	if (std::is_same<T, long>::value) return "%ld";
+	if (std::is_same<T, long long>::value) return "%lld";
+	if (std::is_same<T, unsigned short>::value) return "%hu";
+	if (std::is_same<T, unsigned int>::value) return "%u";
+	if (std::is_same<T, unsigned long>::value) return "%lu";
+	if (std::is_same<T, unsigned long>::value) return "%llu";
+	if (std::is_same<T, float>::value) return "%f";
+	if (std::is_same<T, double>::value) return "%f";
+	if (std::is_same<T, long double>::value) return "%Lf";
 }
 }
 
