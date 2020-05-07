@@ -7,21 +7,11 @@ Manufacturer::Manufacturer(const char *serialnum, const char *name,
 		const std::string& email)
 	:serialnum(convstr(serialnum)), name(convstr(name)), email(email)
 {
-	try
-	{
-		if (strcmp(serialnum, "") == 0) throw serialnum;
-		if (strcmp(name, "") == 0) throw name;
-		if (email.empty() || email.find("@") == std::string::npos) throw email;
-	}
-	catch (const char *serialnum)
-	{
+	if (strcmp(serialnum, "") == 0)
 		throw std::runtime_error("Empty manufacturer serial number.");
-	}
-	catch (const char *name)
-	{
+	if (strcmp(name, "") == 0)
 		throw std::runtime_error("Empty manufacturer name.");
-	}
-	catch (const std::string& email)
+	if (email.empty() || email.find("@") == std::string::npos)
 	{
 		std::string err = "Invalid email. Empty email/Missing \'@\'";
 		throw std::runtime_error(err);

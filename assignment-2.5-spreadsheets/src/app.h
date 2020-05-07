@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <fstream>
-#include <unordered_map>
+#include <map>
 #include <vector>
 
 #include "course.h"
@@ -17,7 +17,7 @@ class App
 		std::vector<Course *> courses;
 		std::vector<Grades *> grades;
 		std::vector<Student *> studs;
-		std::vector<std::pair<lab::xstring, lab::xstring>> matchings;
+		std::map<lab::xstring, lab::xstring> matchings;
 
 	public:
 		App();
@@ -29,6 +29,7 @@ class App
 		const std::vector<Course *>& get_courses()	const;
 		const std::vector<Grades *>& get_grades()	const;
 		const std::vector<Student *>& get_studs()	const;
+		const std::map<lab::xstring, lab::xstring>& get_matchings() const;
 
 	private:
 		template<typename T> void dealloc(std::vector<T *>& vec);

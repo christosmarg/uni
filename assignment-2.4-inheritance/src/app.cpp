@@ -7,30 +7,19 @@ App::App(const char *serialnum, const std::string& name,
 	const std::string& os, Manufacturer *manf, int price)
 	:serialnum(convsn(serialnum)), name(name), os(os), manf(manf), price(price)
 {
-	try
-	{
-		if (strcmp(serialnum, "") == 0)	throw serialnum;
-		if (name.empty()) throw name;
-		if (os.empty()) throw os;
-		if (price < 0) throw price;
-	}
-	catch (const char *serialnum)
-	{
+	if (strcmp(serialnum, "") == 0)
 		throw std::runtime_error("Empty app serial number.");	
-	}
-	catch (const std::string& name)
-	{
+	if (name.empty())
 		throw std::runtime_error("Empty app name.");	
-	}
-	catch (const std::string& os)
-	{
+	if (os.empty())
 		throw std::runtime_error("Empty OS name.");	
-	}
-	catch (int price)
-	{
+	if (price < 0)
 		throw std::runtime_error("Price can't have negative value.");
-	}
 }
+
+App::App(const App& a)
+	:serialnum(a.serialnum), name(a.name), os(a.os), manf(a.manf),
+	price(a.price) {}
 
 App::~App()
 {

@@ -6,9 +6,12 @@ Review::Review()
 Review::Review(int stars, const std::string& username, const std::string& comment)
 	:stars(stars), username(username), comment(comment)
 {
-	try {if (stars < 0 || stars > 5) throw stars;}
-	catch (int stars) {throw std::runtime_error("Wrong star value.");}
+	if (stars < 0 || stars > 5)
+		throw std::runtime_error("Wrong star value.");
 }
+
+Review::Review(const Review& r)
+	:stars(r.stars), username(r.username), comment(r.comment) {}
 
 int Review::get_stars() const
 {

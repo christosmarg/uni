@@ -1,9 +1,11 @@
 #ifndef APP_H
 #define APP_H
 
+#include <cstring>
+#include <iomanip>
+#include <iostream>
 #include <stdexcept>
 #include <string>
-#include <string.h>
 #include <vector>
 
 #include "manufacturer.h"
@@ -23,6 +25,7 @@ class App
 		App();
 		App(const char *serialnum, const std::string& name,
 				const std::string& os, Manufacturer *manf, int price);
+		App(const App& app);
 		virtual ~App(); 
 
 		void addrev(Review *rev);
@@ -40,6 +43,8 @@ class App
 		void set_os(const std::string& os);
 		void set_manf(Manufacturer *manf);
 		void set_price(int price);
+
+		virtual void print(std::ostream& stream) const = 0;
 	
 	private:
 		char *convsn(const char *serialnum);
