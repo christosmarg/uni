@@ -54,15 +54,13 @@ class xstring
 		char *cstr() const;
 		char& front() const;
 		char& back() const;
-		std::size_t length();
+		std::size_t length() const;
 		bool empty() const;
 		void clear();
 	
 	private:
-		char *conv(const char *s);
-		char *conv(char c);
-		void resize(const char *s);
 		void resize(std::size_t n);
+		char *conv(const char *s) const;
 		bool strempty(const char *s) const;
 };
 

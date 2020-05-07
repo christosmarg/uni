@@ -160,10 +160,9 @@ xstring& xstring::append(const xstring& s)
 {
 	if (!s.empty())
 	{
-		resize(s.str);
+		resize(s.len);
 		strcat(str, s.str);
 	}
-	else str = conv(s.str);
 	len = length();
 	return *this;
 }
@@ -192,10 +191,9 @@ xstring& xstring::append(const char *s)
 {
 	if (!strempty(s))
 	{
-		resize(s);
+		resize(strlen(s));
 		strcat(str, s);
 	}
-	else str = conv(s);
 	len = length();
 	return *this;
 }
@@ -228,13 +226,9 @@ xstring& xstring::append(char c)
 
 void xstring::push_back(char c)
 {
-	if (!this->empty())
-	{
-		resize(1);
-		str[len] = c;
-		str[len+1] = '\0';
-	}
-	else str = conv(c);
+	resize(1);
+	str[len] = c;
+	str[len+1] = '\0';
 	len = length();
 }
 
@@ -279,20 +273,14 @@ char& xstring::back() const
 	else return str[0];
 }
 
-std::size_t xstring::length()
+std::size_t xstring::length() const
 {
-	len = strlen(str);
-	return len; 
+	return strlen(str);
 }
 
 bool xstring::empty() const
 {
 	return len == 0;
-}
-
-bool xstring::strempty(const char *s) const
-{
-	return strlen(s) == 0;
 }
 
 void xstring::clear()
@@ -301,35 +289,6 @@ void xstring::clear()
 	str = new char[1];
 	*this = "";
 	len = 0;
-}
-
-char *xstring::conv(const char *s)
-{
-	std::size_t l = strlen(s);
-	char *tmp = new char[l + 1];
-	std::copy(s, s + l+1, tmp);
-	return tmp;
-}
-
-char *xstring::conv(char c)
-{
-	char *tmp = new char[2];
-	tmp[0] = c;
-	tmp[1] = '\0';
-	return tmp;
-}
-
-void xstring::resize(const char *s)
-{
-	if (!this->empty())
-	{
-		std::size_t l = len + strlen(s);
-		char *tmp = new char[l + 1];
-		std::copy(str, str + len+1, tmp);
-		delete[] str;
-		str = tmp;
-		len = length();
-	}
 }
 
 void xstring::resize(std::size_t n)
@@ -345,6 +304,19 @@ void xstring::resize(std::size_t n)
 	}
 }
 
+char *xstring::conv(const char *s) const
+{
+	std::size_t l = strlen(s);
+	char *tmp = new char[l + 1];
+	std::copy(s, s + l+1, tmp);
+	return tmp;
+}
+
+bool xstring::strempty(const char *s) const
+{
+	return strlen(s) == 0;
+}
+
 std::istream& getline(std::istream& stream, xstring& s, char delim)
 {
 	char c;
@@ -352,7 +324,7 @@ std::istream& getline(std::istream& stream, xstring& s, char delim)
 	while (stream.get(c) && c != '\n')
 	{
 		if (c == delim) break;
-		else s.append(c);
+		else s.push_back(c);
 	}
 	return stream;
 }

@@ -15,7 +15,7 @@ class Student
 				const lab::xstring& lname,
 				const lab::xstring& fname);
 
-		const lab::xstring& get_AM() const;
+		const lab::xstring& get_AM()	const;
 		const lab::xstring& get_lname() const;
 		const lab::xstring& get_fname() const;
 };
