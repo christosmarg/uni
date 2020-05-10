@@ -29,7 +29,8 @@ xstring::~xstring()
 	delete[] str;
 }
 
-xstring xstring::operator= (const xstring& s)
+xstring
+xstring::operator= (const xstring& s)
 {
 	if (this == &s) return *this;
 	if (!s.empty())
@@ -46,7 +47,8 @@ xstring xstring::operator= (const xstring& s)
 	return *this;
 }
 
-xstring	xstring::operator= (const char *s)
+xstring
+xstring::operator= (const char *s)
 {
 	if (!empty()) delete[] str;
 	str = conv(s);
@@ -54,111 +56,132 @@ xstring	xstring::operator= (const char *s)
 	return *this;
 }
 
-xstring xstring::operator+ (const xstring& s)
+xstring
+xstring::operator+ (const xstring& s)
 {
 	return xstring(strcat(this->str, s.str));
 }
 
-xstring xstring::operator+ (const char *s)
+xstring
+xstring::operator+ (const char *s)
 {
 	return xstring(strcat(this->str, s));
 }
 
-xstring& xstring::operator+= (const xstring& s)
+xstring&
+xstring::operator+= (const xstring& s)
 {
 	append(s.str);
 	return *this;	
 }
 
-xstring& xstring::operator+= (const char *s)
+xstring&
+xstring::operator+= (const char *s)
 {
 	append(s);
 	return *this;
 }
 
-xstring& xstring::operator+= (char c)
+xstring&
+xstring::operator+= (char c)
 {
 	push_back(c);
 	return *this;
 }
 
-bool xstring::operator== (const xstring& s) const
+bool
+xstring::operator== (const xstring& s) const
 {
 	return strcmp(this->str, s.str) == 0;
 }
 
-bool xstring::operator== (const char *s) const
+bool
+xstring::operator== (const char *s) const
 {
 	return strcmp(this->str, s) == 0;
 }
 
-bool xstring::operator!= (const xstring& s) const
+bool
+xstring::operator!= (const xstring& s) const
 {
 	return strcmp(this->str, s.str) != 0;
 }
 
-bool xstring::operator!= (const char *s) const
+bool
+xstring::operator!= (const char *s) const
 {
 	return strcmp(this->str, s) != 0;
 }
 
-bool xstring::operator< (const xstring& s) const
+bool
+xstring::operator< (const xstring& s) const
 {
 	return strlen(this->str) < strlen(s.str);
 }
 
-bool xstring::operator< (const char *s) const
+bool
+xstring::operator< (const char *s) const
 {
 	return strlen(this->str) < strlen(s);
 }
 
-bool xstring::operator<= (const xstring& s) const
+bool
+xstring::operator<= (const xstring& s) const
 {
 	return strlen(this->str) <= strlen(s.str);
 }
 
-bool xstring::operator<= (const char *s) const
+bool
+xstring::operator<= (const char *s) const
 {
 	return strlen(this->str) <= strlen(s);
 }
 
-bool xstring::operator> (const xstring& s) const
+bool
+xstring::operator> (const xstring& s) const
 {
 	return strlen(this->str) > strlen(s.str);
 }
 
-bool xstring::operator> (const char *s) const
+bool
+xstring::operator> (const char *s) const
 {
 	return strlen(this->str) > strlen(s);
 }
 
-bool xstring::operator>= (const xstring& s) const
+bool
+xstring::operator>= (const xstring& s) const
 {
 	return strlen(this->str) >= strlen(s.str);
 }
 
-bool xstring::operator>= (const char *s) const
+bool
+xstring::operator>= (const char *s) const
 {
 	return strlen(this->str) >= strlen(s);
 }
 
-char& xstring::operator[] (std::size_t i) const
+char&
+xstring::operator[] (std::size_t i) const
 {
 	if (i >= len) throw std::runtime_error("Out of bounds.");
 	return str[i];	
 }
 
-std::ostream& operator<< (std::ostream& stream, const xstring& s)
+std::ostream&
+operator<< (std::ostream& stream, const xstring& s)
 {
 	return stream << s.str;
 }
 
-std::istream& operator>> (std::istream& stream, const xstring& s)
+std::istream&
+operator>> (std::istream& stream, const xstring& s)
 {
 	return stream >> s.str;
 }
 
-xstring& xstring::append(const xstring& s)
+xstring&
+xstring::append(const xstring& s)
 {
 	if (!s.empty())
 	{
@@ -169,7 +192,8 @@ xstring& xstring::append(const xstring& s)
 	return *this;
 }
 
-xstring& xstring::append(const xstring& s, std::size_t i)
+xstring&
+xstring::append(const xstring& s, std::size_t i)
 {
 	if (!s.empty() && i < len)
 	{
@@ -189,7 +213,8 @@ xstring& xstring::append(const xstring& s, std::size_t i)
 	return *this;
 }
 
-xstring& xstring::append(const char *s)
+xstring&
+xstring::append(const char *s)
 {
 	if (!strempty(s))
 	{
@@ -200,7 +225,8 @@ xstring& xstring::append(const char *s)
 	return *this;
 }
 
-xstring& xstring::append(const char *s, std::size_t i)
+xstring&
+xstring::append(const char *s, std::size_t i)
 {
 	if (!strempty(s) && i < len)
 	{
@@ -220,13 +246,15 @@ xstring& xstring::append(const char *s, std::size_t i)
 	return *this;
 }
 
-xstring& xstring::append(char c)
+xstring&
+xstring::append(char c)
 {
 	push_back(c);
 	return *this;
 }
 
-void xstring::push_back(char c)
+void
+xstring::push_back(char c)
 {
 	resize(1);
 	str[len] = c;
@@ -234,7 +262,8 @@ void xstring::push_back(char c)
 	len = length();
 }
 
-void xstring::pop_back()
+void
+xstring::pop_back()
 {
 	if (len - 1 > 0)
 	{
@@ -254,48 +283,57 @@ void xstring::pop_back()
 	else return;
 }
 
-void xstring::replace(std::size_t i, char c)
+void
+xstring::replace(std::size_t i, char c)
 {
 	if (i < len) str[i] = c;	
 }
 
-bool xstring::find(const xstring& s) const
+bool
+xstring::find(const xstring& s) const
 {
 	return (strstr(this->cstr(), s.cstr()) != nullptr);
 }
 
-bool xstring::find(const char *s) const
+bool
+xstring::find(const char *s) const
 {
 	return (strstr(this->cstr(), s) != nullptr);
 }
 
-char *xstring::cstr() const
+char *
+xstring::cstr() const
 {
 	return str;
 }
 
-char& xstring::front() const
+char&
+xstring::front() const
 {
 	return str[0];
 }
 
-char& xstring::back() const
+char&
+xstring::back() const
 {
 	if (!this->empty()) return str[len-1];
 	else return str[0];
 }
 
-std::size_t xstring::length() const
+std::size_t
+xstring::length() const
 {
 	return strlen(str);
 }
 
-bool xstring::empty() const
+bool
+xstring::empty() const
 {
 	return len == 0;
 }
 
-void xstring::clear()
+void
+xstring::clear()
 {
 	if (!this->empty()) delete[] str;
 	str = new char[1];
@@ -304,7 +342,8 @@ void xstring::clear()
 	len = 0;
 }
 
-void xstring::resize(std::size_t n)
+void
+xstring::resize(std::size_t n)
 {
 	if (!this->empty())
 	{
@@ -317,7 +356,8 @@ void xstring::resize(std::size_t n)
 	}
 }
 
-char *xstring::conv(const char *s) const
+char *
+xstring::conv(const char *s) const
 {
 	std::size_t l = strlen(s);
 	char *tmp = new char[l + 1];
@@ -325,12 +365,14 @@ char *xstring::conv(const char *s) const
 	return tmp;
 }
 
-bool xstring::strempty(const char *s) const
+bool
+xstring::strempty(const char *s) const
 {
 	return strlen(s) == 0;
 }
 
-std::istream& getline(std::istream& stream, xstring& s, char delim)
+std::istream&
+getline(std::istream& stream, xstring& s, char delim)
 {
 	char c;
 	s.clear();

@@ -9,32 +9,38 @@ Course::Course(const std::string& code, const std::string& cname, unsigned int c
 Course::Course(const Course& c)
 	:code(c.code), cname(c.cname), csemester(c.csemester) {}
 
-const std::string& Course::get_code() const
+const std::string&
+Course::get_code() const
 {
 	return this->code;
 }
 
-const std::string& Course::get_cname() const
+const std::string&
+Course::get_cname() const
 {
 	return this->cname;
 }
 
-unsigned int Course::get_csemester() const
+unsigned int
+Course::get_csemester() const
 {
 	return this->csemester;
 }
 
-void Course::set_code(const std::string& code)
+void
+Course::set_code(const std::string& code)
 {
 	this->code = code;
 }
 
-void Course::set_cname(const std::string& cname)
+void
+Course::set_cname(const std::string& cname)
 {
 	this->cname = cname;
 }
 
-void Course::set_csemester(unsigned int csemester)
+void
+Course::set_csemester(unsigned int csemester)
 {
 	this->csemester = csemester;
 }

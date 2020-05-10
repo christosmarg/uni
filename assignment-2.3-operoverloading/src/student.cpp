@@ -50,7 +50,8 @@ Student::~Student()
 	if (this->sc != nullptr) delete[] this->sc;
 }
 
-void Student::operator+= (Course *c)
+void
+Student::operator+= (Course *c)
 {
 	Course **tmp = new Course *[nsc+1];
 	if (sc != nullptr)
@@ -63,7 +64,8 @@ void Student::operator+= (Course *c)
 	nsc++;
 }
 
-Student Student::operator= (const Student& s)
+Student
+Student::operator= (const Student& s)
 {
 	if (this == &s) return *this;
 	this->AM = convert_AM(s.AM);
@@ -79,103 +81,123 @@ Student Student::operator= (const Student& s)
 	return *this;
 }
 
-bool Student::operator== (const Student& s) const
+bool
+Student::operator== (const Student& s) const
 {
 	return this->semester == s.semester;
 }
 
-bool Student::operator!= (const Student& s) const
+bool
+Student::operator!= (const Student& s) const
 {
 	return this->semester != s.semester;
 }
 
-bool Student::operator<	(const Student& s) const
+bool
+Student::operator< (const Student& s) const
 {
 	return this->semester < s.semester;
 }
 
-bool Student::operator<= (const Student& s) const
+bool
+Student::operator<= (const Student& s) const
 {
 	return this->semester <= s.semester;
 }
 
-bool Student::operator> (const Student& s) const
+bool
+Student::operator> (const Student& s) const
 {
 	return this->semester > s.semester;
 }
 
-bool Student::operator>= (const Student& s) const
+bool
+Student::operator>= (const Student& s) const
 {
 	return this->semester >= s.semester;
 }
 
-const char *Student::get_AM() const
+const char *
+Student::get_AM() const
 {
 	return this->AM;
 }
 
-const std::string& Student::get_name() const
+const std::string&
+Student::get_name() const
 {
 	return this->name;
 }
 
-unsigned int Student::get_semester() const
+unsigned int
+Student::get_semester() const
 {
 	return this->semester;
 }
 
-unsigned int Student::get_pcourses() const
+unsigned int
+Student::get_pcourses() const
 {
 	return this->pcourses;
 }
 
-float *Student::get_grades() const
+float *
+Student::get_grades() const
 {
 	return (this->pcourses > 0) ? this->grades : nullptr;
 }
 
-Course **Student::get_submitted_courses() const
+Course **
+Student::get_submitted_courses() const
 {
 	return this->sc;
 }
 
-unsigned int Student::get_num_submitted_courses() const
+unsigned int
+Student::get_num_submitted_courses() const
 {
 	return this->nsc;
 }
 
-void Student::set_AM(const char *AM)
+void
+Student::set_AM(const char *AM)
 {
 	if (this->AM != nullptr) delete[] this->AM;
 	this->AM = convert_AM(AM);
 }
 
-void Student::set_name(const std::string& name)
+void
+Student::set_name(const std::string& name)
 {
 	this->name = name;
 }
 
-void Student::set_semester(unsigned int semester)
+void
+Student::set_semester(unsigned int semester)
 {
 	this->semester = semester;
 }
 
-void Student::set_pcourses(unsigned int pcourses)
+void
+Student::set_pcourses(unsigned int pcourses)
 {
 	this->pcourses = pcourses;
 }
 
-void Student::set_grades(float *grades)
+void
+Student::set_grades(float *grades)
 {
 	this->grades = convert_PSG(grades);
 }
 
-void Student::set_num_submitted_courses(unsigned nsc)
+void
+Student::set_num_submitted_courses(unsigned nsc)
 {
 	this->nsc = nsc;
 }
 
-void Student::set_submitted_courses(Course **sc)
+void
+Student::set_submitted_courses(Course **sc)
 {
 	if (sc != nullptr)
 	{
@@ -184,7 +206,8 @@ void Student::set_submitted_courses(Course **sc)
 	}
 }
 
-char *Student::convert_AM(const char *AM)
+char *
+Student::convert_AM(const char *AM)
 {
 	int len = strlen(AM);
 	char *tmp = new char[len+1];
@@ -192,7 +215,8 @@ char *Student::convert_AM(const char *AM)
 	return tmp;
 }
 
-float *Student::convert_PSG(const float *grades)
+float *
+Student::convert_PSG(const float *grades)
 {
 	if (pcourses > 0 && grades != nullptr)
 	{
@@ -204,7 +228,8 @@ float *Student::convert_PSG(const float *grades)
 	else return nullptr;
 }
 
-void Student::add_grade(float grade)
+void
+Student::add_grade(float grade)
 {
 	float *tmp = new float[pcourses+1];
 	if (grades != nullptr)
@@ -217,7 +242,8 @@ void Student::add_grade(float grade)
 	pcourses++;
 }
 
-void Student::detailed_print() const
+void
+Student::detailed_print() const
 {
 	if (grades != nullptr)
 	{
@@ -230,7 +256,8 @@ void Student::detailed_print() const
 	}
 }
 
-float Student::calc_average() const
+float
+Student::calc_average() const
 {
 	if (grades != nullptr)
 	{

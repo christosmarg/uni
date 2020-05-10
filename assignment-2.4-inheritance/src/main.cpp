@@ -7,7 +7,8 @@ static void edit(AppSystem& sys);
 static void remove(AppSystem& sys);
 static void getapps(const AppSystem& sys);
 
-int main(int argc, char **argv)
+int
+main(int argc, char **argv)
 {
 	AppSystem sys;
 	if (!sys.import_data<Manufacturer>("res/manfdata.csv")) return -1;
@@ -27,7 +28,8 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-std::ostream& operator<< (std::ostream& stream, const AppSystem& sys)
+std::ostream&
+operator<< (std::ostream& stream, const AppSystem& sys)
 {
 	stream <<
 		std::left << std::setw(7) << "SN" <<
@@ -46,14 +48,16 @@ std::ostream& operator<< (std::ostream& stream, const AppSystem& sys)
 	return stream;	
 }
 
-static void cont()
+static void
+cont()
 {
 	std::cout << std::endl;
 	std::cout << "Press <ENTER> to continue. . .";
 	if (std::cin.get()) system("clear || cls");
 }
 
-static void pluseqs(AppSystem& sys)
+static void
+pluseqs(AppSystem& sys)
 {
 	Manufacturer *comp = new Manufacturer("0004", "Company", "comp@comp.com");
 	Manufacturer *chris = new Manufacturer("0005", "Chris", "chris@chris.com");
@@ -64,7 +68,8 @@ static void pluseqs(AppSystem& sys)
 	sys += new Game("0005", "minecurses", "MAD Robot 1.0", chris, 0, "Puzzle", false);
 }
 
-static void edit(AppSystem& sys)
+static void
+edit(AppSystem& sys)
 {
 	sys.newrev("minecurses", new Review(5, "gamer", "Good game"));
 	sys.newrevs("LibreOffice", {new Review(2, "user1", "Not so good"), new Review(4, "user2", "Good app")});
@@ -78,12 +83,14 @@ static void edit(AppSystem& sys)
 	sys.chexts("zathura", {".exe", ".bin", ".dat"});
 }
 
-static void remove(AppSystem& sys)
+static void
+remove(AppSystem& sys)
 {
 	sys.removebad("GNU");
 }
 
-static void getapps(const AppSystem& sys)
+static void
+getapps(const AppSystem& sys)
 {
 	const std::vector<Office *>& fapps = sys.get_freeapps();
 	const std::vector<Game *>& ggames = sys.get_goodgames();

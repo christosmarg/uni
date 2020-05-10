@@ -32,7 +32,8 @@ App::~App()
 	}
 }
 
-char *App::convsn(const char *serialnum)
+char *
+App::convsn(const char *serialnum)
 {
 	int len = strlen(serialnum);
 	char *tmp = new char[len + 1];
@@ -40,68 +41,81 @@ char *App::convsn(const char *serialnum)
 	return tmp;	
 }
 
-void App::addrev(Review *rev)
+void
+App::addrev(Review *rev)
 {
 	reviews.push_back(rev);
 }
 
-void App::addrevs(const std::vector<Review *> revs)
+void
+App::addrevs(const std::vector<Review *> revs)
 {
 	reviews.insert(reviews.end(), revs.begin(), revs.end());
 }
 
-const char *App::get_serialnum() const
+const char *
+App::get_serialnum() const
 {
 	return serialnum;
 }
 
-const std::string& App::get_name() const
+const std::string&
+App::get_name() const
 {
 	return name;
 }
 
-const std::string& App::get_os() const
+const std::string&
+App::get_os() const
 {
 	return os;
 }
 
-const Manufacturer App::get_manf() const
+const Manufacturer
+App::get_manf() const
 {
 	return Manufacturer(*manf);
 }
 
-const std::vector<Review *>& App::get_revs() const
+const std::vector<Review *>&
+App::get_revs() const
 {
 	return reviews;
 }
 
-int App::get_price() const
+int
+App::get_price() const
 {
 	return price;
 }
 
-void App::set_serialnum(const char *serialnum)
+void
+App::set_serialnum(const char *serialnum)
 {
 	if (this->serialnum != nullptr) delete[] this->serialnum;
 	this->serialnum = convsn(serialnum);
 }
 
-void App::set_name(const std::string& name)
+void
+App::set_name(const std::string& name)
 {
 	this->name = name;
 }
 
-void App::set_os(const std::string& os)
+void
+App::set_os(const std::string& os)
 {
 	this->os = os;
 }
 
-void App::set_manf(Manufacturer *manf)
+void
+App::set_manf(Manufacturer *manf)
 {
 	this->manf = manf;
 }
 
-void App::set_price(int price)
+void
+App::set_price(int price)
 {
 	this->price = price;
 }

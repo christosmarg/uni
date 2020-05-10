@@ -16,27 +16,32 @@ Game::Game(const Game& g)
 	:App(g.serialnum, g.name, g.os, g.manf, g.price), genre(g.genre),
 	online(g.online) {}
 
-const std::string Game::get_genre() const
+const std::string
+Game::get_genre() const
 {
 	return genre;
 }
 
-bool Game::get_online() const
+bool
+Game::get_online() const
 {
 	return online;
 }
 
-void Game::set_genre(const std::string& genre)
+void
+Game::set_genre(const std::string& genre)
 {
 	this->genre = genre;
 }
 
-void Game::set_online(bool online)
+void
+Game::set_online(bool online)
 {
 	this->online = online;
 }
 
-void Game::print(std::ostream& stream) const
+void
+Game::print(std::ostream& stream) const
 {
 	stream <<
 		std::left << std::setw(7) << serialnum <<

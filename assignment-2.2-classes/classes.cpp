@@ -69,58 +69,69 @@ Student::~Student()
 	if (this->AM != nullptr) delete[] this->grades;
 }
 
-const char *Student::get_AM() const
+const char *
+Student::get_AM() const
 {
 	return this->AM;
 }
 
-const std::string& Student::get_name() const
+const std::string&
+Student::get_name() const
 {
 	return this->name;
 }
 
-unsigned int Student::get_semester() const
+unsigned int
+Student::get_semester() const
 {
 	return this->semester;
 }
 
-unsigned int Student::get_pcourses() const
+unsigned int
+Student::get_pcourses() const
 {
 	return this->pcourses;
 }
 
-float *Student::get_grades() const
+float *
+Student::get_grades() const
 {
 	return this->grades;
 }
 
-void Student::set_AM(const char *AM)
+void
+Student::set_AM(const char *AM)
 {
 	if (this->AM != nullptr) delete[] this->AM;
 	this->AM = convert_AM(AM);
 }
 
-void Student::set_name(const std::string& name)
+void
+Student::set_name(const std::string& name)
 {
 	this->name = name;
 }
 
-void Student::set_semester(unsigned int semester)
+void
+Student::set_semester(unsigned int semester)
 {
 	this->semester = semester;
 }
 
-void Student::set_pcourses(unsigned int pcourses)
+void
+Student::set_pcourses(unsigned int pcourses)
 {
 	this->pcourses = pcourses;
 }
 
-void Student::set_grades(float *grades)
+void
+Student::set_grades(float *grades)
 {
 	this->grades = convert_PSG(grades);
 }
 
-char *Student::convert_AM(const char *AM)
+char *
+Student::convert_AM(const char *AM)
 {
 	int len = strlen(AM);
 	char *tmp = new char[len+1];
@@ -128,7 +139,8 @@ char *Student::convert_AM(const char *AM)
 	return tmp;
 }
 
-float *Student::convert_PSG(const float *grades)
+float *
+Student::convert_PSG(const float *grades)
 {
 	if (pcourses > 0 && grades != nullptr)
 	{
@@ -140,7 +152,8 @@ float *Student::convert_PSG(const float *grades)
 	else return nullptr;
 }
 
-void Student::add_grade(float grade)
+void
+Student::add_grade(float grade)
 {
 	float *tmp = new float[pcourses+1];
 	if (grades != nullptr)
@@ -153,7 +166,8 @@ void Student::add_grade(float grade)
 	pcourses++;
 }
 
-void Student::detailed_print() const
+void
+Student::detailed_print() const
 {
 	if (grades != nullptr)
 	{
@@ -166,7 +180,8 @@ void Student::detailed_print() const
 	}
 }
 
-float Student::calc_average() const
+float
+Student::calc_average() const
 {
 	if (grades != nullptr)
 	{
@@ -190,7 +205,8 @@ static void detprint (const Student& s3);
 static void setters(Student& s3);
 static void addgrd(Student& s3);
 
-int main(int argc, char **argv)
+int
+main(int argc, char **argv)
 {
 	std::string n1 = "Name Surname";
 	std::string n2 = "Name Surnamington";
@@ -222,7 +238,8 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-std::ostream& operator<< (std::ostream& stream, const Student& s)
+std::ostream&
+operator<< (std::ostream& stream, const Student& s)
 {
 	return stream <<
 		"AM: " << s.get_AM() << std::endl <<
@@ -230,14 +247,16 @@ std::ostream& operator<< (std::ostream& stream, const Student& s)
 		"Semester: " << s.get_semester() << std::endl;
 }
 
-static void cont(void)
+static void
+cont(void)
 {
 	std::cout << std::endl;
 	std::cout << "Press <ENTER> to continue. . .";
 	if (std::cin.get()) system("clear || cls");
 }
 
-static void constructor1(const Student& s1)
+static void
+constructor1(const Student& s1)
 {
 	std::cout << "Constructor for s1 (AM, Name)" << std::endl;
 	std::cout << "----------------------------" << std::endl;
@@ -247,14 +266,16 @@ static void constructor1(const Student& s1)
 	std::cout << "Courses passed (default value): " << s1.get_pcourses() << std::endl;
 }
 
-static void ostream_overload(const Student& s1)
+static void
+ostream_overload(const Student& s1)
 {
 	std::cout << "std::ostream overload" << std::endl;
 	std::cout << "----------------------------" << std::endl;
 	std::cout << s1 << std::endl;
 }
 
-static void constructor2(const Student& s2)
+static void
+constructor2(const Student& s2)
 {
 	std::cout << "Constructor for s2 (AM, Name, Semester)" << std::endl;
 	std::cout << "----------------------------" << std::endl;
@@ -264,7 +285,8 @@ static void constructor2(const Student& s2)
 	std::cout << "Courses passed (default value): " << s2.get_pcourses() << std::endl;
 }
 
-static void copy_constructor(const Student& copystud)
+static void
+copy_constructor(const Student& copystud)
 {
 	std::cout << "Copy Constructor using copystud object as a copy of s2" << std::endl;
 	std::cout << "----------------------------" << std::endl;
@@ -274,7 +296,8 @@ static void copy_constructor(const Student& copystud)
 	std::cout << "Courses passed (default value): " << copystud.get_pcourses() << std::endl;
 }
 
-static void constructor3(const Student& s3)
+static void
+constructor3(const Student& s3)
 {
 	std::cout << "Constructor for s3 (AM, Name, Semester, Courses passed, Grades)" << std::endl;
 	std::cout << "----------------------------" << std::endl;
@@ -295,14 +318,16 @@ static void constructor3(const Student& s3)
 	}
 }
 
-static void detprint (const Student& s3)
+static void
+detprint (const Student& s3)
 {
 	std::cout << "Detailed print of s3's grades" << std::endl;
 	std::cout << "----------------------------" << std::endl;
 	s3.detailed_print();
 }
 
-static void setters(Student& s3)
+static void
+setters(Student& s3)
 {
 	s3.set_AM("010101");
 	s3.set_name("AAAA");
@@ -340,7 +365,8 @@ static void setters(Student& s3)
 	}
 }
 
-static void addgrd(Student& s3)
+static void
+addgrd(Student& s3)
 {
 	s3.add_grade(7.5f);
 	float *gr = s3.get_grades();
