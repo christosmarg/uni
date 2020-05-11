@@ -2,9 +2,10 @@
 
 namespace lab {
 xstring::xstring()
-	:str(new char[1]), len(0)
 {
+	str = new char[0];
 	str[0] = '\0';
+	len = 0;
 }
 
 xstring::xstring(const char *s)
@@ -17,11 +18,7 @@ xstring::xstring(const xstring& s)
 		str = conv(s.str);
 		len = s.len;
 	}
-	else
-	{
-		len = 0;
-		str = new char[1];
-	}
+	else clear();
 }
 
 xstring::~xstring()
@@ -39,11 +36,7 @@ xstring::operator= (const xstring& s)
 		str = conv(s.str);
 		len = s.len;
 	}
-	else
-	{
-		str = new char[1];
-		len = 0;
-	}
+	else clear();
 	return *this;
 }
 
@@ -193,7 +186,26 @@ xstring::append(const xstring& s)
 }
 
 xstring&
-xstring::append(const xstring& s, std::size_t i)
+xstring::append(const char *s)
+{
+	if (!strempty(s))
+	{
+		resize(strlen(s));
+		strcat(str, s);
+	}
+	len = length();
+	return *this;
+}
+
+xstring&
+xstring::append(char c)
+{
+	push_back(c);
+	return *this;
+}
+
+xstring&
+xstring::insert(const xstring& s, std::size_t i)
 {
 	if (!s.empty() && i < len)
 	{
@@ -214,19 +226,7 @@ xstring::append(const xstring& s, std::size_t i)
 }
 
 xstring&
-xstring::append(const char *s)
-{
-	if (!strempty(s))
-	{
-		resize(strlen(s));
-		strcat(str, s);
-	}
-	len = length();
-	return *this;
-}
-
-xstring&
-xstring::append(const char *s, std::size_t i)
+xstring::insert(const char *s, std::size_t i)
 {
 	if (!strempty(s) && i < len)
 	{
@@ -243,13 +243,6 @@ xstring::append(const char *s, std::size_t i)
 		delete[] tmp1;
 		delete[] tmp2;
 	}
-	return *this;
-}
-
-xstring&
-xstring::append(char c)
-{
-	push_back(c);
 	return *this;
 }
 
@@ -277,8 +270,7 @@ xstring::pop_back()
 	else if (len - 1 == 0)
 	{
 		delete[] str;
-		str = new char[1];
-		str[0] = '\0';
+		clear();
 	}
 	else return;
 }
@@ -338,7 +330,6 @@ xstring::clear()
 	if (!this->empty()) delete[] str;
 	str = new char[1];
 	str[0] = '\0';
-	//*this = "";
 	len = 0;
 }
 

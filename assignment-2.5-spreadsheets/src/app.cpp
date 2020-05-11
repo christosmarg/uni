@@ -5,28 +5,8 @@ App::App() {}
 App::~App()
 {
 	dealloc<Course>(courses);
-	dealloc<Grades>(grades);
+	dealloc<Grade>(grades);
 	dealloc<Student>(studs);	
-}
-
-bool
-App::import_matchings(const char *fpath)
-{
-	std::ifstream f;
-	f.open(fpath);
-	// exceptions
-	lab::xstring skip;
-	lab::getline(f, skip);
-	while (f.good())
-	{
-		lab::xstring newcurr, oldcurr;
-		lab::getline(f, newcurr, ';');
-		lab::getline(f, oldcurr);
-		if (f.eof()) break;
-		matchings.emplace(newcurr, oldcurr);
-	}
-	f.close();
-	return true;
 }
 
 const std::vector<Course *>&
@@ -35,7 +15,7 @@ App::get_courses() const
 	return courses;
 }
 
-const std::vector<Grades *>&
+const std::vector<Grade *>&
 App::get_grades() const
 {
 	return grades;
@@ -47,8 +27,38 @@ App::get_studs() const
 	return studs;
 }
 
-const std::map<lab::xstring, lab::xstring>&
-App::get_matchings() const
+const equivalencies&
+App::get_eqvs() const
 {
-	return matchings;
+	return eqvs;
+}
+
+bool
+App::valid_path(const char *fpath)
+{
+	return (strstr(fpath, ".csv") != nullptr);
+}
+
+const lab::xstring 
+App::err_csv(const char *fpath)
+{
+	lab::xstring err = "Error. File must be of format \'.csv\'. ().";
+	err.insert(fpath, 39);
+	return err;
+}
+
+const lab::xstring
+App::err_read(const char *fpath)
+{
+	lab::xstring err = "Error reading file \'\'.";
+	err.insert(fpath, 20);
+	return err;
+}
+
+const lab::xstring
+App::err_write(const char *fpath)
+{
+	lab::xstring err = "Error writing to file \'\'.";
+	err.insert(fpath, 23);
+	return err;
 }
