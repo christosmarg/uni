@@ -7,7 +7,6 @@
 #include <vector>
 
 #include "course.h"
-#include "grade.h"
 #include "student.h"
 #include "xstring.h"
 
@@ -16,9 +15,9 @@ typedef std::map<lab::xstring, lab::xstring> equivalencies;
 class App
 {
 	private:
-		std::vector<Course *> courses;
-		std::vector<Grade *> grades;
-		std::vector<Student *> studs;
+		std::map<lab::xstring, Course *> courses;
+		std::map<lab::xstring, Student *> studs;
+		std::map<Student *, std::map<Course *, float>> data;
 		equivalencies eqvs;
 
 	public:
@@ -26,18 +25,15 @@ class App
 		~App();
 
 		template<typename T> bool import_data(const char *fpath);
+		void store_data();
+		void analyze();
 		
-		const std::vector<Course *>& get_courses()	const;
-		const std::vector<Grade *>& get_grades()	const;
-		const std::vector<Student *>& get_studs()	const;
-		const equivalencies& get_eqvs()				const;
-
 	private:
 		bool valid_path(const char *fpath);
 		const lab::xstring err_csv(const char *fpath);
 		const lab::xstring err_read(const char *fpath);
 		const lab::xstring err_write(const char *fpath);
-		template<typename T> void dealloc(std::vector<T *>& vec);
+		template<typename T> void dealloc(std::map<lab::xstring, T *>& vec);
 };
 
 template<typename T> bool
@@ -62,17 +58,7 @@ App::import_data(const char *fpath)
 					lab::getline(f, code, ';');
 					lab::getline(f, name);
 					if (f.eof()) break;
-					courses.push_back(new Course(code, name));
-				}
-				else if (std::is_same<T, Grade>::value)
-				{
-					lab::xstring AM, code, grade;
-					lab::getline(f, AM, ';');
-					lab::getline(f, code, ';');
-					lab::getline(f, grade);
-					if (f.eof()) break;
-					grades.push_back(new Grade(AM, code,
-								std::atof(grade.cstr())));
+					courses.insert(std::make_pair(code, new Course(code, name)));
 				}
 				else if (std::is_same<T, Student>::value)
 				{
@@ -81,7 +67,7 @@ App::import_data(const char *fpath)
 					lab::getline(f, lname, ';');
 					lab::getline(f, fname);
 					if (f.eof()) break;
-					studs.push_back(new Student(AM, lname, fname));
+					studs.insert(std::make_pair(AM, new Student(AM, lname, fname)));
 				}
 				else if (std::is_same<T, equivalencies>::value)
 				{
@@ -89,9 +75,9 @@ App::import_data(const char *fpath)
 					lab::getline(f, newcurr, ';');
 					lab::getline(f, oldcurr);
 					if (f.eof()) break;
-					eqvs.emplace(newcurr, oldcurr);
+					eqvs.insert(std::make_pair(newcurr, oldcurr));
 				}
-			}	
+			}
 		}
 		f.close();
 	}
@@ -104,11 +90,11 @@ App::import_data(const char *fpath)
 }
 
 template<typename T> void
-App::dealloc(std::vector<T *>& vec)
+App::dealloc(std::map<lab::xstring, T *>& vec)
 {
 	for (auto& v : vec)
-		if (v != nullptr)
-			delete v;
+		if (v.second != nullptr)
+			delete v.second;
 	if (!vec.empty())
 		vec.clear();
 }

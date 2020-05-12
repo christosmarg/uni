@@ -5,32 +5,46 @@ App::App() {}
 App::~App()
 {
 	dealloc<Course>(courses);
-	dealloc<Grade>(grades);
-	dealloc<Student>(studs);	
+	dealloc<Student>(studs);
+	eqvs.clear();
 }
 
-const std::vector<Course *>&
-App::get_courses() const
+void
+App::store_data()
 {
-	return courses;
+	for (auto& stud : studs)
+		std::cout << stud.first << std::endl;
 }
 
-const std::vector<Grade *>&
-App::get_grades() const
+void
+App::analyze()
 {
-	return grades;
-}
-
-const std::vector<Student *>&
-App::get_studs() const
-{
-	return studs;
-}
-
-const equivalencies&
-App::get_eqvs() const
-{
-	return eqvs;
+	std::ifstream f;
+	const char *fpath = "res/grades.csv";
+	f.exceptions(std::ifstream::badbit);
+	try
+	{
+		if (!valid_path(fpath))
+			throw std::runtime_error(err_csv(fpath).cstr());
+		f.open(fpath);
+		if (f.is_open())
+		{
+			lab::xstring skip;
+			lab::getline(f, skip);
+			while (f.good())
+			{
+				lab::xstring AM, code, grade;
+				lab::getline(f, AM, ';');
+				lab::getline(f, code, ';');
+				lab::getline(f, grade);
+			}
+		}
+		f.close();	
+	}
+	catch (const std::ifstream::failure& e)
+	{
+		std::cerr << err_read(fpath) << std::endl << e.what() << std::endl;
+	}
 }
 
 bool
