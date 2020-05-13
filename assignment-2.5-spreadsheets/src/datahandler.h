@@ -1,5 +1,5 @@
-#ifndef APP_H
-#define APP_H
+#ifndef DATA_HANDLER_H
+#define DATA_HANDLER_H
 
 #include <iostream>
 #include <fstream>
@@ -7,37 +7,47 @@
 #include <vector>
 
 #include "course.h"
+#include "errlog.h"
 #include "student.h"
 #include "xstring.h"
 
 typedef std::map<lab::xstring, lab::xstring> equivalencies;
 
-class App
+class DataHandler 
 {
 	private:
+		const char *datapath = "res/grades.csv";
+		const char *reppath = "res/report.csv";
 		std::map<lab::xstring, Course *> courses;
 		std::map<lab::xstring, Student *> studs;
+		std::map<Course *, float> grd;
 		std::map<Student *, std::map<Course *, float>> data;
 		equivalencies eqvs;
+		ErrLog errlog;
 
 	public:
-		App();
-		~App();
+		DataHandler();
+		~DataHandler();
 
 		template<typename T> bool import_data(const char *fpath);
-		void store_data();
-		void analyze();
+		bool store_data();
+		bool make_report() const;
 		
 	private:
-		bool valid_path(const char *fpath);
-		const lab::xstring err_csv(const char *fpath);
-		const lab::xstring err_read(const char *fpath);
-		const lab::xstring err_write(const char *fpath);
+		bool analyze(
+				const lab::xstring& currAM,
+				const lab::xstring& AM,
+				const lab::xstring& code,
+				const lab::xstring& grade);
+		bool valid_path(const char *fpath) const;
+		const lab::xstring err_csv	(const char *fpath)	const;
+		const lab::xstring err_read	(const char *fpath)	const;
+		const lab::xstring err_write(const char *fpath) const;
 		template<typename T> void dealloc(std::map<lab::xstring, T *>& vec);
 };
 
 template<typename T> bool
-App::import_data(const char *fpath)
+DataHandler::import_data(const char *fpath)
 {
 	std::ifstream f;
 	f.exceptions(std::ifstream::badbit);
@@ -90,13 +100,13 @@ App::import_data(const char *fpath)
 }
 
 template<typename T> void
-App::dealloc(std::map<lab::xstring, T *>& vec)
+DataHandler::dealloc(std::map<lab::xstring, T *>& vec)
 {
-	for (auto& v : vec)
+	for (auto&& v : vec)
 		if (v.second != nullptr)
 			delete v.second;
 	if (!vec.empty())
 		vec.clear();
 }
 
-#endif /* APP_H */
+#endif /* DATA_HANDLER_H */

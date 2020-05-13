@@ -26,7 +26,7 @@ App::~App()
 	if (serialnum != nullptr) delete[] serialnum;
 	if (!reviews.empty())
 	{
-		for (auto& rev :reviews)
+		for (auto&& rev :reviews)
 			delete rev;
 		reviews.clear();
 	}
