@@ -84,7 +84,7 @@ AppSystem::parse(std::ifstream& f)
 			
 			if (!manfs.empty())
 			{
-				for (auto& man : manfs)
+				for (const auto& man : manfs)
 				{
 					if (man->get_name() == manf)
 					{
@@ -112,7 +112,7 @@ AppSystem::parse(std::ifstream& f)
 			
 			if (!manfs.empty())
 			{
-				for (auto& man : manfs)
+				for (const auto& man : manfs)
 				{
 					if (man->get_name() == manf)
 					{
@@ -171,7 +171,7 @@ AppSystem::import_data(const char *fpath)
 					std::getline(f, username, ',');
 					std::getline(f, comment);
 					if (f.eof()) return true;
-					for (auto& app : apps)
+					for (auto&& app : apps)
 						if (appname == app->get_name())
 							app->addrev(new Review(std::stoi(stars), username, comment)); 
 				}
@@ -202,7 +202,7 @@ AppSystem::export_data(const char *fpath)
 		if (std::is_same<T, Manufacturer>::value)
 		{
 			f << "SN,Name,Email\n";
-			for (auto& manf : manfs)
+			for (const auto& manf : manfs)
 				f << manf->get_serialnum() << ',' <<
 					manf->get_name() << ',' <<
 					manf->get_email() << std::endl;
@@ -210,7 +210,7 @@ AppSystem::export_data(const char *fpath)
 		else if (std::is_same<T, App>::value)
 		{
 			f << "Type,SN,Name,OS,Manf,Price,Genre,Online,Extensions\n";
-			for (auto& app : apps)
+			for (const auto& app : apps)
 			{
 				Manufacturer manf = app->get_manf();
 				Game *o = dynamic_cast<Game *>(app);
@@ -234,11 +234,11 @@ AppSystem::export_data(const char *fpath)
 		else if (std::is_same<T, Review>::value)
 		{
 			f << "AppName,Stars,Username,Comment\n";
-			for (auto& app : apps)
+			for (const auto& app : apps)
 			{
 				const std::vector<Review *> revs = app->get_revs();
 				if (!revs.empty())
-					for (auto& rev : revs)
+					for (const auto& rev : revs)
 						f <<
 							app->get_name() << ',' <<
 							rev->get_stars() << ',' <<
@@ -259,11 +259,18 @@ AppSystem::export_data(const char *fpath)
 template<typename T> void
 AppSystem::dealloc(std::vector<T *>& vec)
 {
-	for (auto& v : vec)
-		if (v != nullptr)
-			delete v;
 	if (!vec.empty())
+	{
+		for (auto&& v : vec)
+		{
+			if (v != nullptr)
+			{
+				delete v;
+				v = nullptr;	
+			}
+		}
 		vec.clear();
+	}
 }
 
 #endif /* APPSYSTEM_H */
