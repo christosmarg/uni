@@ -46,7 +46,8 @@ DataHandler::store_data()
 					lab::getline(f, code, ';');
 					lab::getline(f, grade);
 					if (f.eof()) break;
-					if (!analyze(currAM, AM, code, grade)) break;
+					if (!analyze(currAM, AM, code,
+								std::atof(grade.cstr()))) break;
 				}
 			}
 		}
@@ -65,7 +66,7 @@ DataHandler::analyze(
 		const lab::xstring& currAM,
 		lab::xstring& AM,
 		lab::xstring& code,
-		lab::xstring& grade)
+		float grade)
 {
 	std::map<lab::xstring, Student *>::const_iterator its = studs.find(AM);
 	std::map<lab::xstring, Course *>::const_iterator itc = courses.find(code);
@@ -75,12 +76,10 @@ DataHandler::analyze(
 		{
 			data.insert(std::make_pair(studs[currAM], grds));
 			grds.clear();
-			grds.insert(std::make_pair(courses[code],
-						std::atof(grade.cstr())));
+			grds.insert(std::make_pair(courses[code], grade));
 			return false;
 		}
-		grds.insert(std::make_pair(courses[code],
-					std::atof(grade.cstr())));
+		grds.insert(std::make_pair(courses[code], grade));
 	}
 	else if (its == studs.end())
 	{
@@ -95,7 +94,7 @@ DataHandler::analyze(
 
 	if (its != studs.end() && itc != courses.end())
 	{
-		miss(AM, code, std::atof(grade.cstr()));	
+		miss(AM, code, grade);	
 		diffr(AM, code, grade);
 	}
 
@@ -131,29 +130,18 @@ DataHandler::miss(lab::xstring AM, lab::xstring code, float grade)
 }
 
 void
-DataHandler::diffr(lab::xstring AM, lab::xstring code, const lab::xstring& grade)
+DataHandler::diffr(lab::xstring AM, lab::xstring code, float grade)
 {
-	float g = std::atof(grade.cstr());
-	for (const auto& grd : grds)
-		if (code == grd.first->get_code() && grd.second != g)
-		{
-			errlog.write(ErrLog::ErrType::DIFFERENT_GRADES,
-					lab::xstring(AM + " in " + code + ": " +
-						lab::to_xstr<float>("%.1f", grd.second) + " | " +
-						lab::to_xstr<float>("%.1f", g)));
-			errcount++;
-		}
+	std::map<Course *, float>::const_iterator it = grds.find(courses[code]);
+	if (it != grds.end() && it->second != grade)
+	{
+		errlog.write(ErrLog::ErrType::DIFFERENT_GRADES,
+				lab::xstring(AM + " in " + code + ": " +
+					lab::to_xstr<float>("%.1f", it->second) + " | " +
+					lab::to_xstr<float>("%.1f", grade)));
+		errcount++;
+	}
 }
-
-void
-DataHandler::dupl(
-		const lab::xstring& AM,
-		const lab::xstring& code,
-		const lab::xstring& grade)
-{
-
-}
-
 
 bool
 DataHandler::make_report() const
