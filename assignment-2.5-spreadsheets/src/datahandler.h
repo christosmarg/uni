@@ -18,9 +18,10 @@ class DataHandler
 	private:
 		const char *datapath = "res/grades.csv";
 		const char *reppath = "res/report.csv";
+		std::vector<lab::xstring> missgrds;
 		std::map<lab::xstring, Course *> courses;
 		std::map<lab::xstring, Student *> studs;
-		std::map<Course *, float> grd;
+		std::map<Course *, float> grds;
 		std::map<Student *, std::map<Course *, float>> data;
 		equivalencies eqvs;
 		ErrLog errlog;
@@ -36,9 +37,11 @@ class DataHandler
 	private:
 		bool analyze(
 				const lab::xstring& currAM,
-				const lab::xstring& AM,
-				const lab::xstring& code,
-				const lab::xstring& grade);
+				lab::xstring& AM,
+				lab::xstring& code,
+				lab::xstring& grade);
+		void missing(lab::xstring& AM, lab::xstring& code);
+		void diffgrds(lab::xstring& AM, lab::xstring& code, lab::xstring& grade);
 		bool valid_path(const char *fpath) const;
 		const lab::xstring err_csv	(const char *fpath)	const;
 		const lab::xstring err_read	(const char *fpath)	const;
