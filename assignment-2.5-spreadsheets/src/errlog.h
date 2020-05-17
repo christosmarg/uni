@@ -13,7 +13,6 @@ class ErrLog
 		enum class ErrType {
 			STUDENT_MISSING,
 			COURSE_MISSING,
-			GRADE_DUPLICATE,
 			DIFFERENT_GRADES
 		};
 

@@ -22,6 +22,7 @@ class xstring
 		xstring	 operator=	(const xstring& s);
 		xstring	 operator=	(const char *s);
 		xstring  operator+	(const xstring& s);
+		xstring	 operator+	(char c);
 		xstring  operator+	(const char *s);
 		xstring& operator+=	(const xstring& s);
 		xstring& operator+=	(const char *s);

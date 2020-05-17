@@ -61,6 +61,12 @@ xstring::operator+ (const char *s)
 	return xstring(append(s));
 }
 
+xstring
+xstring::operator+ (char c)
+{
+	return xstring(append(c));
+}
+
 xstring&
 xstring::operator+= (const xstring& s)
 {

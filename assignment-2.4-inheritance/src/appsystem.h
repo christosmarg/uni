@@ -146,6 +146,7 @@ AppSystem::import_data(const char *fpath)
 		f.open(fpath);
 		if (f.is_open())
 		{
+			std::cout << "Importing data from \'" << fpath << "\'." << std::endl;
 			std::string skip;
 			std::getline(f, skip);
 			while (f.good())
@@ -198,7 +199,8 @@ AppSystem::export_data(const char *fpath)
 		if (!valid_path(strpath))
 			throw std::runtime_error(err_csv(strpath));
 		f.open(fpath);
-
+		std::cout << "Exporting data to \'" << fpath << "\'." << std::endl;
+		
 		if (std::is_same<T, Manufacturer>::value)
 		{
 			f << "SN,Name,Email\n";
