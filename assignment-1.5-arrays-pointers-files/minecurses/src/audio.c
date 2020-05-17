@@ -1,6 +1,7 @@
 #include "audio.h"
 
-void *play_audio(void *threadid)
+void *
+play_audio(void *threadid)
 {
 	/*int tid = (long)threadid;*/
 	Mix_Music *music = NULL;
@@ -14,7 +15,8 @@ void *play_audio(void *threadid)
 	Mix_CloseAudio();
 }
 
-void volume(char option)
+void
+volume(char option)
 {
 	static int volume = MIX_MAX_VOLUME;
 
@@ -31,7 +33,8 @@ void volume(char option)
 	}
 }
 
-void pause_audio(void)
+void
+pause_audio(void)
 {
 	(Mix_PausedMusic() == 1) ? Mix_ResumeMusic() : Mix_PauseMusic();
 }

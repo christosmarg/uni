@@ -1,31 +1,34 @@
 #include "wins.h"
 
-void init_curses(void)
+void
+init_curses(void)
 {
     initscr();
     noecho();
     cbreak();
 }
 
-WINDOW *game_win(int rows, int cols)
+WINDOW *
+game_win(int rows, int cols)
 {
 	int wrows = rows+2;
 	int wcols = cols*3+2;
-	int wy = YMAX/2 - wrows/2;
-	int wx = XMAX/2 - wcols/2;
-	WINDOW *gamew = newwin(wrows, wcols, wy, wx);
-	wattron(gamew, A_BOLD);
-	box(gamew, 0, 0);
-	wrefresh(gamew);
-	wattroff(gamew, A_BOLD);
-	return gamew;
+	int wy = YMAX(stdscr)/2 - wrows/2;
+	int wx = XMAX(stdscr)/2 - wcols/2;
+	WINDOW *gw = newwin(wrows, wcols, wy, wx);
+	wattron(gw, A_BOLD);
+	box(gw, 0, 0);
+	wrefresh(gw);
+	wattroff(gw, A_BOLD);
+	return gw;
 }
 
-void options_menu(void)
+void
+options_menu(void)
 {
 	int w = 33, h = 15;
-	int wy = YMAX/2 - h/2;
-	int wx = XMAX/2 - w/2;
+	int wy = YMAX(stdscr)/2 - h/2;
+	int wx = XMAX(stdscr)/2 - w/2;
 	WINDOW *opts = newwin(h, w, wy, wx);
 	werase(opts);
 	box(opts, 0, 0);
@@ -37,7 +40,8 @@ void options_menu(void)
 	delwin(opts);
 }
 
-void fill_menu(WINDOW *opts)
+void
+fill_menu(WINDOW *opts)
 {
 	mvwprintw(opts, 1, 1, "q	Quit");
 	mvwprintw(opts, 2, 1, "w/k	Move up");

@@ -6,52 +6,57 @@
 #include "wins.h"
 #include <pthread.h>
 
-int main(int argc, char **argv)
+int
+main(int argc, char **argv)
 {	
-	Board brd;
 	init_curses();
-	reset(&brd);
-	WINDOW *gamew = game_win(brd.rows, brd.cols);
-	init_game(gamew, &brd);
+	Board b;
+	reset(&b);
+	WINDOW *gw = game_win(b.rows, b.cols);
+	init_game(gw, &b);
+
 	pthread_t audiothread;
 	long threadid = 1;
 	pthread_create(&audiothread, NULL, play_audio, (void *)threadid);
-	play(gamew, &brd);
+	play(gw, &b);
 	
 	pthread_cancel(audiothread);
-	clear_board(&brd);
-	delwin(gamew);
+	clear_board(&b);
+	delwin(gw);
 	endwin();
 
 	return 0;
 }
 
-void reset(Board *brd)
+void
+reset(Board *b)
 {
 	echo();
-	brd->cols = set_cols();
-	brd->rows = set_rows();
-	brd->nmines = set_nmines(brd->rows * brd->cols);
+	b->cols = set_cols();
+	b->rows = set_rows();
+	b->nmines = set_nmines(b->rows * b->cols);
 	noecho();
 	options_menu();
 	erase();
 	refresh();
 }
 
-void init_game(WINDOW *gamew, Board *brd)
+void
+init_game(WINDOW *gw, Board *b)
 {
-	brd->db = init_db(gamew, brd->cols, brd->rows);
-	brd->mb = init_mb(gamew, brd->cols, brd->rows, brd->nmines);
+	init_db(gw, b);
+	init_mb(gw, b);
 }
 
-void clear_board(Board *brd)
+void
+clear_board(Board *b)
 {
 	int i;
-	for (i = 0; i < brd->rows; i++)
+	for (i = 0; i < b->rows; i++)
 	{
-		free(brd->db[i]);
-		free(brd->mb[i]);
+		free(b->db[i]);
+		free(b->mb[i]);
 	}
-	free(brd->db);
-	free(brd->mb);
+	free(b->db);
+	free(b->mb);
 }
