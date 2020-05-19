@@ -16,9 +16,9 @@ class Review
 		Review(int stars, const std::string& username, const std::string& comment);
 		Review(const Review& r);
 
+		int	get_stars() const;
 		const std::string& get_username() const;
 		const std::string& get_comment() const;
-		constexpr int get_stars() const {return stars;}
 
 		void set_stars(int stars);
 		void set_username(const std::string& username);

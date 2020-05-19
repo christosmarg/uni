@@ -1,7 +1,7 @@
 #include "audio.h"
 
 void *
-play_audio(void *tid)
+play_audio(void *threadid)
 {
 	/*int tid = (long)threadid;*/
 	Mix_Music *music = NULL;
@@ -13,7 +13,6 @@ play_audio(void *tid)
 	while (Mix_PlayingMusic()) ;
 	Mix_FreeMusic(music);
 	Mix_CloseAudio();
-	return NULL;
 }
 
 void

@@ -15,9 +15,9 @@ class Student
 				const lab::xstring& lname,
 				const lab::xstring& fname);
 
-		constexpr const lab::xstring& get_AM()    const {return AM;}
-		constexpr const lab::xstring& get_lname() const {return	lname;}
-		constexpr const lab::xstring& get_fname() const {return fname;}
+		const lab::xstring& get_AM()	const;
+		const lab::xstring& get_lname() const;
+		const lab::xstring& get_fname() const;
 };
 
 #endif /* STUDENT_H */

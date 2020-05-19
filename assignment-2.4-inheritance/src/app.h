@@ -31,12 +31,12 @@ class App
 		void addrev(Review *rev);
 		void addrevs(const std::vector<Review *> revs);
 
+		const char *get_serialnum() const;
 		const std::string& get_name() const;
 		const std::string& get_os() const;
 		const Manufacturer get_manf() const;
-		constexpr const char *get_serialnum() const {return serialnum;}
-		constexpr const std::vector<Review *>& get_revs() const {return reviews;}
-		constexpr int get_price() const {return price;}
+		const std::vector<Review *>& get_revs() const;
+		int get_price() const;
 
 		void set_serialnum(const char *serialnum);
 		void set_name(const std::string& name);

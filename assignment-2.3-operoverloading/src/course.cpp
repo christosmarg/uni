@@ -21,6 +21,12 @@ Course::get_cname() const
 	return this->cname;
 }
 
+unsigned int
+Course::get_csemester() const
+{
+	return this->csemester;
+}
+
 void
 Course::set_code(const std::string& code)
 {

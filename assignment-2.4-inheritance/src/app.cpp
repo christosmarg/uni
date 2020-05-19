@@ -64,6 +64,12 @@ App::addrevs(const std::vector<Review *> revs)
 	reviews.insert(reviews.end(), revs.begin(), revs.end());
 }
 
+const char *
+App::get_serialnum() const
+{
+	return serialnum;
+}
+
 const std::string&
 App::get_name() const
 {
@@ -80,6 +86,18 @@ const Manufacturer
 App::get_manf() const
 {
 	return Manufacturer(*manf);
+}
+
+const std::vector<Review *>&
+App::get_revs() const
+{
+	return reviews;
+}
+
+int
+App::get_price() const
+{
+	return price;
 }
 
 void

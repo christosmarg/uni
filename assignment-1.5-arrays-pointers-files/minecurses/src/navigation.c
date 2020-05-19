@@ -1,37 +1,37 @@
 #include "navigation.h"
 
 void
-navigate(Board *b, int *mv)
+navigate(WINDOW *gw, int *mv, int *mbx, int *mby)
 {
 	static int y = 1, x = 2;
-	update_curs(b, y, x);
-	b->x = (x-2)/3;
-	b->y = y-1;
+	update_curs(gw, y, x);
+	*mbx = (x-2)/3;
+	*mby = y-1;
 	refresh();
-	getmv(b, mv, &y, &x);
+	getmv(gw, mv, &y, &x);
 }
 
 void
-getmv(const Board *b, int *mv, int *y, int *x)
+getmv(WINDOW *gw, int *mv, int *y, int *x)
 {
-	*mv = wgetch(b->gw);
-	switch (*mv)
+	*mv = wgetch(gw);
+	switch (*mv) // vim keys support!!
 	{
-		case 'k': case 'K': /* FALLTHROUGH */
+		case 'k': case 'K':
 		case 'w': case 'W':
 			mvup(y);
 			break;
-		case 'j': case 'J': /* FALLTHROUGH */
+		case 'j': case 'J':
 		case 's': case 'S':
-			mvdown(y, YMAX(b->gw));
+			mvdown(y, YMAX(gw));
 			break;
-		case 'h': case 'H': /* FALLTHROUGH */
+		case 'h': case 'H':
 		case 'a': case 'A':
 			mvleft(x);
 			break;
-		case 'l': case 'L': /* FALLTHROUGH */
+		case 'l': case 'L':
 		case 'd': case 'D':
-			mvright(x, XMAX(b->gw));
+			mvright(x, XMAX(gw));
 			break;
 	}
 }
@@ -65,7 +65,7 @@ mvright(int *x, int xmax)
 }
 
 void
-update_curs(const Board *b, int y, int x)
+update_curs(WINDOW *gw, int y, int x)
 {
-	wmove(b->gw, y, x);
+	wmove(gw, y, x);
 }

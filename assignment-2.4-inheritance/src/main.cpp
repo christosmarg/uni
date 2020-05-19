@@ -63,7 +63,7 @@ operator<< (std::ostream& stream, const AppSystem& sys)
 	return stream;	
 }
 
-void
+static void
 cont(const char *s)
 {
 	std::cout << std::endl;
@@ -72,7 +72,7 @@ cont(const char *s)
 	if (strlen(s) > 0) std::cout << s << std::endl << std::endl;
 }
 
-void
+static void
 pluseqs(AppSystem& sys)
 {
 	Manufacturer *comp = new Manufacturer("0004", "Company", "comp@comp.com");
@@ -84,7 +84,7 @@ pluseqs(AppSystem& sys)
 	sys += new Game("0005", "minecurses", "NiceOS 0.5", chris, 0, "Puzzle", false);
 }
 
-void
+static void
 edit(AppSystem& sys)
 {
 	sys.newrev("minecurses", new Review(5, "gamer", "Good game"));
@@ -102,13 +102,13 @@ edit(AppSystem& sys)
 	sys.chexts("zathura", {".exe", ".bin", ".dat"});
 }
 
-void
+static void
 remove(AppSystem& sys)
 {
 	sys.removebad("GNU");
 }
 
-void
+static void
 getapps(const AppSystem& sys)
 {
 	const std::vector<Office *>& fapps = sys.get_freeapps();

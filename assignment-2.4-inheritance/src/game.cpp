@@ -22,6 +22,12 @@ Game::get_genre() const
 	return genre;
 }
 
+bool
+Game::get_online() const
+{
+	return online;
+}
+
 void
 Game::set_genre(const std::string& genre)
 {
