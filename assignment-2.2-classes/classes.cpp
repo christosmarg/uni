@@ -22,11 +22,11 @@ class Student
 		Student(const Student& s);
 		~Student();
 
-		const char *get_AM() const;
 		const std::string& get_name() const;
-		unsigned int get_semester() const;
-		unsigned int get_pcourses() const;
-		float *get_grades() const;
+		constexpr const char *get_AM() const		{return this->AM;}
+		constexpr unsigned int get_semester() const {return this->semester;}
+		constexpr unsigned int get_pcourses() const {return this->pcourses;}
+		constexpr float *get_grades() const			{return this->grades;}
 
 		void set_AM(const char *AM);
 		void set_name(const std::string& name);
@@ -77,34 +77,10 @@ Student::~Student()
 	}
 }
 
-const char *
-Student::get_AM() const
-{
-	return this->AM;
-}
-
 const std::string&
 Student::get_name() const
 {
 	return this->name;
-}
-
-unsigned int
-Student::get_semester() const
-{
-	return this->semester;
-}
-
-unsigned int
-Student::get_pcourses() const
-{
-	return this->pcourses;
-}
-
-float *
-Student::get_grades() const
-{
-	return this->grades;
 }
 
 void

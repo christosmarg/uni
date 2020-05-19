@@ -88,78 +88,6 @@ xstring::operator+= (char c)
 	return *this;
 }
 
-bool
-xstring::operator== (const xstring& s) const
-{
-	return strcmp(this->str, s.str) == 0;
-}
-
-bool
-xstring::operator== (const char *s) const
-{
-	return strcmp(this->str, s) == 0;
-}
-
-bool
-xstring::operator!= (const xstring& s) const
-{
-	return strcmp(this->str, s.str) != 0;
-}
-
-bool
-xstring::operator!= (const char *s) const
-{
-	return strcmp(this->str, s) != 0;
-}
-
-bool
-xstring::operator< (const xstring& s) const
-{
-	return strcmp(str, s.str) < 0;
-}
-
-bool
-xstring::operator< (const char *s) const
-{
-	return strcmp(str, s) < 0;
-}
-
-bool
-xstring::operator<= (const xstring& s) const
-{
-	return strcmp(str, s.str) <= 0;
-}
-
-bool
-xstring::operator<= (const char *s) const
-{
-	return strcmp(str, s) <= 0;
-}
-
-bool
-xstring::operator> (const xstring& s) const
-{
-	return strcmp(str, s.str) > 0;
-}
-
-bool
-xstring::operator> (const char *s) const
-{
-	return strcmp(str, s) > 0;
-}
-
-bool
-xstring::operator>= (const xstring& s) const
-{
-	return strcmp(str, s.str) >= 0;
-}
-
-bool
-xstring::operator>= (const char *s) const
-{
-	return strcmp(str, s) >= 0;
-}
-
 char&
 xstring::operator[] (std::size_t i) const
 {
@@ -294,35 +222,11 @@ xstring::find(const char *s) const
 	return (strstr(this->cstr(), s) != nullptr);
 }
 
-char *
-xstring::cstr() const
-{
-	return str;
-}
-
-char&
-xstring::front() const
-{
-	return str[0];
-}
-
 char&
 xstring::back() const
 {
 	if (!this->empty()) return str[len-1];
 	else return str[0];
-}
-
-std::size_t
-xstring::length() const
-{
-	return strlen(str);
-}
-
-bool
-xstring::empty() const
-{
-	return len == 0;
 }
 
 void
@@ -357,12 +261,6 @@ xstring::conv(const char *s) const
 	std::copy(s, s + l+1, tmp);
 	tmp[l] = '\0';
 	return tmp;
-}
-
-bool
-xstring::strempty(const char *s) const
-{
-	return strlen(s) == 0;
 }
 
 std::istream&

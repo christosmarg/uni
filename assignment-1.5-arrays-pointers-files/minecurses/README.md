@@ -31,6 +31,7 @@ Additional controls
 * Add colors
 * Add UTF-8 support
 * Fix wrong mine spawning bug
+* Fix flickering and cursor
 
 ## Execution
 
