@@ -13,7 +13,7 @@ MKDIR_P = mkdir -p
 
 CC = g++
 CPPFLAGS += -Iinclude
-CFLAGS += -Wall
+CFLAGS += -std=c++17 -Wall
 LDFLAGS += -Llib
 #LDLIBS += -lm 
 

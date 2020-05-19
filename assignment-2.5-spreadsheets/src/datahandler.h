@@ -68,7 +68,7 @@ DataHandler::import_data(const char *fpath)
 			lab::getline(f, skip);
 			while (f.good())
 			{
-				if (std::is_same<T, Course>::value)
+				if constexpr (std::is_same<T, Course>::value)
 				{
 					lab::xstring code, name;
 					lab::getline(f, code, ';');
@@ -76,7 +76,7 @@ DataHandler::import_data(const char *fpath)
 					if (f.eof()) break;
 					courses.insert(std::make_pair(code, new Course(code, name)));
 				}
-				else if (std::is_same<T, Student>::value)
+				else if constexpr (std::is_same<T, Student>::value)
 				{
 					lab::xstring AM, lname, fname;
 					lab::getline(f, AM, ';');
@@ -85,7 +85,7 @@ DataHandler::import_data(const char *fpath)
 					if (f.eof()) break;
 					studs.insert(std::make_pair(AM, new Student(AM, lname, fname)));
 				}
-				else if (std::is_same<T, equivalencies>::value)
+				else if constexpr (std::is_same<T, equivalencies>::value)
 				{
 					lab::xstring oldcurr, newcurr;
 					lab::getline(f, oldcurr, ';');
