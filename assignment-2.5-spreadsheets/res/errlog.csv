@@ -35,8 +35,6 @@ Grade;SR000049 in P1-1030: 0.4 | 6.6;Different
 Grade;SR000058 in P1-1060: 9.0 | 4.7;Different
 Grade;SR000058 in P1-6220: 10.0 | 4.7;Different
 Course;P1-8020;Missing
-Course;P1-8020;Missing
-Course;P1-8020;Missing
 Grade;SR000058 in P1-9315: 7.5 | 7.6;Different
 Grade;SR000058 in P1-9315: 7.5 | 7.6;Different
 Grade;SR000058 in P1-9340: 7.5 | 8.6;Different
@@ -71,8 +69,6 @@ Grade;SR000071 in P1-6010: 9.6 | 1.6;Different
 Grade;SR000073 in P1-4040: 1.1 | 3.4;Different
 Grade;SR000073 in P1-4040: 1.1 | 3.4;Different
 Grade;SR000076 in P1-1060: 3.5 | 8.6;Different
-Course;P1-8020;Missing
-Course;P1-8020;Missing
 Grade;SR000076 in P1-9135: 1.8 | 7.9;Different
 Grade;SR000076 in P1-9225: 2.8 | 0.2;Different
 Grade;SR000080 in P1-1050: 8.6 | 3.4;Different
@@ -81,8 +77,6 @@ Grade;SR000081 in P1-1030: 6.8 | 7.6;Different
 Grade;SR000081 in P1-2010: 0.3 | 3.4;Different
 Grade;SR000082 in P1-1030: 1.4 | 1.1;Different
 Grade;SR000083 in P1-1030: 1.1 | 4.7;Different
-Course;P1-8020;Missing
-Course;P1-8020;Missing
 Grade;SR000088 in P1-4020: 7.5 | 8.6;Different
 Grade;SR000088 in P1-4030: 3.4 | 3.6;Different
 Grade;SR000088 in P1-5030: 0.3 | 5.4;Different
@@ -201,8 +195,6 @@ Grade;SR000238 in P1-1050: 8.6 | 3.4;Different
 Grade;SR000238 in P1-6010: 7.4 | 4.1;Different
 Grade;SR000238 in P1-6310: 6.8 | 3.2;Different
 Grade;SR000239 in P1-3010: 3.7 | 7.1;Different
-Course;P1-8020;Missing
-Course;P1-8020;Missing
 Grade;SR000250 in P1-4030: 6.8 | 3.2;Different
 Grade;SR000252 in P1-1010: 7.5 | 0.5;Different
 Grade;SR000252 in P1-1020: 7.5 | 8.6;Different
@@ -306,8 +298,6 @@ Grade;SR000365 in P1-2020: 10.0 | 7.6;Different
 Grade;SR000365 in P1-4050: 3.4 | 1.2;Different
 Grade;SR000371 in P1-4020: 7.5 | 1.1;Different
 Grade;SR000371 in P1-5020: 9.4 | 4.7;Different
-Course;P1-8010;Missing
-Course;P1-8010;Missing
 Grade;SR000376 in P1-5030: 3.4 | 6.8;Different
 Grade;SR000376 in P1-5040: 3.4 | 0.2;Different
 Grade;SR000376 in P1-6320: 1.1 | 8.6;Different
@@ -382,8 +372,6 @@ Grade;SR000439 in P1-2010: 6.6 | 0.0;Different
 Grade;SR000443 in P1-3040: 1.8 | 1.0;Different
 Grade;SR000443 in P1-3050: 8.6 | 7.6;Different
 Grade;SR000444 in P1-2040: 4.7 | 0.2;Different
-Course;P1-8020;Missing
-Course;P1-8020;Missing
 Grade;SR000447 in P1-4020: 3.4 | 4.7;Different
 Grade;SR000447 in P1-4050: 1.1 | 0.5;Different
 Grade;SR000450 in P1-1050: 0.3 | 1.1;Different
@@ -422,8 +410,6 @@ Grade;SR000476 in P1-1020: 7.5 | 0.3;Different
 Grade;SR000476 in P1-2060: 3.4 | 4.7;Different
 Grade;SR000476 in P1-3020: 1.8 | 8.6;Different
 Grade;SR000478 in P1-3020: 0.3 | 4.7;Different
-Course;P1-8020;Missing
-Course;P1-8020;Missing
 Grade;SR000480 in P1-1030: 1.0 | 4.7;Different
 Grade;SR000480 in P1-2060: 7.5 | 8.6;Different
 Grade;SR000483 in P1-1060: 0.3 | 9.5;Different
@@ -929,7 +915,6 @@ Grade;SR001063 in P1-1050: 7.5 | 8.6;Different
 Grade;SR001063 in P1-1050: 7.5 | 8.6;Different
 Grade;SR001063 in P1-4050: 1.1 | 6.8;Different
 Grade;SR001066 in P1-3010: 8.5 | 7.6;Different
-Course;P1-8020;Missing
 Grade;SR001068 in P1-1020: 7.5 | 3.4;Different
 Grade;SR001068 in P1-1050: 1.8 | 0.3;Different
 Grade;SR001070 in P1-1020: 7.5 | 7.6;Different
@@ -1038,7 +1023,6 @@ Grade;SR001162 in P1-4010: 10.0 | 3.4;Different
 Grade;SR001164 in P1-5110: 6.8 | 6.0;Different
 Grade;SR001166 in P1-4020: 1.1 | 6.8;Different
 Grade;SR001166 in P1-6010: 9.3 | 0.4;Different
-Course;P1-8010;Missing
 Grade;SR001171 in P1-3040: 6.8 | 7.6;Different
 Grade;SR001171 in P1-4040: 10.0 | 3.4;Different
 Grade;SR001171 in P1-4040: 10.0 | 3.4;Different
@@ -1139,7 +1123,6 @@ Grade;SR001287 in P1-3050: 0.3 | 4.7;Different
 Grade;SR001289 in P1-3020: 0.3 | 8.6;Different
 Grade;SR001290 in P1-1060: 7.5 | 0.7;Different
 Grade;SR001290 in P1-5220: 0.3 | 4.3;Different
-Course;P1-8010;Missing
 Grade;SR001291 in P1-4020: 3.4 | 0.7;Different
 Grade;SR001292 in P1-1010: 7.5 | 0.3;Different
 Grade;SR001303 in P1-1010: 7.5 | 8.6;Different
@@ -1154,7 +1137,6 @@ Grade;SR001311 in P1-9130: 0.0 | 10.0;Different
 Grade;SR001312 in P1-3040: 4.6 | 0.8;Different
 Grade;SR001312 in P1-4020: 6.8 | 0.2;Different
 Grade;SR001312 in P1-4050: 4.7 | 0.7;Different
-Course;P1-8010;Missing
 Grade;SR001315 in P1-6010: 9.2 | 3.4;Different
 Grade;SR001316 in P1-5010: 1.1 | 4.7;Different
 Grade;SR001316 in P1-9350: 3.5 | 5.1;Different
@@ -1353,7 +1335,6 @@ Grade;SR001502 in P1-2060: 0.3 | 4.7;Different
 Grade;SR001503 in P1-1010: 0.3 | 4.7;Different
 Grade;SR001503 in P1-1020: 8.6 | 6.8;Different
 Grade;SR001505 in P1-3020: 10.0 | 7.5;Different
-Course;P1-8020;Missing
 Grade;SR001513 in P1-1060: 10.0 | 4.2;Different
 Grade;SR001513 in P1-1060: 10.0 | 3.5;Different
 Grade;SR001513 in P1-2060: 0.3 | 4.7;Different
@@ -1520,7 +1501,6 @@ Grade;SR001646 in P1-5110: 0.3 | 3.3;Different
 Grade;SR001647 in P1-4020: 8.6 | 0.7;Different
 Grade;SR001647 in P1-4030: 3.4 | 7.6;Different
 Grade;SR001647 in P1-6010: 4.1 | 2.5;Different
-Course;P1-8020;Missing
 Grade;SR001652 in P1-3040: 9.3 | 7.6;Different
 Grade;SR001663 in P1-4050: 8.6 | 0.7;Different
 Grade;SR001663 in P1-6010: 1.0 | 6.6;Different
@@ -1633,9 +1613,6 @@ Grade;SR001774 in P1-1030: 4.7 | 5.7;Different
 Grade;SR001774 in P1-9170: 8.6 | 4.7;Different
 Grade;SR001775 in P1-5030: 5.1 | 4.7;Different
 Grade;SR001775 in P1-6020: 8.3 | 3.6;Different
-Course;P1-8010;Missing
-Course;P1-8020;Missing
-Course;P1-8020;Missing
 Grade;SR001776 in P1-2020: 0.3 | 8.6;Different
 Grade;SR001776 in P1-2050: 10.0 | 7.5;Different
 Grade;SR001778 in P1-1030: 7.4 | 1.8;Different
@@ -1755,7 +1732,6 @@ Grade;SR001899 in P1-5040: 3.4 | 3.6;Different
 Grade;SR001901 in P1-5030: 6.8 | 4.7;Different
 Grade;SR001901 in P1-5040: 0.3 | 4.7;Different
 Grade;SR001904 in P1-2020: 7.5 | 0.3;Different
-Course;P1-8010;Missing
 Grade;SR001909 in P1-6020: 0.4 | 4.7;Different
 Grade;SR001920 in P1-2010: 1.1 | 4.7;Different
 Grade;SR001920 in P1-2020: 8.6 | 7.6;Different
@@ -1783,137 +1759,18 @@ Grade;SR001947 in P1-2020: 8.6 | 4.7;Different
 Grade;SR001947 in P1-6010: 1.0 | 7.6;Different
 Student;SR001950;Missing
 Student;SR001951;Missing
-Student;SR001951;Missing
-Student;SR001951;Missing
-Student;SR001952;Missing
-Student;SR001952;Missing
-Student;SR001952;Missing
-Student;SR001952;Missing
 Student;SR001952;Missing
 Student;SR001953;Missing
 Student;SR001954;Missing
-Student;SR001954;Missing
-Student;SR001954;Missing
-Student;SR001954;Missing
-Student;SR001954;Missing
-Student;SR001954;Missing
-Student;SR001954;Missing
-Student;SR001954;Missing
-Student;SR001954;Missing
-Student;SR001954;Missing
-Student;SR001954;Missing
-Student;SR001954;Missing
-Student;SR001954;Missing
-Student;SR001954;Missing
-Student;SR001954;Missing
 Student;SR001955;Missing
-Student;SR001955;Missing
-Student;SR001955;Missing
-Student;SR001955;Missing
-Student;SR001955;Missing
-Student;SR001955;Missing
-Student;SR001955;Missing
-Student;SR001955;Missing
-Student;SR001955;Missing
-Student;SR001955;Missing
-Student;SR001955;Missing
-Student;SR001955;Missing
-Student;SR001955;Missing
-Student;SR001956;Missing
-Student;SR001956;Missing
-Student;SR001956;Missing
-Student;SR001956;Missing
-Student;SR001956;Missing
-Student;SR001956;Missing
-Student;SR001956;Missing
-Student;SR001956;Missing
-Student;SR001956;Missing
-Student;SR001956;Missing
-Student;SR001956;Missing
-Student;SR001956;Missing
-Student;SR001956;Missing
-Student;SR001956;Missing
-Student;SR001956;Missing
 Student;SR001956;Missing
 Student;SR001957;Missing
-Student;SR001957;Missing
-Student;SR001957;Missing
-Student;SR001957;Missing
-Student;SR001957;Missing
-Student;SR001957;Missing
-Student;SR001957;Missing
-Student;SR001957;Missing
-Student;SR001957;Missing
-Student;SR001957;Missing
-Student;SR001957;Missing
-Student;SR001957;Missing
 Student;SR001958;Missing
-Student;SR001958;Missing
-Student;SR001958;Missing
-Student;SR001958;Missing
-Student;SR001958;Missing
-Student;SR001958;Missing
-Student;SR001958;Missing
-Student;SR001958;Missing
-Student;SR001958;Missing
-Student;SR001958;Missing
-Student;SR001958;Missing
-Student;SR001958;Missing
-Student;SR001958;Missing
-Student;SR001958;Missing
-Student;SR001958;Missing
-Student;SR001958;Missing
-Student;SR001958;Missing
-Student;SR001958;Missing
-Student;SR001958;Missing
-Student;SR001958;Missing
-Student;SR001958;Missing
-Student;SR001958;Missing
-Student;SR001959;Missing
-Student;SR001959;Missing
-Student;SR001959;Missing
-Student;SR001959;Missing
-Student;SR001959;Missing
-Student;SR001959;Missing
-Student;SR001959;Missing
 Student;SR001959;Missing
 Student;SR001960;Missing
-Student;SR001960;Missing
-Student;SR001960;Missing
-Student;SR001960;Missing
-Student;SR001960;Missing
 Student;SR001961;Missing
-Student;SR001961;Missing
-Student;SR001961;Missing
-Student;SR001961;Missing
-Student;SR001961;Missing
-Student;SR001962;Missing
-Student;SR001962;Missing
-Student;SR001962;Missing
 Student;SR001962;Missing
 Student;SR001963;Missing
-Student;SR001963;Missing
-Student;SR001963;Missing
-Student;SR001964;Missing
-Student;SR001964;Missing
-Student;SR001964;Missing
-Student;SR001964;Missing
-Student;SR001964;Missing
-Student;SR001964;Missing
-Student;SR001964;Missing
 Student;SR001964;Missing
 Student;SR001965;Missing
-Student;SR001965;Missing
-Student;SR001965;Missing
-Student;SR001965;Missing
-Student;SR001965;Missing
-Student;SR001965;Missing
-Student;SR001965;Missing
-Student;SR001966;Missing
-Student;SR001966;Missing
-Student;SR001966;Missing
-Student;SR001966;Missing
-Student;SR001966;Missing
-Student;SR001966;Missing
-Student;SR001966;Missing
 Student;SR001966;Missing

@@ -1,6 +1,7 @@
 #ifndef DATA_HANDLER_H
 #define DATA_HANDLER_H
 
+#include <algorithm>
 #include <iostream>
 #include <fstream>
 #include <map>
@@ -22,6 +23,7 @@ class DataHandler
 		std::map<lab::xstring, Student *> studs;
 		std::map<Course *, float> grds;
 		std::map<Student *, std::map<Course *, float>> data;
+		std::vector<lab::xstring> errs;
 		std::vector<lab::xstring> missing;
 		equivalencies eqvs;
 		ErrLog errlog;

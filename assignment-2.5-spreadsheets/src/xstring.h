@@ -103,17 +103,17 @@ to_xstr(const char *fs, T val)
 template<typename T> constexpr const char *
 getformat()
 {
-	if (std::is_same<T, short>::value) return "%hi";
-	if (std::is_same<T, int>::value) return "%d";
-	if (std::is_same<T, long>::value) return "%ld";
-	if (std::is_same<T, long long>::value) return "%lld";
-	if (std::is_same<T, unsigned short>::value) return "%hu";
-	if (std::is_same<T, unsigned int>::value) return "%u";
-	if (std::is_same<T, unsigned long>::value) return "%lu";
-	if (std::is_same<T, unsigned long>::value) return "%llu";
-	if (std::is_same<T, float>::value) return "%f";
-	if (std::is_same<T, double>::value) return "%f";
-	if (std::is_same<T, long double>::value) return "%Lf";
+	if constexpr (std::is_same<T, short>::value) return "%hi";
+	if constexpr (std::is_same<T, int>::value) return "%d";
+	if constexpr (std::is_same<T, long>::value) return "%ld";
+	if constexpr (std::is_same<T, long long>::value) return "%lld";
+	if constexpr (std::is_same<T, unsigned short>::value) return "%hu";
+	if constexpr (std::is_same<T, unsigned int>::value) return "%u";
+	if constexpr (std::is_same<T, unsigned long>::value) return "%lu";
+	if constexpr (std::is_same<T, unsigned long>::value) return "%llu";
+	if constexpr (std::is_same<T, float>::value) return "%f";
+	if constexpr (std::is_same<T, double>::value) return "%f";
+	if constexpr (std::is_same<T, long double>::value) return "%Lf";
 }
 }
 
