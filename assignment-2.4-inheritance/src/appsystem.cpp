@@ -130,9 +130,9 @@ AppSystem::removebad(Manufacturer *man)
 	apps.erase(std::remove_if(apps.begin(), apps.end(), [&](App *app)
 		{
 			Manufacturer m = app->get_manf();
-			if (strcmp(m.get_name(), man->get_name()) == 0)
+			if (!std::strcmp(m.get_name(), man->get_name()))
 				delete app;
-			return strcmp(m.get_name(), man->get_name()) == 0;
+			return !std::strcmp(m.get_name(), man->get_name());
 		}), apps.end());	
 }
 
@@ -142,9 +142,9 @@ AppSystem::removebad(const char *manfname)
 	apps.erase(std::remove_if(apps.begin(), apps.end(), [&](App *app)
 		{
 			Manufacturer m = app->get_manf();
-			if (strcmp(m.get_name(), manfname) == 0)
+			if (!std::strcmp(m.get_name(), manfname))
 				delete app;
-			return strcmp(m.get_name(), manfname) == 0;
+			return !std::strcmp(m.get_name(), manfname);
 		}), apps.end());	
 }
 

@@ -9,7 +9,7 @@ xstring::xstring()
 }
 
 xstring::xstring(const char *s)
-	:str(conv(s)), len(strlen(s)) {}
+	:str(conv(s)), len(std::strlen(s)) {}
 
 xstring::xstring(const xstring& s)
 {
@@ -113,7 +113,7 @@ xstring::append(const xstring& s)
 	if (!s.empty())
 	{
 		resize(s.len);
-		strcat(str, s.str);
+		std::strcat(str, s.str);
 	}
 	len = length();
 	return *this;
@@ -124,8 +124,8 @@ xstring::append(const char *s)
 {
 	if (!strempty(s))
 	{
-		resize(strlen(s));
-		strcat(str, s);
+		resize(std::strlen(s));
+		std::strcat(str, s);
 	}
 	len = length();
 	return *this;
@@ -168,10 +168,10 @@ xstring::insert(const char *s, std::size_t i)
 		char *tmp2 = new char[len - i + 1];
 		std::copy(str, str + i + 1, tmp1);
 		std::copy(str + i, str + len + 1, tmp2);
-		resize(strlen(s));
+		resize(std::strlen(s));
 		std::copy(tmp1, tmp1 + i + 1, str);
-		std::copy(s, s + strlen(s) + 1, str + i);
-		std::copy(tmp2, tmp2 + len - i + 1, str + strlen(s) + i); 
+		std::copy(s, s + std::strlen(s) + 1, str + i);
+		std::copy(tmp2, tmp2 + len - i + 1, str + std::strlen(s) + i); 
 		len = length();
 		str[len] = '\0';
 		delete[] tmp1;
@@ -210,25 +210,6 @@ xstring::replace(std::size_t i, char c)
 	if (i < len) str[i] = c;	
 }
 
-bool
-xstring::find(const xstring& s) const
-{
-	return (strstr(this->cstr(), s.cstr()) != nullptr);
-}
-
-bool
-xstring::find(const char *s) const
-{
-	return (strstr(this->cstr(), s) != nullptr);
-}
-
-char&
-xstring::back() const
-{
-	if (!this->empty()) return str[len-1];
-	else return str[0];
-}
-
 void
 xstring::clear()
 {
@@ -236,6 +217,18 @@ xstring::clear()
 	str = new char[1];
 	str[0] = '\0';
 	len = 0;
+}
+
+bool
+xstring::find(const xstring& s) const
+{
+	return (std::strstr(this->cstr(), s.cstr()) != nullptr);
+}
+
+bool
+xstring::find(const char *s) const
+{
+	return (std::strstr(this->cstr(), s) != nullptr);
 }
 
 void
@@ -256,7 +249,7 @@ xstring::resize(std::size_t n)
 char *
 xstring::conv(const char *s) const
 {
-	std::size_t l = strlen(s);
+	std::size_t l = std::strlen(s);
 	char *tmp = new char[l + 1];
 	std::copy(s, s + l+1, tmp);
 	tmp[l] = '\0';

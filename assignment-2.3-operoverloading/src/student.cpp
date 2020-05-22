@@ -1,22 +1,25 @@
 #include "student.h"
 
-Student::Student(const char *AM, const std::string& name)
-	:AM(convert_AM(AM)), name(name), semester(1), pcourses(0)
+Student::Student(const char *id, const std::string& name)
+	:id(convid(id)), name(name), semester(1), pcourses(0)
 {
 	nsc = 0;
 	sc = nullptr;
 }
 
-Student::Student(const char *AM, const std::string& name, unsigned int semester)
-	:AM(convert_AM(AM)), name(name), semester(semester), pcourses(0)
+Student::Student(const char *id, const std::string& name,
+		const unsigned int semester)
+	:id(convid(id)), name(name), semester(semester), pcourses(0)
 {
 	nsc = 0;
 	sc = nullptr;
 }
 
-Student::Student(const char *AM, const std::string& name, unsigned int semester,
-			    unsigned int pcourses, const float *grades)
-	:AM(convert_AM(AM)), name(name), semester(semester), pcourses(pcourses), grades(convert_PSG(grades))
+Student::Student(const char *id, const std::string& name,
+		const unsigned int semester,
+		const unsigned int pcourses, const float *grades)
+	:id(convid(id)), name(name), semester(semester), pcourses(pcourses),
+	grades(convpsg(grades))
 {
 	nsc = 0;
 	sc = nullptr;
@@ -25,11 +28,11 @@ Student::Student(const char *AM, const std::string& name, unsigned int semester,
 Student::Student(const Student& s)
 	:name(s.name), semester(s.semester), pcourses(s.pcourses)
 {
-	int sl = strlen(s.AM);
-	this->AM = new char[sl + 1];
-	memcpy(AM, s.AM, sizeof(s.AM) + (sl+1));
+	int sl = std::strlen(s.id);
+	this->id = new char[sl + 1];
+	std::memcpy(id, s.id, sizeof(s.id) + (sl+1));
 	this->grades = new float[s.pcourses];
-	memcpy(grades, s.grades, sizeof(float) * s.pcourses);
+	std::memcpy(grades, s.grades, sizeof(float) * s.pcourses);
 
 	if (s.nsc <= 0)
 	{
@@ -39,16 +42,16 @@ Student::Student(const Student& s)
 	else
 	{
 		this->sc = new Course *[s.nsc];
-		memcpy(sc, s.sc, sizeof(s.sc) * s.nsc);
+		std::memcpy(sc, s.sc, sizeof(s.sc) * s.nsc);
 	}
 }
 
 Student::~Student()
 {
-	if (this->AM != nullptr)
+	if (this->id != nullptr)
 	{
-		delete[] this->AM;
-		this->AM = nullptr;	
+		delete[] this->id;
+		this->id = nullptr;	
 	}
 	if (this->grades != nullptr)
 	{
@@ -68,7 +71,7 @@ Student::operator+= (Course *c)
 	Course **tmp = new Course *[nsc+1];
 	if (sc != nullptr)
 	{
-		memcpy(tmp, sc, sizeof(Course *) * nsc);
+		std::memcpy(tmp, sc, sizeof(Course *) * nsc);
 		delete[] sc;
 	}
 	tmp[nsc] = c;
@@ -80,11 +83,11 @@ Student
 Student::operator= (const Student& s)
 {
 	if (this == &s) return *this;
-	this->AM = convert_AM(s.AM);
+	this->id = convid(s.id);
 	this->name = s.name;
 	this->semester = s.semester;
 	this->pcourses = s.pcourses;
-	if (s.grades != nullptr) this->grades = convert_PSG(s.grades);
+	if (s.grades != nullptr) this->grades = convpsg(s.grades);
 	if (s.sc != nullptr)
 	{
 		this->nsc = s.nsc;
@@ -100,10 +103,10 @@ Student::get_name() const
 }
 
 void
-Student::set_AM(const char *AM)
+Student::set_id(const char *id)
 {
-	if (this->AM != nullptr) delete[] this->AM;
-	this->AM = convert_AM(AM);
+	if (this->id != nullptr) delete[] this->id;
+	this->id = convid(id);
 }
 
 void
@@ -113,25 +116,25 @@ Student::set_name(const std::string& name)
 }
 
 void
-Student::set_semester(unsigned int semester)
+Student::set_semester(const unsigned int semester)
 {
 	this->semester = semester;
 }
 
 void
-Student::set_pcourses(unsigned int pcourses)
+Student::set_pcourses(const unsigned int pcourses)
 {
 	this->pcourses = pcourses;
 }
 
 void
-Student::set_grades(float *grades)
+Student::set_grades(const float *grades)
 {
-	this->grades = convert_PSG(grades);
+	this->grades = convpsg(grades);
 }
 
 void
-Student::set_num_submitted_courses(unsigned nsc)
+Student::set_num_submitted_courses(const unsigned nsc)
 {
 	this->nsc = nsc;
 }
@@ -143,26 +146,26 @@ Student::set_submitted_courses(Course **sc)
 	{
 		if (this->sc != nullptr) delete[] this->sc;
 		this->sc = new Course *[nsc];
-		memcpy(this->sc, sc, sizeof(Course *) * nsc);
+		std::memcpy(this->sc, sc, sizeof(Course *) * nsc);
 	}
 }
 
 char *
-Student::convert_AM(const char *AM)
+Student::convid(const char *id)
 {
-	int len = strlen(AM);
+	int len = std::strlen(id);
 	char *tmp = new char[len+1];
-	memcpy(tmp, AM, len+1);
+	std::memcpy(tmp, id, len+1);
 	return tmp;
 }
 
 float *
-Student::convert_PSG(const float *grades)
+Student::convpsg(const float *grades)
 {
 	if (pcourses > 0 && grades != nullptr)
 	{
 		float *tmp = new float[pcourses];
-		memcpy(tmp, grades, sizeof(float) * pcourses);
+		std::memcpy(tmp, grades, sizeof(float) * pcourses);
 		if (this->grades != nullptr) delete[] this->grades;
 		return tmp;
 	}
@@ -170,12 +173,12 @@ Student::convert_PSG(const float *grades)
 }
 
 void
-Student::add_grade(float grade)
+Student::add_grade(const float grade)
 {
 	float *tmp = new float[pcourses+1];
 	if (grades != nullptr)
 	{
-		memcpy(tmp, grades, sizeof(float) * pcourses);
+		std::memcpy(tmp, grades, sizeof(float) * pcourses);
 		delete[] grades;
 	}
 	tmp[pcourses] = grade;
@@ -193,12 +196,12 @@ Student::detailed_print() const
 			std::cout << "Course " << i+1 << ": ";
 			std::cout << grades[i] << std::endl;		
 		}
-		std::cout << "Average grade: " << std::setprecision(2) << calc_average() << std::endl;
+		std::cout << "Average grade: " << std::setprecision(2) << avg() << std::endl;
 	}
 }
 
 float
-Student::calc_average() const
+Student::avg() const
 {
 	if (grades != nullptr)
 	{

@@ -6,16 +6,16 @@
 class Student
 {
 	private:
-		lab::xstring AM;
+		lab::xstring id;
 		lab::xstring lname;
 		lab::xstring fname;
 
 	public:
-		Student(const lab::xstring& AM,
+		Student(const lab::xstring& id,
 				const lab::xstring& lname,
 				const lab::xstring& fname);
 
-		constexpr const lab::xstring& get_AM()    const {return AM;}
+		constexpr const lab::xstring& get_id()    const {return id;}
 		constexpr const lab::xstring& get_lname() const {return	lname;}
 		constexpr const lab::xstring& get_fname() const {return fname;}
 };

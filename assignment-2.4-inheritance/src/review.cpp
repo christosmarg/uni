@@ -7,7 +7,7 @@ Review::Review(int stars, const std::string& username, const std::string& commen
 	:stars(stars), username(username), comment(comment)
 {
 	if (stars < 0 || stars > 5)
-		throw std::runtime_error("Wrong star value.");
+		throw std::runtime_error("Wrong star value. Must be in [0, 5]");
 }
 
 Review::Review(const Review& r)
