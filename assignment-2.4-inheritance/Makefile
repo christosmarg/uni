@@ -12,7 +12,7 @@ MOVE = mv
 MKDIR_P = mkdir -p
 
 CC = g++
-CPPFLAGS += -Iinclude
+CPPFLAGS += -Iinclude -pedantic
 CFLAGS += -std=c++17 -Wall
 LDFLAGS += -Llib
 #LDLIBS += -lm 

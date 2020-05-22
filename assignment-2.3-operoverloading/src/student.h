@@ -13,12 +13,12 @@ class Student
 	private:
 		char *id;				// id
 		std::string name;		// Name
-		Course **sc;			// Submitted courses
-		unsigned int nsc;		// Number of submitted courses 
 		unsigned int semester;	// Current semester
 		unsigned int pcourses;	// Passed courses
 		float *grades;			// Grades
 		std::size_t size;
+		Course **sc;			// Submitted courses
+		unsigned int nsc;		// Number of submitted courses 
 
 	public:
 		Student(const char *id, const std::string& name);
