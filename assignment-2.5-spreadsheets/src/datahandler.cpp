@@ -121,17 +121,17 @@ DataHandler::miss(lab::xstring id, lab::xstring code, float grade)
 		{
 			bool found = false;
 			for (const auto& grd : grds)
-				if (grd.first->get_code() == eqvs[code])
+				if (grd.first->code == eqvs[code])
 					found = true;
 			if (!found)
 			{
 				missing.push_back(id + ";" +
-						studs[id]->get_lname() + ";" +
-						studs[id]->get_fname() + ";" +
-						courses[eqvs[code]]->get_code() + ";" +
-						courses[eqvs[code]]->get_name() + ";" +
+						studs[id]->lname + ";" +
+						studs[id]->fname + ";" +
+						courses[eqvs[code]]->code + ";" +
+						courses[eqvs[code]]->name + ";" +
 						eqvs[code] + ";" +
-						courses[code]->get_name() + ";" +
+						courses[code]->name + ";" +
 						lab::to_xstr<float>("%.1f", grade));
 				misscount++;
 			}
