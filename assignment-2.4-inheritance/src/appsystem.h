@@ -37,8 +37,8 @@ class AppSystem
 		void removebad	(Manufacturer *man);
 		void removebad	(const char *manfname);
 		
-		constexpr const std::vector<App *>& get_apps() const {return apps;}
-		constexpr const std::vector<Manufacturer *>& get_manfs() const {return manfs;} 
+		inline constexpr const std::vector<App *>& get_apps() const {return apps;}
+		inline constexpr const std::vector<Manufacturer *>& get_manfs() const {return manfs;} 
 		const std::vector<Office *> get_freeapps() const;
 		const std::vector<Game *> get_goodgames() const;
 
@@ -60,7 +60,7 @@ AppSystem::parse(std::ifstream& f)
 {
 	try
 	{
-		if constexpr (std::is_same<T, Manufacturer>::value)
+		if constexpr (std::is_same_v<T, Manufacturer>)
 		{
 			std::string sn, name, email;
 			std::getline(f, sn, ',');
@@ -69,7 +69,7 @@ AppSystem::parse(std::ifstream& f)
 			if (f.eof()) return true;
 			manfs.push_back(new Manufacturer(sn.c_str(), name.c_str(), email));	
 		}	
-		else if constexpr (std::is_same<T, Office>::value)
+		else if constexpr (std::is_same_v<T, Office>)
 		{
 			std::string sn, name, os, manf, price, skip1, skip2;
 			std::getline(f, sn, ',');
@@ -95,7 +95,7 @@ AppSystem::parse(std::ifstream& f)
 				}
 			}
 		}
-		else if constexpr (std::is_same<T, Game>::value)
+		else if constexpr (std::is_same_v<T, Game>)
 		{
 			std::string sn, name, os, manf, price, genre, online;
 			std::string skip;
@@ -151,11 +151,11 @@ AppSystem::import_data(const char *fpath)
 			std::getline(f, skip);
 			while (f.good())
 			{
-				if constexpr (std::is_same<T, Manufacturer>::value)
+				if constexpr (std::is_same_v<T, Manufacturer>)
 				{
 					if (!parse<Manufacturer>(f)) break;
 				}
-				else if constexpr (std::is_same<T, App>::value)
+				else if constexpr (std::is_same_v<T, App>)
 				{
 					std::string type;
 					std::getline(f, type, ',');
@@ -164,7 +164,7 @@ AppSystem::import_data(const char *fpath)
 					if (type == "Office")
 						if (!parse<Office>(f)) break;
 				}
-				else if constexpr (std::is_same<T, Review>::value)
+				else if constexpr (std::is_same_v<T, Review>)
 				{
 					std::string appname, stars, username, comment;
 					std::getline(f, appname, ',');
@@ -201,7 +201,7 @@ AppSystem::export_data(const char *fpath)
 		f.open(fpath);
 		std::cout << "Exporting data to \'" << fpath << "\'." << std::endl;
 		
-		if constexpr (std::is_same<T, Manufacturer>::value)
+		if constexpr (std::is_same_v<T, Manufacturer>)
 		{
 			f << "SN,Name,Email\n";
 			for (const auto& manf : manfs)
@@ -209,7 +209,7 @@ AppSystem::export_data(const char *fpath)
 					manf->get_name() << ',' <<
 					manf->get_email() << std::endl;
 		}
-		else if constexpr (std::is_same<T, App>::value)
+		else if constexpr (std::is_same_v<T, App>)
 		{
 			f << "Type,SN,Name,OS,Manf,Price,Genre,Online,Extensions\n";
 			for (const auto& app : apps)
@@ -233,7 +233,7 @@ AppSystem::export_data(const char *fpath)
 				}
 			}
 		}
-		else if constexpr (std::is_same<T, Review>::value)
+		else if constexpr (std::is_same_v<T, Review>)
 		{
 			f << "AppName,Stars,Username,Comment\n";
 			for (const auto& app : apps)

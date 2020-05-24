@@ -16,12 +16,6 @@ Office::~Office()
 	if (!extensions.empty()) extensions.clear();
 }
 
-const std::vector<std::string>
-Office::get_exts() const
-{
-	return extensions;
-}
-
 void
 Office::set_exts(const std::vector<std::string>& extensions)
 {

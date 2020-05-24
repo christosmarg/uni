@@ -16,24 +16,6 @@ Game::Game(const Game& g)
 	:App(g.serialnum, g.name, g.os, g.manf, g.price), genre(g.genre),
 	online(g.online) {}
 
-const std::string
-Game::get_genre() const
-{
-	return genre;
-}
-
-void
-Game::set_genre(const std::string& genre)
-{
-	this->genre = genre;
-}
-
-void
-Game::set_online(bool online)
-{
-	this->online = online;
-}
-
 void
 Game::print(std::ostream& stream) const
 {

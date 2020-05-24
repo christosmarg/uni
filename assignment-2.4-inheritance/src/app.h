@@ -28,21 +28,22 @@ class App
 		App(const App& app);
 		virtual ~App(); 
 
-		void addrev(Review *rev);
-		void addrevs(const std::vector<Review *> revs);
+		void addrev(Review *rev) {reviews.push_back(rev);}
+		void addrevs(const std::vector<Review *> revs)
+			{reviews.insert(reviews.end(), revs.begin(), revs.end());}
 
-		const std::string& get_name() const;
-		const std::string& get_os() const;
-		const Manufacturer get_manf() const;
-		constexpr const char *get_serialnum() const {return serialnum;}
-		constexpr const std::vector<Review *>& get_revs() const {return reviews;}
-		constexpr int get_price() const {return price;}
+		inline const std::string& get_name() const {return name;}
+		inline const std::string& get_os()   const {return os;}
+		inline const Manufacturer get_manf() const {return Manufacturer(*manf);}
+		inline constexpr const char *get_serialnum() const {return serialnum;}
+		inline constexpr const std::vector<Review *>& get_revs() const {return reviews;}
+		inline constexpr int get_price() const {return price;}
 
 		void set_serialnum(const char *serialnum);
-		void set_name(const std::string& name);
-		void set_os(const std::string& os);
-		void set_manf(Manufacturer *manf);
-		void set_price(int price);
+		inline void set_name(const std::string& name) {this->name = name;}
+		inline void set_os(const std::string& os)	  {this->os = os;}
+		inline void set_manf(Manufacturer *manf)      {this->manf = manf;}
+		inline void set_price(int price)			  {this->price = price;}
 
 		virtual void print(std::ostream& stream) const = 0;
 	

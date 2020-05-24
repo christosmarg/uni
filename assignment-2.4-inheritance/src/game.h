@@ -16,11 +16,10 @@ class Game: public App
 				const std::string& genre, bool online);
 		Game(const Game& g);
 
-		const std::string get_genre() const;
-		constexpr bool get_online() const {return online;}
-
-		void set_genre(const std::string& genre);
-		void set_online(bool online);
+		inline const std::string get_genre() const {return genre;}
+		inline constexpr bool get_online()	 const {return online;}
+		inline void set_genre(const std::string& genre) {this->genre = genre;}
+		inline void set_online(bool online) {this->online = online;}
 		virtual void print(std::ostream& stream) const override;
 };
 

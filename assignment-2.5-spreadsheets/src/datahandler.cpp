@@ -7,8 +7,11 @@ DataHandler::~DataHandler()
 {
 	dealloc<Course>(courses);
 	dealloc<Student>(studs);
-	eqvs.clear();
-	errs.clear();
+	if (!grds.empty()) grds.clear();
+	if (!data.empty()) data.clear();
+	if (!eqvs.empty()) eqvs.clear();
+	if (!errs.empty()) errs.clear();
+	if (!missing.empty()) missing.clear();
 }
 
 bool
@@ -121,17 +124,17 @@ DataHandler::miss(lab::xstring id, lab::xstring code, float grade)
 		{
 			bool found = false;
 			for (const auto& grd : grds)
-				if (grd.first->code == eqvs[code])
+				if (grd.first->get_code() == eqvs[code])
 					found = true;
 			if (!found)
 			{
 				missing.push_back(id + ";" +
-						studs[id]->lname + ";" +
-						studs[id]->fname + ";" +
-						courses[eqvs[code]]->code + ";" +
-						courses[eqvs[code]]->name + ";" +
+						studs[id]->get_lname() + ";" +
+						studs[id]->get_fname() + ";" +
+						courses[eqvs[code]]->get_code() + ";" +
+						courses[eqvs[code]]->get_name() + ";" +
 						eqvs[code] + ";" +
-						courses[code]->name + ";" +
+						courses[code]->get_name() + ";" +
 						lab::to_xstr<float>("%.1f", grade));
 				misscount++;
 			}

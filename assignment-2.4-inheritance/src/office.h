@@ -16,7 +16,7 @@ class Office: public App
 		Office(const Office& o);
 		~Office();
 
-		const std::vector<std::string> get_exts() const;
+		const std::vector<std::string> get_exts() const {return extensions;}
 		void set_exts(const std::vector<std::string>& extensions);
 		virtual void print(std::ostream& stream) const override;
 };
