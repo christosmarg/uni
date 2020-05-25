@@ -6,21 +6,21 @@
 
 class ErrLog
 {
-	private:
-		const char *fpath = "res/errlog.csv";
-		void fclear() const;
+    private:
+        const char *fpath = "res/errlog.csv";
+        void fclear() const;
 
-	public:
-		enum class ErrType {
-			STUDENT_MISSING,
-			COURSE_MISSING,
-			DIFFERENT_GRADES
-		};
+    public:
+        enum class ErrType {
+            STUDENT_MISSING,
+            COURSE_MISSING,
+            DIFFERENT_GRADES
+        };
 
-		ErrLog();
-		void write(ErrType type, const lab::xstring& s) const;
+        ErrLog();
+        void write(ErrType type, const lab::xstring& s) const;
 
-	private:
+    private:
 };
 
 #endif /* ERRLOG_H */
