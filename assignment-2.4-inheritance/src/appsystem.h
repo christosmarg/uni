@@ -37,8 +37,8 @@ class AppSystem
         void removebad  (Manufacturer *man);
         void removebad  (const char *manfname);
         
-        inline constexpr const std::vector<App *>& get_apps() const {return apps;}
-        inline constexpr const std::vector<Manufacturer *>& get_manfs() const {return manfs;} 
+        constexpr const std::vector<App *>& get_apps() const {return apps;}
+        constexpr const std::vector<Manufacturer *>& get_manfs() const {return manfs;} 
         const std::vector<Office *> get_freeapps() const;
         const std::vector<Game *> get_goodgames() const;
 
