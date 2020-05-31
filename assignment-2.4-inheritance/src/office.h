@@ -3,7 +3,7 @@
 
 #include "app.h"
 
-class Office: public App
+class Office final: public App
 {
     private:
         std::vector<std::string> extensions;

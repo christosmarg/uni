@@ -21,6 +21,18 @@ xstring::xstring(const xstring& s)
     else clear();
 }
 
+xstring::xstring(xstring&& s) noexcept
+{
+    if (!s.empty())
+    {
+        str = s.str;
+        len = s.len;
+        s.str = nullptr;
+        s.len = 0;
+    }
+    else clear();
+}
+
 xstring::~xstring()
 {
     delete[] str;

@@ -1,8 +1,5 @@
 #include "course.h"
 
-
-Course::Course() {}
-
 Course::Course(const std::string& code, const std::string& cname, unsigned int csemester)
     :code(code), cname(cname), csemester(csemester) {}
 
@@ -12,13 +9,13 @@ Course::Course(const Course& c)
 const std::string&
 Course::get_code() const
 {
-    return this->code;
+    return code;
 }
 
 const std::string&
 Course::get_cname() const
 {
-    return this->cname;
+    return cname;
 }
 
 void

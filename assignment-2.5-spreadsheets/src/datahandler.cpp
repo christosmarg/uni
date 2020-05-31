@@ -208,7 +208,7 @@ DataHandler::valid_path(const char *fpath) const
     return (std::strstr(fpath, ".csv") != nullptr);
 }
 
-const lab::xstring 
+const lab::xstring
 DataHandler::err_csv(const char *fpath) const
 {
     return lab::xstring("Error. File must be of format \'.csv\'. ()").

@@ -41,31 +41,32 @@ class Student
         void detailed_print() const;
 
     private:
-        char *convert_id  (const char *id);
-        float *convert_PSG(const float *grades);
-        float calc_average() const;
+        template<typename T> T *conv(const T *arr, std::size_t len) const;
+        template<typename T> T *resize(const T *arr, std::size_t len);
+        constexpr std::size_t len(const char *s) const {return std::strlen(s) + 1;}
+        float avg() const;
 };
 
 Student::Student(const char *id, const std::string& name)
-    :id(convert_id(id)), name(name), semester(1), pcourses(0), grades(nullptr) {}
+    :id(conv<char>(id, len(id))), name(name), semester(1), pcourses(0),
+    grades(nullptr) {}
 
 Student::Student(const char *id, const std::string& name,
         const unsigned int semester)
-    :id(convert_id(id)), name(name), semester(semester), pcourses(0), grades(nullptr) {}
+    :id(conv<char>(id, len(id))), name(name), semester(semester), pcourses(0),
+    grades(nullptr) {}
 
 Student::Student(const char *id, const std::string& name,
         const unsigned int semester,
         const unsigned int pcourses, const float *grades)
-    :id(convert_id(id)), name(name), semester(semester), pcourses(pcourses), grades(convert_PSG(grades)) {}
+    :id(conv<char>(id, len(id))), name(name), semester(semester), pcourses(pcourses),
+    grades(conv<float>(grades, pcourses)) {}
 
 Student::Student(const Student& s)
     :name(s.name), semester(s.semester), pcourses(s.pcourses)
 {
-    int sl = std::strlen(s.id);
-    id = new char[sl + 1];
-    std::memcpy(id, s.id, sizeof(s.id) + (sl+1));
-    this->grades = new float[s.pcourses];
-    std::memcpy(grades, s.grades, sizeof(float) * s.pcourses);
+    this->id = conv<char>(s.id, len(s.id));
+    this->grades = conv<float>(s.grades, s.pcourses);
 }
 
 Student::~Student()
@@ -92,7 +93,7 @@ void
 Student::set_id(const char *id)
 {
     if (this->id != nullptr) delete[] this->id;
-    this->id = convert_id(id);
+    this->id = conv<char>(id, len(id));
 }
 
 void
@@ -116,40 +117,13 @@ Student::set_pcourses(const unsigned int pcourses)
 void
 Student::set_grades(const float *grades)
 {
-    this->grades = convert_PSG(grades);
-}
-
-char *
-Student::convert_id(const char *id)
-{
-    int len = std::strlen(id);
-    char *tmp = new char[len+1];
-    std::memcpy(tmp, id, len+1);
-    return tmp;
-}
-
-float *
-Student::convert_PSG(const float *grades)
-{
-    if (pcourses > 0 && grades != nullptr)
-    {
-        float *tmp = new float[pcourses];
-        std::memcpy(tmp, grades, sizeof(float) * pcourses);
-        if (this->grades != nullptr) delete[] this->grades;
-        return tmp;
-    }
-    else return nullptr;
+    this->grades = conv<float>(grades, pcourses);
 }
 
 void
 Student::add_grade(const float grade)
 {
-    float *tmp = new float[pcourses+1];
-    if (grades != nullptr)
-    {
-        std::memcpy(tmp, grades, sizeof(float) * pcourses);
-        delete[] grades;
-    }
+    float *tmp = resize<float>(grades, pcourses);
     tmp[pcourses] = grade;
     grades = tmp;
     pcourses++;
@@ -165,12 +139,12 @@ Student::detailed_print() const
             std::cout << "Subject " << i+1 << ": ";
             std::cout << grades[i] << std::endl;        
         }
-        std::cout << "Average grade: " << std::setprecision(2) << calc_average() << std::endl;
+        std::cout << "Average grade: " << std::setprecision(2) << avg() << std::endl;
     }
 }
 
 float
-Student::calc_average() const
+Student::avg() const
 {
     if (grades != nullptr)
     {
@@ -181,6 +155,30 @@ Student::calc_average() const
         return average;
     }
     else return 0.0f;
+}
+
+template<typename T> T *
+Student::conv(const T *arr, std::size_t len) const
+{
+    if (arr != nullptr)
+    {
+        T *tmp = new T[len];
+        std::memcpy(tmp, arr, sizeof(T) * len);
+        return tmp;
+    }
+    else return nullptr;
+}
+
+template<typename T> T *
+Student::resize(const T *arr, std::size_t len)
+{
+    T *tmp = new T[len+1];
+    if (arr != nullptr)
+    {
+        std::memcpy(tmp, arr, sizeof(T) * len);
+        delete[] arr;
+    }
+    return tmp;
 }
 
 static std::ostream& operator<< (std::ostream& stream, const Student& s);

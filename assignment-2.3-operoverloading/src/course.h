@@ -7,13 +7,14 @@
 class Course
 {
     private:
-        std::string code;           // Course code
-        std::string cname;          // Course name
-        unsigned int csemester;     // Corresponding semester of course
+        std::string code;       // Course code
+        std::string cname;      // Course name
+        unsigned int csemester; // Corresponding semester of course
 
     public:
-        Course();
-        Course(const std::string& code, const std::string& cname, unsigned int csemester);
+        Course() = default;
+        Course(const std::string& code, const std::string& cname,
+               const unsigned int csemester);
         Course(const Course& s);
 
         const std::string& get_code() const;
@@ -22,7 +23,7 @@ class Course
 
         void set_code(const std::string& code);
         void set_cname(const std::string& cname);
-        void set_csemester(unsigned int csemester);
+        void set_csemester(const unsigned int csemester);
 };
 
 #endif /* COURSE_H */

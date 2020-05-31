@@ -11,14 +11,14 @@
 class Student
 {
     private:
-        char *id;               // id
-        std::string name;       // Name
-        unsigned int semester;  // Current semester
-        unsigned int pcourses;  // Passed courses
-        float *grades;          // Grades
-        std::size_t size;
-        Course **sc;            // Submitted courses
-        unsigned int nsc;       // Number of submitted courses 
+        char *id;              // id
+        std::string name;      // Name
+        unsigned int semester; // Current semester
+        unsigned int pcourses; // Passed courses
+        float *grades;         // Grades
+        std::size_t size;      // Grades array size
+        Course **sc;           // Submitted courses
+        unsigned int nsc;      // Number of submitted courses 
 
     public:
         Student(const char *id, const std::string& name);
@@ -45,7 +45,7 @@ class Student
         constexpr unsigned int get_semester() const {return this->semester;}
         constexpr unsigned int get_pcourses() const {return this->pcourses;}
         constexpr float *get_grades() const {return (this->pcourses > 0) ? this->grades : nullptr;}
-        constexpr Course **get_submitted_courses() const         {return this->sc;}
+        constexpr Course **get_submitted_courses() const {return this->sc;}
         constexpr unsigned int get_num_submitted_courses() const {return this->nsc;}
 
         void set_id      (const char *id);
@@ -60,9 +60,34 @@ class Student
         void detailed_print() const;
 
     private:
-        char  *convid(const char *id);
-        float *convpsg(const float *grades);
-        float  avg() const;
+        template<typename T> T *conv(const T *arr, std::size_t len) const;
+        template<typename T> T *resize(const T *arr, std::size_t len);
+        constexpr std::size_t len(const char *s) const {return std::strlen(s) + 1;}
+        float avg() const;
 };
+
+template<typename T> T *
+Student::conv(const T *arr, std::size_t len) const
+{
+    if (arr != nullptr)
+    {
+        T *tmp = new T[len];
+        std::memcpy(tmp, arr, sizeof(T) * len);
+        return tmp;
+    }
+    else return nullptr;
+}
+
+template<typename T> T *
+Student::resize(const T *arr, std::size_t len)
+{
+    T *tmp = new T[len+1];
+    if (arr != nullptr)
+    {
+        std::memcpy(tmp, arr, sizeof(T) * len);
+        delete[] arr;
+    }
+    return tmp;
+}
 
 #endif /* STUDENT_H */
