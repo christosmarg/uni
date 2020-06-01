@@ -7,7 +7,7 @@
 class ErrLog
 {
     private:
-        const char *fpath = "res/errlog.csv";
+        static constexpr const char *fpath = "res/errlog.csv";
         void fclear() const;
 
     public:

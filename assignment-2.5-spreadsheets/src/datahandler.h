@@ -17,8 +17,8 @@ using equivalencies = std::map<lab::xstring, lab::xstring>;
 class DataHandler 
 {
     private:
-        const char *datapath = "res/grades.csv";
-        const char *reppath = "res/report.csv";
+        static constexpr const char *datapath = "res/grades.csv";
+        static constexpr const char *reppath = "res/report.csv";
         std::map<lab::xstring, Course *> courses;
         std::map<lab::xstring, Student *> studs;
         std::map<Course *, float> grds;
@@ -65,7 +65,7 @@ DataHandler::import_data(const char *fpath)
         f.open(fpath);
         if (f.is_open())
         {
-            std::cout << "Importing data from \'" << fpath << "\'." << std::endl;
+            std::printf("Importing data from \'%s\'\n", fpath);
             lab::xstring skip;
             lab::getline(f, skip);
             while (f.good())

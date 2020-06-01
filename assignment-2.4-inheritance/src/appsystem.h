@@ -16,7 +16,7 @@ class AppSystem
         std::vector<Manufacturer *> manfs;
 
     public:
-        AppSystem();
+        AppSystem() = default;
         ~AppSystem();
 
         AppSystem& operator+= (App *app);
@@ -24,13 +24,14 @@ class AppSystem
 
         template<typename T> bool import_data(const char *fpath);
         template<typename T> bool export_data(const char *fpath);
-        void newrev     (const std::string& appname, Review *rev);
-        void newrevs    (const std::string& appname, const std::vector<Review *> revs);
-        void chserialnum(const std::string& appname, const char *serialnum);
-        void chname     (const std::string& appname, const std::string& name);
-        void chos       (const std::string& appname, const std::string& os);
-        void chmanf     (const std::string& appname, Manufacturer *manf);
-        void chprice    (const std::string& appname, int price);
+        template<typename T> void call(
+                const std::string& appname,
+                T element,
+                void(App::*func)(T));
+        template<typename T, class U> void cast_call(
+                const std::string& appname,
+                T element,
+                void(U::*func)(T));
         void chgenre    (const std::string& appname, const std::string& genre);
         void chonline   (const std::string& appname, bool online);
         void chexts     (const std::string& appname, const std::vector<std::string> exts);
@@ -146,7 +147,7 @@ AppSystem::import_data(const char *fpath)
         f.open(fpath);
         if (f.is_open())
         {
-            std::cout << "Importing data from \'" << fpath << "\'." << std::endl;
+            std::printf("Importing data from \'%s\'\n", fpath);
             std::string skip;
             std::getline(f, skip);
             while (f.good())
@@ -199,7 +200,7 @@ AppSystem::export_data(const char *fpath)
         if (!valid_path(strpath))
             throw std::runtime_error(err_csv(strpath));
         f.open(fpath);
-        std::cout << "Exporting data to \'" << fpath << "\'." << std::endl;
+        std::printf("Exporting data to \'%s\'\n", fpath);
         
         if constexpr (std::is_same_v<T, Manufacturer>)
         {
@@ -256,6 +257,23 @@ AppSystem::export_data(const char *fpath)
         return false;
     }
     return true;
+}
+
+template<typename T> void
+AppSystem::call(const std::string& appname, T element, void(App::*func)(T))
+{
+    for (auto&& app : apps)
+        if (app->get_name() == appname)
+            (app->*func)(element);
+}
+
+template<typename T, class U> void
+AppSystem::cast_call(const std::string& appname, T element, void(U::*func)(T))
+{
+    for (auto&& app : apps)
+        if (U *o = dynamic_cast<U *>(app))
+            if (o->get_name() == appname)
+                (o->*func)(element);
 }
 
 template<typename T> void

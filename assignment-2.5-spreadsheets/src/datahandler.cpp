@@ -26,10 +26,8 @@ DataHandler::store_data()
         f.open(datapath);
         if (f.is_open())
         {
-            std::cout << "Importing data from \'" << datapath << "\'." << std::endl;
-            std::cout << std::endl;
-            std::cout << "Making data structures and analyzing data." << std::endl;
-
+            std::printf("Importing data from \'%s\'\n\n", datapath);
+            std::printf("Making data structures and analyzing data.\n");
             lab::xstring skip;
             lab::getline(f, skip);
 
@@ -86,23 +84,19 @@ DataHandler::analyze(
         }
         grds.insert(std::make_pair(courses[code], grade));
     }
-    else if (its == studs.end())
+    else if (its == studs.end() && 
+            std::find(errs.begin(), errs.end(), id) == errs.end())
     {
-        if (std::find(errs.begin(), errs.end(), id) == errs.end())
-        {
             errs.push_back(id);
             errlog.write(ErrLog::ErrType::STUDENT_MISSING, id);
             errcount++;
-        }
     }
-    else if (itc == courses.end())
+    else if (itc == courses.end() &&
+            std::find(errs.begin(), errs.end(), code) == errs.end())
     {
-        if (std::find(errs.begin(), errs.end(), code) == errs.end())
-        {
             errs.push_back(code);
             errlog.write(ErrLog::ErrType::COURSE_MISSING, code);
             errcount++;
-        }
     }
 
     if (its != studs.end() && itc != courses.end())
@@ -110,7 +104,6 @@ DataHandler::analyze(
         miss(id, code, grade);  
         diffr(id, code, grade);
     }
-
     return true;
 }
 
@@ -168,7 +161,7 @@ DataHandler::make_report() const
         f.open(reppath);
         if (f.is_open())
         {
-            std::cout << "Making report." << std::endl;
+            std::printf("Making report.\n");
             f << "ID;Last name;First name;New course code;New course name;" <<
                  "Old course code;Old course name;Grade" << std::endl;
             for (const auto& m : missing) f << m << std::endl;
@@ -191,15 +184,13 @@ DataHandler::summary() const
     for (const auto& dat : data)
         datacount += dat.second.size();
 
-    std::cout << std::endl;
-    std::cout << "Students: " << studs.size() << std::endl;
-    std::cout << "Courses: " << courses.size() << std::endl;
-    std::cout << "Equivalencies: " << eqvs.size() << std::endl;
-    std::cout << "Total grades stored: " << datacount << std::endl;
-    std::cout << "Grades missing: " << misscount << std::endl;
-    std::cout << "Errors: " << errcount << std::endl;
-    std::cout << std::endl;
-    std::cout << "Thank you :)" << std::endl;
+    std::printf("\nStudents: %ld\n", studs.size());
+    std::printf("Courses: %ld\n", courses.size());
+    std::printf("Equivalences: %ld\n", eqvs.size());
+    std::printf("Total grades stored: %d\n", datacount);
+    std::printf("Grades missing: %d\n", misscount); 
+    std::printf("Errors: %d\n", errcount);
+    std::printf("\nThank you :)\n");
 }
 
 bool
