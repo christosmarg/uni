@@ -25,10 +25,10 @@ class Student
         ~Student();
 
         const std::string& get_name() const;
-        constexpr const char *get_id() const        {return this->id;}
-        constexpr unsigned int get_semester() const {return this->semester;}
-        constexpr unsigned int get_pcourses() const {return this->pcourses;}
-        constexpr float *get_grades() const         {return this->grades;}
+        constexpr const char *get_id() const;
+        constexpr const unsigned int get_semester() const;
+        constexpr const unsigned int get_pcourses() const;
+        constexpr float *get_grades() const;
 
         void set_id      (const char *id);
         void set_name    (const std::string& name);
@@ -42,7 +42,7 @@ class Student
     private:
         template<typename T> T *conv(const T *arr, std::size_t len) const;
         template<typename T> T *resize(const T *arr, std::size_t len);
-        constexpr std::size_t len(const char *s) const {return std::strlen(s) + 1;}
+        constexpr std::size_t len(const char *s) const;
         float avg() const;
 };
 
@@ -86,6 +86,30 @@ const std::string&
 Student::get_name() const
 {
     return this->name;
+}
+
+constexpr const char *
+Student::get_id() const
+{
+    return this->id;
+}
+
+constexpr const unsigned int
+Student::get_semester() const
+{
+    return this->semester;
+}
+
+constexpr const unsigned int
+Student::get_pcourses() const
+{
+    return this->pcourses;
+}
+
+constexpr float *
+Student::get_grades() const
+{
+    return this->grades;
 }
 
 void
@@ -140,6 +164,12 @@ Student::detailed_print() const
         }
         std::cout << "Average grade: " << std::setprecision(2) << avg() << std::endl;
     }
+}
+
+constexpr std::size_t
+Student::len(const char *s) const
+{
+    return std::strlen(s) + 1;
 }
 
 float

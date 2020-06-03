@@ -10,5 +10,5 @@ Review::Review(int stars, const std::string& username, const std::string& commen
         throw std::runtime_error("Wrong star value. Must be in [0, 5]");
 }
 
-Review::Review(const Review& r)
-    :stars(r.stars), username(r.username), comment(r.comment) {}
+Review::Review(const Review& rev)
+    :stars(rev.stars), username(rev.username), comment(rev.comment) {}

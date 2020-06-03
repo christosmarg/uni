@@ -26,14 +26,14 @@ class AppSystem
         template<typename T> bool export_data(const char *fpath);
         template<typename T> void call(
                 const std::string& appname,
-                T element,
-                void(App::*func)(T));
+                const T element,
+                void (App::*func)(T));
         template<typename T, class U> void cast_call(
                 const std::string& appname,
-                T element,
-                void(U::*func)(T));
-        void removebad  (Manufacturer *man);
-        void removebad  (const char *manfname);
+                const T element,
+                void (U::*func)(T));
+        void removebad(const Manufacturer *man);
+        void removebad(const char *manfname);
         
         constexpr const std::vector<App *>& get_apps() const {return apps;}
         constexpr const std::vector<Manufacturer *>& get_manfs() const {return manfs;} 
@@ -41,11 +41,12 @@ class AppSystem
         const std::vector<Game *> get_goodgames() const;
 
     private:
+        template<typename T> bool exists(const std::vector<T *>& vec, const T *element);
         template<typename T> bool parse(std::ifstream& f);
         const std::vector<std::string> parse_office_exts(std::ifstream& f);
         const std::vector<Review *>
             parse_reviews(const std::string& appname, const char *rpath);
-        void write_office_exts(Office *of, std::ofstream& f);
+        void write_office_exts(const Office *of, std::ofstream& f);
         bool valid_path(const std::string& strpath);
         const std::string err_csv(const std::string& strpath);
         const std::string err_read(const std::string& strpath);
@@ -256,8 +257,14 @@ AppSystem::export_data(const char *fpath)
     return true;
 }
 
+template<typename T> bool
+AppSystem::exists(const std::vector<T *>& vec, const T *element)
+{
+    return std::find(vec.begin(), vec.end(), element) != vec.end();
+}
+
 template<typename T> void
-AppSystem::call(const std::string& appname, T element, void(App::*func)(T))
+AppSystem::call(const std::string& appname, const T element, void (App::*func)(T))
 {
     for (auto&& app : apps)
         if (app->get_name() == appname)
@@ -265,7 +272,7 @@ AppSystem::call(const std::string& appname, T element, void(App::*func)(T))
 }
 
 template<typename T, class U> void
-AppSystem::cast_call(const std::string& appname, T element, void(U::*func)(T))
+AppSystem::cast_call(const std::string& appname, const T element, void (U::*func)(T))
 {
     for (auto&& app : apps)
         if (U *o = dynamic_cast<U *>(app))

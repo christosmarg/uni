@@ -15,7 +15,7 @@ class Manufacturer
     public:
         Manufacturer();
         Manufacturer(const char *serialnum, const char *name,
-                const std::string& email);
+                     const std::string& email);
         Manufacturer(const Manufacturer& m);
         ~Manufacturer();
 
