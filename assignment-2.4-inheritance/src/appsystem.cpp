@@ -42,27 +42,29 @@ AppSystem::write_office_exts(const Office *of, std::ofstream& f)
 }
 
 void
-AppSystem::removebad(const Manufacturer *man)
+AppSystem::removebad(const Manufacturer *manf)
 {
-    apps.erase(std::remove_if(apps.begin(), apps.end(), [&](App *app)
-        {
-            Manufacturer m = app->get_manf();
-            if (!std::strcmp(m.get_name(), man->get_name()))
-                delete app;
-            return !std::strcmp(m.get_name(), man->get_name());
-        }), apps.end());    
+    auto lambda = [&](App *app) -> bool
+    {
+        Manufacturer m = app->get_manf();
+        if (!std::strcmp(m.get_name(), manf->get_name()))
+            delete app;
+        return !std::strcmp(m.get_name(), manf->get_name());
+    };
+    apps.erase(std::remove_if(apps.begin(), apps.end(), lambda), apps.end());
 }
 
 void
 AppSystem::removebad(const char *manfname)
 {
-    apps.erase(std::remove_if(apps.begin(), apps.end(), [&](App *app)
-        {
-            Manufacturer m = app->get_manf();
-            if (!std::strcmp(m.get_name(), manfname))
-                delete app;
-            return !std::strcmp(m.get_name(), manfname);
-        }), apps.end());    
+    auto lambda = [&](App *app) -> bool
+    {
+        Manufacturer m = app->get_manf();
+        if (!std::strcmp(m.get_name(), manfname))
+            delete app;
+        return !std::strcmp(m.get_name(), manfname);
+    };
+    apps.erase(std::remove_if(apps.begin(), apps.end(), lambda), apps.end());
 }
 
 const std::vector<Office *>
