@@ -1,4 +1,4 @@
-#include "office.h"
+#include "office.hpp"
 
 Office::Office()
     :App() {}

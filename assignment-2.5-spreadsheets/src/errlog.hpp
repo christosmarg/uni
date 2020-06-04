@@ -1,8 +1,8 @@
-#ifndef ERRLOG_H
-#define ERRLOG_H
+#ifndef ERRLOG_HPP
+#define ERRLOG_HPP
 
 #include <fstream>
-#include "xstring.h"
+#include "xstring.hpp"
 
 class ErrLog
 {
@@ -14,11 +14,12 @@ class ErrLog
         enum class ErrType {
             STUDENT_MISSING,
             COURSE_MISSING,
-            DIFFERENT_GRADES
+            DIFFERENT_GRADES,
+            RUNTIME_ERR
         };
 
         ErrLog();
         void write(ErrType type, const lab::xstring& s) const;
 };
 
-#endif /* ERRLOG_H */
+#endif /* ERRLOG_HPP */

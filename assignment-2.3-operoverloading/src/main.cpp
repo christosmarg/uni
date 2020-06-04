@@ -1,5 +1,5 @@
 #include <memory>
-#include "student.h"
+#include "student.hpp"
 
 static std::ostream& operator<< (std::ostream& stream, const Student& s);
 static void cont();

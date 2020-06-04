@@ -1,4 +1,4 @@
-#include "course.h"
+#include "course.hpp"
 
 Course::Course(const std::string& code, const std::string& cname, unsigned int csemester)
     :code(code), cname(cname), csemester(csemester) {}

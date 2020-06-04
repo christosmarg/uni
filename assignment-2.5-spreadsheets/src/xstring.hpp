@@ -1,5 +1,5 @@
-#ifndef XSTRING_H
-#define XSTRING_H
+#ifndef XSTRING_HPP
+#define XSTRING_HPP
 
 #include <algorithm>
 #include <cstdlib>
@@ -17,7 +17,6 @@ class xstring
         xstring();
         xstring(const char *s);
         xstring(const xstring& s);
-        xstring(xstring&& s) noexcept;
         ~xstring();
         
         xstring  operator=  (const xstring& s);
@@ -124,4 +123,4 @@ getformat()
 }
 }
 
-#endif /* XSTRING_H */
+#endif /* XSTRING_HPP */

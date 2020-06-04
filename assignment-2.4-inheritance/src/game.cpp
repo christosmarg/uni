@@ -1,4 +1,4 @@
-#include "game.h"
+#include "game.hpp"
 
 Game::Game()
     :App(), genre(""), online(false) {}
@@ -9,7 +9,7 @@ Game::Game(const char *serialnum, const std::string& name,
     :App(serialnum, name, os, manf, price), genre(genre), online(online)
 {
     if (genre.empty() || genre == "")
-        throw std::runtime_error("Empty game genre.");
+        errlog.write("Game: " + std::string(serialnum) + ": Empty genre");
 }
 
 Game::Game(const Game& g)

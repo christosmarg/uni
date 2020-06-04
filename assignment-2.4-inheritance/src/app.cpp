@@ -1,4 +1,4 @@
-#include "app.h"
+#include "app.hpp"
 
 App::App()
     :serialnum(nullptr), name(""), os(""), manf(nullptr), price(0) {}
@@ -8,13 +8,13 @@ App::App(const char *serialnum, const std::string& name,
     :serialnum(convsn(serialnum)), name(name), os(os), manf(manf), price(price)
 {
     if (!std::strcmp(serialnum, ""))
-        throw std::runtime_error("Empty app serial number.");   
+        errlog.write("Missing app serial number");
     if (name.empty())
-        throw std::runtime_error("Empty app name.");    
+        errlog.write("App: " + std::string(serialnum) + ": Missing app name");
     if (os.empty())
-        throw std::runtime_error("Empty OS name."); 
+        errlog.write("App: " + std::string(serialnum) + ": Missing OS version");
     if (price < 0)
-        throw std::runtime_error("Price can't have negative value.");
+        errlog.write("App: " + std::string(serialnum) + ": Negative price");
 }
 
 App::App(const App& app)
@@ -23,21 +23,12 @@ App::App(const App& app)
 
 App::~App()
 {
-    if (serialnum != nullptr)
-    {
-        delete[] serialnum;
-        serialnum = nullptr;    
-    }
+    if (serialnum != nullptr) delete[] serialnum;
     if (!reviews.empty())
     {
         for (auto&& rev : reviews)
-        {
             if (rev != nullptr)
-            {
                 delete rev;
-                rev = nullptr;
-            }
-        }
         reviews.clear();
     }
 }

@@ -1,4 +1,4 @@
-#include "datahandler.h"
+#include "datahandler.hpp"
 
 DataHandler::DataHandler()
     :misscount(0), errcount(0) {}
@@ -15,14 +15,12 @@ DataHandler::~DataHandler()
 }
 
 bool
-DataHandler::store_data()
+DataHandler::load_grades()
 {
     std::ifstream f;
     f.exceptions(std::ifstream::badbit);
     try
     {
-        if (!valid_path(datapath))
-            throw std::runtime_error(err_csv(datapath).cstr());
         f.open(datapath);
         if (f.is_open())
         {
@@ -58,7 +56,7 @@ DataHandler::store_data()
     }
     catch (const std::ifstream::failure& e)
     {
-        std::cerr << err_read(datapath) << std::endl << e.what() << std::endl;
+        errlog.write(ErrLog::ErrType::RUNTIME_ERR, err_read(datapath));
         return false;
     }
     return true;
@@ -126,7 +124,7 @@ DataHandler::miss(lab::xstring id, lab::xstring code, float grade)
                         studs[id]->fname + ";" +
                         courses[eqvs[code]]->code + ";" +
                         courses[eqvs[code]]->name + ";" +
-                        eqvs[code] + ";" +
+                        code + ";" +
                         courses[code]->name + ";" +
                         lab::to_xstr<float>("%.1f", grade));
                 misscount++;
@@ -149,15 +147,13 @@ DataHandler::diffr(lab::xstring id, lab::xstring code, float grade)
     }
 }
 
-bool
+void
 DataHandler::make_report() const
 {
     std::ofstream f;
     f.exceptions(std::ofstream::failbit | std::ofstream::badbit);
     try
     {
-        if (!valid_path(reppath))
-            throw std::runtime_error(err_csv(reppath).cstr());
         f.open(reppath);
         if (f.is_open())
         {
@@ -170,10 +166,8 @@ DataHandler::make_report() const
     }
     catch (const std::ofstream::failure& e)
     {
-        std::cerr << err_write(reppath) << std::endl << e.what() << std::endl;
-        return false;
+        errlog.write(ErrLog::ErrType::RUNTIME_ERR, err_write(reppath));
     }
-    return true;
 }
 
 
@@ -191,19 +185,6 @@ DataHandler::summary() const
     std::printf("Grades missing: %d\n", misscount); 
     std::printf("Errors: %d\n", errcount);
     std::printf("\nThank you :)\n");
-}
-
-bool
-DataHandler::valid_path(const char *fpath) const
-{
-    return (std::strstr(fpath, ".csv") != nullptr);
-}
-
-const lab::xstring
-DataHandler::err_csv(const char *fpath) const
-{
-    return lab::xstring("Error. File must be of format \'.csv\'. ()").
-        insert(fpath, 39);
 }
 
 const lab::xstring
