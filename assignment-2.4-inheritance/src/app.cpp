@@ -4,7 +4,7 @@ App::App()
     :serialnum(nullptr), name(""), os(""), manf(nullptr), price(0) {}
 
 App::App(const char *serialnum, const std::string& name,
-    const std::string& os, Manufacturer *manf, int price)
+    const std::string& os, Manufacturer *manf, const int price)
     :serialnum(convsn(serialnum)), name(name), os(os), manf(manf), price(price)
 {
     if (!std::strcmp(serialnum, ""))

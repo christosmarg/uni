@@ -1,6 +1,7 @@
 #include "course.hpp"
 
-Course::Course(const std::string& code, const std::string& cname, unsigned int csemester)
+Course::Course(const std::string& code, const std::string& cname,
+        const unsigned int csemester)
     :code(code), cname(cname), csemester(csemester) {}
 
 Course::Course(const Course& c)

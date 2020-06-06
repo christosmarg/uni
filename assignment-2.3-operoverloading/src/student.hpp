@@ -41,11 +41,12 @@ class Student
 
         const std::string& get_name() const;
         constexpr const char *get_id() const {return this->id;}
-        constexpr unsigned int get_semester() const {return this->semester;}
-        constexpr unsigned int get_pcourses() const {return this->pcourses;}
-        constexpr float *get_grades() const {return (this->pcourses > 0) ? this->grades : nullptr;}
+        constexpr const unsigned int get_semester() const {return this->semester;}
+        constexpr const unsigned int get_pcourses() const {return this->pcourses;}
+        constexpr float *get_grades() const
+            {return (this->pcourses > 0) ? this->grades : nullptr;}
         constexpr Course **get_submitted_courses() const {return this->sc;}
-        constexpr unsigned int get_num_submitted_courses() const {return this->nsc;}
+        constexpr const unsigned int get_num_submitted_courses() const {return this->nsc;}
 
         void set_id      (const char *id);
         void set_name    (const std::string& name);

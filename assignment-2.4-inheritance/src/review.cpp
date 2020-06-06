@@ -3,7 +3,8 @@
 Review::Review()
     :stars(0), username(""), comment("") {}
 
-Review::Review(int stars, const std::string& username, const std::string& comment)
+Review::Review(const int stars, const std::string& username,
+        const std::string& comment)
     :stars(stars), username(username), comment(comment)
 {
     if (stars < 0 || stars > 5)

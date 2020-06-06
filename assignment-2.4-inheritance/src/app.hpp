@@ -26,7 +26,7 @@ class App
     public:
         App();
         App(const char *serialnum, const std::string& name,
-            const std::string& os, Manufacturer *manf, int price);
+            const std::string& os, Manufacturer *manf, const int price);
         App(const App& app);
         virtual ~App(); 
 
