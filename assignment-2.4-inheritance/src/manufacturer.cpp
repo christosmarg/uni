@@ -26,6 +26,11 @@ Manufacturer::~Manufacturer()
     if (name != nullptr) delete[] name;
 }
 
+/* 
+ * Makes a copy of a const char array and returns
+ * a temporary array which is meant to be stored in
+ * a member variable.
+ */
 char *
 Manufacturer::convstr(const char *str)
 {

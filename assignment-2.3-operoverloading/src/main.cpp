@@ -18,6 +18,11 @@ static void plusequals_overload(Student& s3, Course *c);
 static void getters(const Course& s3);
 static void setters(Course& c);
 
+/*
+ * main uses smart pointers since there are quite a few dynamically
+ * allocated objects and so it looks cleaner to let them handle the
+ * deletions.
+ */
 int
 main(int argc, char **argv)
 {

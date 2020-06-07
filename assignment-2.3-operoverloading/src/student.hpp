@@ -32,6 +32,10 @@ class Student
         void operator+= (Course *c);
         Student operator= (const Student& s);
 
+		/* 
+		 * The function below are marked as constexpr just so they 
+		 * can be computed at compile time since everything is hardcoded.
+		 */
         constexpr bool operator== (const Student& s) const {return this->semester == s.semester;}
         constexpr bool operator!= (const Student& s) const {return this->semester != s.semester;}
         constexpr bool operator<  (const Student& s) const {return this->semester <  s.semester;}
@@ -66,6 +70,11 @@ class Student
         float avg() const;
 };
 
+/* 
+ * Makes a copy of a given array of type T and returns a temporary array
+ * which is meant to be stored in a member variable.
+ * If the array is empty it returns nullptr.
+ */
 template<typename T> T *
 Student::conv(const T *arr, std::size_t len) const
 {

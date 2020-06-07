@@ -8,6 +8,11 @@ static void edit(AppSystem& sys);
 static void remove(AppSystem& sys);
 static void getapps(const AppSystem& sys);
 
+/* 
+ * main uses smart pointers just so I don't have to delete
+ * them manually. There's obviously no good reason to do it
+ * as there's only one object, but it looks cool.
+ */
 int
 main(int argc, char **argv)
 {
@@ -109,7 +114,7 @@ edit(AppSystem& sys)
 void
 remove(AppSystem& sys)
 {
-    sys.removebad("GNU");
+    sys.removebad("0003");
 }
 
 void

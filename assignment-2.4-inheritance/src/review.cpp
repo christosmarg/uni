@@ -10,6 +10,3 @@ Review::Review(const int stars, const std::string& username,
     if (stars < 0 || stars > 5)
         errlog.write("Review from: " + username + ": Star value out of bounds");
 }
-
-Review::Review(const Review& rev)
-    :stars(rev.stars), username(rev.username), comment(rev.comment) {}
