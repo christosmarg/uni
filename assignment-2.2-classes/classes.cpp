@@ -82,7 +82,7 @@ Student::get_name() const
 }
 
 /* 
- * The function below are marked as constexpr just so they 
+ * The functions below are marked as constexpr just so they 
  * can be computed at compile time since everything is hardcoded.
  */
 constexpr const char *

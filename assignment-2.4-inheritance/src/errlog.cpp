@@ -9,7 +9,7 @@ ErrLog::fclear() const
 }
 
 void
-ErrLog::write(const std::string& str) const
+ErrLog::write(std::string&& str) const
 {
     std::ofstream f;
     f.open(fpath, std::ios_base::app);

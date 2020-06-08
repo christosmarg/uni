@@ -27,11 +27,11 @@ class AppSystem
         template<typename T> void import_data(const char *fpath);
         template<typename T> void export_data(const char *fpath);
         template<typename T> void call(
-                const std::string& appname,
+                std::string&& appname,
                 const T element,
                 void (App::*setter)(T));
         template<typename T, class U> void cast_call(
-                const std::string& appname,
+                std::string&& appname,
                 const T element,
                 void (U::*setter)(T));
         void removebad(const Manufacturer *manf);
@@ -270,7 +270,7 @@ AppSystem::exists(const std::vector<T *>& vec, const T *element)
  * It's ugly.
  */
 template<typename T> void
-AppSystem::call(const std::string& appname, const T element, void (App::*setter)(T))
+AppSystem::call(std::string&& appname, const T element, void (App::*setter)(T))
 {
     for (auto&& app : apps)
         if (app->get_name() == appname)
@@ -283,7 +283,7 @@ AppSystem::call(const std::string& appname, const T element, void (App::*setter)
  * dynamic casting everytime would be pointless.
  */
 template<typename T, class U> void
-AppSystem::cast_call(const std::string& appname, const T element, void (U::*setter)(T))
+AppSystem::cast_call(std::string&& appname, const T element, void (U::*setter)(T))
 {
     for (auto&& app : apps)
         if (U *o = dynamic_cast<U *>(app))
