@@ -63,81 +63,81 @@ class AppSystem
 template<typename T> void
 AppSystem::parse(std::ifstream& f)
 {
-	if constexpr (std::is_same_v<T, Manufacturer>)
-	{
-		std::string sn, name, email;
-		std::getline(f, sn, ',');
-		std::getline(f, name, ',');
-		std::getline(f, email);
-		if (f.eof()) return;
-		manfs.push_back(new Manufacturer(sn.c_str(), name.c_str(), email)); 
-	}   
-	else if constexpr (std::is_same_v<T, Office>)
-	{
-		std::string sn, name, os, manf, price, skip1, skip2;
-		std::getline(f, sn, ',');
-		std::getline(f, name, ',');
-		std::getline(f, os, ',');
-		std::getline(f, manf, ',');
-		std::getline(f, price, ',');
-		std::getline(f, skip1, ',');
-		std::getline(f, skip2, ',');
-		if (f.eof()) return;
-		std::vector<std::string> exts = parse_office_exts(f);
-		
-		if (!manfs.empty())
-		{
-			for (const auto& man : manfs)
-			{
-				if (man->get_name() == manf)
-				{
-					apps.push_back(new Office(sn.c_str(), name, os,
-								man, std::stoi(price), exts));
-					break;
-				}
-			}
-		}
-	}
-	else if constexpr (std::is_same_v<T, Game>)
-	{
-		std::string sn, name, os, manf, price, genre, online;
-		std::string skip;
-		std::getline(f, sn, ',');
-		std::getline(f, name, ',');
-		std::getline(f, os, ',');
-		std::getline(f, manf, ',');
-		std::getline(f, price, ',');
-		std::getline(f, genre, ',');
-		std::getline(f, online, ',');
-		std::getline(f, skip);
-		if (f.eof()) return;
-		bool onl = online == "Yes";
-		
-		if (!manfs.empty())
-		{
-			for (const auto& man : manfs)
-			{
-				if (man->get_name() == manf)
-				{
-					apps.push_back(new Game(sn.c_str(), name, os,
-								man, std::stoi(price), genre, onl));
-					break;
-				}
-			}
-		}
-	}
-	else if constexpr (std::is_same_v<T, Review>)
-	{
-		std::string appname, stars, username, comment;
-		std::getline(f, appname, ',');
-		std::getline(f, stars, ',');
-		std::getline(f, username, ',');
-		std::getline(f, comment);
-		if (f.eof()) return;
-		for (auto&& app : apps)
-			if (appname == app->get_name())
-				app->addrev(new Review(std::stoi(stars), username, comment)); 
-	}
+    if constexpr (std::is_same_v<T, Manufacturer>)
+    {
+        std::string sn, name, email;
+        std::getline(f, sn, ',');
+        std::getline(f, name, ',');
+        std::getline(f, email);
+        if (f.eof()) return;
+        manfs.push_back(new Manufacturer(sn.c_str(), name.c_str(), email)); 
+    }   
+    else if constexpr (std::is_same_v<T, Office>)
+    {
+        std::string sn, name, os, manf, price, skip1, skip2;
+        std::getline(f, sn, ',');
+        std::getline(f, name, ',');
+        std::getline(f, os, ',');
+        std::getline(f, manf, ',');
+        std::getline(f, price, ',');
+        std::getline(f, skip1, ',');
+        std::getline(f, skip2, ',');
+        if (f.eof()) return;
+        std::vector<std::string> exts = parse_office_exts(f);
+        
+        if (!manfs.empty())
+        {
+            for (const auto& man : manfs)
+            {
+                if (man->get_name() == manf)
+                {
+                    apps.push_back(new Office(sn.c_str(), name, os,
+                                man, std::stoi(price), exts));
+                    break;
+                }
+            }
+        }
+    }
+    else if constexpr (std::is_same_v<T, Game>)
+    {
+        std::string sn, name, os, manf, price, genre, online;
+        std::string skip;
+        std::getline(f, sn, ',');
+        std::getline(f, name, ',');
+        std::getline(f, os, ',');
+        std::getline(f, manf, ',');
+        std::getline(f, price, ',');
+        std::getline(f, genre, ',');
+        std::getline(f, online, ',');
+        std::getline(f, skip);
+        if (f.eof()) return;
+        bool onl = online == "Yes";
+        
+        if (!manfs.empty())
+        {
+            for (const auto& man : manfs)
+            {
+                if (man->get_name() == manf)
+                {
+                    apps.push_back(new Game(sn.c_str(), name, os,
+                                man, std::stoi(price), genre, onl));
+                    break;
+                }
+            }
+        }
+    }
+    else if constexpr (std::is_same_v<T, Review>)
+    {
+        std::string appname, stars, username, comment;
+        std::getline(f, appname, ',');
+        std::getline(f, stars, ',');
+        std::getline(f, username, ',');
+        std::getline(f, comment);
+        if (f.eof()) return;
+        for (auto&& app : apps)
+            if (appname == app->get_name())
+                app->addrev(new Review(std::stoi(stars), username, comment)); 
+    }
 }
 
 /* 
@@ -170,7 +170,7 @@ AppSystem::import_data(const char *fpath)
                     if (type == "Office") parse<Office>(f);
                 }
                 else if constexpr (std::is_same_v<T, Review>)
-					parse<Review>(f);
+                    parse<Review>(f);
             }
         }
         f.close();
@@ -181,6 +181,7 @@ AppSystem::import_data(const char *fpath)
          * We terminate because there's no point in continuing if
          * the file is corrupted
          */
+        errlog.write(err_read(fpath) + " (" + e.what() + ")");
         throw std::runtime_error(err_read(fpath) + " (" + e.what() + ")");
     }
 }
