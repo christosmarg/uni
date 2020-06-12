@@ -8,7 +8,7 @@ Game::Game(const char *serialnum, const std::string& name,
         const std::string& genre, const bool online)
     :App(serialnum, name, os, manf, price), genre(genre), online(online)
 {
-    if (genre.empty() || genre == "")
+    if (genre.empty())
         errlog.write("Game: " + std::string(serialnum) + ": Empty genre");
 }
 

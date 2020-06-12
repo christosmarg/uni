@@ -177,7 +177,11 @@ AppSystem::import_data(const char *fpath)
     }
     catch (const std::ifstream::failure& e)
     {
-        errlog.write(err_read(fpath) + " (" + e.what() + ")");
+        /*
+         * We terminate because there's no point in continuing if
+         * the file is corrupted
+         */
+        throw std::runtime_error(err_read(fpath) + " (" + e.what() + ")");
     }
 }
 
@@ -248,6 +252,11 @@ AppSystem::export_data(const char *fpath)
     }
     catch (const std::ofstream::failure& e)
     {
+        /*
+         * In this case we don't terminate because the output
+         * file is not to be used by the program later, so
+         * we shouldn't lose all progress.
+         */
         errlog.write(err_write(fpath) + " (" + e.what() + ")");
     }
 }

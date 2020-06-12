@@ -12,6 +12,11 @@ static void getapps(const AppSystem& sys);
  * main uses smart pointers just so I don't have to delete
  * them manually. There's obviously no good reason to do it
  * as there's only one object, but it looks cool.
+ *
+ * I also used some features that might make the program harder
+ * to understand, but I wanted to take a chance and try out some of
+ * these features, for fun mainly, even though they might seem
+ * (and be) useless.
  */
 int
 main(int argc, char **argv)

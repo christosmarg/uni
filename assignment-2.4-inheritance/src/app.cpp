@@ -13,6 +13,8 @@ App::App(const char *serialnum, const std::string& name,
         errlog.write("App: " + std::string(serialnum) + ": Missing app name");
     if (os.empty())
         errlog.write("App: " + std::string(serialnum) + ": Missing OS version");
+    if (manf == nullptr)
+        errlog.write("App: " + std::string(serialnum) + ": Missing Manufacturer");
     if (price < 0)
         errlog.write("App: " + std::string(serialnum) + ": Negative price");
 }
