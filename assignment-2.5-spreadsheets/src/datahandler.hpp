@@ -34,12 +34,12 @@ class DataHandler
         ~DataHandler();
 
         template<typename T> void import_data(const char *fpath);
-        bool load_grades();
+        void load_grades();
         void make_report() const;
         void summary() const;
         
     private:
-        bool analyze(
+        void analyze(
                 const lab::xstring& currid,
                 lab::xstring& id,
                 lab::xstring& code,
@@ -68,11 +68,14 @@ DataHandler::import_data(const char *fpath)
             {
                 if constexpr (std::is_same_v<T, Course>)
                 {
-                    lab::xstring code, name;
+                    lab::xstring code, name, curriculum;
                     lab::getline(f, code, ';');
-                    lab::getline(f, name);
+                    lab::getline(f, name, ';');
+                    lab::getline(f, curriculum);
                     if (f.eof()) break;
-                    courses.insert(std::make_pair(code, new Course(code, name)));
+                    courses.insert(std::make_pair(code, new Course(code,
+                                    name,
+                                    curriculum == "4" ? true : false)));
                 }
                 else if constexpr (std::is_same_v<T, Student>)
                 {
@@ -97,8 +100,8 @@ DataHandler::import_data(const char *fpath)
     }
     catch (const std::ifstream::failure& e)
     {
-        errlog.write(ErrLog::ErrType::RUNTIME_ERR, err_read(fpath); 
-        throw std::runtime_error(err_read(fpath) + " (" + e.what() + ")");
+        errlog.write(ErrLog::ErrType::RUNTIME_ERR, err_read(fpath)); 
+        throw std::runtime_error(err_read(fpath).cstr());
     }
 }
 
