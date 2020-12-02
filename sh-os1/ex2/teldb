@@ -15,7 +15,7 @@ main() {
 }
 
 usage() {
-        echo "usage: ${0##*/} [-a|-l|-s [COL]|-c [KEYWORD]|-d [KEYWORD [-b|-r]]|-n]"
+        echo "usage: ${0##*/} [-a|-l|-s COL|-c KEYWORD|-d KEYWORD [-b|-r]|-n]"
         echo ""
         echo "options:"
         echo "-a        add a new entry"
@@ -26,10 +26,12 @@ usage() {
         echo "    -b    replace line with an empty line"
         echo "    -r    remove line completely"
         echo "-n        count empty lines and ask if they should be deleted"
+
+        exit 1
 }
 
 errempty() {
-        test -z "$1" && echo "${0##*/}: expected non-empty string" && exit 1
+        test -z "$1" && usage
 }
 
 skipempty() {
