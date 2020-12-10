@@ -7,9 +7,9 @@
 .eqv SYS_READ_CHAR      12
 
 .macro endl()
-        li      $v0, SYS_PRINT_CHAR
-        li      $a0, 0xa
-        syscall
+li      $v0, SYS_PRINT_CHAR
+li      $a0, 0xa
+syscall
 .end_macro
 
 .data
