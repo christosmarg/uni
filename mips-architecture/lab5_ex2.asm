@@ -19,30 +19,26 @@ main:
         
         # init strlen counter
         li      $t0, 0
-        # load string to $t1 because we want to use $a0
-        la      $t1, str
         
 strlen:
-        lb      $a0, 0($t1)
-        beqz    $a0, strrev
+        lb      $t1, str($t0)
+        beqz    $t1, strrev
         addi    $t0, $t0, 1
-        addi    $t1, $t1, 1
         j       strlen
         
         # subtract 2 so that we skip '\n' and '\0' and get to the
         # last character in the string
-        addi    $t1, $t1, -2
+        addi    $t0, $t0, -2
 
 strrev:
         # if $t0 is 0 is means we reached str[0]
         beqz    $t0, exit
         # in the first loop, $t1 is at the last actual character,
         # so we'll go backwards to get to the beginning
-        lb      $a0, 0($t1)
         li      $v0, SYS_PRINT_CHAR
+        lb      $a0, str($t0)
         syscall
         addi    $t0, $t0, -1
-        addi    $t1, $t1, -1
         j       strrev
                 
 exit:                           

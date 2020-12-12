@@ -3,30 +3,46 @@
 main() {
         test $# -eq 4 || usage
 
-        rootdir=$1
-        ndbdirs=$2
-        ndatadirs=$3
-        username=$4
+        rootdir=${1}
+        ndbdirs=${2}
+        ndatadirs=${3}
+        username=${4}
 
-        test -d "$rootdir" || err "$rootdir: no such directory"
-        isnumber $ndbdirs || err "'$ndbdirs' is not a number"
-        isnumber $ndatadirs || err "'$ndatadirs' is not a number"
-        test ! -z $(grep "$username" /etc/passwd) || err "'$username' is not in /etc/passwd"
-        
-        # pending...
+        test -d "${rootdir}" || err "${rootdir}: no such directory"
+        isnumber ${ndbdirs} || err "'${ndbdirs}' is not a number"
+        isnumber ${ndatadirs} || err "'${ndatadirs}' is not a number"
+        test ! -z "$(grep -w "^${username}" /etc/passwd)" ||
+        err "'${username}' is not in /etc/passwd"
+
+        makedirs "dbfolder" ${ndbdirs}
+        makedirs "datafolder" ${ndatadirs}
 }
 
 usage() {
-        echo "usage: ${0##*/} [ROOT_DIR] [N_DBDIRS] [N_DATADIRS] [USERNAME]" &&
+        echo "usage: ${0##*/} root_dir num_dbdirs num_datadirs username"
         exit 1
 }
 
 err() {
-        echo "${0##*/}: $1" && exit 1
+        echo "${0##*/}: ${1}"
+        exit 1
 }
 
 isnumber() {
-        test ! -z $(echo "$1" | grep "^[0-9]\+$")
+        test ! -z "$(echo "${1}" | grep "^[0-9]\+$")"
+}
+
+makedirs() {
+        n=${2}
+        lastdir=$(ls ${rootdir} | grep "${1}" | sed "s/${1}//g" | sort -V | tail -1)
+        test -z ${lastdir} && lastdir=0
+
+        while ! [ $(expr ${n}) = 0 ]; do
+                lastdir=$(expr ${lastdir} + 1)
+                mkdir "${rootdir}/${1}${lastdir}" &&
+                chown ${username}: "${rootdir}/${1}${lastdir}"
+                n=$(expr ${n} - 1)
+        done 
 }
 
 main "$@"
