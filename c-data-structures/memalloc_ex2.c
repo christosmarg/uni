@@ -3,7 +3,7 @@
 #include <string.h>
 
 /*
- * Make N student strucutre, allocate memory for them and
+ * Make N student structures, allocate memory for them and
  * assign values to them from stdin.
  */
 

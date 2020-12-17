@@ -1,0 +1,46 @@
+#!/bin/sh
+
+main() {
+        while getopts u:s: arg; do
+                case "${arg}" in
+                        u) test ! -z "$(grep -w "^${OPTARG}" /etc/passwd)" ||
+                           err "'${OPTARG}' is not in /etc/passwd"
+                           uid=$(id -u ${OPTARG}) ;;
+                        s) state="${OPTARG}" ;;
+                        *) usage
+                esac
+        done
+
+        printf "Name\tPID\tPPID\tUID\tGID\tState\n" | expand -t 16
+        for proc in /proc/*/status; do
+                # call getfield once
+                # handle flags
+                procname=$(getfield "Name" ${proc})
+                procpid=$(getfield "Pid" ${proc})
+                procppid=$(getfield "PPid" ${proc})
+                procuid=$(getfield "Uid:\s*${uid}" ${proc})
+                procgid=$(getfield "Gid" ${proc})
+                procstate=$(getfield "State:\s*${state}" ${proc})
+
+                printf "%s\t%s\t%s\t%s\t%s\t%s\n" \
+                ${procname} ${procpid} ${procppid} ${procuid} ${procgid} ${procstate} |
+                expand -t 16
+
+        done
+}
+
+usage() {
+        echo "usage: ${0##*/} [-u username] [-s S|R|Z]" 1>&2
+        exit 1
+}
+
+err() {
+        echo "${0##*/}: $@" 1>&2
+        exit 1
+}
+
+getfield() {
+        grep -w "^${1}" ${2} | awk '{print $2}'
+}
+
+main "$@"
