@@ -2,13 +2,14 @@
 
 main() {
         while getopts u:s: arg; do
-                case "${arg}" in
-                        u) test ! -z "$(grep -w "^${OPTARG}" /etc/passwd)" ||
-                           err "'${OPTARG}' is not in /etc/passwd"
-                           uid=$(id -u ${OPTARG}) ;;
-                        s) state="${OPTARG}" ;;
-                        *) usage
-                esac
+        case "${arg}" in
+                u) test ! -z "$(grep -w "^${OPTARG}" /etc/passwd)" ||
+                   err "'${OPTARG}' is not in /etc/passwd"
+                   uid=$(id -u ${OPTARG}) ;;
+                   # TODO: error check
+                s) state="${OPTARG}" ;;
+                *) usage
+        esac
         done
 
         printf "Name\tPID\tPPID\tUID\tGID\tState\n" | expand -t 16

@@ -16,7 +16,7 @@ main:
         syscall
         
         li      $v0, SYS_READ_WORD
-        syscall 
+        syscall
         
         # get 2 lowest bits
         andi    $t0, $v0, 3
