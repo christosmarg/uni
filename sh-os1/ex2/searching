@@ -3,6 +3,7 @@
 main() {
         test $# -eq 2 || usage
         isnumber ${1}
+        test ${1} -ge 0 && test ${1} -le 7777 || err "'${1}' is not a valid mode"
         isnumber ${2}
 
         sum1=0; sum2=0; sum3=0; sum4=0; sum5=0
@@ -12,6 +13,7 @@ main() {
                 test ! -z "${dir}" || err "please give a directory name"
                 test -d "${dir}" || err "'${dir}' is not a directory"
 
+                # TODO: minimize calls
                 echo "Files with permissions ${1}: "
                 find "${dir}" -perm ${1} 2> /dev/null
                 sum1=$((${sum1}+$(find "${dir}" -perm ${1} 2> /dev/null | wc -l)))
@@ -56,7 +58,7 @@ err() {
 }
 
 isnumber() {
-        test ! -z "$(echo "${1}" | grep "^[0-9]\+$")" || err "'${1}' is not a digit"
+        test ! -z "$(echo "${1}" | grep "^[0-9]\+$")" || err "'${1}' is not a valid number"
 }
 
 main "$@"
