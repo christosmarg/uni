@@ -1,32 +1,43 @@
 #!/bin/sh
 
-main() {
-        test $# -eq 2 || usage
-        isnumber ${1}
-        test ${1} -ge 0 && test ${1} -le 7777 || err "'${1}' is not a valid mode"
-        isnumber ${2}
+# ΧΡΗΣΤΟΣ ΜΑΡΓΙΩΛΗΣ - [REDACTED]
 
+main() {
+        mode=${1}
+        days=${2}
+        # Command line arguments must be 2.
+        test $# -eq 2 || usage
+        # Check if `1` and `2` are numbers, otherwise exit.
+        isnumber ${mode} || err "'${mode}' is not a valid number"
+        isnumber ${days} || err "'${days}' is not a valid number"
+        # In order for `mode` to really be a valid mode, `0 <= x <= 7777` must
+        # satisfied, since permission modes can range from 0 to 7777.
+        test ${mode} -ge 0 && test ${mode} -le 7777 || err "'${mode}' is not a valid mode"
+
+        # Pretty ugly loop.
         sum1=0; sum2=0; sum3=0; sum4=0; sum5=0
+        # Exit if `cont` is "n".
         while [ ! "${cont}" = "n" ] ; do
                 read -erp "Directory name: " dir
 
+                # Exit if nothing was typed.
                 test ! -z "${dir}" || err "please give a directory name"
+                # Check if `dir` really is a directory.
                 test -d "${dir}" || err "'${dir}' is not a directory"
 
-                # TODO: minimize calls
-                echo "Files with permissions ${1}: "
-                find "${dir}" -perm ${1} 2> /dev/null
-                sum1=$((${sum1}+$(find "${dir}" -perm ${1} 2> /dev/null | wc -l)))
+                echo "Files with permissions ${mode}: "
+                find "${dir}" -perm ${mode} 2> /dev/null
+                sum1=$((${sum1}+$(find "${dir}" -perm ${mode} 2> /dev/null | wc -l)))
                 echo ""
 
-                echo "Files modified within the last ${2} days: "
-                find "${dir}" -mtime -${2} 2> /dev/null
-                sum2=$((${sum2}+$(find "${dir}" -mtime -${2} 2> /dev/null | wc -l)))
+                echo "Files modified within the last ${days} days: "
+                find "${dir}" -mtime -${days} 2> /dev/null
+                sum2=$((${sum2}+$(find "${dir}" -mtime -${days} 2> /dev/null | wc -l)))
                 echo ""
 
-                echo "Subdirectories accessed within the last ${2} days: "
-                find "${dir}" -type d -atime -${2} 2> /dev/null
-                sum3=$((${sum3}+$(find "${dir}" -type d -atime -${2} 2> /dev/null | wc -l)))
+                echo "Subdirectories accessed within the last ${days} days: "
+                find "${dir}" -type d -atime -${days} 2> /dev/null
+                sum3=$((${sum3}+$(find "${dir}" -type d -atime -${days} 2> /dev/null | wc -l)))
                 echo ""
 
                 echo "Files which all users have read access to: "
@@ -41,6 +52,7 @@ main() {
 
                 read -erp "Do you want to continue (y/n)? " cont
                 test "${cont}" = "n" &&
+
                 printf "Total entries found for:\n1. %s\n2. %s\n3. %s\n4. %s\n5. %s\n" \
                         "${sum1}" "${sum2}" "${sum3}" "${sum4}" "${sum5}"
         done
@@ -48,6 +60,8 @@ main() {
 }
 
 usage() {
+        # `{0##*/}` means the first argument (i.e the script's name) with
+        # its path stripped, if it exists. 
         echo "usage: ${0##*/} perms days" 1>&2
         exit 1
 }
@@ -58,7 +72,11 @@ err() {
 }
 
 isnumber() {
-        test ! -z "$(echo "${1}" | grep "^[0-9]\+$")" || err "'${1}' is not a valid number"
+        # If the argument does not begin *and* end in a number, then
+        # it's not a number. This also excludes negative numbers, but
+        # we shouldn't accept negative numbers anyway.
+        test ! -z "$(echo "${1}" | grep "^[0-9]\+$")"
 }
 
+# Pass all command line arguments to `main`.
 main "$@"

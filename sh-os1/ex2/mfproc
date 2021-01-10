@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# ΧΡΗΣΤΟΣ ΜΑΡΓΙΩΛΗΣ - [REDACTED]
+
 # Exit codes:
 # 0     Success
 # 1     No user
@@ -7,47 +9,82 @@
 # 3     Usage
 
 main() {
-        # TODO: explain getopts(1)
+        # Using getopts(1) because it's easier to parse
+        # optional command line options. getopts(1) works
+        # by passing it all the available options. If an option
+        # is followed by a ':', that means that getopts(1) is
+        # expecting an argument as well. If no argument is passed,
+        # it exits with an error code of 1. In this case I've
+        # passed it the string "u:s:" which means that the options
+        # are '-u' and '-s' and both of them take an argument.
+        # The argument is always stored in the `OPTARG` environmental
+        # variable.
         while getopts u:s: arg; do
         case "${arg}" in
+                # In order for `username` to really be a user's name, it
+                # has to exist in `/etc/passwd`.
                 u) test ! -z "$(grep -w "^${OPTARG}" /etc/passwd)" ||
                    err "'${OPTARG}' is not in /etc/passwd" 1
+                   # Get UID from username.
                    uid=$(id -u ${OPTARG}) ;;
                 s) state="${OPTARG}"
+                   # `state` needs to be either S, R or Z in order
+                   # to be valid.
                    validstate ${state} || usage ;;
                 *) usage
         esac
         done
 
         count=0
+        # Print header. expand(1) will will expand \t to 16 spaces
+        # in order for the output to be aligned.
         printf "Name\tPID\tPPID\tUID\tGID\tState\n" | expand -t 16
+
+        # Parse each process in `/proc`. This is a slow way to parse it though.
         for proc in /proc/*/status; do
                 procuid=$(getfield "Uid:\s*${uid}" ${proc})
                 procgid=$(getfield "Gid" ${proc})
+                # If the `-u` option was passed, ignore every UID that
+                # does not match the UID we gave it as an argument.
+                # We're using a `continue` command here so that it
+                # stop searching for anything else in this file since
+                # we don't need it.
                 test -z ${uid} || [ "${procuid}" == "${uid}" ] || continue
 
                 procstate=$(getfield "State:\s*${state}" ${proc})
+
                 # Ignore any state other than S|R|Z
                 validstate ${procstate} || continue
+
+                # If the `-s` option was passed, ignore every state that does
+                # not match the one we gave it as an argument.
                 test -z ${state} || [ "${procstate}" == "${state}" ] || continue
 
                 procname=$(getfield "Name" ${proc})
                 procpid=$(getfield "Pid" ${proc})
                 procppid=$(getfield "PPid" ${proc})
 
+                # Print everything in a top(1)-like format.
                 printf "%s\t%s\t%s\t%s\t%s\t%s\n" \
                 ${procname} ${procpid} ${procppid} ${procuid} ${procgid} ${procstate} |
                 expand -t 16
+
+                # Increment counter by 1 to keep track of how many processes
+                # we have printed. If `count` is 0 after the loop, the script
+                # will exit with error code 2, as is done below.
                 count=$(expr ${count} + 1)
         done
 
         # We didn't print any process
         test ${count} -eq 0 && exit 2
+
         # Success!
         exit 0
 }
 
 usage() {
+        # `{0##*/}` means the first argument (i.e the script's name) with
+        # its path stripped, if it exists. 
         echo "usage: ${0##*/} [-u username] [-s S|R|Z]" 1>&2
         exit 3
 }
@@ -57,12 +94,17 @@ err() {
         exit ${2}
 }
 
+# Check if process is either S, R or Z.
 validstate() {
         [ "${1}" = "S" ] || [ "${1}" = "R" ] || [ "${1}" = "Z" ]
 }
 
+# Get wanted field. grep(1) will return the line
+# that begins with the first argument we passed.
+# awk(1) is used to extract the 2nd field in the string.
 getfield() {
         grep -w "^${1}" ${2} | awk '{print $2}'
 }
 
+# Pass all command line arguments to `main`.
 main "$@"
