@@ -6,12 +6,12 @@ end fa_tb;
 
 architecture behav of fa_tb is
 
-signal a1, b1, cin1: bit;
-signal s1, cout1: bit;
+signal a1, b1, cin1: std_logic;
+signal s1, cout1: std_logic;
 
 component fa is port (
-        a, b, cin: in bit;
-        s, cout: out bit
+        a, b, cin: in std_logic;
+        s, cout: out std_logic
 );
 end component;
 

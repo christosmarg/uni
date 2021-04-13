@@ -93,7 +93,7 @@ main(int argc, char *argv[])
                 default:
                         /* wait for P2 to exit */
                         if (wait(NULL) == -1)
-                                die("waitpid");
+                                die("wait");
                 }
                 if (execl("/bin/ps", "ps", NULL) == -1)
                         die("execl");
