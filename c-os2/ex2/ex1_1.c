@@ -84,7 +84,8 @@ main(int argc, char *argv[])
 	while (n--) {
 		for (i = 0; i < len; i++) {
 			/* Get appropriate string. */
-			f->str = strdup(nums[i % len]);
+			if ((f->str = strdup(nums[i % len])) == NULL)
+				die("strdup");
 			if (pthread_create(&tds[i], NULL, tdprint, (void *)f) != 0)
 				die("pthread_create");
 			if (pthread_join(tds[i], NULL) != 0)
