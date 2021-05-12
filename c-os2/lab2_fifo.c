@@ -11,7 +11,7 @@ static void
 die(const char *str)
 {
         perror(str);
-        exit(EXIT_FAILURE);
+        exit(1);
 }
 
 int

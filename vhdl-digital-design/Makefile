@@ -1,6 +1,6 @@
 all:
-	ghdl -a ${IN}.vhd
-	ghdl -e ${IN}
+	ghdl -a --ieee=synopsys ${IN}.vhd
+	ghdl -e --ieee=synopsys ${IN}
 	ghdl -r ${IN} --vcd=${IN}.vcd
 
 sim:
