@@ -12,7 +12,7 @@
  * Εργαστήριο ΛΣ2 (Δ6) / Εργασία 2: Άσκηση 3 (server) / 2020-2021
  * Ονοματεπώνυμο: Χρήστος Μαργιώλης
  * ΑΜ: 19390133
- * Τρόπος μεταγλώττισης: `cc ex3_server.c -lpthread -o ex3_server`
+ * Τρόπος μεταγλώττισης: `cc ex3_server.c -o ex3_server`
  */
 
 /* Results to be sent back to the client. */
@@ -180,7 +180,7 @@ main(int argc, char *argv[])
 
 	if (bind(sfd, (struct sockaddr *)&sun, sizeof(sun)) == -1)
 		die("bind");
-	if (listen(sfd, BACKLOG) == -1)
+	if (listen(sfd, backlog) == -1)
 		die("listen");
 
 	f = emalloc(sizeof(struct foo));
