@@ -14,7 +14,7 @@ static char *argv0;
 static void
 die(const char *str)
 {
-	(void)fprintf(stderr, "%s: ", argv0);
+	fprintf(stderr, "%s: ", argv0);
         perror(str);
         exit(1);
 }
@@ -29,7 +29,7 @@ main(int argc, char *argv[])
 
 	argv0 = *argv;
         if (argc != 2) {
-		(void)fprintf(stderr, "usage: %s file\n", argv0);
+		fprintf(stderr, "usage: %s file\n", argv0);
 		return 1;
 	}
         if ((fp = fopen(argv[1], "r")) == NULL)

@@ -2,6 +2,15 @@
 #define _SCORE_HPP_
 
 class Score {
+private:
+	struct HighScores {
+		char name[10];
+		int score;
+	} hiscores[5];
+
+public:
+	Score();
+	~Score();
 };
 
 #endif /* _SCORE_HPP_ */

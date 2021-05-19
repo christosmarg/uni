@@ -1,3 +1,5 @@
+#include <cstring>
+
 #include "Engine.hpp"
 
 /* Function declarations */

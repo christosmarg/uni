@@ -64,7 +64,7 @@ begin
 		s_clk <= '1';
 		wait for 250 ns;
 
-		s_we <= '0';
+		s_we <= '1';
 		s_clk <= '0';
 		s_addr <= "10";
 		s_a <= "0010";

@@ -15,6 +15,12 @@
 #include "Traal.hpp"
 #include "Score.hpp"
 
+#ifndef ESC
+#define ESC 27
+#endif /* ESC */
+
+#define CENTER(x, y) (((x) >> 1) - ((y) >> 1))
+
 class Engine {
 private:
 
@@ -43,6 +49,7 @@ private:
 	bool init_curses();
 	bool init_entities();
 	bool init_score(const char *scorefile);
+	void menuopts();
 };
 
 #endif /* _ENGINE_HPP_ */
