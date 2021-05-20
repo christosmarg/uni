@@ -56,10 +56,10 @@ srv(struct foo *foo)
 	f = (struct foo *)foo;
 	while (cont != 'n') {
 		if (recv(f->cfd, &n, sizeof(int), 0) == -1)
-			goto exit;
+			goto fail;
 		arr = emalloc(n * sizeof(int));
 		if (recv(f->cfd, arr, n * sizeof(int), 0) == -1)
-			goto exit;
+			goto fail;
 		res = emalloc(sizeof(struct pack_res));
 		printf("cfd: %d\tn: %d\n", f->cfd, n);
 		for (i = 0, sum = 0; i < n; i++) {
@@ -75,18 +75,18 @@ srv(struct foo *foo)
 			(void)strncpy(res->str, "sequence: failed",
 			    sizeof(res->str) - 1);
 		if (send(f->cfd, res, sizeof(struct pack_res), 0) == -1)
-			goto exit;
+			goto fail;
 		f->ntotal++;
 		printf("[%s] success: %d: total: %d\n",
 		    argv0, f->nsucc, f->ntotal);
 
 		if (recv(f->cfd, &cont, 1, 0) == -1)
-			goto exit;
+			goto fail;
 		free(arr);
 	}
 	rc = 0;
 
-exit:
+fail:
 	printf("[%s] connection with client %d closed\n", argv0, f->cfd);
 	(void)close(f->cfd);
 	if (arr != NULL)

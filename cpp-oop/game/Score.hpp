@@ -3,7 +3,7 @@
 
 class Score {
 private:
-	struct HighScores {
+	struct HighScore {
 		char name[10];
 		int score;
 	} hiscores[5];

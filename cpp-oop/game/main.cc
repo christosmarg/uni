@@ -18,39 +18,43 @@ die(const std::string& str)
 static void
 usage()
 {
-	std::cerr << "usage: " << argv0 << " map_file score_file" << std::endl;
+	std::cerr << "usage: " << argv0 << " <map_file> <score_file>" << std::endl;
 	exit(1);
 }
 
 int
 main(int argc, char *argv[])
 {
-	Engine eng;
+	Engine *eng;
 	char *mapfile, *scorefile;
 
 	argv0 = *argv++;
-
 	if (argc < 3)
 		usage();
 	mapfile = *argv++;
 	scorefile = *argv;
+
 	if (!strcmp(mapfile, scorefile))
-		die("input files must not be the same");
+		die("input files cannot be the same");
+	/* 
+	 * We're linking with `lncursesw` so we need to have UTF-8 enabled,
+	 * otherwise colors and certain characters might not show up properly.
+	 */
 	if (!setlocale(LC_ALL, ""))
 		die("setlocale");
 
 	try {
-		eng.init(mapfile, scorefile);
+		eng = new Engine(mapfile, scorefile);
 	} catch (std::string e) {
 		die(e);
 	}
-
-	while (eng.is_running()) {
-		eng.kbd_input();
-		eng.collisions();
-		eng.upd_score();
-		eng.redraw();
+	while (eng->is_running()) {
+		eng->kbd_input();
+		eng->collisions();
+		eng->upd_score();
+		eng->redraw();
 	}
+	delete eng;
 
 	return 0;
 }

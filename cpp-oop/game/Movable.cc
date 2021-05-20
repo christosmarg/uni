@@ -1,9 +1,5 @@
 #include "Movable.hpp"
 
-Movable::Movable()
-{
-}
-
 Movable::Movable(int x, int y, int dir, char sym)
 	:x(x), y(y), dir(dir), sym(sym)
 {
@@ -22,12 +18,12 @@ Movable::set_newpos(int dir, int xmax, int ymax)
 			x = 0;
 		break;
 	case Direction::RIGHT:
-		if (++x > xmax - 1)
-			x = xmax - 1;
+		if (++x > xmax - 2)
+			x = xmax - 2;
 		break;
 	case Direction::UP:
-		if (--y < 2)
-			y = 2;
+		if (--y < 0)
+			y = 0;
 		break;
 	case Direction::DOWN:
 		if (++y > ymax - 1)
