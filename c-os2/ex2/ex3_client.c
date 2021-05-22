@@ -70,12 +70,12 @@ main(int argc, char *argv[])
 	argv += optind;
 
 
-	if ((fd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1)
+	if ((fd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0)
 		die("socket");
 	(void)memset(&sun, 0, sizeof(sun));
 	sun.sun_family = AF_UNIX;
 	(void)strncpy(sun.sun_path, sockfile, sizeof(sun.sun_path) - 1);
-	if (connect(fd, (struct sockaddr *)&sun, sizeof(struct sockaddr_un)) == -1)
+	if (connect(fd, (struct sockaddr *)&sun, sizeof(struct sockaddr_un)) < 0)
 		die("connect");
 
 	res = emalloc(sizeof(struct pack_res));
@@ -95,17 +95,17 @@ main(int argc, char *argv[])
 			scanf("%d", &arr[i]);
 		}
 		(void)getchar();
-		if (send(fd, &n, sizeof(int), 0) == -1)
+		if (send(fd, &n, sizeof(int), 0) < 0)
 			die("send");
-		if (send(fd, arr, n * sizeof(int), 0) == -1)
+		if (send(fd, arr, n * sizeof(int), 0) < 0)
 			die("send");
-		if (recv(fd, res, sizeof(struct pack_res), 0) == -1)
+		if (recv(fd, res, sizeof(struct pack_res), 0) < 0)
 			die("recv");
 		printf("response: %s\tavg: %.2f\n", res->str, res->avg);
 
 		printf("%s> continue (y/n)? ", argv0);
 		ch = getchar();
-		if (send(fd, &ch, 1, 0) == -1)
+		if (send(fd, &ch, 1, 0) < 0)
 			die("send");
 		if (ch == 'n')
 			break;

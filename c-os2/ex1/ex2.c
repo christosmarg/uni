@@ -69,7 +69,7 @@ main(int argc, char *argv[])
 		/* Print the message to stdout */
 		if (write(STDOUT_FILENO, buf, n) != n)
 			die("write");
-		if (wait(NULL) == -1)
+		if (wait(NULL) < 0)
 			die("wait");
 		/* Create P2 */
 		switch (fork()) {
@@ -87,21 +87,21 @@ main(int argc, char *argv[])
 					exit(EXIT_SUCCESS);
 				default:
 					/* Wait for all children to exit first */
-					if (wait(NULL) == -1)
+					if (wait(NULL) < 0)
 						die("wait");
 				}
 			}
 			exit(EXIT_SUCCESS);
 		default:
 			/* wait for P2 to exit */
-			if (wait(NULL) == -1)
+			if (wait(NULL) < 0)
 				die("wait");
 		}
 		/* 
 		 * Finally, the parent process executes ps(1) after
 		 * everything else has exited 
 		 */
-		if (execl("/bin/ps", "ps", NULL) == -1)
+		if (execl("/bin/ps", "ps", NULL) < 0)
 			die("execl");
 	}
 

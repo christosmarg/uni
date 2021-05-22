@@ -1,7 +1,7 @@
 #include <cstring>
 #include "Score.hpp"
 
-Score::Score()
+Score::Score(const char *scorefile)
 {
 	(void)memset(&hiscores, 0, sizeof(hiscores));
 }

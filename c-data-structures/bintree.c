@@ -110,7 +110,7 @@ main(int argc, char *argv[])
                         printinorder(root);
                         break;
                 case 3:
-                        if ((max = maxgrade(root)) == -1)
+                        if ((max = maxgrade(root)) < 0)
                                 puts("Empty tree.");
                         else
                                 printf("Max grade: %.2f\n", max);

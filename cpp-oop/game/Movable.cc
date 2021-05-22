@@ -30,6 +30,7 @@ Movable::set_newpos(int dir, int xmax, int ymax)
 			y = ymax - 1;
 		break;
 	}
+	this->dir = dir;
 }
 
 int
@@ -42,6 +43,12 @@ int
 Movable::get_y()
 {
 	return y;
+}
+
+int
+Movable::get_dir()
+{
+	return dir;
 }
 
 char

@@ -55,10 +55,10 @@ srv(struct foo *foo)
 	rc = -1;
 	f = (struct foo *)foo;
 	while (cont != 'n') {
-		if (recv(f->cfd, &n, sizeof(int), 0) == -1)
+		if (recv(f->cfd, &n, sizeof(int), 0) < 0)
 			goto fail;
 		arr = emalloc(n * sizeof(int));
-		if (recv(f->cfd, arr, n * sizeof(int), 0) == -1)
+		if (recv(f->cfd, arr, n * sizeof(int), 0) < 0)
 			goto fail;
 		res = emalloc(sizeof(struct pack_res));
 		printf("cfd: %d\tn: %d\n", f->cfd, n);
@@ -74,13 +74,13 @@ srv(struct foo *foo)
 		} else
 			(void)strncpy(res->str, "sequence: failed",
 			    sizeof(res->str) - 1);
-		if (send(f->cfd, res, sizeof(struct pack_res), 0) == -1)
+		if (send(f->cfd, res, sizeof(struct pack_res), 0) < 0)
 			goto fail;
 		f->ntotal++;
 		printf("[%s] success: %d: total: %d\n",
 		    argv0, f->nsucc, f->ntotal);
 
-		if (recv(f->cfd, &cont, 1, 0) == -1)
+		if (recv(f->cfd, &cont, 1, 0) < 0)
 			goto fail;
 		free(arr);
 	}
@@ -175,22 +175,22 @@ main(int argc, char *argv[])
 	(void)sigemptyset(&sa.sa_mask);
 	sa.sa_handler = sighandler;
 	sa.sa_flags = SA_RESTART;
-	if (sigaction(SIGHUP, &sa, NULL) == -1)
-		die("sigaction: SIGHUP");
-	if (sigaction(SIGINT, &sa, NULL) == -1)
-		die("sigaction: SIGINT");
-	if (sigaction(SIGTERM, &sa, NULL) == -1)
-		die("sigaction: SIGTERM");
+	/*if (sigaction(SIGHUP, &sa, NULL) < 0)*/
+		/*die("sigaction: SIGHUP");*/
+	/*if (sigaction(SIGINT, &sa, NULL) < 0)*/
+		/*die("sigaction: SIGINT");*/
+	/*if (sigaction(SIGTERM, &sa, NULL) < 0)*/
+		/*die("sigaction: SIGTERM");*/
 
-	if ((sfd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1)
+	if ((sfd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0)
 		die("socket");
 	(void)memset(&sun, 0, sizeof(sun));
 	sun.sun_family = AF_UNIX;
 	(void)strncpy(sun.sun_path, sockfile, sizeof(sun.sun_path) - 1);
 
-	if (bind(sfd, (struct sockaddr *)&sun, sizeof(sun)) == -1)
+	if (bind(sfd, (struct sockaddr *)&sun, sizeof(sun)) < 0)
 		die("bind");
-	if (listen(sfd, backlog) == -1)
+	if (listen(sfd, backlog) < 0)
 		die("listen");
 
 	f = emalloc(sizeof(struct foo));
@@ -205,14 +205,14 @@ main(int argc, char *argv[])
 		 * accept(2)'s `addr` and `addrlen` arguments can be NULL if
 		 * we don't care about the address information of the client.
 		 */
-		if ((f->cfd = accept(sfd, NULL, NULL)) == -1)
+		if ((f->cfd = accept(sfd, NULL, NULL)) < 0)
 			continue;
 		printf("[%s] accepted client: %d\n", argv0, f->cfd);
 		switch (fork()) {
 		case -1:
 			die("fork");
 		case 0:
-			if (srv(f) == -1)
+			if (srv(f) < 0)
 				perror("srv");
 			_exit(0);
 		default:
