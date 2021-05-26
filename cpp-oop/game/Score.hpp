@@ -2,6 +2,7 @@
 #define _SCORE_HPP_
 
 #include <fstream>
+#include <vector>
 
 class Score {
 private:
@@ -9,6 +10,9 @@ private:
 		char name[10];
 		int score;
 	} hiscores[5];
+
+	std::fstream sf;
+	int curscore;
 
 public:
 	Score(const char *scorefile);

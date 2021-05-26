@@ -2,6 +2,7 @@
 #include <sys/types.h>
 #include <sys/un.h>
 
+#include <err.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,7 +31,6 @@ struct foo {
 static int srv(struct foo *);
 static void sighandler(int);
 static void *emalloc(size_t);
-static void die(const char *);
 
 static char *argv0;
 /* Only gets set if a termination signal is caught. */
@@ -44,7 +44,7 @@ srv(struct foo *foo)
 	int *arr;
 	int i, n, sum;
 	int rc;
-	char cont = 'y';
+	char cont;
 
 	/*
 	 * The return code is -1 (error) by default so that we don't
@@ -54,7 +54,7 @@ srv(struct foo *foo)
 	 */
 	rc = -1;
 	f = (struct foo *)foo;
-	while (cont != 'n') {
+	for (;;) {
 		if (recv(f->cfd, &n, sizeof(int), 0) < 0)
 			goto fail;
 		arr = emalloc(n * sizeof(int));
@@ -66,6 +66,13 @@ srv(struct foo *foo)
 			printf("cfd: %d\tarr[%d]: %d\n", f->cfd, i, arr[i]);
 			sum += arr[i];
 		}
+		free(arr);
+		/* 
+		 * If we go to `fail:`, `gcc` for some reason double frees if 
+		 * we don't manually set it to NULL, even though we explicitly 
+		 * check for NULL first...
+		 */
+		arr = NULL;
 
 		if ((res->avg = sum / (float)n) > 10.0f) {
 			(void)strncpy(res->str, "sequence: ok",
@@ -82,7 +89,8 @@ srv(struct foo *foo)
 
 		if (recv(f->cfd, &cont, 1, 0) < 0)
 			goto fail;
-		free(arr);
+		if (cont == 'n')
+			break;
 	}
 	rc = 0;
 
@@ -109,18 +117,8 @@ emalloc(size_t nb)
 	void *p;
 
 	if ((p = malloc(nb)) == NULL)
-		die("malloc");
-
+		err(1, "malloc");
 	return p;
-}
-
-/* FIXME: clean up resources as well. */
-static void
-die(const char *str)
-{
-	fprintf(stderr, "%s: ", argv0);
-	perror(str);
-	exit(1);
 }
 
 static void
@@ -151,7 +149,7 @@ main(int argc, char *argv[])
 			 * listen(2)'s FreeBSD man page), but it's better to
 			 * not allow it in case the user passes a negative
 			 * value accidentally. Also a value of 0 doesn't make
-			 * any sense, so we don't allow it either.
+			 * sense, so we don't allow it either.
 			 */
 			if ((backlog = atoi(optarg)) < 1)
 				usage();
@@ -176,22 +174,22 @@ main(int argc, char *argv[])
 	sa.sa_handler = sighandler;
 	sa.sa_flags = SA_RESTART;
 	/*if (sigaction(SIGHUP, &sa, NULL) < 0)*/
-		/*die("sigaction: SIGHUP");*/
+		/*err(1, "sigaction: SIGHUP");*/
 	/*if (sigaction(SIGINT, &sa, NULL) < 0)*/
-		/*die("sigaction: SIGINT");*/
+		/*err(1, "sigaction: SIGINT");*/
 	/*if (sigaction(SIGTERM, &sa, NULL) < 0)*/
-		/*die("sigaction: SIGTERM");*/
+		/*err(1, "sigaction: SIGTERM");*/
 
 	if ((sfd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0)
-		die("socket");
+		err(1, "socket");
 	(void)memset(&sun, 0, sizeof(sun));
 	sun.sun_family = AF_UNIX;
 	(void)strncpy(sun.sun_path, sockfile, sizeof(sun.sun_path) - 1);
 
 	if (bind(sfd, (struct sockaddr *)&sun, sizeof(sun)) < 0)
-		die("bind");
+		err(1, "bind");
 	if (listen(sfd, backlog) < 0)
-		die("listen");
+		err(1, "listen");
 
 	f = emalloc(sizeof(struct foo));
 	f->nsucc = 0;
@@ -210,10 +208,10 @@ main(int argc, char *argv[])
 		printf("[%s] accepted client: %d\n", argv0, f->cfd);
 		switch (fork()) {
 		case -1:
-			die("fork");
+			err(1, "fork");
 		case 0:
 			if (srv(f) < 0)
-				perror("srv");
+				warnx("srv failed");
 			_exit(0);
 		default:
 			(void)close(f->cfd);

@@ -2,9 +2,6 @@
 
 #include "Engine.hpp"
 
-/* Function declarations */
-static void die(const std::string&);
-
 /* Program name */
 static char *argv0;
 
