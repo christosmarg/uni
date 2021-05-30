@@ -8,6 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include <map>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -28,7 +29,7 @@ class Engine {
 private:
 
 	std::vector<Movable *> entities;
-	std::vector<std::vector<char>> map;
+	std::vector<std::string> map;
 	std::vector<int> colors;
 	Potter *player;
 	Score *score;
@@ -54,8 +55,9 @@ public:
 	bool is_running();
 
 private:
-	bool load_map(const char *mapfile);
 	bool init_curses();
+	bool init_gamewin();
+	void load_map(const char *mapfile);
 	void calc_pos(int *x, int *y);
 	bool init_entities();
 	bool init_score(const char *scorefile);

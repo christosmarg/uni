@@ -42,8 +42,8 @@ static void
 usage(void)
 {
 	fprintf(stderr, "usage: %1$s [-s sockfile]\n"
-	    "       %1$s [-i [-p port]] [-s sockfile] hostname\n"
-	    "       %1$s [-i [-p port]] [-s sockfile] ipv4_addr\n", argv0);
+	    "       %1$s -i [-p port] [-s sockfile] hostname\n"
+	    "       %1$s -i [-p port] [-s sockfile] ipv4_addr\n", argv0);
 	exit(1);
 }
 
@@ -62,19 +62,16 @@ main(int argc, char *argv[])
 	char ch;
 
 	argv0 = *argv;
-	/* Run on the UNIX domain by default. */
 	uflag = 1;
 	iflag = 0;
 
 	while ((ch = getopt(argc, argv, "ip:s:")) != -1) {
 		switch (ch) {
 		case 'i':
-			/* Run the server on the internet domain. */
 			iflag = 1;
 			uflag = 0;
 			break;
 		case 'p':
-			/* Choose custom port but don't use a well-known port. */
 			if ((port = atoi(optarg)) < 1024)
 				errx(1, "can't use port number < 1024");
 			break;
@@ -89,7 +86,6 @@ main(int argc, char *argv[])
 	argc -= optind;
 	argv += optind;
 
-	/* If we're on the internet domain, we also need a hostname. */
 	if (iflag && argc < 1)
 		usage();
 

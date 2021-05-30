@@ -18,7 +18,7 @@ struct foo {
 	int **d;	/* `d[i][j] = g_max - g_arr[i][j]` */
 	int *l_max;	/* Local maximums. */
 	int g_max;	/* Global maximum. */
-	int l_n;	/* Number of elements for each thread. */
+	int l_n;	/* Number of elements each thread will work with. */
 	int n;		/* Dimensions. */
 	int ntd;	/* Number of threads. */
 	int tid;	/* Thread ID. */
@@ -26,19 +26,17 @@ struct foo {
 	pthread_barrier_t bar;
 };
 
-/* Function declarations */
 static void *threaded_stuff(void *);
 static void *emalloc(size_t);
 static void usage(void);
 
-/* Global variables */
 static char *argv0;
 
 static void *
-threaded_stuff(void *foo)
+thread_callback(void *foo)
 {
 	struct foo *f;
-	int i, j, start, end, max;
+	int i, j, start, end, max, rc;
 	
 	f = (struct foo *)foo;
 	/* 
@@ -82,25 +80,46 @@ threaded_stuff(void *foo)
 				max = f->g_arr[i][j];
 	f->l_max[f->tid] = max;
 
-	/* Calculate the global max, no need for more functions. */
+	/* Calculate the global max right away, no need for more functions. */
 	if (pthread_mutex_lock(&f->mtx) != 0)
 		err(1, "pthread_mutex_lock");
 	if (f->tid == 0)
 		f->g_max = *f->l_max;
 	else if (f->l_max[f->tid] > f->g_max)
 		f->g_max = f->l_max[f->tid];
+
+	/* 
+	 * We need to know each thread's ID in order to calculate `start`
+	 * and `end` properly. Since we don't touch `f->tid` inside `main`
+	 * (apart from initializing it), we need to change its value here.
+	 */
+	f->tid++;
 	if (pthread_mutex_unlock(&f->mtx) != 0)
 		err(1, "pthread_mutex_unlock");
+
 	/* 
 	 * Wait for all threads to finish executing the statements above, 
 	 * then continue. 
-	 * FIXME
 	 */
-	(void)pthread_barrier_wait(&f->bar);
-	if (errno == EINVAL)
+	rc = pthread_barrier_wait(&f->bar);
+	if ((rc != 0 && rc != PTHREAD_BARRIER_SERIAL_THREAD) || errno == EINVAL)
 		err(1, "pthread_barrier_wait");
 
+	/* 
+	 * We'll get here once all threads have passed the barrier, which
+	 * means that `f->tid` will be equal to the total number of threads.
+	 * In order for `start` and `end` to be offset properly again, we now 
+	 * need to go backwards.
+	 */
+	if (pthread_mutex_lock(&f->mtx) != 0)
+		err(1, "pthread_mutex_lock");
+	f->tid--;
+	if (pthread_mutex_unlock(&f->mtx) != 0)
+		err(1, "pthread_mutex_unlock");
+
 	/* Calculate the D array. */
+	start = f->tid * f->l_n;
+	end = start + f->l_n;
 	for (i = start; i < end; i++)
 		for (j = 0; j < f->n; j++)
 			f->d[i][j] = f->g_max - f->g_arr[i][j];
@@ -139,11 +158,16 @@ main(int argc, char *argv[])
 	do {
 		printf("p: ");
 		scanf("%d", &f->ntd);
-	} while (f->ntd < 0);
+	/* Cannot have less than 1 threads. */
+	} while (f->ntd < 1);
 
 	do {
 		printf("n: ");
 		scanf("%d", &f->n);
+	/* 
+	 * The number of elements must be greater than 0 (obviously) and
+	 * a multiple of the number of threads.
+	 */
 	} while (f->n < 0 || f->n % f->ntd != 0);
 
 	tds = emalloc(f->ntd * sizeof(pthread_t));
@@ -165,13 +189,12 @@ main(int argc, char *argv[])
 	if (pthread_barrier_init(&f->bar, NULL, f->ntd) != 0)
 		err(1, "pthread_barrier_init");
 
-	for (i = 0; i < f->ntd; i++) {
-		f->tid = i;
-		if (pthread_create(&tds[i], NULL, threaded_stuff, (void *)f) != 0)
+	for (i = 0, f->tid = 0; i < f->ntd; i++)
+		if (pthread_create(&tds[i], NULL, thread_callback, (void *)f) != 0)
 			err(1, "pthread_create");
+	for (i = 0; i < f->ntd; i++)
 		if (pthread_join(tds[i], NULL) != 0)
 			err(1, "pthread_join");
-	}
 
 	/* Print results. */
 	for (i = 0; i < f->n; i++)

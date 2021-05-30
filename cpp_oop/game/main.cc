@@ -43,7 +43,7 @@ main(int argc, char *argv[])
 
 	try {
 		eng = new Engine(mapfile, scorefile);
-	} catch (std::string e) {
+	} catch (const std::string& e) {
 		die(e);
 	}
 	while (eng->is_running()) {

@@ -16,13 +16,14 @@
 
 struct foo {
 	char *str;
+	int done;
+	int tid;
 	pthread_mutex_t mtx;
 	pthread_cond_t cv;
-	int done;
 };
 
 /* Function declarations */
-static void *tdprint(void *);
+static void *thread_callback(void *);
 static void *emalloc(size_t);
 static void usage(void);
 
@@ -35,7 +36,7 @@ static const char *nums[] = {
 };
 
 static void *
-tdprint(void *foo)
+thread_callback(void *foo)
 {
 	struct foo *f;
 	
@@ -47,14 +48,17 @@ tdprint(void *foo)
 	 * with `pthread_cond_wait`.
 	 */
 	f->done = 0;
+	if ((f->str = strdup(nums[f->tid++])) == NULL)
+		err(1, "strdup");
 	printf("%s", f->str);
 	free(f->str);
 	f->done = 1;
+
 	/* If a thread is not done executing the statements above, wait. */
 	if (!f->done) {
 		if (pthread_cond_wait(&f->cv, &f->mtx) != 0)
 			err(1, "pthread_cond_wait");
-	/* We're done, the next thread can do its job now. */
+	/* We're done, the next threads can do their job now. */
 	} else {
 		if (pthread_cond_signal(&f->cv) != 0)
 			err(1, "pthread_cond_signal");
@@ -96,7 +100,7 @@ main(int argc, char *argv[])
 		switch (ch) {
 		case 'n':
 			if ((n = atoi(optarg)) < 1)
-				usage();
+				errx(1, "value must be greater than 1");
 			break;
 		case '?':
 		default:
@@ -110,20 +114,20 @@ main(int argc, char *argv[])
 	tds = emalloc(len * sizeof(pthread_t));
 	f = emalloc(sizeof(struct foo));
 
-	f->done = 0;
 	if (pthread_mutex_init(&f->mtx, NULL) != 0)
 		err(1, "pthread_mutex_init");
 	if (pthread_cond_init(&f->cv, NULL) != 0)
 		err(1, "pthread_cond_init");
+
 	while (n--) {
-		for (i = 0; i < len; i++) {
-			if ((f->str = strdup(nums[i])) == NULL)
-				err(1, "strdup");
-			if (pthread_create(&tds[i], NULL, tdprint, (void *)f) != 0)
+		f->done = f->tid = 0;
+		for (i = 0; i < len; i++)
+			if (pthread_create(&tds[i], NULL, 
+			    thread_callback, (void *)f) != 0)
 				err(1, "pthread_create");
+		for (i = 0; i < len; i++)
 			if (pthread_join(tds[i], NULL) != 0)
 				err(1, "pthread_join");
-		}
 	}
 	printf("\n");
 
