@@ -159,9 +159,10 @@ main(int argc, char *argv[])
 		printf("\rp: ");
 		/* 
 		 * Save the return value of scanf(3) to make sure
-		 * that we did read valid input.
+		 * we did read valid input.
 		 */
 		rc = scanf("%d", &f->ntd);
+		/* Flush input buffer. */
 		(void)getchar();
 	/* Cannot have less than 1 threads. */
 	} while (f->ntd < 1 || rc != 1);
@@ -172,7 +173,7 @@ main(int argc, char *argv[])
 		(void)getchar();
 	/* 
 	 * The number of elements must be greater than 0 (obviously) and
-	 * a multiple of the number of threads.
+	 * a multiple of the total number of threads.
 	 */
 	} while (f->n < 0 || f->n % f->ntd != 0 || rc != 1);
 
