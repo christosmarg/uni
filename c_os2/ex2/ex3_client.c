@@ -25,9 +25,6 @@ struct pack_res {
 	float avg;
 };
 
-static void *emalloc(size_t nb);
-static void usage(void);
-
 static char *argv0;
 
 static void *
@@ -50,7 +47,6 @@ usage(void)
 	exit(1);
 }
 
-/* Code shared with `ex3_server` is explained in `ex3_server.c`. */
 int
 main(int argc, char *argv[])
 {
@@ -125,7 +121,7 @@ main(int argc, char *argv[])
 
 		/* Make sure we send valid input to the server */
 		do {
-			printf("\r%s> n: ", argv0);
+			printf("%s> n: ", argv0);
 			rc = scanf("%d", &n);
 			/* Flush input buffer */
 			(void)getchar();
@@ -133,7 +129,7 @@ main(int argc, char *argv[])
 		arr = emalloc(n * sizeof(int));
 		for (i = 0; i < n; i++) {
 			do {
-				printf("\r%s> arr[%d]: ", argv0, i);
+				printf("%s> arr[%d]: ", argv0, i);
 				rc = scanf("%d", &arr[i]);
 				(void)getchar();
 			} while (rc != 1);
@@ -144,17 +140,17 @@ main(int argc, char *argv[])
 			err(1, "send");
 		if (recv(fd, res, sizeof(struct pack_res), 0) < 0)
 			err(1, "recv");
-		free(arr);
 
+		free(arr);
 		printf("server response: %s\tavg: %.2f\n", res->str, res->avg);
-		do
-			printf("\r%s> continue (y/n)? ", argv0);
-		while ((ch = getchar()) != 'y' && ch != 'n');
+		printf("%s> continue (y/n)? ", argv0);
+		ch = getchar();
 		if (send(fd, &ch, 1, 0) < 0)
 			err(1, "send");
 		if (ch == 'n')
 			break;
 	}
+
 	free(res);
 	(void)close(fd);
 

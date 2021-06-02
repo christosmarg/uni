@@ -125,14 +125,6 @@ Engine::load_map(const char *mapfile)
 		if (l != str.length())
 			throw std::runtime_error("rows must have an equal "
 			    "length: line " + std::to_string(curline));
-		
-		/* The map must not contain anything other than ' ' and '*'. */
-		for (char& c : str)
-			if (c != ' ' && c != '*')
-				throw std::runtime_error("the map must contain "
-				    "only spaces and asterisks: line: " + 
-				    std::to_string(curline));
-
 		map.push_back(str);
 		curline++;
 	}
@@ -145,10 +137,7 @@ Engine::load_map(const char *mapfile)
 	w = map[0].length();
 	h = map.size();
 
-	/* 
-	 * The map has to fit in the screen, obviously. The top 2 lines on 
-	 * the Y axis are reserved for the status bar.
-	 */
+	/* The map has to fit in the screen. */
 	if (w > xmax || h > ymax - 2)
 		throw std::runtime_error("the map doesn't fit to screen");
 }
