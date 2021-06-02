@@ -91,7 +91,7 @@ thread_callback(void *foo)
 	/* 
 	 * We need to know each thread's ID in order to calculate `start`
 	 * and `end` properly. Since we don't touch `f->tid` inside `main`
-	 * (apart from initializing it), we need to change its value here.
+	 * (apart from initializing it), we need to update it here.
 	 */
 	f->tid++;
 	if (pthread_mutex_unlock(&f->mtx) != 0)
@@ -150,25 +150,31 @@ main(int argc, char *argv[])
 {
 	struct foo *f;
 	pthread_t *tds;
-	int i, j;
+	int i, j, rc;
 
 	argv0 = *argv;
 	f = emalloc(sizeof(struct foo));
 
 	do {
-		printf("p: ");
-		scanf("%d", &f->ntd);
+		printf("\rp: ");
+		/* 
+		 * Save the return value of scanf(3) to make sure
+		 * that we did read valid input.
+		 */
+		rc = scanf("%d", &f->ntd);
+		(void)getchar();
 	/* Cannot have less than 1 threads. */
-	} while (f->ntd < 1);
+	} while (f->ntd < 1 || rc != 1);
 
 	do {
-		printf("n: ");
-		scanf("%d", &f->n);
+		printf("\rn: ");
+		rc = scanf("%d", &f->n);
+		(void)getchar();
 	/* 
 	 * The number of elements must be greater than 0 (obviously) and
 	 * a multiple of the number of threads.
 	 */
-	} while (f->n < 0 || f->n % f->ntd != 0);
+	} while (f->n < 0 || f->n % f->ntd != 0 || rc != 1);
 
 	tds = emalloc(f->ntd * sizeof(pthread_t));
 	f->l_n = f->n / f->ntd;
@@ -176,6 +182,7 @@ main(int argc, char *argv[])
 	f->l_max = emalloc(f->ntd * sizeof(int));
 	f->d = emalloc(f->n * sizeof(int *));
 	
+	/* The exercise says we should read from a file, but don't do it. :-) */
 	srand(time(NULL));
 	for (i = 0; i < f->n; i++) {
 		f->g_arr[i] = emalloc(f->n * sizeof(int));

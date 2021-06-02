@@ -6,14 +6,15 @@
 #include <string.h>
 #include <unistd.h>
 
-#define LEN(x) (sizeof(x) / sizeof(x[0]))
-
 /*
  * Εργαστήριο ΛΣ2 (Δ6) / Εργασία 2: Άσκηση 1.1 / 2020-2021
  * Ονοματεπώνυμο: Χρήστος Μαργιώλης
  * ΑΜ: 19390133
  * Τρόπος μεταγλώττισης: `cc ex1_1.c -lpthread -lrt -o ex1_1`
  */
+
+/* Calculate an array's length. */
+#define LEN(x) (sizeof(x) / sizeof(x[0]))
 
 struct foo {
 	char *str;
@@ -44,12 +45,19 @@ thread_callback(void *foo)
 	struct foo *f;
 	
 	f = (struct foo *)foo;
+	/* Lock the semaphore (decrement by one). */
 	if (sem_wait(&f->sem) < 0)
 		err(1, "sem_wait");
+	/* 
+	 * Get appropriate string. `f->tid` has the thread's ID -- we'll use
+	 * it to give each thread a unique string. Thread 0 will get the first
+	 * string, thread 1 the second, and so on.
+	 */
 	if ((f->str = strdup(nums[f->tid++])) == NULL)
 		err(1, "strdup");
 	fputs(f->str, stdout);
 	free(f->str);
+	/* Unlock the semaphore (increment by one). */
 	if (sem_post(&f->sem) < 0)
 		err(1, "sem_post");
 
@@ -86,6 +94,12 @@ main(int argc, char *argv[])
 	while ((ch = getopt(argc, argv, "n:")) != -1) {
 		switch (ch) {
 		case 'n':
+			/* 
+			 * Manually choose how many times the string sequence
+			 * is going to be printed. Obviously, we cannot allow
+			 * an N less than 1. By default `n` is 5 (see 
+			 * declaration above).
+			 */
 			if ((n = atoi(optarg)) < 1)
 				errx(1, "value must be greater than 1");
 			break;

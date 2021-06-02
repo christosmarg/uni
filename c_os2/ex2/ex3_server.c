@@ -27,9 +27,9 @@ struct pack_res {
 };
 
 struct foo {
-	int cfd;
-	int nsucc;
-	int ntotal;
+	int cfd;	/* Client file descriptor. */
+	int nsucc;	/* Number of successful calculations (avg > 10). */
+	int ntotal;	/* Total number of servings. */
 };
 
 static int srv(struct foo *);
@@ -148,7 +148,7 @@ main(int argc, char *argv[])
 	int sfd;
 	int backlog = 10;
 	int port = 9999;
-	int iflag, uflag, sockflags;
+	int iflag, uflag;
 	char ch;
 
 	argv0 = *argv;
@@ -209,7 +209,7 @@ main(int argc, char *argv[])
 	if (sigaction(SIGTERM, &sa, NULL) < 0)
 		err(1, "sigaction(SIGTERM)");
 
-	/* Set up the socket for use in the Internet domain. */
+	/* Set the socket up for use in the Internet domain. */
 	if (iflag) {
 		if ((sfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
 			err(1, "socket(AF_INET)");
@@ -240,7 +240,7 @@ main(int argc, char *argv[])
 		printf("Socket: %s\nDomain: AF_INET\nIPv4: %s\n"
 		    "Port: %d\nBacklog: %d\n", 
 		    sockfile, inet_ntoa(sin.sin_addr), port, backlog);
-	/* Set up the socket for use in the UNIX domain. */
+	/* Set the socket up for use in the UNIX domain. */
 	} else if (uflag) {
 		if ((sfd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0)
 			err(1, "socket(AF_UNIX)");
