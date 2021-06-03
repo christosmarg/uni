@@ -3,17 +3,28 @@ package population;
 import java.util.HashMap;
 
 public class Country {
-	private String index = "";
+	private String index;;
 	private String variant = "";
 	private String name = "";
 	private String notes = "";
-	private String ctrycode = "";
+	private String ctrycode;
 	private String type = "";
-	private String pntcode = "";
-	private HashMap<String, String> population;
-
-	public void add_population(String k, String v) {
-		population.put(k, v);
+	private String pntcode;
+	private HashMap<Integer, Integer> population;
+	private Integer recentpop;
+	
+	Country(String index, String variant, String name, String notes,
+	    String ctrycode, String type, String pntcode,
+	    HashMap<Integer, Integer> population) {
+		this.index = index;
+		this.variant = variant;
+		this.name = name;
+		this.notes = notes;
+		this.ctrycode = ctrycode;
+		this.type = type;
+		this.pntcode = pntcode;
+		this.population = population;
+		recentpop = population.get(population.size());
 	}
 	
 	public String get_index() {
@@ -42,5 +53,9 @@ public class Country {
 	
 	public String get_pntcode() {
 		return pntcode;
+	}
+	
+	public HashMap<Integer, Integer> get_population() {
+		return population;
 	}
 }

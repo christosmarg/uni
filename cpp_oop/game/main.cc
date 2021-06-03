@@ -8,14 +8,14 @@ static char *argv0;
 static void
 die(const std::string& str)
 {
-	std::cerr << argv0 << ": " << str << std::endl;
+	std::cerr << argv0 << ": " << str << "\n";
 	exit(1);
 }
 
 static void
 usage()
 {
-	std::cerr << "usage: " << argv0 << " <map_file> <score_file>" << std::endl;
+	std::cerr << "usage: " << argv0 << " <map_file> <score_file>\n";
 	exit(1);
 }
 
@@ -43,15 +43,14 @@ main(int argc, char *argv[])
 
 	try {
 		eng = new Engine(mapfile, scorefile);
-	} catch (const std::string& e) {
-		die(e);
+	} catch (const std::runtime_error& e) {
+		die(e.what());
 	}
 	while (eng->is_running()) {
 		eng->redraw();
 		eng->kbd_input();
 		eng->enemies_move();
 		eng->collisions();
-		eng->upd_score();
 	}
 	delete eng;
 

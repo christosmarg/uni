@@ -2,7 +2,9 @@ package population;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
@@ -13,7 +15,8 @@ public class ExcelParser {
 	private final int TARGET_TYPE_CELL = 5;
 	private final int HEADER_ROW = 16;
 	private final int COUNTRIES_ROW = 44;
-	private ArrayList<Country> countries;
+	private final int STARTING_YEAR = 1950;
+	private List<Country> countries;
 	private XSSFRow row;
 	
 	ExcelParser(String path) throws Exception {
@@ -44,41 +47,73 @@ public class ExcelParser {
 	}
 	
 	private Country read_country(XSSFRow row) throws Exception {
-		Country ctry = new Country();
-		Iterator<Cell> cit = row.cellIterator();
+		final int MIN_CELLNUM = 7;
+		Country ctry;
+		Iterator<Cell> cit;
 		Cell cell;
-		String str = "";
-		
+		Integer year = STARTING_YEAR;
+		String[] fields = new String[MIN_CELLNUM];
+		HashMap<Integer, Integer> population = new HashMap<Integer, Integer>();
+		Double d;
+		Integer n;
+		int i = 0;
+
+		cit = row.cellIterator();
+		if (row.getLastCellNum() < MIN_CELLNUM) {
+			throw new Exception("file must have at least " +
+			    MIN_CELLNUM + " columns");
+		}
 		while (cit.hasNext()) {
 			cell = cit.next();
-			switch (cell.getCellType()) {
-			case STRING:
-				str = cell.getStringCellValue(); 
-				break;
-			case NUMERIC:
-				str = String.valueOf(
-				    cell.getNumericCellValue());
-				break;
-			case BOOLEAN:
-				str = String.valueOf(
-				    cell.getBooleanCellValue());
-				break;
-			case BLANK:
-				str = "0";
-			case ERROR: /* FALLTHROUGH */
-			case FORMULA:
-			case _NONE:
-			default:
-				break;
-			}
-			System.out.print(str + "\t\t");
+			if (i < MIN_CELLNUM) {
+				switch (cell.getCellType()) {
+				case STRING:
+					fields[i++] = cell.getStringCellValue(); 
+					break;
+				case NUMERIC:
+					/* 
+					 * We'll need another conversion back to
+					 * Integer, but it's easier to do it that
+					 * way than to keep lots of variables
+					 * and hardcode everything.
+					 */
+					n = dtoi(cell.getNumericCellValue());
+					fields[i++] = Integer.toString(n);
+					break;
+				case BOOLEAN:
+					fields[i++] = String.valueOf(
+					    cell.getBooleanCellValue());
+					break;
+				case BLANK:
+					fields[i++] = "0";
+					break;
+				case ERROR: /* FALLTHROUGH */
+				case FORMULA:
+				case _NONE:
+				default:
+					fields[i++] = "";
+					break;
+				}
+			} else if (cell.getCellType() == CellType.NUMERIC)
+				population.put(year++,
+				    dtoi(cell.getNumericCellValue()));
 		}
-		System.out.println();
-		
+		ctry = new Country(fields[0], fields[1], fields[2], fields[3],
+		    fields[4], fields[5], fields[5], population);
+
 		return ctry;
 	}
 	
-	public ArrayList<Country> get_countries() {
+	private Integer dtoi(double n) {
+		Integer i;
+		Double d;
+		
+		d = Double.valueOf(n);
+		i = Integer.valueOf(d.intValue());
+		return i;
+	}
+	
+	public List<Country> get_countries() {
 		return countries;
 	}
 }

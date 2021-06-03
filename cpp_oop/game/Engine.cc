@@ -6,30 +6,59 @@ enum Color {
 	POTTER,
 	GNOME,
 	TRAAL,
+	STONE,
+	PARCHMENT,
 	LAST
 };
 
-/* TODO: intro message and stuff? */
 Engine::Engine(const char *mapfile, const char *scorefile)
 {
 	if (!init_curses())
-		throw "init_curses failed";
+		throw std::runtime_error("init_curses failed");
 	/* 
 	 * We'll use exceptions here because we want to display a useful
-	 * error message since `load_map` has many points of failure.
-	 * If we do catch an exception, we'll just "forward" it to `main`.
+	 * error message since `load_map` and `Score`'s constructor
+	 * have many points of failure. If we do catch an exception,
+	 * we'll just "forward" it to `main`.
 	 */
 	try {
 		load_map(mapfile);
-	} catch (std::runtime_error& e) {
-		throw "load_map failed: " + std::string(mapfile) + ": " + e.what();
+		score = new Score(scorefile);
+	} catch (const std::runtime_error& e) {
+		throw std::runtime_error("error: " + std::string(e.what()));
+	} catch (const std::ios_base::failure& e) {
+		throw std::runtime_error("error: " + std::string(e.what()));
 	}
+
 	if (!init_gamewin())
-		throw "init_gamewin failed";
-	if (!init_entities())
-		throw "init_entities failed";
-	if (!init_score(scorefile))
-		throw "init_score failed: " + std::string(scorefile);
+		throw std::runtime_error("init_gamewin failed");
+	init_entities();
+	prch = nullptr;
+
+	/* Initialize messages for the popup windows. */
+	ctrls = {
+		"Up       Move up",
+		"Down     Move down",
+		"Left     Move left",
+		"Right    Move right",
+		"ESC      Quit",
+		"s        High Scores",
+		"c        Controls menu",
+		"Press any key to quit the menu",
+	};
+	rules = {
+		"                      Babis Potter",
+		"--------------------------------------------------------",
+		"The objective is to collect all the gems without getting",
+		"caught by the Gnomes and Traals!",
+		"",
+		"You can always see what controls are available by",
+		"pressing the 'c' key.",
+		"               Press any key to continue",
+	};
+
+	/* Display a welcome message. */
+	popup(rules);
 	f_running = 1;
 }
 
@@ -39,16 +68,24 @@ Engine::~Engine()
 	player = nullptr;
 	for (auto&& e : entities)
 		delete e;
+	for (auto&& g : gems)
+		delete g;
+	if (prch != nullptr)
+		delete prch;
 	delete score;
 	map.clear();
 	colors.clear();
+	ctrls.clear();
+	rules.clear();
 	(void)delwin(gw);
 	(void)endwin();
 }
 
 /* Private methods */
 
-/* Initialize curses(3) environment */
+/* 
+ * Initialize curses(3) environment 
+ */
 bool
 Engine::init_curses()
 {
@@ -70,6 +107,8 @@ Engine::init_curses()
 	colors.push_back(COLOR_CYAN);	/* Potter */
 	colors.push_back(COLOR_GREEN);	/* Gnome */
 	colors.push_back(COLOR_YELLOW);	/* Traal */
+	colors.push_back(COLOR_MAGENTA);/* Stone */
+	colors.push_back(COLOR_WHITE);	/* Parchment */
 
 	start_color();
 	use_default_colors();
@@ -107,13 +146,15 @@ Engine::load_map(const char *mapfile)
 	f.exceptions(std::ifstream::badbit);
 	f.open(mapfile);
 	if (!f.is_open())
-		throw std::runtime_error("cannot open file");
+		throw std::runtime_error(std::string(mapfile) + 
+		    ": cannot open file");
 	/* 
 	 * Read first row outside the loop so we can get an initial 
 	 * row length.
 	 */
 	if (!std::getline(f, str))
-		throw "cannot read first row";
+		throw std::runtime_error(std::string(mapfile) +
+		    ": cannot read first row");
 	map.push_back(str);
 	l = str.length();
 	while (std::getline(f, str)) {
@@ -123,14 +164,19 @@ Engine::load_map(const char *mapfile)
 		 * have the same length.
 		 */
 		if (l != str.length())
-			throw std::runtime_error("rows must have an equal "
-			    "length: line " + std::to_string(curline));
+			throw std::runtime_error(std::string(mapfile) +
+			    ": rows must have an equal length: line " + 
+			    std::to_string(curline));
 		
-		/* The map must not contain anything other than ' ' and '*'. */
+		/* 
+		 * The map must not contain anything other than SYM_PATH 
+		 * and SYM_WALL.
+		 */
 		for (char& c : str)
-			if (c != ' ' && c != '*')
-				throw std::runtime_error("the map must contain "
-				    "only spaces and asterisks: line: " + 
+			if (c != SYM_PATH && c != SYM_WALL)
+				throw std::runtime_error(std::string(mapfile) + 
+				    "the map must contain only spaces and "
+				    "asterisks: line: " + 
 				    std::to_string(curline));
 
 		map.push_back(str);
@@ -150,14 +196,15 @@ Engine::load_map(const char *mapfile)
 	 * the Y axis are reserved for the status bar.
 	 */
 	if (w > xmax || h > ymax - 2)
-		throw std::runtime_error("the map doesn't fit to screen");
+		throw std::runtime_error(std::string(mapfile) +
+		    ": the map doesn't fit to screen");
 }
 
 bool
-Engine::collides_with_wall(int x, int y)
+Engine::collides_with_wall(int x, int y) const
 {
 	if (x < w && y < h)
-		return map[y][x] == '*';
+		return map[y][x] == SYM_WALL;
 	return true;
 }
 
@@ -174,18 +221,20 @@ Engine::calc_pos(int *x, int *y)
 		for (const auto& e : entities)
 			if (*x == e->get_x() && *y == e->get_y())
 				continue;
+		for (const auto& g : gems)
+			if (*x == g->get_x() && *y == g->get_y())
+				continue;
 	} while (collides_with_wall(*x, *y));
 }
 
-bool
+void
 Engine::init_entities()
 {
 	int i, x, y, type;
 
 	srand(time(nullptr));
-
 	calc_pos(&x, &y);
-	entities.push_back(new Potter(x, y, Movable::Direction::DOWN, 'P'));
+	entities.push_back(new Potter(x, y, Movable::Direction::DOWN, SYM_POTTER));
 	for (i = 0; i < nenemies; i++) {
 		calc_pos(&x, &y);
 		/* 
@@ -195,58 +244,78 @@ Engine::init_entities()
 		switch (type = rand() % 2) {
 		case 0:
 			entities.push_back(new Gnome(x, y,
-			    Movable::Direction::DOWN, 'G'));
+			    Movable::Direction::DOWN, SYM_GNOME));
 			break;
 		case 1:
 			entities.push_back(new Traal(x, y,
-			    Movable::Direction::DOWN, 'T'));
+			    Movable::Direction::DOWN, SYM_TRAAL));
 			break;
 		}
 	}
+	for (i = 0; i < ngems; i++) {
+		calc_pos(&x, &y);
+		gems.push_back(new Gem(x, y, SYM_STONE));
+	}
 	player = (Potter *)entities[0];
-
-	return true;
-}
-
-bool
-Engine::init_score(const char *scorefile)
-{
-	score = new Score(scorefile);
-
-	return true;
 }
 
 void
-Engine::ctrl_menu()
+Engine::spawn_parchment()
 {
-	WINDOW *opts;
-	int wr, wc, wy, wx;
+	int x, y;
 
-	wc = 32;
-	wr = 9;
+	calc_pos(&x, &y);
+	prch = new Gem(x, y, SYM_PARCHMENT);
+}
+
+/* 
+ * Draw a popup window with the `lines` argument as contents.
+ */
+void
+Engine::popup(const std::vector<std::string>& lines) const
+{
+	WINDOW *win;
+	auto lencmp = [](const std::string& a, const std::string& b) {
+		return a.length() < b.length();
+	};
+	int vecsz, wr, wc, wy, wx;
+
+	vecsz = lines.size();
+	/* 
+	 * Find longest string to set the right window width. +2 columns
+	 * for the box.
+	 */
+	wc = std::max_element(lines.begin(), lines.end(), lencmp)->length() + 2;
+	/* 
+	 * +2 lines for the box, and +1 for the space between the last message
+	 * and the rest of the messages.
+	 */
+	wr = vecsz + 3;
 	wx = CENTER(xmax, wc);
 	wy = CENTER(ymax, wr);
-	if ((opts = newwin(wr, wc, wy, wx)) == NULL)
+	if ((win = newwin(wr, wc, wy, wx)) == NULL)
 		return;
-	werase(opts);
-	box(opts, 0, 0);
-
-	mvwprintw(opts, 1, 1, "Up       Move up");
-	mvwprintw(opts, 2, 1, "Down     Move down");
-	mvwprintw(opts, 3, 1, "Left     Move left");
-	mvwprintw(opts, 4, 1, "Right    Move right");
-	mvwprintw(opts, 5, 1, "ESC      Quit");
-	mvwprintw(opts, 7, 1, "Press any key to quit the menu");
-
-	wrefresh(opts);
-	(void)wgetch(opts);
-	werase(opts);
-	wrefresh(opts);
-	(void)delwin(opts);
+	werase(win);
+	box(win, 0, 0);
+	for (std::size_t i = 0; i < vecsz; i++) {
+		if (i != vecsz - 1)
+			mvwprintw(win, i + 1, 1, lines[i].c_str());
+		/*
+		 * The last message is always the "quit menu" message, so
+		 * we'll leave an empty line before we print it.
+		 */
+		else
+			mvwprintw(win, i + 2, 1, lines[i].c_str());
+	}
+	wrefresh(win);
+	(void)wgetch(win);
+	werase(win);
+	wrefresh(win);
+	(void)delwin(win);
 }
 
 void
-Engine::calc_dist(std::map<int, int>& dists, int ex, int ey, int dir)
+Engine::calc_dist(std::map<int, int>& dists, int ex, int ey, int dir) const
 {
 	int px, py, dx, dy, d;
 
@@ -286,8 +355,11 @@ Engine::kbd_input()
 		dir = Movable::Direction::DOWN;
 		break;
 	case 'c':
-		ctrl_menu();
+		popup(ctrls);
 		return;
+	case 's':
+		popup(score->scores_strfmt());
+		break;
 	case ESC: /* FALLTHROUGH */
 		/* FIXME: what? */
 		f_running = 0;
@@ -336,55 +408,103 @@ Engine::enemies_move()
 	}
 }
 
+/* TODO: define constants for scores */
 void
 Engine::collisions()
 {
-	int px, py, ex, ey;
+	int px, py, x, y;
 
 	px = player->get_x();
 	py = player->get_y();
 
 	for (const auto& e : entities) {
-		ex = e->get_x();
-		ey = e->get_y();
-		if (e != player && px == ex && py == ey) {
-			/* TODO: increase score */
+		x = e->get_x();
+		y = e->get_y();
+		if (e != player && px == x && py == y) {
+			/* TODO: Handle this. */
 		}
 	}
+	for (auto& g : gems) {
+		x = g->get_x();
+		y = g->get_y();
+		if (px == x && py == y) {
+			upd_score(10);
+			delete g;
+			gems.erase(std::remove(gems.begin(), gems.end(), g),
+			    gems.end());
+		}
+	}
+	if (gems.empty() && prch != nullptr) {
+		x = prch->get_x();
+		y = prch->get_y();
+		if (px == x && py == y) {
+			upd_score(100);
+			/* TODO: YOU WON + delete + reset */
+		}
+	} else if (gems.empty() && prch == nullptr)
+		spawn_parchment();
 }
 
 void
-Engine::upd_score()
+Engine::upd_score(int n)
 {
+	*score << score->get_curname() << score->get_curscore() + n;
 }
 
 void
-Engine::redraw()
+Engine::redraw() const
 {
-	char msg_score[] = "Score: %d";
-	char msg_opts[] = "c Controls";
-	int color;
+	const char msg_pos[] = "Potter: (%d, %d)";
+	const char msg_score[] = "Score: %d (%s)";
+	const char msg_opts[] = "c Controls";
 
-	/* TODO: print more info */
 	werase(gw);
 	erase();
-	mvprintw(0, 0, "Potter: (%d, %d)", player->get_x(), player->get_y());
-	mvprintw(0, CENTER(xmax, strlen(msg_score)), msg_score, 10);
+	
+	/* Draw top bar info. */
+	mvprintw(0, 0, msg_pos, player->get_x(), player->get_y());
+	mvprintw(0, CENTER(xmax, strlen(msg_score)), msg_score,
+	    score->get_curscore(), score->get_curname());
 	mvprintw(0, xmax - strlen(msg_opts), msg_opts);
 	mvhline(1, 0, ACS_HLINE, xmax);
+
+	/* Draw everything */
 	wattron(gw, A_REVERSE);
+	draw_map();
+	draw_entities();
+	draw_gems();
+	if (prch != nullptr)
+		draw_parchment();
+	wattroff(gw, A_REVERSE);
+	refresh();
+	wrefresh(gw);
+}
+
+void
+Engine::draw_map() const
+{
+	int color;
+
 	for (const auto& row : map) {
 		for (const auto& c : row) {
-			if (c == '*')
+			if (c == SYM_WALL)
 				color = COLOR_PAIR(Color::WALL);
-			else if (c == ' ')
+			else if (c == SYM_PATH)
 				color = COLOR_PAIR(Color::PATH);
 			wattron(gw, color);
 			waddch(gw, c);
 			wattroff(gw, color);
 		}
 	}
+}
+
+void
+Engine::draw_entities() const
+{
+	int color;
+
 	for (const auto& e : entities) {
+		/* Determine subclass type and assign colors accordingly. */
 		if (dynamic_cast<Potter *>(e) != nullptr)
 			color = COLOR_PAIR(Color::POTTER);
 		else if (dynamic_cast<Gnome *>(e) != nullptr)
@@ -395,13 +515,34 @@ Engine::redraw()
 		mvwaddch(gw, e->get_y(), e->get_x(), e->get_sym());
 		wattroff(gw, color);
 	}
-	wattroff(gw, A_REVERSE);
-	refresh();
-	wrefresh(gw);
+}
+
+void
+Engine::draw_gems() const
+{
+	int color;
+
+	for (const auto& g : gems) {
+		if (g->get_sym() == SYM_STONE)
+			color = COLOR_PAIR(Color::STONE);
+		else if (g->get_sym() == SYM_PARCHMENT)
+			color = COLOR_PAIR(Color::PARCHMENT);
+		wattron(gw, color);
+		mvwaddch(gw, g->get_y(), g->get_x(), g->get_sym());
+		wattroff(gw, color);
+	}
+}
+
+void
+Engine::draw_parchment() const
+{
+	wattron(gw, COLOR_PAIR(Color::PARCHMENT));
+	mvwaddch(gw, prch->get_y(), prch->get_x(), prch->get_sym());
+	wattroff(gw, COLOR_PAIR(Color::PARCHMENT));
 }
 
 bool
-Engine::is_running()
+Engine::is_running() const
 {
 	return f_running;
 }
