@@ -3,7 +3,7 @@ package population;
 import java.util.HashMap;
 
 public class Country {
-	private String index;;
+	private String index;
 	private String variant = "";
 	private String name = "";
 	private String notes = "";
@@ -11,7 +11,7 @@ public class Country {
 	private String type = "";
 	private String pntcode;
 	private HashMap<Integer, Integer> population;
-	private Integer recentpop;
+	private String recentpop;
 	
 	Country(String index, String variant, String name, String notes,
 	    String ctrycode, String type, String pntcode,
@@ -24,38 +24,47 @@ public class Country {
 		this.type = type;
 		this.pntcode = pntcode;
 		this.population = population;
-		recentpop = population.get(population.size());
+		recentpop = String.valueOf(
+		   population.get(Main.STARTING_YEAR + population.size() - 1));
 	}
 	
-	public String get_index() {
+	/* 
+	 * The getters *must* have this naming convention, otherwise 
+	 * JavaFX TableView methods don't recognize them. Pretty stupid...
+	 */
+	public String getIndex() {
 		return index;
 	}
 	
-	public String get_variant() {
+	public String getVariant() {
 		return variant;
 	}
 	
-	public String get_name() {
+	public String getName() {
 		return name;
 	}
 	
-	public String get_notes() {
+	public String getNotes() {
 		return notes;
 	}
 	
-	public String get_ctrycode() {
+	public String getCtrycode() {
 		return ctrycode;
 	}
 	
-	public String get_type() {
+	public String getType() {
 		return type;
 	}
 	
-	public String get_pntcode() {
+	public String getPntcode() {
 		return pntcode;
 	}
 	
-	public HashMap<Integer, Integer> get_population() {
+	public HashMap<Integer, Integer> getPopulation() {
 		return population;
+	}
+	
+	public String getRecentpop() {
+		return recentpop;
 	}
 }

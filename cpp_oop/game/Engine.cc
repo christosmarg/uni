@@ -24,9 +24,9 @@ Engine::Engine(const char *mapfile, const char *scorefile)
 	try {
 		load_map(mapfile);
 		score = new Score(scorefile);
-	} catch (const std::runtime_error& e) {
-		throw std::runtime_error("error: " + std::string(e.what()));
 	} catch (const std::ios_base::failure& e) {
+		throw std::runtime_error("error: " + std::string(e.what()));
+	} catch (const std::runtime_error& e) {
 		throw std::runtime_error("error: " + std::string(e.what()));
 	}
 
@@ -107,8 +107,8 @@ Engine::init_curses()
 	colors.push_back(COLOR_CYAN);	/* Potter */
 	colors.push_back(COLOR_GREEN);	/* Gnome */
 	colors.push_back(COLOR_YELLOW);	/* Traal */
-	colors.push_back(COLOR_MAGENTA);/* Stone */
-	colors.push_back(COLOR_WHITE);	/* Parchment */
+	colors.push_back(COLOR_WHITE);	/* Stone */
+	colors.push_back(COLOR_BLACK);	/* Parchment */
 
 	start_color();
 	use_default_colors();
@@ -160,7 +160,7 @@ Engine::load_map(const char *mapfile)
 	while (std::getline(f, str)) {
 		/* 
 		 * If a row happens to have a different length, the map hasn't
-		 * been written properly, so we exit. All rows have be
+		 * been written properly, so we exit. All rows have to
 		 * have the same length.
 		 */
 		if (l != str.length())
@@ -278,7 +278,8 @@ Engine::popup(const std::vector<std::string>& lines) const
 	auto lencmp = [](const std::string& a, const std::string& b) {
 		return a.length() < b.length();
 	};
-	int vecsz, wr, wc, wy, wx;
+	std::size_t vecsz;
+	int wr, wc, wy, wx;
 
 	vecsz = lines.size();
 	/* 
@@ -334,6 +335,7 @@ Engine::kbd_input()
 {
 	int key, dir, newx, newy;
 
+	dir = 0;
 	newx = player->get_x();
 	newy = player->get_y();
 	

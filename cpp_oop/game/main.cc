@@ -1,5 +1,3 @@
-#include <cstring>
-
 #include "Engine.hpp"
 
 /* Program name */
