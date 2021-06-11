@@ -49,9 +49,7 @@ public class MainWindow {
 		} catch (FileNotFoundException e) {
 			err(path + ": no such file");
 			return;
-		} catch (IndexOutOfBoundsException e) {
-			err("usage: population xlsx_file");
-			return;
+
 		} catch (IOException e) {
 			err(path + ": io error");
 			return;
@@ -71,7 +69,7 @@ public class MainWindow {
 		stg.show();
 	}
 	
-	private void err(String errstr) {
+	public void err(String errstr) {
 		Alert alert;
 		
 		alert = new Alert(AlertType.ERROR, errstr, ButtonType.CLOSE);
@@ -86,11 +84,16 @@ public class MainWindow {
 
 		btn_file = new Button("Load File");
 		btn_file.setOnAction(ev -> {
+			String path;
 			FileChooser fc = new FileChooser();
+			
 			fc.setTitle("Load File");
 			fc.getExtensionFilters().add(
 			    new ExtensionFilter("XLSX Files", "*.xlsx"));
-			setup(fc.showOpenDialog(stg).getAbsolutePath());
+			
+			path = fc.showOpenDialog(stg).getAbsolutePath();
+			setup(path);
+			show();
 		});
 		
 		btn_chart = new Button("Chart");

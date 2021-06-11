@@ -22,6 +22,7 @@ main(int argc, char *argv[])
 {
 	Engine *eng;
 	char *mapfile, *scorefile;
+	char name[NAMEMAX];
 
 	argv0 = *argv++;
 	if (argc < 3)
@@ -39,8 +40,21 @@ main(int argc, char *argv[])
 	if (!setlocale(LC_ALL, ""))
 		die("setlocale");
 
+	do {
+		std::cout << "\rPlayer name: ";
+		std::cin >> name;
+	/* Make sure we read valid input. */
+	} while (strlen(name) >= NAMEMAX || std::cin.fail());
+
+	/* 
+	 * We'll guarantee the name is null-terminated and has a 
+	 * length < NAMEMAX so we don't have to do any checks in 
+	 * the other classes.
+	 */
+	name[strlen(name)] = '\0';
+
 	try {
-		eng = new Engine(mapfile, scorefile);
+		eng = new Engine(mapfile, scorefile, name);
 	} catch (const std::runtime_error& e) {
 		die(e.what());
 	}

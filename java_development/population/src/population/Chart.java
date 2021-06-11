@@ -22,6 +22,7 @@ import javafx.stage.StageStyle;
 public class Chart {
 	private final int WIDTH = 1280;
 	private final int HEIGHT = 1000;
+	private final String TITLE = "Population Chart";
 	private Stage stg;
 	private VBox vb;
 	private HBox hb;
@@ -34,18 +35,16 @@ public class Chart {
 	private NumberAxis yaxis;
 	private LineChart<Number, Number> lc;
 	private ArrayList<XYChart.Series<Number, Number>> sr;
-	private List<Country> countries;
 	
 	Chart(List<Country> countries) {
-		this.countries = countries;
-		stg = mkstage();
-		xaxis = mkxaxis("Year");
-		yaxis = mkyaxis("Population");
 		sr = new ArrayList<XYChart.Series<Number, Number>>();
-		lc = mklinechart(xaxis, yaxis, stg);
-		btn_close = mkclosebtn(stg, "Close");
-		btn_clear = mkclearbtn(stg, sr, lc, "Clear");
-		cb_ctry = mkctrylist(sr, lc, "Country");
+		mkstage();
+		mkxaxis("Year");
+		mkyaxis("Population");
+		mklinechart();
+		mkclosebtn("Close");
+		mkclearbtn("Clear");
+		mkctrylist(countries, "Country");
 		cb_yearfrom = mkyearcb(Country.STARTING_YEAR);
 		cb_yearto = mkyearcb(Country.LAST_YEAR);
 		
@@ -60,19 +59,16 @@ public class Chart {
 		});
 	}
 	
-	private Stage mkstage() {
-		Stage stg = new Stage();
-		
+	private void mkstage() {
+		stg = new Stage();
 		stg.setWidth(WIDTH);
 		stg.setHeight(HEIGHT);
 		stg.initStyle(StageStyle.UTILITY);
 		stg.initModality(Modality.WINDOW_MODAL);
-		return stg;
 	}
 	
-	private NumberAxis mkxaxis(String str) {
-		NumberAxis xaxis = new NumberAxis();
-		
+	private void mkxaxis(String str) {
+		xaxis = new NumberAxis();
 		xaxis.setLabel(str);
 		/* 
 		 * By default, the chart isn't resized properly
@@ -82,30 +78,14 @@ public class Chart {
 		xaxis.setUpperBound(Country.LAST_YEAR);
 		/* No. Stop auto resizing. */
 		xaxis.setAutoRanging(false);
-		return xaxis;
 	}
 	
-	private NumberAxis mkyaxis(String str) {
-		NumberAxis yaxis = new NumberAxis();
-		
+	private void mkyaxis(String str) {
+		yaxis = new NumberAxis();
 		yaxis.setLabel(str);
-		return yaxis;
 	}
 	
-	private XYChart.Series<Number, Number> mkseries(String str) {
-		XYChart.Series<Number, Number> sr;
-		
-		sr = new XYChart.Series<Number, Number>();
-		sr.setName(str);
-		return sr;
-	}
-	
-	private LineChart<Number, Number> mklinechart(
-	    NumberAxis xaxis,
-	    NumberAxis yaxis,
-	    Stage stg) {
-		LineChart<Number, Number> lc;
-		
+	private void mklinechart() {
 		lc = new LineChart<Number, Number>(xaxis, yaxis);
 		
 		/* Fit to screen. */
@@ -120,37 +100,26 @@ public class Chart {
 		
 		/* Do not draw nodes, just the line. */
 		lc.setCreateSymbols(false);
-		
-		return lc;
 	}
 	
-	private Button mkclosebtn(Stage stg, String str) {
-		Button btn_close = new Button(str);
-		
+	private void mkclosebtn(String str) {
+		btn_close = new Button(str);
 		btn_close.setOnAction(ev -> {
 			stg.close();
 		});
-		return btn_close;
 	}
 
-	private Button mkclearbtn(
-	    Stage stg,
-	    ArrayList<XYChart.Series<Number, Number>> sr,
-	    LineChart<Number, Number> lc,
-	    String str) {
-		Button btn_clear = new Button(str);
-		
+	private void mkclearbtn(String str) {
+		btn_clear = new Button(str);
 		btn_clear.setOnAction(ev -> {
 			lc.getData().clear();
 			sr.forEach(s -> s.getData().clear());
 			sr.clear();
 		});
-		return btn_clear;
 	}
 	
 	private ComboBox<Integer> mkyearcb(Integer n) {
 		ComboBox<Integer> cb = new ComboBox<Integer>();
-		
 		for (int i = Country.STARTING_YEAR; i <= Country.LAST_YEAR; i++)
 			cb.getItems().add(i);
 		/* 
@@ -162,12 +131,8 @@ public class Chart {
 		return cb;
 	}
 	
-	private ComboBox<String> mkctrylist(
-	    ArrayList<XYChart.Series<Number, Number>> sr,
-	    LineChart<Number, Number> lc,
-	    String str) {
-		ComboBox<String> cb_ctry = new ComboBox<String>();
-		
+	private void mkctrylist(List<Country> countries, String str) {
+		cb_ctry = new ComboBox<String>();
 		countries.forEach(c -> cb_ctry.getItems().add(c.getName()));
 		cb_ctry.setPromptText(str);
 		/* 
@@ -209,7 +174,14 @@ public class Chart {
 			}
 			lc.getData().add(sr.get(sr.size()-1));
 		});
-		return cb_ctry;
+	}
+	
+	private XYChart.Series<Number, Number> mkseries(String str) {
+		XYChart.Series<Number, Number> series;
+		
+		series = new XYChart.Series<Number, Number>();
+		series.setName(str);
+		return series;
 	}
 	
 	public void show() {
@@ -227,7 +199,7 @@ public class Chart {
 		vb.setSpacing(5);
 		vb.setPadding(new Insets(10, 10, 10, 10));
 		vb.getChildren().addAll(lc, hb);
-		stg.setTitle("Population Chart");
+		stg.setTitle(TITLE);
 		stg.setScene(new Scene(vb, 400, 200));
 		stg.show();
 	}

@@ -3,7 +3,6 @@
 
 #include <algorithm>
 #include <cmath>
-#include <csignal>
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
@@ -42,9 +41,10 @@ private:
 	std::vector<Movable *> entities;
 	std::vector<Gem *> gems;
 	std::vector<std::string> map;
-	std::vector<int> colors;
-	std::vector<std::string> ctrls;
-	std::vector<std::string> rules;
+	std::vector<std::string> p_ctrls;
+	std::vector<std::string> p_rules;
+	std::vector<std::string> p_win;
+	std::vector<std::string> p_lose;
 	Potter *player;
 	Score *score;
 	Gem *prch;
@@ -57,10 +57,11 @@ private:
 	int h;
 	int nenemies = 2;
 	int ngems = 10;
-	volatile sig_atomic_t f_running;
+	int f_running;
 
 public:
-	explicit Engine(const char *mapfile, const char *scorefile);
+	explicit Engine(const char *mapfile, const char *scorefile,
+	    const char *name);
 	~Engine();
 
 	void kbd_input();
@@ -70,16 +71,20 @@ public:
 	bool is_running() const;
 
 private:
+	void free_entities();
+	void reset_entities();
 	bool init_curses();
 	bool init_gamewin();
 	void load_map(const char *mapfile);
 	void calc_pos(int *x, int *y);
 	void init_entities();
+	void init_popup_msgs();
 	void spawn_parchment();
 	bool collides_with_wall(int x, int y) const;
-	void popup(const std::vector<std::string>& lines) const;
+	int popup(const std::vector<std::string>& lines) const;
 	void calc_dist(std::map<int, int>& dists, int ex, int ey, int dir) const;
 	void upd_score(int n);
+	void round_end(bool is_win);
 	void draw_map() const;
 	void draw_entities() const;
 	void draw_gems() const;
