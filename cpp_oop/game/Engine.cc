@@ -11,6 +11,7 @@ enum Color {
 	LAST
 };
 
+/* TODO get player name */
 Engine::Engine(const char *mapfile, const char *scorefile)
 {
 	if (!init_curses())

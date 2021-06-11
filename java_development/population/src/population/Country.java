@@ -3,6 +3,8 @@ package population;
 import java.util.HashMap;
 
 public class Country {
+	public static final int STARTING_YEAR = 1950;
+	public static int LAST_YEAR;
 	private String index;
 	private String variant = "";
 	private String name = "";
@@ -11,8 +13,8 @@ public class Country {
 	private String type = "";
 	private String pntcode;
 	private HashMap<Integer, Integer> population;
-	private String recentpop;
-	
+	private String curpop;
+
 	Country(String index, String variant, String name, String notes,
 	    String ctrycode, String type, String pntcode,
 	    HashMap<Integer, Integer> population) {
@@ -24,8 +26,9 @@ public class Country {
 		this.type = type;
 		this.pntcode = pntcode;
 		this.population = population;
-		recentpop = String.valueOf(
-		   population.get(Main.STARTING_YEAR + population.size() - 1));
+		LAST_YEAR = STARTING_YEAR + this.population.size() - 1;
+		setCurpop(LAST_YEAR);
+
 	}
 	
 	/* 
@@ -64,7 +67,11 @@ public class Country {
 		return population;
 	}
 	
-	public String getRecentpop() {
-		return recentpop;
+	public String getCurpop() {
+		return curpop;
+	}
+	
+	public void setCurpop(Integer i) {
+		curpop = String.valueOf(population.get(i));
 	}
 }
