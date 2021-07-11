@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 
 entity alu is
 generic (
-	dw:	natural := 4
+	dw:		natural := 4
 );
 port (
 	alu_in1:	in std_logic_vector(dw-1 downto 0);

@@ -7,7 +7,7 @@ end alu_tb;
 
 architecture behav of alu_tb is
 
-signal s_dw:	natural := 4;
+signal s_dw:		natural := 4;
 signal s_alu_in1:	std_logic_vector(s_dw-1 downto 0);
 signal s_alu_in2:	std_logic_vector(s_dw-1 downto 0);
 signal s_alu_ctrl:	std_logic_vector(3 downto 0);
@@ -16,7 +16,7 @@ signal s_alu_zero:	std_logic;
 
 component alu is
 generic (
-	dw:	natural := 4
+	dw:		natural := 4
 );
 port (
 	alu_in1:	in std_logic_vector(dw-1 downto 0);
