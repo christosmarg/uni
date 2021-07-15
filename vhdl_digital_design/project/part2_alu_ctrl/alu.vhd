@@ -4,19 +4,19 @@ use ieee.numeric_std.all;
 
 entity alu is
 generic (
-	dw:		natural := 4
+	sz:		natural := 4
 );
 port (
-	alu_in1:	in std_logic_vector(dw-1 downto 0);
-	alu_in2:	in std_logic_vector(dw-1 downto 0);
+	alu_in1:	in std_logic_vector(sz-1 downto 0);
+	alu_in2:	in std_logic_vector(sz-1 downto 0);
 	alu_ctrl:	in std_logic_vector(3 downto 0);
-	alu_out:	out std_logic_vector(dw-1 downto 0);
+	alu_out:	out std_logic_vector(sz-1 downto 0);
 	alu_zero:	out std_logic
 );
 end alu;
 
 architecture behav of alu is
-signal sig:		std_logic_vector(dw-1 downto 0);
+signal sig:		std_logic_vector(sz-1 downto 0);
 
 begin
 	process (alu_ctrl) begin

@@ -6,21 +6,21 @@ end mux2to1gen_tb;
 
 architecture behav of mux2to1gen_tb is
 
-signal s_dw: 	natural := 4;
-signal s_a:	std_logic_vector(s_dw-1 downto 0);
-signal s_b:	std_logic_vector(s_dw-1 downto 0);
+signal s_sz: 	natural := 4;
+signal s_a:	std_logic_vector(s_sz-1 downto 0);
+signal s_b:	std_logic_vector(s_sz-1 downto 0);
 signal s_s:	std_logic;
-signal s_c:	std_logic_vector(s_dw-1 downto 0);
+signal s_c:	std_logic_vector(s_sz-1 downto 0);
 
 component mux2to1gen is
 generic (
-	dw:	natural := 4
+	sz:	natural := 4
 );
 port (
-	a:	in std_logic_vector(dw-1 downto 0);
-	b:	in std_logic_vector(dw-1 downto 0);
+	a:	in std_logic_vector(sz-1 downto 0);
+	b:	in std_logic_vector(sz-1 downto 0);
 	s: 	in std_logic;
-	c:	out std_logic_vector(dw-1 downto 0)
+	c:	out std_logic_vector(sz-1 downto 0)
 );
 end component;
 

@@ -3,13 +3,13 @@ use ieee.std_logic_1164.all;
 
 entity mux2to1gen is
 generic (
-	dw: 	natural := 4
+	sz: 	natural := 4
 );
 port (
-	a: 	in std_logic_vector(dw-1 downto 0);
-	b: 	in std_logic_vector(dw-1 downto 0);
+	a: 	in std_logic_vector(sz-1 downto 0);
+	b: 	in std_logic_vector(sz-1 downto 0);
 	s: 	in std_logic;
-	c: 	out std_logic_vector(dw-1 downto 0)
+	c: 	out std_logic_vector(sz-1 downto 0)
 );
 end mux2to1gen;
 
