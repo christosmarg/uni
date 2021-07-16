@@ -5,8 +5,8 @@ use ieee.numeric_std.all;
 
 entity regfile_ext is
 generic (
-	sz:		natural := 4;
-	addrw:		natural := 3
+	sz:		natural := 32;
+	addrw:		natural := 5
 );
 port (
 	idata:		in std_logic_vector(sz-1 downto 0);
@@ -23,10 +23,10 @@ end regfile_ext;
 
 architecture behav of regfile_ext is
 
-signal arrsz:		natural := 8;
+signal arrsz:		natural := 32;
 type regarr		is array(0 to arrsz-1) of std_logic_vector(sz-1 downto 0);
--- Empty register array used for initialization when rst = 1.
-signal s_init:		regarr := (others => (others => '0'));
+-- Array used for initialization when rst = 1.
+signal s_init:		regarr := (others => x"ffffffff");
 signal regf:		regarr;
 
 begin
