@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>HTTPServer Test</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+	Example of GET method<br>
+	<form action="http://127.0.0.1:8010" method="GET">
+		Username<input type="text" name="user"><br>
+		Password<input type="text" name="pass"><br>
+		<input type="submit" value="Login"><br>
+	</form>
+
+	<p>Example of POST method</p>
+	<form action="http://127.0.0.1:8010" method="POST">
+		Username<input type="text" name="user"><br>
+		Password<input type="text" name="pass"><br>
+		<input type="submit" value="Login"><br>
+	</form>
+
+	<p>Example of multi-part request</p>
+	<form action="http://127.0.0.1:8010" method="POST" enctype="multipart/form-data">
+		Type your name<input type="text" name="uname"><br>
+		File<input type="file" name="attach1"><br>
+		File<input type="file" name="attach2"><br>
+		<input type="submit" value="Send to server"><br>
+	</form>
+</body>
+</html>
