@@ -14,17 +14,6 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L Device:LED LED1
-U 1 1 61E8F822
-P 9350 5200
-F 0 "LED1" H 9343 5325 50  0000 C CNN
-F 1 "LED" H 9343 5326 50  0001 C CNN
-F 2 "" H 9350 5200 50  0001 C CNN
-F 3 "~" H 9350 5200 50  0001 C CNN
-	1    9350 5200
-	1    0    0    -1  
-$EndComp
-$Comp
 L Device:R_US R1
 U 1 1 61EA1FDB
 P 5300 3000
@@ -203,18 +192,14 @@ Connection ~ 6550 2450
 $Comp
 L Sensor:BME280 BME280
 U 1 1 61E953D6
-P 8600 3250
-F 0 "BME280" H 8171 3296 50  0000 R CNN
-F 1 "BME280" H 8171 3205 50  0001 R CNN
-F 2 "Package_LGA:Bosch_LGA-8_2.5x2.5mm_P0.65mm_ClockwisePinNumbering" H 10100 2800 50  0001 C CNN
-F 3 "https://ae-bst.resource.bosch.com/media/_tech/media/datasheets/BST-BME280-DS002.pdf" H 8600 3050 50  0001 C CNN
-	1    8600 3250
+P 8750 2600
+F 0 "BME280" H 8321 2646 50  0000 R CNN
+F 1 "BME280" H 8321 2555 50  0001 R CNN
+F 2 "Package_LGA:Bosch_LGA-8_2.5x2.5mm_P0.65mm_ClockwisePinNumbering" H 10250 2150 50  0001 C CNN
+F 3 "https://ae-bst.resource.bosch.com/media/_tech/media/datasheets/BST-BME280-DS002.pdf" H 8750 2400 50  0001 C CNN
+	1    8750 2600
 	-1   0    0    -1  
 $EndComp
-Wire Wire Line
-	8000 3150 7800 3150
-Wire Wire Line
-	7800 3150 7800 4900
 Wire Wire Line
 	6650 2700 6650 2450
 $Comp
@@ -324,20 +309,6 @@ Connection ~ 6550 6150
 Wire Wire Line
 	6550 6150 6550 6300
 Wire Wire Line
-	7800 4900 7450 4900
-Wire Wire Line
-	7450 5000 7900 5000
-Wire Wire Line
-	7900 5000 7900 3350
-Wire Wire Line
-	7900 3350 8000 3350
-Wire Wire Line
-	8000 2950 7700 2950
-Wire Wire Line
-	7700 2950 7700 5100
-Wire Wire Line
-	7700 5100 7450 5100
-Wire Wire Line
 	6000 1750 6000 1950
 Wire Wire Line
 	6550 5700 6550 6150
@@ -345,23 +316,72 @@ Wire Wire Line
 	6650 5600 6650 5700
 Wire Wire Line
 	6650 5700 6550 5700
+Wire Wire Line
+	8650 6150 6550 6150
+Wire Wire Line
+	8650 1950 6000 1950
+Wire Wire Line
+	7450 4900 7550 4900
+Wire Wire Line
+	7550 4900 7550 2500
+Wire Wire Line
+	7550 2500 8150 2500
+Wire Wire Line
+	7450 5000 7650 5000
+Wire Wire Line
+	7650 5000 7650 2700
+Wire Wire Line
+	7650 2700 8150 2700
+Wire Wire Line
+	7450 5100 7750 5100
+Wire Wire Line
+	7750 5100 7750 2300
+Wire Wire Line
+	7750 2300 8150 2300
+Wire Wire Line
+	8650 3200 8650 3700
+Connection ~ 8650 3700
+Wire Wire Line
+	8450 3700 8650 3700
+$Comp
+L Device:LED LED1
+U 1 1 61E8F822
+P 8300 3700
+F 0 "LED1" H 8293 3825 50  0000 C CNN
+F 1 "LED" H 8293 3826 50  0001 C CNN
+F 2 "" H 8300 3700 50  0001 C CNN
+F 3 "~" H 8300 3700 50  0001 C CNN
+	1    8300 3700
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	8100 3700 8150 3700
+Wire Wire Line
+	7450 3700 7800 3700
+$Comp
+L Device:R_US R3
+U 1 1 61F053CB
+P 7950 3700
+F 0 "R3" H 8018 3746 50  0000 L CNN
+F 1 "330Ω" H 8018 3655 50  0000 L CNN
+F 2 "" V 7990 3690 50  0001 C CNN
+F 3 "~" H 7950 3700 50  0001 C CNN
+	1    7950 3700
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	8650 2000 8650 1950
+Wire Wire Line
+	8650 3700 8650 6150
 $Comp
 L Switch:SW_Push BTN1
 U 1 1 620E2C06
-P 9800 5200
-F 0 "BTN1" H 9800 5393 50  0000 C CNN
-F 1 "SW_Push" H 9800 5394 50  0001 C CNN
-F 2 "" H 9800 5400 50  0001 C CNN
-F 3 "~" H 9800 5400 50  0001 C CNN
-	1    9800 5200
+P 9250 4050
+F 0 "BTN1" H 9250 4243 50  0000 C CNN
+F 1 "SW_Push" H 9250 4244 50  0001 C CNN
+F 2 "" H 9250 4250 50  0001 C CNN
+F 3 "~" H 9250 4250 50  0001 C CNN
+	1    9250 4050
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	8500 3850 8500 6150
-Wire Wire Line
-	8500 6150 6550 6150
-Wire Wire Line
-	8500 2650 8500 1950
-Wire Wire Line
-	8500 1950 6000 1950
 $EndSCHEMATC
