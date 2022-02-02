@@ -1,4 +1,4 @@
-update=Tue Jan 25 02:02:50 2022
+update=Mon Jan 31 23:37:10 2022
 version=1
 last_client=kicad
 [general]
@@ -34,7 +34,7 @@ LibDir=
 [schematic_editor]
 version=1
 PageLayoutDescrFile=layout.kicad_wks
-PlotDirectoryName=./
+PlotDirectoryName=../doc/
 SubpartIdSeparator=0
 SubpartFirstId=65
 NetFmtName=
