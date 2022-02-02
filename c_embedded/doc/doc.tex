@@ -104,30 +104,69 @@
 εύρος θερμοκρασίας λειτουργίας, το σύστημα είναι ασφαλές να
 λειτουργήσει στους $\SI{-20}{\celsius} \sim \SI{70}{\celsius}$.
 
-\subsection{Διάρκεια ζωής}
-
-<++>
-
 \section{Ανάπτυξη συστήματος}
-\subsection{Εργαλεία}
-Η ανάπτυξη του συστήματος έγινε σε FreeBSD 13.0 με την χρήση του
-\lstinline{sdcc} C compiler, και το \lstinline{pk2cmd} για την
-επικοινωνία του μικροελεγκτή με το PICKit2 -- τον προγραμματιστή.
-'Εχω αναλύσει την διαδικασία αυτή σε μορφή οδηγού στην ιστοσελίδα
-μου και στο FreeBSD Wiki: https://wiki.freebsd.org/Microcontrollers/PIC
+
+Στο directory \lstinline{schem/} βρίσκονται όλα τα αρχεία
+σχετικά με το σχηματικό (αρχεία KiCAD και PDF).
 
 \subsection{Σχηματικό}
 \begin{center}
 	\includegraphics[width=\linewidth]{./res/schem.png}
 \end{center}
 
-\subsection{PCB}
-<++>
-
 \subsection{Κώδικας}
-<++>
+Η ανάπτυξη του κώδικα έγινε σε λειτουργικό FreeBSD 13.0 με την χρήση του
+\lstinline{sdcc} C compiler, και το \lstinline{pk2cmd} για την
+επικοινωνία του μικροελεγκτή με το PICKit2 -- τον προγραμματιστή.
+'Εχω αναλύσει την διαδικασία αυτή σε μορφή οδηγού στην ιστοσελίδα
+μου και στο FreeBSD Wiki: https://wiki.freebsd.org/Microcontrollers/PIC.
+
+Στο directory \lstinline{src/} βρίσκεται όλος ο κώδικας του συστήματος.
+Το \lstinline{Makefile} είναι υπεύθυνο για την μεταγλώττιση και φόρτωση
+του προγράμματος στο PIC. Η επιλογές που μπορούν να δωθούν στο \lstinline{Makefile}
+είναι οι εξής:
+
+\begin{itemize}
+	\item Καμία επιλογή: Μεταγλωττίζει το πρόγραμμα.
+	\item \lstinline{clean}: Καθαρίζει το directory από τα αρχεία
+		που παράγει ο compiler.
+	\item \lstinline{erase}: Διαγράφει την μνήμη του PIC.
+	\item \lstinline{flash}: Φορτώνει το πρόγραμμα στο PIC.
+\end{itemize}
+
+Στον κώδικα έχει υλοποιηθεί ο Timer0 του PIC, driver για την οθόνη LCD,
+υλοποιήση του προτοκώλλου I$^2$C και driver για τον σένσορα BME280. 'Εχει
+υλοποιηθεί μόνο ό,τι είναι απολύτως απαραίτητο για το σύστημα.
+
+Αν και στην εκφώνηση αναφέρεται ότι ο σένσορας θερμοκρασίας και υγρασίας
+πρέπει να είναι αναλογικός, χρησιμοποίησα ψηφιακό, λόγω του ότι στο μαγαζί
+όπου προμηθεύτηκα τα υλικά δεν υπήρχε αναλογικός σένσορας σε απόθεμα.
 
 \subsection{Εικόνες}
-<++>
+
+\begin{figure}[H]
+        \centering
+	\rotatebox{270}{\includegraphics[width=\linewidth]{res/main.jpg}}
+	\caption{Βασική λειτουργία.}
+\end{figure}
+
+
+\begin{figure}[H]
+        \centering
+	\includegraphics[width=\linewidth]{res/side.jpg}
+	\caption{Πλάγια λήψη.}
+\end{figure}
+
+\begin{figure}[H]
+        \centering
+	\rotatebox{270}{\includegraphics[width=\linewidth]{res/button.jpg}}
+	\caption{Λειτουργία κατά την πίεση του κουμπιού.}
+\end{figure}
+
+\begin{figure}[H]
+        \centering
+	\rotatebox{270}{\includegraphics[width=\linewidth]{res/pickit.jpg}}
+	\caption{Προγραμματισμός του συστήματος με το PICKit2.}
+\end{figure}
 
 \end{document}

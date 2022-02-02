@@ -6,6 +6,7 @@
 #define I2C_MASTER 0x08
 #define I2C_SLEW_OFF 0x80
 #define I2C_SLEW_ON 0x00
+#define I2C_CLK_1MHZ 1000000
 
 void	i2c_init(uint8_t, uint8_t, uint32_t);
 void	i2c_hold(void);

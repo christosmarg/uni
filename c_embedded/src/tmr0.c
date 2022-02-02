@@ -5,8 +5,8 @@
 
 struct timer_req {
 	ev_handler handler;	/* ISR callback */
-	uint32_t rate;		/* Interval */
-	uint32_t cnt;		/* Current time */
+	uint16_t rate;		/* Interval */
+	uint16_t cnt;		/* Current time */
 };
 
 static void tmr0_isr(void) __interrupt;
@@ -47,7 +47,7 @@ tmr0_init(void)
 }
 
 void
-tmr0_delay_ms(uint32_t t)
+tmr0_delay_ms(uint16_t t)
 {
 	while (t--) {
 		while (INTCONbits.TMR0IF == 0)
@@ -58,7 +58,7 @@ tmr0_delay_ms(uint32_t t)
 }
 
 int
-tmr0_set_event(ev_handler handler, uint32_t rate)
+tmr0_set_event(ev_handler handler, uint16_t rate)
 {
 	struct timer_req *r;
 	uint8_t i;

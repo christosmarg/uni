@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 
-int	bme280_init(void);
-int32_t	bme280_read_temp(void);
-uint32_t bme280_read_humid(void);
+int		bme280_init(void);
+int32_t		bme280_read_temp(void);
+uint32_t	bme280_read_humid(void);
 
 #endif /* _BME280_H_ */
