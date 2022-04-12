@@ -1,0 +1,11 @@
+START=INT
+
+INT:		+ \-	-> INT_BEG
+		1-9	-> INT_R
+		*	-> BAD
+INT_BEG:	1-9	-> INT_R 
+		*	-> BAD
+INT_R:		0-9	-> INT_R
+		\n	-> GOOD
+		*	-> BAD
+GOOD(OK):	\n	-> GOOD

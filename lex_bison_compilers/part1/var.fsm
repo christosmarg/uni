@@ -1,0 +1,8 @@
+START=VAR
+
+VAR:		\?		-> VAR_R
+		*		-> BAD
+VAR_R:		A-Z a-z 0-9	-> VAR_R
+		\n		-> GOOD
+		*		-> BAD
+GOOD(OK):	\n		-> GOOD
