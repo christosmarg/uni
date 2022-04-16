@@ -1,0 +1,28 @@
+#!/bin/sh
+
+echo "exercise 1:"
+./priv dat/priv.in
+echo
+
+echo "exercise 2:"
+./priv -v dat/priv.in | awk '{print $2}' > dat/encrypt.in
+./atoh 'Christos Margiolis' | ./encrypt dat/encrypt.in
+echo
+
+echo "exercise 3:"
+./decrypt dat/decrypt.in | ./htoa
+echo
+
+echo "exercise 4:"
+printf "sign1: "; ./atoh 'This is a message' | ./sign dat/decrypt.in
+printf "sign2: "; ./atoh 'This iz a message' | ./sign dat/decrypt.in
+echo
+
+echo "exercise 5a:"
+./verify dat/verify1_cor.in | tail -1 | awk '{print $2}' | ./htoa
+./verify dat/verify1_inc.in | tail -1 | awk '{print $2}' | ./htoa
+echo
+
+echo "exercise 5b:"
+./verify dat/verify2.in | tail -1 | awk '{print $2}' | ./htoa
+echo

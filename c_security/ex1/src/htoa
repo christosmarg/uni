@@ -1,0 +1,6 @@
+#!/bin/sh
+
+while read hex; do
+	echo "16i ${hex} P" | dc
+done
+echo
