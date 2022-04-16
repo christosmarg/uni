@@ -247,6 +247,41 @@
 
 \section{Δραστηριότητα 6: Μη-αυτόματη επαλήθευση πιστοποιητικού X.509}
 
-<++>
+Κατεβάζουμε το πιστοποιητικό της ιστοσελίδας margiolis.net:
+\begin{lstlisting}
+	$ openssl s_client -connect margiolis.net:443 -showcerts \
+		</dev/null 2>/dev/null | openssl x509 -outform pem > dat/c0.pem
+\end{lstlisting}
+
+Εξάγουμε το $e$:
+\begin{lstlisting}
+	$ openssl x509 -in dat/c0.pem -text -noout | grep 'Exponent' |
+		awk '{print $3}' | sed 's/(//;s/)//;s/0x//' > dat/cert.in
+\end{lstlisting}
+
+Εξάγουμε το $n$:
+\begin{lstlisting}
+	$ openssl x509 -in dat/c0.pem -noout -modulus |
+		sed 's/Modulus=//' >> dat/cert.in
+\end{lstlisting}
+
+Εξάγουμε την υπογραφή:
+\begin{lstlisting}
+	$ openssl x509 -in dat/c0.pem -text -noout \
+		-certopt ca_default -certopt no_validity \
+		-certopt no_serial -certopt no_subject \
+		-certopt no_extensions -certopt no_signame |
+		sed 1d | tr -d '[:space:]:' | sha256 >> dat/cert.in
+\end{lstlisting}
+
+Τέλος, επαληθεύουμε το πιστοποιητικό (το output είναι πολύ μεγάλο για να
+συμπεριληφθεί ολόκληρο):
+\begin{lstlisting}
+	$ ./verify dat/cert.in
+	e: 010001
+	n: B8CF8F..........1AE7F0DE351B
+	sign: E8230B...........AC59DF719
+	str: 46F35C99.........5034620EF8149AE
+\end{lstlisting}
 
 \end{document}

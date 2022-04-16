@@ -7,7 +7,7 @@
 static const char *
 read_line(FILE *fp)
 {
-	char buf[BUFSIZ];
+	char buf[2048];
 
 	if (fgets(buf, sizeof(buf), fp) == NULL)
 		err(1, "fgets");
