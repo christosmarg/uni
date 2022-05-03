@@ -1,0 +1,28 @@
+\boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
+\babel@toc {english}{}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {1}Χρήση \lstinline {rpcgen}}{1}{}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2}Εκτέλεση κώδικα}{1}{}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {3}Ενδεικτικά τρεξίματα}{3}{}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.1}Server και client στον ίδιο υπολογιστή}{3}{}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.2}Server και client σε διαφορετικές IP}{3}{}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.3}Δοκιμή concurrency}{4}{}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4}Κώδικας}{5}{}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.1}\lstinline {rpc.x}}{5}{}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.2}\lstinline {rpc_server.c}}{7}{}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.3}\lstinline {rpc_client.c}}{9}{}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.4}\lstinline {sock_client.c}}{17}{}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.5}\lstinline {Makefile.rpc}}{23}{}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.6}\lstinline {Makefile}}{24}{}%
