@@ -23,7 +23,7 @@ public class Room {
 		else if (avail - num >= 0) {
 			guests.put(name, guests.getOrDefault(name, 0) + num);
 			avail -= num;
-			return "success: " + num * price + "€";
+			return "success: " + num * price + " euros";
 		} else if (avail > 0)
 			return "fail: can only book " + avail + " rooms";
 		else
@@ -80,6 +80,6 @@ public class Room {
 
 	public String toString() {
 		return avail + " " + type + " (" + desc +
-		    ") rooms available - " + price + "€ per night";
+		    ") rooms available - " + price + " euros per night";
 	}
 }

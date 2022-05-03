@@ -1,0 +1,20 @@
+\boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
+\babel@toc {english}{}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {1}<++>}{1}{}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2}Εκτέλεση κώδικα}{1}{}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {3}Ενδεικτικά τρεξίματα}{1}{}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4}Κώδικας}{1}{}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.1}\lstinline {HRInterface.java}}{1}{}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.2}\lstinline {HRImpl.java}}{2}{}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.3}\lstinline {Room.java}}{4}{}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.4}\lstinline {HRServer.java}}{6}{}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.5}\lstinline {HRClient.java}}{7}{}%
