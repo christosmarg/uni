@@ -2,116 +2,132 @@
 #include <err.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <math.h>
 
+/* Silence warnings... */
 extern int	yylex(void);
-extern int	yyparse(void);
-extern FILE	*yyin, *yyout;
-extern char	*yytext;
 
-double	func(char *);
-double	calc(char *, double, double);
+/* Input and output files. */
+extern FILE	*yyin, *yyout;
+
+int	cw = 0;	/* correct words */
+int	ce = 0;	/* correct expressions */
+int	ww = 0;	/* wrong words */
+int	we = 0;	/* wrong expressions */
+
 void	yyerror(const char *);
 %}
 
-%union {
-	double	dval;
-	char	*sval;
-}
-
-%token <sval> FUNC STR DEFIN VAR
-%token <dval> INT FLOAT
-%token NEWLINE UNKNOWN LPAR RPAR ARROW
-
-%type <dval> expr
+/* Tokens declared from flex. */
+%token DEFFACTS DEFRULE BIND READ PRINT TEST ARITH INT FLOAT COMP
+%token STR DEFIN VAR LPAR RPAR ARROW NEWLINE UNKNOWN
 
 %start prog
 
 %%
+/* Start here. */
 prog:
-	{ printf("> "); }
-	| prog expr NEWLINE		{ printf("%f\n> ", $2); }
+	| prog NEWLINE
+	| prog expr
 	;
 
+/*
+ * Declare numbers. Variables only accept numerical values so add them here as
+ * well.
+ */
+num:
+	INT
+	| FLOAT
+	| VAR
+	;
+
+/* Accept any number of strings (for use in printout) */
+str:
+	STR
+	| str STR
+	;
+
+/* (= (expr)) */
+cmp:
+	LPAR COMP expr expr RPAR
+	;
+
+/* (test (= (expr))) */
+test:
+	LPAR TEST cmp RPAR
+	;
+
+/* (prinout (str)...) */
+print:
+	LPAR PRINT str RPAR
+	;
+
+fact:
+	expr
+	| fact expr
+	;
+
+/* We match expressions here. */
 expr:
-	INT				{ $$ = $1; }
-	| FLOAT				{ $$ = $1; }
-	| LPAR FUNC RPAR		{ $$ = func($2); }
-	| LPAR FUNC expr expr RPAR	{ $$ = calc($2, $3, $4); }
-	| error				{ yyerror("error"); }
+	num						/* numbers */
+	| cmp				{ ce++; }	/* comparisons */
+	| test				{ ce++; }	/* test keyword */
+	| print				{ ce++; }	/* (printout "str"...) */
+	| LPAR READ RPAR		{ ce++; }	/* (read) */
+	| LPAR ARITH expr expr RPAR	{ ce++; }	/* (arithmetic_op (expr)...) */
+	| LPAR BIND VAR expr RPAR	{ ce++; }	/* (bind ?var (expr)) */
+	| LPAR DEFFACTS DEFIN fact RPAR { ce++; }	/* (deffacts DEF facts...) */
+	/* (defrule DEF
+	 *	(facts)
+	 *	...
+	 *	(test)
+	 *	->
+	 *	(printout))
+	 */
+	| LPAR DEFRULE DEFIN fact test ARROW print RPAR { ce++; }
+	| error				{ we++; if (ce > 0) ce--; }
 	;
 %%
 
-double
-func(char *op)
-{
-	double n;
-	int rc;
-
-	if (strcmp(op, "quit") == 0) {
-		exit(0);
-	} else if (strcmp(op, "read") == 0) {
-		do {
-			printf("read> ");
-			rc = scanf("%lf", &n);
-			(void)getchar();
-		} while (rc != 1);
-		return (n);
-	}
-
-	yyerror("invalid expression");
-	/* NOT REACHED */
-	return (0);
-}
-
-double
-calc(char *op, double arg1, double arg2)
-{
-	if (strcmp(op, "+") == 0)
-		return (arg1 + arg2);
-	else if (strcmp(op, "-") == 0)
-		return (arg1 - arg2);
-	else if (strcmp(op, "*") == 0)
-		return (arg1 * arg2);
-	else if (strcmp(op, "/") == 0) {
-		if (arg2 == 0)
-			yyerror("cannot divide by 0");
-		return (arg1 / arg2);
-	}
-	else if (strcmp(op, "e") == 0)
-		return (pow(arg1, arg2));
-	else if (strcmp(op, "=") == 0)
-		return (arg1 == arg2);
-
-	yyerror("invalid expression");
-	/* NOT REACHED */
-	return (0);
-}
-
+/* Print errors. */
 void
 yyerror(const char *s)
 {
 	fprintf(stderr, "%s\n", s);
-	exit(1);
 }
 
 int
 main(int argc, char *argv[])
 {
-	/*if (argc < 2) {*/
-		/*fprintf(stderr, "usage: %s input [output]\n", *argv);*/
-		/*return (-1);*/
-	/*}*/
-	/*if ((yyin = fopen(argv[1], "r")) == NULL)*/
-		/*err(1, "fopen(%s)", argv[1]);*/
-	/*if (argc == 3 && (yyout = fopen(argv[2], "w")) == NULL)*/
-		/*err(1, "fopen(%s)", argv[2]);*/
+	/* We need at least 1 input and 1 output file... */
+	if (argc < 3) {
+		fprintf(stderr, "usage: %s input... output\n", *argv);
+		return (-1);
+	}
 
-	if (yyparse() == 0)
-		fprintf(stderr, "success\n");
-	else
-		fprintf(stderr, "failure\n");
+	/* Open last file as output. */
+	if ((yyout = fopen(argv[--argc], "w")) == NULL)
+		err(1, "fopen(%s)", argv[argc]);
+
+	/* Parse all input files in reverse order. */
+	while (argc-- > 1) {
+		if ((yyin = fopen(argv[argc], "r")) == NULL)
+			err(1, "fopen(%s)", argv[argc]);
+		/* Parse file */
+		if (yyparse() == 0)
+			fprintf(yyout, "%s: success\n", argv[argc]);
+		else
+			fprintf(yyout, "%s: failure\n", argv[argc]);
+		fclose(yyin);
+	}
+
+	/* Print results. */
+	fprintf(yyout, "\n");
+	fprintf(yyout, "correct words: %d\n", cw);
+	fprintf(yyout, "correct expressions: %d\n", ce);
+	fprintf(yyout, "wrong words: %d\n", ww);
+	fprintf(yyout, "wrong expressions: %d\n", we);
+
+	fclose(yyout);
 
 	return (0);
 }

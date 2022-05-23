@@ -8,8 +8,8 @@
  * Με βάση το μέρος Α2, υλοποιούμε τις κανονικές εκφράσεις και τις
  * αντιστοιχούμε στα κατάλληλα tokens.
  */
-FUNC		deffacts|defrule|test|bind|read|printout|quit|"+"|"-"|"*"|"/"|"="|"e"
-DELIM		[ \t]+
+ARITH		"+"|"-"|"*"|"/"|"="
+DELIM		[ \t\n]+
 INT		0|[+-]?[1-9]+[0-9]*
 FLOAT		[+-]?[0-9]+((\.[0-9]+)([eE][+-]?[0-9]*)?|([eE][+-]?[0-9]*)?)
 STR		\"[^\"\\]*(?:\\.[^\"\\]*)*\"
@@ -22,17 +22,24 @@ COMMENT		;.*
  * οποίο ανήκει
  */
 %%
-{FUNC}		{ yylval.sval = strdup(yytext); return FUNC; }
-{INT}		{ yylval.dval = strtod(yytext, NULL); return INT; }
-{FLOAT}		{ yylval.dval = strtod(yytext, NULL); return FLOAT; }
-{STR}		{ yylval.sval = strdup(yytext); return STR; }
-{DEFIN}		{ yylval.sval = strdup(yytext); return DEFIN; }
-{VAR}		{ yylval.sval = strdup(yytext); return VAR; }
+"deffacts"	{ return DEFFACTS; }
+"defrule"	{ return DEFRULE; }
+"bind"		{ return BIND; }
+"read"		{ return READ; }
+"printout"	{ return PRINT; }
+"test"		{ return TEST; }
+"="		{ return COMP; }
 "("		{ return LPAR; }
 ")"		{ return RPAR; }
 "->"		{ return ARROW; }
-\n		{ return NEWLINE; }
+{ARITH}		{ return ARITH; }
+{INT}		{ return INT; }
+{FLOAT}		{ return FLOAT;}
+{STR}		{ return STR; }
+{DEFIN}		{ return DEFIN; }
+{VAR}		{ return VAR; }
 {DELIM}		{ /* ignore whitespace */ }
 {COMMENT}	{ /* skip comments */ }
+"\n"		{ return NEWLINE; }
 .		{ return UNKNOWN; }
 %%
