@@ -9,10 +9,10 @@ extern int	yylex(void);
 /* Input and output files. */
 extern FILE	*yyin, *yyout;
 
-int	cw = 0;	/* correct words */
-int	ce = 0;	/* correct expressions */
-int	ww = 0;	/* wrong words */
-int	we = 0;	/* wrong expressions */
+extern int	cw;	/* correct words */
+extern int	ww;	/* wrong words */
+int		ce = 0;	/* correct expressions */
+int		we = 0;	/* wrong expressions */
 
 void	yyerror(const char *);
 %}

@@ -2,6 +2,9 @@
 %{
 #include <stdlib.h>
 #include "syntax.tab.h"
+
+int	cw = 0;	/* correct words */
+int	ww = 0;	/* wrong words */
 %}
 
 /*
@@ -22,24 +25,24 @@ COMMENT		;.*
  * οποίο ανήκει
  */
 %%
-"deffacts"	{ return DEFFACTS; }
-"defrule"	{ return DEFRULE; }
-"bind"		{ return BIND; }
-"read"		{ return READ; }
-"printout"	{ return PRINT; }
-"test"		{ return TEST; }
-"="		{ return COMP; }
+"deffacts"	{ cw++;  return DEFFACTS; }
+"defrule"	{ cw++;  return DEFRULE; }
+"bind"		{ cw++;  return BIND; }
+"read"		{ cw++;  return READ; }
+"printout"	{ cw++;  return PRINT; }
+"test"		{ cw++;  return TEST; }
+"="		{ cw++;  return COMP; }
 "("		{ return LPAR; }
 ")"		{ return RPAR; }
 "->"		{ return ARROW; }
-{ARITH}		{ return ARITH; }
-{INT}		{ return INT; }
-{FLOAT}		{ return FLOAT;}
-{STR}		{ return STR; }
-{DEFIN}		{ return DEFIN; }
-{VAR}		{ return VAR; }
+{ARITH}		{ cw++;  return ARITH; }
+{INT}		{ cw++;  return INT; }
+{FLOAT}		{ cw++;  return FLOAT;}
+{STR}		{ cw++;  return STR; }
+{DEFIN}		{ cw++; return DEFIN; }
+{VAR}		{ cw++; return VAR; }
 {DELIM}		{ /* ignore whitespace */ }
 {COMMENT}	{ /* skip comments */ }
 "\n"		{ return NEWLINE; }
-.		{ return UNKNOWN; }
+.		{ ww++; return UNKNOWN; }
 %%
