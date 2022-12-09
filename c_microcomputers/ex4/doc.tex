@@ -1,0 +1,44 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[greek,english]{babel}
+\usepackage{alphabeta}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{mathtools}
+\usepackage{xcolor}
+\usepackage[backend=bibtex]{biblatex}
+\usepackage{hyperref}
+\usepackage[left=1cm,right=1cm]{geometry}
+\hypersetup{
+	colorlinks=true,
+	linktoc=all,
+	linkcolor=black,
+}
+\lstset {
+        basicstyle=\ttfamily,
+        columns=fullflexible,
+        breaklines=true,
+        keepspaces=true,
+	showstringspaces=false
+}
+
+\title{Μικροϋπολογιστές: Εργαστηριακή άσκηση 4}
+\author{Χρήστος Μαργιώλης -- 19390133}
+\date{Δεκέμβριος 2022}
+
+\begin{document}
+
+\begin{titlepage}
+        \maketitle
+\end{titlepage}
+
+\section{Κύκλωμα}
+
+\includegraphics[width=\linewidth]{freertos.png}
+\pagebreak
+
+\section{Κώδικας}
+
+\lstinputlisting[language=C]{freertos.ino}
+
+\end{document}

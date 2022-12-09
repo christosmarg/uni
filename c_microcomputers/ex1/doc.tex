@@ -1,0 +1,40 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[greek,english]{babel}
+\usepackage{alphabeta}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{mathtools}
+\usepackage{xcolor}
+\usepackage[backend=bibtex]{biblatex}
+\usepackage{hyperref}
+\usepackage[left=1cm,right=1cm]{geometry}
+\hypersetup{
+	colorlinks=true,
+	linktoc=all,
+	linkcolor=black,
+}
+\lstset {
+        basicstyle=\ttfamily,
+        columns=fullflexible,
+        breaklines=true,
+        keepspaces=true,
+	showstringspaces=false
+}
+
+\title{Μικροϋπολογιστές: Εργαστηριακή άσκηση 1}
+\author{Χρήστος Μαργιώλης -- 19390133}
+\date{Νοέμβριος 2022}
+
+\begin{document}
+
+\begin{titlepage}
+        \maketitle
+\end{titlepage}
+
+\includegraphics[width=\linewidth]{servo.png}
+\pagebreak
+
+\lstinputlisting[language=C]{servo.ino}
+
+\end{document}
