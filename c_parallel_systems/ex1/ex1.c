@@ -5,27 +5,19 @@
 
 #include <omp.h>
 
-#define abs(x) ((x) < 0 ? -(x) : (x))
+#define abs(x)	((x) < 0 ? -(x) : (x))
 
-static int
-safe_input(const char *fmt, ...)
-{
-	va_list args;
-	char buf[48];
-	int n, rc;
+static void	*emalloc(size_t);
+static int	safe_input(const char *, ...);
+static void	pretty_print(int **, int, const char *);
+static int	strictly_diagonal_dominant(int **, int);
+static int	diagonal_max(int **, int);
+static int	**new_array(int **, int, int);
+static int	calc_min(int **, int);
 
-	va_start(args, fmt);
-	vsnprintf(buf, sizeof(buf), fmt, args);
-	va_end(args);
-	do {
-		printf("\r%s", buf);
-		rc = scanf("%d", &n);
-		(void)getchar();
-	} while (rc != 1);
-
-	return (n);
-}
-
+/*
+ * Fail-safe malloc(3).
+ */
 static void *
 emalloc(size_t nb)
 {
@@ -35,6 +27,56 @@ emalloc(size_t nb)
 		err(1, "malloc");
 
 	return (p);
+}
+
+static int
+safe_input(const char *fmt, ...)
+{
+	va_list args;
+	char buf[48];
+	int n, rc;
+
+	/* Collect the arguments into a buffer. */
+	va_start(args, fmt);
+	vsnprintf(buf, sizeof(buf), fmt, args);
+	va_end(args);
+
+	/*
+	 * The following loop keeps asking for input as long as the current
+	 * input wasn't correct. In this case "incorrect" input means anything
+	 * other than digits.
+	 */
+	do {
+		printf("\r%s", buf);
+		rc = scanf("%d", &n);
+		(void)getchar();
+	} while (rc != 1);
+
+	return (n);
+}
+
+/*
+ * Print the contents of a 2D array like:
+ *
+ * array = [
+ *	[x, y, z]
+ *	[x, y, z]
+ * ]
+ */
+static void
+pretty_print(int **arr, int n, const char *name)
+{
+	int i, j;
+
+	printf("\n%s = [\n", name);
+	for (i = 0; i < n; i++) {
+		printf("\t[");
+		for (j = 0; j < n; j++) {
+			printf("%d%s", arr[i][j],
+			   (j == n - 1) ? "]\n" : ", ");
+		}
+	}
+	printf("]\n");
 }
 
 static int
@@ -88,27 +130,44 @@ new_array(int **a, int m, int n)
 }
 
 static int
-min_reduction(int **b, int n)
+calc_min(int **b, int n)
 {
-	int i, min;
+	int i, j, min;
 
+	/* with reduction */
 	min = b[0][0];
 #pragma omp parallel for reduction(min : min)
 	for (i = 0; i < n; i++) {
-		if (b[i][i] < min)
-			min = b[i][i];
+		for (j = 0; j < n; j++) {
+			if (b[i][j] < min)
+				min = b[i][j];
+		}
 	}
+
+	/* without reduction, with critical region protection */
+	min = b[0][0];
+#pragma omp parallel for private(i, j) shared(min)
+	for (i = 0; i < n; i++) {
+		for (j = 0; j < n; j++) {
+#pragma omp critical
+		{
+			if (b[i][j] < min)
+				min = b[i][j];
+		}
+		}
+	}
+
+	/* XXX: didn't implement binary tree method */
 
 	return (min);
 }
-
-/* TODO: min_no_reduction() */
 
 int
 main(int argc, char *argv[])
 {
 	int **a, **b;
 	int i, j, m, min, n, ntd;
+	double start, end;
 
 	ntd = safe_input("threads: ", 0);
 	omp_set_num_threads(ntd);
@@ -121,21 +180,24 @@ main(int argc, char *argv[])
 			a[i][j] = safe_input("a[%d][%d]: ", i, j);
 	}
 
+	start = omp_get_wtime();
+
 	if (strictly_diagonal_dominant(a, n)) {
 		m = diagonal_max(a, n);
-		printf("diagonal_max: %d\n", m);
-
 		b = new_array(a, m, n);
+		min = calc_min(b, n);
 
-		min = min_reduction(b, n);
-		printf("min_reduction: %d\n", min);
+		pretty_print(a, n, "A");
+		pretty_print(b, n, "B");
+		printf("Diagonal max: %d\n", m);
+		printf("Min: %d\n", min);
 
-		for (i = 0; i < n; i++)
-			for (j = 0; j < n; j++)
-				printf("b[%d][%d]: %d\n", i, j, b[i][j]);
 		free(b);
 	} else
 		printf("not strictly diagonal dominant\n");
+
+	end = omp_get_wtime();
+	printf("Total time: %f seconds\n", end - start);
 
 	free(a);
 

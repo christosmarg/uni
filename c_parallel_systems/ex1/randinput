@@ -1,0 +1,12 @@
+#!/bin/sh
+
+usage()
+{
+	echo "usage: ${0##*/} nthreads N" 1>&2
+	exit 1
+}
+
+test ${#} -ne 2 && usage
+echo ${1}
+echo ${2}
+strings -n 1 < /dev/random | grep -o '[[:digit:]]' | head -n$((${2} * ${2}))
