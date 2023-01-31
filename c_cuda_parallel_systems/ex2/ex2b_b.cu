@@ -1,31 +1,34 @@
 #include <stdio.h>
 #include <time.h>
 
-#define N	(1 << 2)
-#define M	(1 << 1)
+#define N	(1 << 3)
+#define M	(1 << 3)
 #define DIM	(N * M)
-#define BLKSIZE	(1 << 8)
+#define BLKSIZE	(1 << 10)
 #define NBLK	((DIM + BLKSIZE - 1) / BLKSIZE)
 
+/*
+ * Calculations taken from lab's example code.
+ */
 __global__ void
 transnorm(float *a, float *atrans, float *x, float *y)
 {
 	int i, j, idx, stridex;
 
-	/* each thread gets a slice of the rows to work with */
+	/* Each thread gets a slice of the rows to work with */
 	idx = blockIdx.x * blockDim.x + threadIdx.x;
 	stridex = blockDim.x * gridDim.x;
 
 	if (idx >= N)
 		return;
-	/* first thread initializes y */
+	/* First thread initializes y */
 	if (threadIdx.x == 0) {
 		for (i = 0; i < M; i++)
 			y[i] = 0;
 	}
 	for (i = idx; i < N; i += stridex) {
 		for (j = 0; j < M; j++) {
-			/* transpose a */
+			/* Transpose A */
 			atrans[j * N + i] = a[i * M + j];
 			y[j] = atrans[j * M + i] * a[i * M + j] * x[j];
 		}
@@ -69,16 +72,16 @@ main(int argc, char *argv[])
 
 	srand(time(NULL));
 
-	/* 
-	 * use unified memory to avoid having additional device arrays and
-	 * memcpying from host to device and vice versa
+	/*
+	 * Use unified memory to avoid having additional device arrays and
+	 * memcpying from host to device and vice versa.
 	 */
 	cudaMallocManaged(&a, DIM * sizeof(float));
 	cudaMallocManaged(&atrans, DIM * sizeof(float));
 	cudaMallocManaged(&x, M * sizeof(float));
 	cudaMallocManaged(&y, M * sizeof(float));
 
-	/* initialize array */
+	/* Initialize arrays */
 	for (i = 0; i < N; i++) {
 		x[i] = (float)(rand() % 100);
 		for (j = 0; j < M; j++)
@@ -86,7 +89,7 @@ main(int argc, char *argv[])
 	}
 
 	transnorm<<<NBLK, BLKSIZE>>>(a, atrans, x, y);
-	/* wait for all devices to finish */
+	/* Wait for all devices to finish */
 	cudaDeviceSynchronize();
 
 	pretty_print_2d(a, "A", N, M);
