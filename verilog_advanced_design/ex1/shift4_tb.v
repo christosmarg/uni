@@ -46,6 +46,7 @@ module shift4_tb;
 
 		/* shift 2 times to the right */
 		repeat (2) @ (posedge tb_clk)
+			;
 
 		/* clear q */
 		#20 tb_clr <= 1;
