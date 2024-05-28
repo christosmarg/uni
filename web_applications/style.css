@@ -1,0 +1,24 @@
+@font-face {
+	font-family: Helvetica;
+	src: url('Helvetica.ttf');
+}
+
+body, input, button, select {
+	font-family: Helvetica;
+	font-size: 32px;
+}
+
+a {
+	color: black;
+}
+
+img {
+	max-width: 100%;
+}
+
+#topright {
+	float: right;
+	position: -webkit-sticky;
+	position: sticky;
+	top: 0;
+}
