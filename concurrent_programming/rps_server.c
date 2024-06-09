@@ -1,5 +1,8 @@
+#include <sys/mman.h>
+#include <sys/queue.h>
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 
 #include <arpa/inet.h>
 #include <netdb.h>
@@ -12,27 +15,161 @@
 #include <string.h>
 #include <unistd.h>
 
-static int srv(int);
+#include "extern.h"
+
+struct user {
+	int fd;
+	int id;
+	char name[NAME_LEN];
+	int move;
+	int nplays;
+	int nwins;
+	struct user *opponent;
+	TAILQ_ENTRY(user) next;
+};
+
+static int srv(struct user *);
 static void sighandler(int);
 static void usage(void);
 
 static volatile sig_atomic_t f_quit = 0;
+static int ids = 0;
+static int *nusers;
+static TAILQ_HEAD(, user) users = TAILQ_HEAD_INITIALIZER(users);
+
+static void
+remove_user(struct user *user)
+{
+	struct user *up;
+
+	while (!TAILQ_EMPTY(&users)) {
+		up = TAILQ_FIRST(&users);
+		TAILQ_REMOVE(&users, up, next);
+		close(up->fd);
+		munmap(up, sizeof(struct user));
+		break;
+	}
+}
 
 static int
-srv(int fd)
+srv(struct user *user)
 {
-	int quit;
+	struct user *up;
+	char cmd[CMD_LEN];
+	int rc = 0, tmp, quit, id;
 
 	for (;;) {
-		if (recv(fd, &quit, sizeof(quit), 0) < 0)
+		tmp = recv(user->fd, cmd, sizeof(cmd), 0);
+		if (tmp < 0) {
+			warn("recv(%d, cmd)", user->fd);
+			rc = -1;
 			break;
-		if (quit) {
-			printf("%s(): quit triggered\n", __func__);
+		} else if (tmp == 0)
 			break;
+
+		if (strcmp(cmd, "challenge") == 0) {
+			if (recv(user->fd, &id, sizeof(id), 0) < 0) {
+				warn("recv(%d, id)", user->fd);
+				rc = -1;
+				break;
+			}
+			up = NULL;
+			TAILQ_FOREACH(up, &users, next) {
+				if (up->id == id)
+					break;
+			}
+			if (up == NULL) {
+				warnx("id=%d not found", id);
+				continue;
+			}
+			if (up->opponent != NULL) {
+				warnx("%s is already challenged", up->name);
+				continue;
+			}
+			user->opponent = up;
+			up->opponent = user;
+			printf("%s is challenging %d\n", user->name, id);
+			/* TODO challenge available user */
+		} else if (strcmp(cmd, "play") == 0) {
+			if (recv(user->fd, &user->move,
+			    sizeof(user->move), 0) < 0) {
+				warn("recv(%d, play)", user->fd);
+				rc = -1;
+				break;
+			}
+
+			/* Cannot play when unchallenged. */
+			if (user->opponent == NULL)
+				continue;
+
+			/* Give the opponent 3 seconds to make a move. */
+			for (int i = 0; user->opponent->move < 0 &&
+			    i < MOVE_TIMEOUT; i++) {
+				printf("[%s - %s] %s sleeping\n",
+				    user->name, user->opponent->name, user->name);
+				sleep(1);
+			}
+
+			/* Didn't respond, he lost. */
+			if (user->opponent->move < 0) {
+				printf("[%s - %s] opponent didn't respond\n",
+				    user->name, user->opponent->name);
+				user->move = -1;
+				user->opponent = NULL;
+				/*user->opponent->opponent = NULL;*/
+				user->nplays++;
+				user->nwins++;
+			}
+
+			printf("%s=%d, %s=%d\n", user->name, user->move,
+			    user->opponent->name, user->opponent->move);
+
+			switch (user->move) {
+			case MOVE_ROCK:
+				if (user->opponent->move == MOVE_SCISSOR)
+					user->nwins++;
+				break;
+			case MOVE_PAPER:
+				if (user->opponent->move == MOVE_ROCK)
+					user->nwins++;
+				break;
+			case MOVE_SCISSOR:
+				if (user->opponent->move == MOVE_PAPER)
+					user->nwins++;
+				break;
+			default:
+				warnx("invalid move: %d", user->move);
+				continue;
+			}
+			printf("[%s - %s] = [%d - %d]\n",
+			    user->name, user->opponent->name,
+			    user->nwins, user->opponent->nwins);
+
+			user->move = -1;
+			user->opponent = NULL;
+			user->opponent->opponent = NULL;
+			user->nplays++;
+		} else if (strcmp(cmd, "msg") == 0) {
+			/* TODO post message to global chat (list) */
+		} else if (strcmp(cmd, "list") == 0) {
+			printf("ID\tNAME\tPLAYED\tWON\n");
+			TAILQ_FOREACH(up, &users, next) {
+				printf("%d\t%s\t%d\t%d\n",
+				    up->id, up->name, up->nplays, up->nwins);
+			}
+			/* TODO send as nvlist */
+		} else if (strcmp(cmd, "quit") == 0) {
+			break;
+		} else {
+			warnx("received unknown command: %s", cmd);
 		}
 	}
 
-	return (0);
+	printf("%s: client disconnected: %s#%d (fd=%d)\n",
+	    getprogname(), user->name, user->id, user->fd);
+	remove_user(user);
+
+	return (rc);
 }
 
 static void
@@ -55,10 +192,10 @@ main(int argc, char *argv[])
 	struct sockaddr_in sin;
 	struct hostent *hp;
 	struct sigaction sa;
+	struct user *user;
 	int backlog = 10;
 	int port = 9999;
 	int sfd;
-	int cfd;
 	int ch;
 
 	while ((ch = getopt(argc, argv, "b:p:")) != -1) {
@@ -136,13 +273,52 @@ main(int argc, char *argv[])
 	if (listen(sfd, backlog) < 0)
 		err(1, "listen");
 
+	/* mmap(2) this that we can modify decrement it from the child. */
+	nusers = mmap(NULL, sizeof(*nusers), PROT_READ | PROT_WRITE,
+	    MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+	if (nusers == MAP_FAILED)
+		err(1, "mmap");
+	*nusers = 0;
+
+	TAILQ_INIT(&users);
+
 	for (;;) {
 		/* We caught a termination signal. */
 		if (f_quit)
 			break;
-		if ((cfd = accept(sfd, NULL, NULL)) < 0)
+
+		/*
+		 * Allocate user structure using mmap(2) so that we can modify
+		 * the userlist from the child process.
+		 */
+		user = mmap(NULL, sizeof(struct user), PROT_READ | PROT_WRITE,
+		    MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+		if (user == MAP_FAILED)
+			err(1, "mmap");
+
+		if ((user->fd = accept(sfd, NULL, NULL)) < 0) {
+			warn("accept(%d)", user->fd);
+			remove_user(user);
 			continue;
-		printf("[%s] client connected: %d\n", getprogname(), cfd);
+		}
+		/* Receive nickname and assign ID to user. */
+		if (recv(user->fd, user->name, sizeof(user->name), 0) < 0) {
+			warn("recv(%d, nick)", user->fd);
+			remove_user(user);
+			continue;
+		}
+
+		user->id = ++ids;
+		user->nplays = 0;
+		user->nwins = 0;
+		user->opponent = NULL;
+		TAILQ_INSERT_TAIL(&users, user, next);
+
+		(*nusers)++;
+
+		printf("%s: active users=%d\n", getprogname(), *nusers);
+		printf("%s: client connected: %s#%d (fd=%d)\n",
+		    getprogname(), user->name, user->id, user->fd);
 		/* 
 		 * Create a child process to serve the client so the parent can
 		 * continue waiting for another client to serve.
@@ -151,19 +327,18 @@ main(int argc, char *argv[])
 		case -1:
 			err(1, "fork");
 		case 0:
-			if (srv(cfd) < 0)
-				warnx("srv failed");
-			printf("[%s] client disconnected: %d\n",
-			    getprogname(), cfd);
+			if (srv(user) < 0)
+				warnx("srv(%s#%d) failed", user->name, user->id);
+			(*nusers)--;
 			_exit(0);
 		default:
-			close(cfd);
+			close(user->fd);
 		}
 	}
 
 	/* Will get here only if a termination signal is caught. */
 	close(sfd);
-	close(cfd);
+	remove_user(user);
 
 	return (0);
 }
