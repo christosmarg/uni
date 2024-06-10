@@ -16,13 +16,15 @@
 
 #include "extern.h"
 
+#define NTDS	2
+
 struct command {
 	char name[CMD_LEN];
 	int (*func)(char *);
 };
 
 static int cmd_challenge(char *);
-static int cmd_play(char *);
+static int cmd_accept(char *);
 static int cmd_msg(char *);
 static int cmd_list(char *);
 static int cmd_quit(char *);
@@ -32,27 +34,42 @@ static void sighandler(int);
 static void usage(void);
 
 static struct command commands[] = {
-	{ "challenge",	cmd_challenge },	/* /challenge <id> */
-	{ "play",	cmd_play },		/* /play <rock|paper|scissor> */
-	{ "msg",	cmd_msg },		/* /msg <message> */
-	{ "list",	cmd_list },		/* /list */
-	{ "quit",	cmd_quit },		/* /quit */
-	{ "help",	cmd_help },		/* /help */
+	{ "challenge",	cmd_challenge },/* /challenge <id> <rock|paper|scissor> */
+	{ "accept",	cmd_accept },	/* /accept <rock|paper|scissor> */
+	{ "msg",	cmd_msg },	/* /msg <message> */
+	{ "list",	cmd_list },	/* /list */
+	{ "quit",	cmd_quit },	/* /quit */
+	{ "help",	cmd_help },	/* /help */
 };
 
 static int ymax;
 static int xmax;
-static int f_quit = 0;
 static int fd;
+static volatile sig_atomic_t f_quit = 0;
 
 static int
 cmd_challenge(char *args)
 {
-	char cmd[CMD_LEN];
-	int id;
+	char cmd[CMD_LEN], *s;
+	int id, move;
 
 	if (args == NULL) {
-		warnx("usage: /challenge <id>");
+		warnx("usage: /challenge <id> <rock|paper|scissor>");
+		return (-1);
+	}
+	s = strchr(args, ' ');
+	if (s == NULL || *s == '\0') {
+		warnx("usage: /challenge <id> <rock|paper|scissor>");
+		return (-1);
+	}
+	while (*s == ' ')
+		s++;
+	if (*s == '\0') {
+		warnx("usage: /challenge <id> <rock|paper|scissor>");
+		return (-1);
+	}
+	if ((move = str2move(s)) < 0) {
+		warnx("invalid move: %s", s);
 		return (-1);
 	}
 
@@ -72,11 +89,16 @@ cmd_challenge(char *args)
 		return (-1);
 	}
 
+	if (send(fd, &move, sizeof(move), 0) < 0) {
+		warn("send(challenge, move)");
+		return (-1);
+	}
+
 	return (0);
 }
 
 static int
-cmd_play(char *args)
+cmd_accept(char *args)
 {
 	char cmd[CMD_LEN];
 	int move;
@@ -86,23 +108,19 @@ cmd_play(char *args)
 		return (-1);
 	}
 
-	strlcpy(cmd, "play", sizeof(cmd));
+	strlcpy(cmd, "accept", sizeof(cmd));
 	if (send(fd, cmd, sizeof(cmd), 0) < 0) {
-		warn("send(play, cmd)");
+		warn("send(accept, cmd)");
 		return (-1);
 	}
 
-	if (strcmp(args, "rock") == 0)
-		move = MOVE_ROCK;
-	else if (strcmp(args, "paper") == 0)
-		move = MOVE_PAPER;
-	else if (strcmp(args, "scissor") == 0)
-		move = MOVE_SCISSOR;
-	else
-		warnx("invalid move: %s\n", args);
+	if ((move = str2move(args)) < 0) {
+		warnx("invalid move: %s", args);
+		return (-1);
+	}
 
 	if (send(fd, &move, sizeof(move), 0) < 0) {
-		warn("send(play, move)");
+		warn("send(accept, move)");
 		return (-1);
 	}
 
@@ -113,6 +131,7 @@ static int
 cmd_msg(char *args)
 {
 	char cmd[CMD_LEN];
+	size_t len;
 
 	if (args == NULL) {
 		warnx("usage: /msg <message>");
@@ -125,19 +144,36 @@ cmd_msg(char *args)
 		return (-1);
 	}
 
+	len = strlen(args) + 1;
+	if (send(fd, &len, sizeof(len), 0) < 0) {
+		warn("send(msg, len)");
+		return (-1);
+	}
+
+	if (send(fd, args, len, 0) < 0) {
+		warn("send(msg, msg)");
+		return (-1);
+	}
+
 	return (0);
 }
 
 static int
 cmd_list(char *args)
 {
-	char cmd[CMD_LEN];
+	char cmd[CMD_LEN], buf[BUF_LEN];
 
 	strlcpy(cmd, "list", sizeof(cmd));
 	if (send(fd, cmd, sizeof(cmd), 0) < 0) {
 		warn("send(list)");
 		return (-1);
 	}
+
+	if (recv(fd, buf, sizeof(buf), 0) < 0) {
+		warn("recv(list)");
+		return (-1);
+	}
+	puts(buf);
 
 	return (0);
 }
@@ -162,8 +198,9 @@ static int
 cmd_help(char *args)
 {
 	printf("Available commands:\n");
-	printf("/challenge <id|name>\t\tChallenge a player\n");
-	printf("/play <rock|paper|scisssor>\tMake a move\n");
+	printf("/challenge <id|name> <rock|paper|scissor>\t\t"
+	    "Challenge a player\n");
+	printf("/accept <rock|paper|scisssor>\tAccept challenge\n");
 	printf("/msg <message>\t\t\tSend a message to the global chat\n");
 	printf("/quit\t\t\t\tQuit the game\n");
 	printf("/help\t\t\t\tShow this help message\n");
@@ -174,7 +211,7 @@ cmd_help(char *args)
 static struct command *
 parse_command(char **args)
 {
-	char buf[BUFSIZ], *line, *cmd, *s;
+	char buf[BUF_LEN], *line, *cmd, *s;
 	int i;
 
 	printf("\r> ");
@@ -255,7 +292,8 @@ main(int argc, char *argv[])
 	struct hostent *hp;
 	struct sigaction sa;
 	struct command *cmd;
-	char *args, *s;
+	char *args;
+	char *s;
 	char nick[NAME_LEN];
 	int port = 9999;
 	int ch;
@@ -311,6 +349,7 @@ main(int argc, char *argv[])
 		break;
 	}
 
+	/* Set up connection. */
 	if ((fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
 		err(1, "socket(AF_INET)");
 	memset(&sin, 0, sizeof(sin));
@@ -328,12 +367,13 @@ main(int argc, char *argv[])
 	if (send(fd, nick, sizeof(nick), 0) < 0)
 		err(1, "send(nick)");
 
+	/* Print list of available players. */
 	cmd_list(NULL);
 
+	/* Main game loop. */
 	for (;;) {
 		if (f_quit)
 			break;
-		/* TODO redraw */
 		if ((cmd = parse_command(&args)) == NULL)
 			continue;
 		if (cmd->func(args) < 0)
@@ -341,6 +381,7 @@ main(int argc, char *argv[])
 		if (args != NULL)
 			free(args);
 	}
+
 	close(fd);
 
 	return (0);
