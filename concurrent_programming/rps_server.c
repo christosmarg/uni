@@ -116,6 +116,7 @@ srv(int fd)
 					break;
 				cp = NULL;
 			}
+			/* TODO add lock */
 			if (cp == NULL) {
 				warnx("id=%d not found", id);
 				continue;
@@ -361,8 +362,9 @@ main(int argc, char *argv[])
 		/* We caught a termination signal. */
 		if (f_quit)
 			break;
-		if ((*nclients + 1) > CLIENTS_MAX)
-			continue;
+		/* TODO */
+		/*if ((*nclients + 1) >= CLIENTS_MAX)*/
+			/*continue;*/
 		if ((cfd = accept(sfd, NULL, NULL)) < 0) {
 			warn("accept(%d)", cfd);
 			continue;
