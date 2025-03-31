@@ -1,0 +1,11 @@
+\boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
+\babel@toc {english}{}
+\contentsline {section}{\numberline {1}Θεωρητικό μέρος}{2}{}%
+\contentsline {section}{\numberline {2}Υλοποίηση της εργασίας}{2}{}%
+\contentsline {section}{\numberline {3}Συνδεσμολόγηση κυκλώματος}{2}{}%
+\contentsline {section}{\numberline {4}Εφαρμογή σήματος}{2}{}%
+\contentsline {subsection}{\numberline {4.1}Θεωρητικός υπολογισμός αντιστάσεων}{3}{}%
+\contentsline {subsection}{\numberline {4.2}Πρακτικός υπολογισμός αντιστάσεων}{4}{}%
+\contentsline {subsection}{\numberline {4.3}Πίνακας μετρήσεων εξόδου}{5}{}%
+\contentsline {subsection}{\numberline {4.4}Γράφημα εξόδου}{5}{}%
+\contentsline {section}{\numberline {5}Υλοποίηση σε breadboard}{6}{}%

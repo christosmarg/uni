@@ -1,3 +1,13 @@
 \babel@toc {english}{}\relax 
-\contentsline {section}{\numberline {1}Εισαγωγή}{6}{}%
-\contentsline {section}{\numberline {2}Βιβλιογραφία}{6}{}%
+\contentsline {section}{\numberline {1}Συντομογραφίες}{6}{}%
+\contentsline {section}{\numberline {2}Εισαγωγή}{6}{}%
+\contentsline {subsection}{\numberline {2.1}Εισαγωγή στην παρακολούθηση (tracing)}{6}{}%
+\contentsline {subsection}{\numberline {2.2}Εισαγωγή στο DTrace}{6}{}%
+\contentsline {section}{\numberline {3}Inline tracing}{6}{}%
+\contentsline {subsection}{\numberline {3.1}Τι είναι inline συναρτήσεις}{6}{}%
+\contentsline {subsection}{\numberline {3.2}Γιατί είναι δύσκολη η παρακολούθηση inline συναρτήσεων}{6}{}%
+\contentsline {section}{\numberline {4}kinst}{6}{}%
+\contentsline {section}{\numberline {5}Πειράματα}{6}{}%
+\contentsline {section}{\numberline {6}Συμπεράσματα}{6}{}%
+\contentsline {section}{\numberline {7}Βιβλιογραφία}{7}{}%
+\contentsline {section}{\numberline {8}Παράρτημα}{8}{}%

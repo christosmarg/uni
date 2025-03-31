@@ -1,0 +1,22 @@
+\boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
+\babel@toc {english}{}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {1}Δομή φακέλων}{2}{section.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2}Διάγραμμα κλάσεων για όλο το Π.Σ}{2}{section.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {3}Διάγραμμα κλάσεων για τις περιπτώσεις χρήσης}{2}{section.3}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.1}Περίπτωση χρήσης 1 -- Κράτηση εισιτηρίων}{2}{subsection.3.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.2}Περίπτωση χρήσης 2 -- 'Ελεγχος εγκυρότητας εισιτηρίων (Check In)}{3}{subsection.3.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.3}Περίπτωση χρήσης 3 -- Πληροφορίες πτήσεις (F.I.D.S)}{4}{subsection.3.3}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4}Περιπτώσης δοκιμής}{5}{section.4}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.1}Περίπτωση δοκιμής 1 -- Κράτηση εισιτηρίων}{5}{subsection.4.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.2}Περίπτωση δοκιμής 2 -- 'Ελεγχος εγκυρότητας εισιτηρίων (Check in)}{6}{subsection.4.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.3}Περιπτωσή δοκιμής 3 -- Πληροφορίες πτήσεις (F.I.D.S)}{7}{subsection.4.3}%
