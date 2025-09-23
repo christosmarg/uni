@@ -52,6 +52,7 @@ int main(int argc, char **argv)
 	setters(*s3);
 	addgrd(*s3); cont();
 	submsubj(*s3); cont();
+	Student *s4 = new Student(*s3);
 
 	std::string c = "356431";
 	std::string n = "OOP";
@@ -61,6 +62,7 @@ int main(int argc, char **argv)
 	getters(*oop); cont();
 	setters(*oop); 
 
+	delete s4;
 	delete s3;
 	delete oop;
 

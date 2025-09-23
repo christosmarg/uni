@@ -32,7 +32,7 @@ class Student
 			AM = new char[sl + 1];
 			memcpy(AM, s.AM, sizeof(s.AM) + (sl+1));
 			this->grades = new float[s.psubj];
-			memcpy(grades, s.grades, sizeof(s.grades) * s.psubj);
+			memcpy(grades, s.grades, sizeof(float) * s.psubj);
 		}
 		
 		~Student()
@@ -75,7 +75,7 @@ float *Student::convert_PSG(const float *grades)
 	if (psubj > 0)
 	{
 		float *tmp = new float[psubj];
-		memcpy(tmp, grades, sizeof(grades) * psubj);
+		memcpy(tmp, grades, sizeof(float) * psubj);
 		return tmp;
 	}
 	else return nullptr;
@@ -84,9 +84,12 @@ float *Student::convert_PSG(const float *grades)
 void Student::add_grade(float grade)
 {
 	float *tmp = new float[psubj+1];
-	memcpy(tmp, grades, sizeof(grades) * psubj);
+	if (grades != nullptr)
+	{
+		memcpy(tmp, grades, sizeof(float) * psubj);
+		delete[] grades;
+	}
 	tmp[psubj] = grade;
-	if (grades != nullptr) delete[] grades;
 	grades = tmp;
 	psubj++;
 }

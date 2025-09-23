@@ -15,7 +15,6 @@ class Subject
 		Subject();
 		Subject(const std::string& code, const std::string& sname, unsigned int subjsemester);
 		Subject(const Subject& s);
-		~Subject();
 
 		inline const std::string& get_code(void) const {return this->code;}
 		inline const std::string& get_sname(void) const {return this->sname;}
