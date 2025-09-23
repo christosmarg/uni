@@ -82,12 +82,12 @@ int set_width(WINDOW *menuWin, int xMax)
 
     do
     {
-        mvwprintw(menuWin, 1, 1, "Width: ");
+        mvwprintw(menuWin, 1, 1, "Width (Max = %d): ", xMax-12);
         wrefresh(menuWin);
         scanw("%d", &WIDTH);
-        mvwprintw(menuWin, 1, strlen("Width: ") + 1, "%d", WIDTH);
+        mvwprintw(menuWin, 1, strlen("Width (Max = XXX): ") + 1, "%d", WIDTH);
         wrefresh(menuWin);
-    } while (WIDTH < 5 || WIDTH > 114 /*WIDTH > xMax*/); // fix limits
+    } while (WIDTH < 5 || WIDTH > xMax - 12);
 
     return WIDTH;    
 }
@@ -99,12 +99,12 @@ int set_height(WINDOW *menuWin, int yMax)
 
     do
     {
-        mvwprintw(menuWin, 2, 1, "Height: ");
+        mvwprintw(menuWin, 2, 1, "Height (Max = %d): ", yMax-12);
         wrefresh(menuWin);
         scanw("%d", &HEIGHT);
-        mvwprintw(menuWin, 2, strlen("Height: ") + 1, "%d", HEIGHT);
+        mvwprintw(menuWin, 2, strlen("Height (Max = YYY): ") + 1, "%d", HEIGHT);
         wrefresh(menuWin);
-    } while (HEIGHT < 5 || HEIGHT > 41 /*HEIGHT > yMax*/); // fix limits
+    } while (HEIGHT < 5 || HEIGHT > yMax - 12);
     
     return HEIGHT;
 }
@@ -116,12 +116,12 @@ int set_nmines(WINDOW *menuWin, int DIMENSIONS)
 
     do
     {
-        mvwprintw(menuWin, 3, 1, "Mines: ");
+        mvwprintw(menuWin, 3, 1, "Mines (Max = %d): ", DIMENSIONS-600); // -500 so the player has a chance to win
         wrefresh(menuWin);
         scanw("%d", &NMINES);
-        mvwprintw(menuWin, 3, strlen("Mines: ") + 1, "%d", NMINES);
+        mvwprintw(menuWin, 3, strlen("Mines (Max = MMMM): ") + 1, "%d", NMINES);
         wrefresh(menuWin);
-    } while (NMINES < 1 || NMINES > DIMENSIONS);
+    } while (NMINES < 1 || NMINES > DIMENSIONS-500);
     
     return NMINES;
 }
@@ -148,7 +148,7 @@ void init_dispboard(WINDOW *gameWin, int WIDTH, int HEIGHT)
     int i;
     char **dispboard = (char **)malloc(WIDTH * sizeof(char *));
     for (i = 0; i < WIDTH; i++)
-        *(dispboard + i) = (char *)malloc(HEIGHT);
+        dispboard[i] = (char *)malloc(HEIGHT);
 
     if (dispboard == NULL)
     {
@@ -171,7 +171,7 @@ void fill_dispboard(char **dispboard, int WIDTH, int HEIGHT)
 
     for (i = 0; i < WIDTH; i++)
         for (j = 0; j < HEIGHT; j++)
-            *(*(dispboard + i) + j) = HIDDEN;
+            dispboard[i][j] = HIDDEN;
 }
 
 
@@ -180,7 +180,7 @@ void init_mineboard(WINDOW *gameWin, int WIDTH, int HEIGHT, int NMINES)
     int i;
     char **mineboard = (char **)malloc(WIDTH * sizeof(char *));
     for (i = 0; i < WIDTH; i++)
-        *(mineboard + i) = (char *)malloc(HEIGHT);
+        mineboard[i] = (char *)malloc(HEIGHT);
 
     if (mineboard == NULL)
     {
@@ -193,7 +193,6 @@ void init_mineboard(WINDOW *gameWin, int WIDTH, int HEIGHT, int NMINES)
         place_mines(mineboard, WIDTH, HEIGHT, NMINES);
         add_adj(mineboard, WIDTH, HEIGHT);
         
-
         print(gameWin, mineboard, WIDTH, HEIGHT);
         filewrite(mineboard, WIDTH, HEIGHT);
     }
@@ -212,7 +211,7 @@ void place_mines(char **mineboard, int WIDTH, int HEIGHT, int NMINES)
     {
         wRand = rand() % WIDTH;
         hRand = rand() % HEIGHT;
-        *(*(mineboard + wRand) + hRand) = MINE;
+        mineboard[wRand][hRand] = MINE;
     }
 }
 
@@ -224,25 +223,18 @@ void add_adj(char **mineboard, int WIDTH, int HEIGHT)
     for (i = 0; i < WIDTH; i++)
         for (j = 0; j < HEIGHT; j++)
             if (!is_mine(mineboard, i, j))
-                *(*(mineboard + i) + j) = adj_mines(mineboard, i, j, WIDTH, HEIGHT) + '0';                
+                mineboard[i][j] = adj_mines(mineboard, i, j, WIDTH, HEIGHT) + '0';                
 }
 
 
 bool is_mine(char **mineboard, int row, int col)
 {
-    if (*(*(mineboard + row) + col) == MINE)
-        return true;
-    else
-        return false;
+    return (mineboard[row][col] == MINE) ? true : false;
 }
-
 
 bool outof_bounds(int row, int col, int WIDTH, int HEIGHT)
 {
-    if (row < 0 || row > WIDTH || col < 0 || col > HEIGHT)
-        return true;
-    else
-        return false;
+    return (row < 0 || row > WIDTH || col < 0 || col > HEIGHT) ? true : false;
 }
 
 
@@ -250,14 +242,14 @@ int8_t adj_mines(char **mineboard, int row, int col, int WIDTH, int HEIGHT)
 {
     int8_t numAdj = 0;
 
-    if (!outof_bounds(row, col - 1, WIDTH, HEIGHT)      && *(*(mineboard + row) + (col - 1))        == MINE) numAdj++; // North
-    if (!outof_bounds(row, col + 1, WIDTH, HEIGHT)      && *(*(mineboard + row) + (col + 1))        == MINE) numAdj++; // South
-    if (!outof_bounds(row + 1, col, WIDTH, HEIGHT)      && *(*(mineboard + (row + 1)) + col)        == MINE) numAdj++; // East
-    if (!outof_bounds(row - 1, col, WIDTH, HEIGHT)      && *(*(mineboard + (row - 1)) + col)        == MINE) numAdj++; // West
-    if (!outof_bounds(row + 1, col - 1, WIDTH, HEIGHT)  && *(*(mineboard + (row + 1)) + (col - 1))  == MINE) numAdj++; // North-East
-    if (!outof_bounds(row - 1, col - 1, WIDTH, HEIGHT)  && *(*(mineboard + (row - 1)) + (col - 1))  == MINE) numAdj++; // North-West
-    if (!outof_bounds(row + 1, col + 1, WIDTH, HEIGHT)  && *(*(mineboard + (row + 1)) + (col + 1))  == MINE) numAdj++; // South-East
-    if (!outof_bounds(row - 1, col + 1, WIDTH, HEIGHT)  && *(*(mineboard + (row - 1)) + (col + 1))  == MINE) numAdj++; // South-West
+    if (!outof_bounds(row, col - 1, WIDTH, HEIGHT)      && mineboard[row][col-1]    == MINE) numAdj++; // North
+    if (!outof_bounds(row, col + 1, WIDTH, HEIGHT)      && mineboard[row][col+1]    == MINE) numAdj++; // South
+    if (!outof_bounds(row + 1, col, WIDTH, HEIGHT)      && mineboard[row+1][col]    == MINE) numAdj++; // East
+    if (!outof_bounds(row - 1, col, WIDTH, HEIGHT)      && mineboard[row-1][col]    == MINE) numAdj++; // West
+    if (!outof_bounds(row + 1, col - 1, WIDTH, HEIGHT)  && mineboard[row+1][col-1]  == MINE) numAdj++; // North-East
+    if (!outof_bounds(row - 1, col - 1, WIDTH, HEIGHT)  && mineboard[row-1][col-1]  == MINE) numAdj++; // North-West
+    if (!outof_bounds(row + 1, col + 1, WIDTH, HEIGHT)  && mineboard[row+1][col+1]  == MINE) numAdj++; // South-East
+    if (!outof_bounds(row - 1, col + 1, WIDTH, HEIGHT)  && mineboard[row-1][col+1]  == MINE) numAdj++; // South-West
 
     return numAdj;
 }
@@ -269,8 +261,8 @@ void fill_spaces(char **mineboard, int WIDTH, int HEIGHT, int NMINES)
 
     for (i = 0; i < WIDTH; i++)
         for (j = 0; j < HEIGHT; j++)
-            if ((*(*mineboard + i) + j) != MINE)
-                *(*(mineboard + i) + j) = '-';
+            if (mineboard[i][j] != MINE)
+                mineboard[i][j] = '-';
 }
 
 
@@ -282,7 +274,7 @@ void print(WINDOW *gameWin, char **mineboard, int WIDTH, int HEIGHT)
     {
         for (j = 0; j < HEIGHT; j++)
         {
-            mvwaddch(gameWin, j + 1, i + 1, *(*(mineboard + i) + j));
+            mvwaddch(gameWin, j + 1, i + 1, mineboard[i][j]);
             wrefresh(gameWin);        
         }
     }
@@ -302,15 +294,18 @@ void filewrite(char **mineboard, int WIDTH, int HEIGHT)
     else
     {
         fprintf(mnsOut, "Mine hit at position (%d, %d)\n\n", 1, 2); // add actual position
-
         fprintf(mnsOut, "Board overview\n\n");
+
         for (i = 0; i < WIDTH; i++)
         {
             for (j = 0; j < HEIGHT; j++)
-                fprintf(mnsOut, "%c ", *(*(mineboard + i) + j));
+                fprintf(mnsOut, "%c ", mineboard[i][j]);
             fprintf(mnsOut, "\n");
         }           
+
         mvprintw(1, 1, "Session written to file");
         refresh();
     }
+
+    fclose(mnsOut);
 }

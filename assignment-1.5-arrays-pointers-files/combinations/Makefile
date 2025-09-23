@@ -1,8 +1,8 @@
-EXEC = combs
+TARGET = combs
 
 SRC_DIR = src
 OBJ_DIR = obj
-EXEC_DIR = bin
+BIN_DIR = bin
 
 SRC = $(wildcard $(SRC_DIR)/*.c)
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
@@ -14,23 +14,23 @@ CC = gcc
 CPPFLAGS += -Iinclude
 CFLAGS += -Wall
 LDFLAGS += -Llib
-LDLIBS += -lm -lncurses
+LDLIBS += -lm
 
 .PHONY: all clean
 
-all: $(EXEC)
+all: $(TARGET)
 
-$(EXEC): $(OBJ)
-	$(MKDIR_P) $(EXEC_DIR)
+$(TARGET): $(OBJ)
+	$(MKDIR_P) $(BIN_DIR)
 	$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
-	$(MOVE) $(EXEC) $(EXEC_DIR)
+	$(MOVE) $(TARGET) $(BIN_DIR)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(MKDIR_P) $(OBJ_DIR)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
 run:
-	./$(EXEC_DIR)/$(EXEC)
+	./$(BIN_DIR)/$(TARGET)
 
 clean:
-	$(RM) $(OBJ) $(EXEC_DIR)/$(EXEC)
+	$(RM) $(OBJ) $(BIN_DIR)/$(TARGET)
