@@ -1,4 +1,5 @@
 .eqv SYS_PRINT_WORD     1
+.eqv SYS_PRINT_STRING   4
 .eqv SYS_READ_STRING    8
 .eqv SYS_EXIT           10
 
@@ -19,14 +20,11 @@ main:
         
         # init strlen counter
         li      $t0, 0
-        # load string to $t1 because we want to use $a0
-        la      $t1, str
         
 strlen:
-        lb      $a0, 0($t1)
-        beqz    $a0, exit
+        lb      $t1, str($t0)
+        beqz    $t1, exit
         addi    $t0, $t0, 1
-        addi    $t1, $t1, 1
         j       strlen
 
 exit:
@@ -35,7 +33,7 @@ exit:
         syscall
         
         li      $v0, SYS_PRINT_WORD
-        la      $a0, 0($t0)
+        la     	$a0, 0($t0)
         syscall
                                 
         li      $v0, SYS_EXIT

@@ -1,0 +1,31 @@
+#!/bin/sh
+
+main() {
+        # allow > 3?
+        test $# -eq 3 || usage
+
+        username=${1}
+        src=${2}
+        dst=${3}
+
+        test ! -z "$(grep -w "^${username}" /etc/passwd)" ||
+        err "'${username}' is not in /etc/passwd"
+        test -e ${src} || err "${src}: no such file or directory"
+        test -e ${dst} || err "${dst}: no such file or directory"
+
+        test -d ${dst} && tar -cvf "${dst}/${src##*/}.tar" ${src}
+        # handle tar.*
+        test ${dst##*.} = "tar" && tar -rf ${dst} ${src}
+}
+
+usage() {
+        echo "usage: ${0##*/} username src dst"
+        exit 1
+}
+
+err() {
+        echo "${0##*/}: ${1}"
+        exit 1
+}
+
+main "$@"

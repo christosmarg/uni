@@ -3,55 +3,55 @@
 emptylnregex="^\ *$"
 
 main() {
-        case $1 in
+        case ${1} in
                 -a) newentry ;;
                 -l) list ;;
-                -s) sortcol $2 ;;
-                -c) filter $2 ;;
-                -d) deleteln $2 $3 ;;
+                -s) sortcol ${2} ;;
+                -c) filter ${2} ;;
+                -d) deleteln ${2} ${3} ;;
                 -n) emptyln ;;
                 *) usage ;;
         esac
 }
 
 usage() {
-        echo "usage: ${0##*/} [-a|-l|-s COL|-c KEYWORD|-d KEYWORD [-b|-r]|-n]"
+        echo "usage: ${0##*/} [-a | -l | -n | -c keyword | -d keyword [-b | -r] | -s col]"
         echo ""
         echo "options:"
         echo "-a        add a new entry"
         echo "-l        list contents of file"
-        echo "-s        sort based on specified column (e.g ${0##*/} -s 3)"
+        echo "-n        count empty lines and ask if they should be deleted"
         echo "-c        filter keyword"
         echo "-d        delete lines containing a keyword followed by one of the options below"
-        echo "    -b    replace line with an empty line"
-        echo "    -r    remove line completely"
-        echo "-n        count empty lines and ask if they should be deleted"
+        echo "          -b replaces line with an empty line"
+        echo "          -r removes line completely"
+        echo "-s        sort based on specified column (e.g ${0##*/} -s 3)"
 
         exit 1
 }
 
 errempty() {
-        test -z "$1" && usage
+        test ! -z "${1}" || usage
 }
 
 skipempty() {
-        grep -v "$emptylnregex"
+        grep -v "${emptylnregex}"
 }
 
 newentry() {
         read -erp "First name: " fname
-        errempty "$fname"
+        errempty "${fname}"
 
         read -erp "Last name: " lname
-        errempty "$lname"
+        errempty "${lname}"
 
         read -erp "Town: " town
-        errempty "$town"
+        errempty "${town}"
 
         read -erp "Phone number: " phone
-        errempty "$phone"
+        errempty "${phone}"
 
-        printf "%s %s %s %s\n" "$fname" "$lname" "$town" "$phone" >> catalog
+        printf "%s %s %s %s\n" "${fname}" "${lname}" "${town}" "${phone}" >> catalog
 }
 
 list() {
@@ -59,30 +59,30 @@ list() {
 }
 
 sortcol() {
-        errempty "$1"
-        sort -k "$1" catalog | skipempty
+        errempty "${1}"
+        sort -k "${1}" catalog | skipempty
 }
 
 filter() {
-        errempty "$1"
-        grep "$1" catalog
+        errempty "${1}"
+        grep "${1}" catalog
 }
 
 deleteln() {
-        errempty "$1"
-        errempty "$2"
+        errempty "${1}"
+        errempty "${2}"
 
-        case $2 in
-                -b) sed -i "s/.*$1.*//" catalog ;;
-                -r) sed -i "/$1/d" catalog ;;
+        case ${2} in
+                -b) sed -i "s/.*${1}.*//" catalog ;;
+                -r) sed -i "/${1}/d" catalog ;;
         esac
 }
 
 emptyln() {
         printf "Empty lines in 'catalog': "
-        grep "$emptylnregex" catalog | wc -l
+        grep "${emptylnregex}" catalog | wc -l
         read -erp "Delete them (y/n)? " del
-        test "$del" = "y" && deleteln "$emptylnregex" "-r"
+        test "${del}" = "y" && deleteln "${emptylnregex}" "-r"
 }
 
 main "$@"

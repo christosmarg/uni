@@ -2,56 +2,61 @@
 
 main() {
         test $# -eq 2 || usage
-        isnumber $1
-        isnumber $2
+        isnumber ${1}
+        isnumber ${2}
 
         sum1=0; sum2=0; sum3=0; sum4=0; sum5=0
-        while [ ! "$cont" = "n" ] ; do
+        while [ ! "${cont}" = "n" ] ; do
                 read -erp "Directory name: " dir
 
-                test -z "$dir" && echo "${0##*/}: please give a directory name" && exit 1
-                test ! -d "$dir" && echo "${0##*/}: '$dir' is not a directory" && exit 1
+                test ! -z "${dir}" || err "please give a directory name"
+                test -d "${dir}" || err "'${dir}' is not a directory"
 
-                echo "Files with permissions $1: "
-                find "$dir" -perm $1 2> /dev/null
-                sum1=$(($sum1+$(find "$dir" -perm $1 2> /dev/null | wc -l)))
+                echo "Files with permissions ${1}: "
+                find "${dir}" -perm ${1} 2> /dev/null
+                sum1=$((${sum1}+$(find "${dir}" -perm ${1} 2> /dev/null | wc -l)))
                 echo ""
 
-                echo "Files modified within the last $2 days: "
-                find "$dir" -mtime -$2 2> /dev/null
-                sum2=$(($sum2+$(find "$dir" -mtime -$2 2> /dev/null | wc -l)))
+                echo "Files modified within the last ${2} days: "
+                find "${dir}" -mtime -${2} 2> /dev/null
+                sum2=$((${sum2}+$(find "${dir}" -mtime -${2} 2> /dev/null | wc -l)))
                 echo ""
 
-                echo "Subdirectories accessed within the last $2 days: "
-                find "$dir" -type d -atime -$2 2> /dev/null
-                sum3=$(($sum3+$(find "$dir" -type d -atime -$2 2> /dev/null | wc -l)))
+                echo "Subdirectories accessed within the last ${2} days: "
+                find "${dir}" -type d -atime -${2} 2> /dev/null
+                sum3=$((${sum3}+$(find "${dir}" -type d -atime -${2} 2> /dev/null | wc -l)))
                 echo ""
 
                 echo "Files which all users have read access to: "
-                ls -l "$dir" 2> /dev/null | grep "^-r..r..r.."
-                sum4=$(($sum4+$(ls -l "$dir" 2> /dev/null | grep "^-r..r..r.." | wc -l)))
+                ls -l "${dir}" 2> /dev/null | grep "^-r..r..r.."
+                sum4=$((${sum4}+$(ls -l "${dir}" 2> /dev/null | grep "^-r..r..r.." | wc -l)))
                 echo ""
 
                 echo "Subdirectories which others have write access to: "
-                ls -l "$dir" 2> /dev/null | grep "^d.w..w..w."
-                sum5=$(($sum5+$(ls -l "$dir" 2> /dev/null | grep "^d.w..w..w." | wc -l)))
+                ls -l "${dir}" 2> /dev/null | grep "^d.w..w..w."
+                sum5=$((${sum5}+$(ls -l "${dir}" 2> /dev/null | grep "^d.w..w..w." | wc -l)))
                 echo ""
 
                 read -erp "Do you want to continue (y/n)? " cont
-                test "$cont" = "n" &&
+                test "${cont}" = "n" &&
                 printf "Total entries found for:\n1. %s\n2. %s\n3. %s\n4. %s\n5. %s\n" \
-                        "$sum1" "$sum2" "$sum3" "$sum4" "$sum5"
+                        "${sum1}" "${sum2}" "${sum3}" "${sum4}" "${sum5}"
         done
 
 }
 
 usage() {
-        echo "usage: ${0##*/} [PERMS] [DAYS]" && exit 0
+        echo "usage: ${0##*/} perms days"
+        exit 1
+}
+
+err() {
+        echo "${0##*/}: ${1}"
+        exit 1
 }
 
 isnumber() {
-        test -z $(echo "$1" | grep "^[0-9]\+$") &&
-        echo "${0##*/}: '$1' is not a digit" && exit 1
+        test ! -z "$(echo "${1}" | grep "^[0-9]\+$")" || err "'${1}' is not a digit"
 }
 
 main "$@"
