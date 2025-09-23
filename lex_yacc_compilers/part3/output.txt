@@ -1,0 +1,6 @@
+input.txt: success
+
+correct words: 0
+correct expressions: 12
+wrong words: 0
+wrong expressions: 0
