@@ -20,6 +20,7 @@
 % XXX https://polynoe.lib.uniwa.gr/xmlui/handle/11400/55
 % XXX https://polynoe.lib.uniwa.gr/xmlui/bitstream/handle/11400/8820/Vangelis_18390008.pdf?sequence=1&isAllowed=y
 % TODO https://ice.uniwa.gr/wp-content/uploads/2022/12/%CE%9A%CE%B1%CE%BD%CE%BF%CE%BD%CE%B9%CF%83%CE%BC%CF%8C%CF%82-%CE%95%CE%BA%CF%80%CF%8C%CE%BD%CE%B7%CF%83%CE%B7%CF%82-%CE%94%CE%B9%CF%80%CE%BB%CF%89%CE%BC%CE%B1%CF%84%CE%B9%CE%BA%CF%8E%CE%BD-%CE%95%CF%81%CE%B3%CE%B1%CF%83%CE%B9%CF%8E%CE%BD-%CE%A4%CE%9C%CE%A0%CE%A5.pdf
+% TODO references παντού (also man pages)
 
 \lstset {
         basicstyle=\ttfamily,
@@ -92,13 +93,19 @@
 Εισηγητής:
 
 \begin{center}
-Παναγιώτης Καρκαζής, <++> % TODO βαθμίδα
+Παναγιώτης Καρκαζής, Καθηγητής
 \end{center}
 
 Εξεταστική επιτροπή:
 
 \begin{center}
-<++>
+\begin{tabular}{|l|l|}
+	\hline
+	\textbf{Ονοματεπώνυμο} & \textbf{Υπογραφή} \\
+	\hline
+	<++> & <++> \\
+	\hline
+\end{tabular}
 \linebreak
 \linebreak
 Ημερομηνία εξέτασης: <++>
@@ -130,7 +137,7 @@
 \begin{center}
 Ο Δηλών
 
-<++> % TODO υπογραφή
+\includegraphics[scale=0.2]{./res/sign.png} \\
 \end{center}
 
 \pagebreak
@@ -140,14 +147,11 @@
 \textbf{Ευχαριστίες}
 \end{center}
 
-% TODO
-% Mark, Mitchell, καθηγητής, οικογένεια, FBSDF, ...
-
 Την προσπάθειά μου αυτή υποστήριξε ο επιβλέπων καθηγητής μου Παναγιώτης
 Καρκαζής, τον οποίο θα ήθελα να ευχαριστήσω.
 
-Ακόμα θα ήθελα να ευχαριστήσω την οικογένειά μου για τη συμπαράσταση κατά τη
-διάρκεια των σπουδών μου, καθώς και τους Mark Johnston, Mitchell Horne και
+Ακόμα θα ήθελα να ευχαριστήσω την οικογένειά μου για τη συμπαράστασή τους κατά
+τη διάρκεια των σπουδών μου, καθώς και τους Mark Johnston, Mitchell Horne και
 το FreeBSD Foundation, για την πολύτιμη βοήθειά τους.
 
 \pagebreak
@@ -159,19 +163,26 @@
 
 Η εργασία αποσκοπεί στην μελέτη τεχνικών που χρησιμοποιούνται στην ανάλυση και
 αποσφαλμάτωση λογισμικού μέσω της καταγραφής και παρακολούθησης των εντολών που
-εκτελούνται σε ένα επεξεργαστή. Στο πλαίσιο της διπλωματικής θα σχεδιαστεί και
-θα αναπτυχθεί επέκταση του εργαλείου DTrace η οποία θα παρέχει την δυνατότητα
-παρακολούθησης οποιασδήποτε μεμονωμένης εντολής assembly εντός μιας δεδομένης
-συνάρτησης του πυρήνα του λειτουργικού συστήματος FreeBSD.
-% TODO improve: mention inline?
+εκτελούνται σε έναν επεξεργαστή. Στο πλαίσιο της διπλωματικής εργασίας θα
+σχεδιαστεί και θα αναπτυχθεί επέκταση του εργαλείου DTrace η οποία θα παρέχει
+την δυνατότητα παρακολούθησης οποιασδήποτε μεμονωμένης εντολής assembly εντός
+μιας δεδομένης συνάρτησης του πυρήνα του λειτουργικού συστήματος FreeBSD. \\ \\
 
-<++> % TODO keywords
+Λέξεις κλειδιά: FreeBSD, DTrace, Παρακολούθηση, Αποσφαλμάτωση, Λειτουργικά
+συστήματα, C, Assembly, Αρχιτεκτονική συνόλου εντολών.
 
 \begin{center}
 \textbf{Abstract}
 \end{center}
 
-<++>
+The thesis aims to study the techniques used in software analysis and
+debugging, by means of recording and tracing CPU instructions. As part of the
+thesis, a DTrace extension will be designed and developed, which will allow
+tracing of arbitrary assembly instructions within a given FreeBSD kernel
+function. \\ \\
+
+Keywords: FreeBSD, DTrace, Tracing, Debugging, Operating systems, C, Assembly,
+Instruction set architecture.
 
 \pagebreak
 
@@ -181,7 +192,17 @@
 
 \section{Συντομογραφίες}
 
-<++>
+\begin{tabular}{ll}
+	CTF & Compact C Type Format \\
+	DIE & Debugging Information Entry \\
+	DIF & D Intermediate Format \\
+	DWARF & Debugging with Attributed Record Formats \\
+	ELF & Executable and Linkable Format \\
+	FBT & Function Boundary Tracing \\
+	GDB & GNU Debugger \\
+	ISA & Instruction Set Architecture \\
+	PC & Program Counter \\
+\end{tabular}
 
 \section{Εισαγωγή στην παρακολούθηση (tracing)}
 
@@ -191,40 +212,100 @@
 καλύτερη κατανόση της ροής εκτέλεσης, καθώς και στην εύρεση τυχόν σημείων που
 προκαλούν καθυστερήσεις (bottleneck). Κατά μία έννοια το tracing μπορεί να
 θεωρηθεί ως μία καλύτερη και πιο δυναμική μορφή καταγραφής πληροφοριών
-(logging), διότι δίνεται η δυνατότητα στον χρήστη να εξάγει αφηρημένες
+(logging), διότι δίνεται η δυνατότητα στον χρήστη να εξάγει μη-συγκεκριμένες
 πληροφορίες από ένα πρόγραμμα, χωρίς να χρειάζεται αναγκαστικά η συγγραφή
 περαιτέρω πηγαίου κώδικα μέσα στο πρόγραμμα και η επαναμεταγλώττισή του, κάτι
 το οποίο, στην περίπτωση μεγάλων προγραμμάτων όπως ο πυρήνας ενός λετουργικού
-συστήματος, τείνει να είναι μία χρονοβόρα διαδικασία.
+συστήματος, τείνει να είναι μία χρονοβόρα και δυσκίνητη διαδικασία.
+
+Προγράμματα παρακολούθησης χρησιμοποιούνται κατά κόρον από προγραμματιστές
+πυρήνων λειτουργικών συστημάτων και διαχειριστές συστημάτων (ασφάλεια, servers,
+βάσεις δεδομένων).
+
+Συνοπτικά μεταξύ άλλων, μερικές από τις συνηθισμένες χρήσεις προγραμμάτων
+παρακολούθησης, είναι οι καταγραφή χρόνων εκτέλεσης συναρτήσεων, εξαγωγή
+ορισμάτων συναρτήσεων και τιμών καταχωρητών επεξεργαστή, η εμφάνιση στοίβας
+κλήσεων (call stack), παραγωγή γραφημάτων απεικόνισης εκτέλεσης, καταγραφή
+συμβάντων (event logging), εισαγωγή breakpoints, κατανόηση ροής εκτέλεσης, και
+πολλές άλλες.
+
+\subsection{Παρακολούθηση στο FreeBSD}
+
+Το FreeBSD παρέχει πληθώρα προγραμμάτων παρακολούθησης και καταγραφής, για
+διάφορους τομείς του λειτουργικού συστήματος. Ενδεικτικά, μερικά από αυτά τα
+εργαλεία είναι τα εξής:
+
+\begin{center}
+\begin{tabular}{|l|l|}
+	\hline
+	\textbf{Πρόγραμμα} & \textbf{Λειτουργία} \\
+	\hline
+	\lstinline{top(1)} & Πληροφορίες για την κατάσταση τρέχουσων
+	διεργασιών. \\
+	\hline
+	\lstinline{netstat(1)} & Κατάσταση δικτύου. \\
+	\hline
+	\lstinline{procstat(1)} & Αναλυτικές πληροφορίες διεργασιών. \\
+	\hline
+	\lstinline{vmstat(1)} & Πληροφορίες εικονικής μνήμης (virtual memory).
+	\\
+	\hline
+	\lstinline{systat(1)} & Στατιστικά συστήματος. \\
+	\hline
+	\lstinline{fstat(1)} & Πληροφορίες ενεργών αρχείων. \\
+	\hline
+	\lstinline{sockstat(1)} & Πληροφορίες ανοιχτών sockets. \\
+	\hline
+	\lstinline{lockstat(1)} & Πληροφορίες locking εντός του πυρήνα. \\
+	\hline
+	\lstinline{truss(1)} & Παρακολούθηση κλήσεων συστήματος (system calls).
+	\\
+	\hline
+	\lstinline{dtrace(1)} & Πρόγραμμα δυναμικής παρακολούθησης. \\
+	\hline
+	\lstinline{ktrace(1)} & Πρόγραμμα καταγραφής λειτουργιών πυρήνα κατά
+	την εκτέλεση μίας διεργασίας. \\
+	\hline
+	\lstinline{pmcstat(8)} & Μετρήσεις επίδοσης συστήματος. \\
+	\hline
+\end{tabular}
+\end{center}
+
+Όλα τα παραπάνω εργαλεία χρησιμοποιούνται εκτενώς από τους χρήστες του FreeBSD,
+ωστόσο δύο βασικοί περιορισμοί μερικών από αυτά, είναι ότι 1) δεν λειτουργούν
+σε πραγματικό χρόνο, 2) δεν είναι πάντα ευέλικτα, διότι κάνουν συγκεκριμένες
+«ερωτήσεις» για την κατάσταση του συστήματος που παρακολουθούν, αλλά και
+παράγουν συγκεκριμένες εξόδους με συγκεκριμένα δεδομένα. Κάτι τέτοιο είναι
+ιδανικό και αρκετό σε πολλές περιπτώσεις, όμως υπάρχουν και περιπτώσεις που ο
+διαχειριστής/προγραμματιστής χρειάζεται να κάνει «ερωτήσεις» οι οποίες δεν
+καλύπτονται από κάποιο υπάρχον πρόγραμμα, καθώς και να κάνει καταγραφή
+δεδομένων με πιο εξειδικευμένο τρόπο. Αυτά είναι μερικά από τα βασικά
+προβλήματα που λύνουν τα προγράμματα δυναμικής παρακόλουθησης (dynamic
+tracing). Στο FreeBSD, το DTrace μαζί με διάφορα προεγκατεστημένα scripts
+(\ref{highscripts}) που το χρησιμοποιούν εσωτερικά, είναι τα πιο συνηθισμένα
+εργαλεία δυναμικής παρακολούθησης σε πραγματικό χρόνο.
 
 % TODO
-% «παρακολούθηση ροής εκτέλεσης»?
-% what can we do with tracing? (func timing, args, stack trace, ...)
-% tracing vs debugging
-% arbitrary questions that diagnostic programs with pre-defined (canned) questions cannot always answer
-%	top(1), nestat(1), procstat(1), vmstat(8), systat(1)
-%	all these static tools are fundamentally limited
-%	they ask pre-defined questions and answer them in pre-defined formats
-%	they are also not realtime
 % realtime
-% used in productions systems, mostly by sysadmins and systems/os developers
 % history: tamches paper
 % REFERENCES
-% https://zinascii.com/2020/fbt-args-and-stack.html
-% https://wiki.freebsd.org/DTrace/Tutorial
-% https://myaut.github.io/dtrace-stap-book/dtrace-stap-book.pdf
-% https://freebsdfoundation.org/wp-content/uploads/2019/01/Debugging-the-FreeBSD-Kernel.pdf
 
 <++>
 
 \section{Εισαγωγή στο DTrace}
 
 % TODO
+% https://www.brendangregg.com/DTrace/dtrace_topics_intro.pdf
+% https://zinascii.com/2020/fbt-args-and-stack.html
+% https://wiki.freebsd.org/DTrace/Tutorial
+% https://myaut.github.io/dtrace-stap-book/dtrace-stap-book.pdf
+% https://freebsdfoundation.org/wp-content/uploads/2019/01/Debugging-the-FreeBSD-Kernel.pdf
 % https://www.illumos.org/books/dtrace/
 % https://www.youtube.com/watch?v=E06GVdH-LX0
 % https://www.youtube.com/watch?v=ctTyYlDbAIM
 % gsoc emails with mark
 % https://www.bsdcan.org/2017/schedule/attachments/432_dtrace_internals.pdf
+% εργαλεία χτισμένα πάνω στο dtrace
 %
 % performance overhead from dtrace
 % kernel module
@@ -267,6 +348,8 @@ framework), το οποίο προήλθε από το λειτουργικό σ
 %			00:57:00
 <++>
 
+% TODO <++> more providers (explain at least all the basic ones?)
+
 \subsection{Probes}
 
 % TODO
@@ -292,13 +375,6 @@ framework), το οποίο προήλθε από το λειτουργικό σ
 %		collect data and summarize them later
 %		printed when dtrace(1) exits (or SIGINFO -> ctrl+t)
 %		mark 00:39:00-00:54:00
-%	d.7
-
-<++>
-
-\subsubsection{Δομή εντολών DTrace}
-
-% TODO
 %	provider:module:function:name /predicate/ {actions}
 %		GIVE EXAMPLES
 %
@@ -319,22 +395,108 @@ framework), το οποίο προήλθε από το λειτουργικό σ
 %			mark 00:35:00
 %
 %		module, function, name can take wildcarding
+%	d.7
 
-Οι εντολές DTrace ορίζονται ως εξής:
+Η D είναι η γλώσσα scripting που χρησιμοποιείται για την σύνταξη DTrace scripts
+και εντολών, η οποία παρομοιάζει την C και την AWK. Η βασική δομή ενός D script
+είναι η εξής:
 
 \begin{lstlisting}
-	<provider>:<module>:<function>:<name> /<predicate>/ {<actions>}
+<++>
 \end{lstlisting}
 
 <++>
 
-\subsubsection{Global μεταβλητές}
+\subsubsection{Μεταβλητές}
 
 % TODO
-%	global variables
-%		pid, execname, timestamp (nanosecs)
-%		they are context-dependent, i.e., different for every thread
+%	they are context-dependent, i.e., different for every thread
+%	dtrace book
 
+Μερικές συνηθισμένες και χρήσιμες μεταβλητές είναι οι παρακάτω:
+
+\begin{center}
+\begin{tabular}{|p{4cm}|p{13cm}|}
+	\hline
+	\textbf{Μεταβλητή} & \textbf{Λειτουργία} \\ 	
+	\hline
+	\lstinline{args[]} & Πίνακας ορισμάτων παρακολουθούμενου probe
+		κωδικοποιημένα με CTF. \\
+	\hline
+	\lstinline{arg0, ..., arg9} & Ορίσματα παρακολοθούμενου probe σε μοφή
+		64-bit unsigned integer. Μόνο τα πρώτα 10 ορίσματα είναι
+		διαθέσιμα μέσω αυτών των μεταβλητών. \\
+	\hline
+	\lstinline{execargs} & Ορίσματα τρέχουσας διεργασίας
+		(\lstinline{curthread->td_proc->p_args}). \\
+	\hline
+	\lstinline{execname} & Όνομα τρέχουσας διεργασίας
+		(\lstinline{curthread->td_proc->p_comm}). \\
+	\hline
+	\lstinline{gid} & Group ID τρέχουσας διεργασίας. \\
+	\hline
+	\lstinline{pid} & Process ID τρέχουσας διεργαςίας. \\
+	\hline
+	\lstinline{uid} & User ID τρέχουσας διεργασίας. \\
+	\hline
+	\lstinline{tid} & Thread ID, είτε του kernel thread, είτε της
+		διεργασίας. \\
+	\hline
+	\lstinline{regs[]} & Τιμές τρέχοντος CPU. \\
+	\hline
+	\lstinline{cpu} & ID τρέχοντος CPU. \\
+	\hline
+	\lstinline{errno} & Τιμή \lstinline{errno(2)} της τελευταίας κλήσης
+		συστήματος στο τρέχον thread. \\
+	\hline
+	\lstinline{curthread} & Pointer στην global δομή \lstinline{curthread}
+		του τρέχοντος CPU. \\
+	\hline
+	\lstinline{timestamp} & Nanoseconds από την εκκίνηση του υπολογιστή. \\
+	\hline
+\end{tabular}
+\end{center}
+
+% TODO examples
+<++>
+
+\subsubsection{Συναρτήσεις}
+
+% TODO
+%	dtrace book
+
+Μερικές συνηθισμένες και χρήσιμες συναρτήσεις είναι οι παρακάτω:
+
+\begin{center}
+\begin{tabular}{|p{4cm}|p{13cm}|}
+	\hline
+	\textbf{Συνάρτηση} & \textbf{Λειτουργία} \\ 	
+	\hline
+	\lstinline{printf(...)} & Εκτύπωση κειμένου. \\
+	\hline
+	\lstinline{quantize(val)} & Κβαντισμός συχνότητας σε δυνάμεις του 2. \\
+	\hline
+	\lstinline{min(val)} & Ελάχιστο. \\
+	\hline
+	\lstinline{max(val)} & Μέγιστο. \\
+	\hline
+	\lstinline{sum(val)} & Άθροισμα. \\
+	\hline
+	\lstinline{count()} & Μέτρηση. \\
+	\hline
+	\lstinline{avg(val)} & Υπολογισμός μέσου όρου. \\
+	\hline
+	\lstinline{stddev(val)} & Τυπική απόκλιση. \\
+	\hline
+	\lstinline{breakpoint()} & Ορισμός kernel breakpoint και μεταφορά
+		ελέγχου στον kernel debugger \lstinline{ddb(4)}. \\
+	\hline
+	\lstinline{panic()} & Πρόκληση kernel panic. \\
+	\hline
+\end{tabular}
+\end{center}
+
+% TODO examples
 <++>
 
 \subsubsection{CTF}
@@ -354,6 +516,7 @@ framework), το οποίο προήλθε από το λειτουργικό σ
 %		ctf is a simplified representation of C types so that we can
 %		fetch them in D
 %			ctfdump -t /boot/kernel/kernel | less
+%				see opts in ctfdump.1
 %			probe arguments are defined using ctf, roughly like C types
 %				dtrace_ip.4
 
@@ -369,25 +532,17 @@ framework), το οποίο προήλθε από το λειτουργικό σ
 %		dtrace -S -> dump bytecode for a given d script
 
 Για να εισαχθεί ένα D script στον πυρήνα του λειτουργικού συστήματος,
-χρησιμοποιείται η κωδικοποίηση DIF (D Intermediary Format). Η κωδικοποίηση αυτή
-έχει ως στόχο την μεταγλώττιση του D script σε μία ενδιάμεση byte κωδικοποίηση
-(byte code), η οποία μπορεί να εκτελεστεί από το DTrace εντός του kernel. Αφού
-το script έχει μεταγλωττιστεί, φορτώνεται στο kernel από το DTrace, και
-εκτελείται για τα probes που έχουν οριστεί όταν αυτά ενεργοποιηθούν.
+χρησιμοποιείται η κωδικοποίηση DIF. Η κωδικοποίηση αυτή έχει ως στόχο την
+μεταγλώττιση του D script σε μία ενδιάμεση byte κωδικοποίηση (byte code), η
+οποία μπορεί να εκτελεστεί από το DTrace εντός του kernel. Αφού το script έχει
+μεταγλωττιστεί, φορτώνεται στο kernel από το DTrace, και εκτελείται για τα
+probes που έχουν οριστεί όταν αυτά ενεργοποιηθούν.
 
 Αντίστοιχα στο Linux, χρησιμοποείται η κωδικοποίηση \lstinline{eBPF}.
 
 <++>
 
 \subsection{Επικοινωνία δεδομένων μεταξύ kernel και userspace}
-
-% TODO
-% Buffers
-%	https://www.illumos.org/books/dtrace/chp-buf.html#chp-buf
-%	what parameters can be modified? do they introduce overhead (switchrate
-%	yes)?
-%	diagrams
-% ioctls?
 
 Η επικονωνία δεδομένων μεταξύ kernel και userspace επιτυχάνεται μέσω ενός
 ζευγαριού buffers, διαφορετικό για κάθε πυρήνα (per-CPU). Aνά πάσα στιγμή ο
@@ -401,9 +556,17 @@ buffer. Με άλλα λόγια, το kernel γράφει στον ενεργό
 το kernel προς το userspace, διότι ταυτόχρονα γίνονται διάβασμα και καταγραφή
 δεδομένων.
 
+% TODO
+% Buffers
+%	https://www.illumos.org/books/dtrace/chp-buf.html#chp-buf
+%	what parameters can be modified? do they introduce overhead (switchrate
+%	yes)?
+%	diagrams
+% ioctls?
+
 <++>
 
-\subsection{Scripts υψηλότερου επιπέδου}
+\subsection{Scripts υψηλότερου επιπέδου} \label{highscripts}
 
 % TODO
 % higher-level scripts
@@ -679,17 +842,17 @@ assembly για κάθε αρχιτεκτονική
 εντολές απλές, με αποτέλεσμα να μην χρειάζεται η επιπλέον πολυπλοκότητα που
 προσθέτει το τραμπολίνο. Ο \lstinline{kinst} όμως μπορεί να παρακολουθήσει εν
 δυνάμει (σχεδόν) % TODO ref to which ones we cannot trace
-όλες τις εντολές των ISA (Instruction Set Architecture) των αρχιτεκτονικών που
-υποστηρίζει, οπότε είναι προφανές πως η προσέγγιση της υλοποίησης εντολών, δεν
-μπορεί να λειτουργήσει σε αυτήν την περίπτωση. Παρ' όλα αυτά, υπάρχουν μερικές
-εξαιρέσεις που θα συζητηθούν παρακάτω. % TODO ref to emulation
+όλες τις εντολές των ISA των αρχιτεκτονικών που υποστηρίζει, οπότε είναι
+προφανές πως η προσέγγιση της υλοποίησης εντολών, δεν μπορεί να λειτουργήσει σε
+αυτήν την περίπτωση. Παρ' όλα αυτά, υπάρχουν μερικές εξαιρέσεις που θα
+συζητηθούν παρακάτω. % TODO ref to emulation
 
 Η χρήση του τραμπολίνου γίνεται ως εξής. Αρχικά, η εντολή προς παρακολούθηση
-αντιγράφεται στο τραμπολίνο και αλλάζοντας την τιμή του PC (program counter), η
-εκτέλεση μεταφέρεται σε αυτό, όταν το kernel εισέλθει στον \lstinline{kinst} με
-σκοπό την παρακόλουθηση της συγκεκριμένης εντολής. Αφού εκτελεστεί η
-αντιγραμμένη εντολή εντός του τραμπολίνου, η εκτέλεση επιστρέφει στην επόμενη
-εντολή και το kernel επανέρχεται στην κανονική ροή εκτέλεσης.
+αντιγράφεται στο τραμπολίνο και αλλάζοντας την τιμή του PC, η εκτέλεση
+μεταφέρεται σε αυτό, όταν το kernel εισέλθει στον \lstinline{kinst} με σκοπό
+την παρακόλουθηση της συγκεκριμένης εντολής. Αφού εκτελεστεί η αντιγραμμένη
+εντολή εντός του τραμπολίνου, η εκτέλεση επιστρέφει στην επόμενη εντολή και το
+kernel επανέρχεται στην κανονική ροή εκτέλεσης.
 
 <++>
 
@@ -860,11 +1023,6 @@ program counter στην διεύθυνση του τραμπολίνου. Στ�
 
 \subsection{Παρακολούθηση inline συναρτήσεων}
 
-% TODO
-% done for each loaded kernel module, painfully slow
-% can handle nested inline funcs
-% See links to docs
-
 Η παρακολούθηση inline συναρτήσεων στον \lstinline{kinst} δεν είναι τίποτα
 παραπάνω από ένα συντακτικό στρώμα που έχει προστεθεί στην libdtrace. Όταν ο
 χρήστης ζητάει ένα probe της μορφής
@@ -877,7 +1035,12 @@ program counter στην διεύθυνση του τραμπολίνου. Στ�
 	λέξη \lstinline{entry} είτε \lstinline{return}.
 },
 η libdtrace αναλύει τις πληροφορίες DWARF (βλέπε ενότητα \ref{dwarf}) όλων των
-φορτωμένων kernel modules, με σκοπό να βρει αν η συνάρτηση
+φορτωμένων kernel modules
+\footnote{
+	Αυτό ωστόσο καθιστά την όλη διαδικασία ιδιαίτερα χρονοβόρα. Μελλοντικός
+	στόχος είναι να μειωθεί όσο το δυνατόν περισσότερο αυτή η επιβάρυνση
+	στην επίδοση.
+}, με σκοπό να βρει αν η συνάρτηση
 \lstinline{<function>} είναι inline. Σε αυτή την περίπτωση, δημιουργεί
 \lstinline{kinst} probes στις συναρτήσεις και ακριβή offset(s), στα οποία έχει
 βρεθεί inline αντίγραφο της \lstinline{<function>}. Ωστόσο, αν η
@@ -953,6 +1116,9 @@ probes για τα inline αντίγραφα, δημιουργεί και ένα
 \href{https://cgit.freebsd.org/src/commit/?id=1e136a9cbd3a9d137037e47a53c1dba3be7f6925}{commit
 1e136a9cbd3a}.
 
+% TODO
+% See links to docs
+
 <++>
 
 \subsubsection{Τι είναι inline συναρτήσεις}
@@ -998,9 +1164,8 @@ probes για τα inline αντίγραφα, δημιουργεί και ένα
 \end{displayquote}
 
 Οι πληροφορίες αυτές αναπαριστώνται ως ένα δέντρο από εγγραφές, οι οποίες
-ονομάζονται DIEs (Debugging Information Entries). Η κάθε μονάδα μεταγλώττισης
-αντιστοιχεί σε ένα τέτοιο δέντρο. Για καλύτερη κατανόηση, ας θεωρήσουμε το
-παρακάτω θεωρητικό δέντρο:
+ονομάζονται DIEs. Η κάθε μονάδα μεταγλώττισης αντιστοιχεί σε ένα τέτοιο δέντρο.
+Για καλύτερη κατανόηση, ας θεωρήσουμε το παρακάτω θεωρητικό δέντρο:
 
 % TODO διάγραμμα από manual
 <++>
@@ -1278,6 +1443,7 @@ $Bound1_{high}$ τα σημεία \lstinline{return}.
 υπολογισμούς.
 
 % TODO https://margiolis.net/en/w/kinst_inline/#heuristic-entry-return
+% nested inline funcs
 
 <++>
 
@@ -1346,6 +1512,8 @@ CPU     ID                    FUNCTION:NAME
 	\href{https://www.sourceware.org/gdb/}{https://www.sourceware.org/gdb/}
 \bibitem{kgdb} FreeBSD manual pages ``kgdb(1)''.
 	\href{https://man.freebsd.org/cgi/man.cgi?query=kgdb(1)}{https://man.freebsd.org/cgi/man.cgi?query=kgdb(1)}
+\bibitem{greggdintro} Brendan Gregg ``DTrace Topics: Introduction''.
+	\href{www.brendangregg.com/DTrace/dtrace\_topics\_intro.pdf}{www.brendangregg.com/DTrace/dtrace\_topics\_intro.pdf}
 \end{thebibliography}
 
 \pagebreak
