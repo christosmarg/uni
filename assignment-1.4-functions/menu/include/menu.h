@@ -1,5 +1,5 @@
-#ifndef HEADER_FILE
-#define HEADER_FILE
+#ifndef MENU_H
+#define MENU_H
 
 void menu(int, int);
 void pause();
