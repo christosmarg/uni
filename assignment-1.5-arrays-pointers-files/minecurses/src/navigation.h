@@ -3,7 +3,7 @@
 
 #include "minesweeper.h"
 
-void navigate	(struct _win_st* gamew, char **mboard, char *move, int *mbx, int *mby);
+void navigate	(struct _win_st* gamew, char *move, int *mbx, int *mby);
 void getmv		(struct _win_st* gamew, char *move, int *y, int *x, int ymax, int xmax);
 void mvup		(int *y);
 void mvdown		(int *y, int ymax);

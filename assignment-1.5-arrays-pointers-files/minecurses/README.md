@@ -34,7 +34,8 @@ Additional controls
 * Add colors
 * Add UTF-8 support
 * Fix wrong mine spawning bug
-* (Perhaps) pack board info into a `struct`
+* ~~Pack board info into a `struct`~~
+* Fix `delwin(gamew)` bug
 
 ## Execution
 

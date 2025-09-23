@@ -1,11 +1,11 @@
 #include "minesweeper.h"
 
-char **init_dboard(WINDOW *gamew, int COLS, int ROWS)
+char **init_dboard(WINDOW *gamew, int cols, int rows)
 {
     int i;
-    char **dboard = (char **)malloc(ROWS * sizeof(char *));
-    for (i = 0; i < ROWS; i++)
-        dboard[i] = (char *)malloc(COLS);
+    char **dboard = (char **)malloc(rows * sizeof(char *));
+    for (i = 0; i < rows; i++)
+        dboard[i] = (char *)malloc(cols);
 
     if (dboard == NULL)
     {
@@ -13,25 +13,25 @@ char **init_dboard(WINDOW *gamew, int COLS, int ROWS)
         refresh();
         exit(EXIT_FAILURE);
     }
-    else fill_dboard(dboard, COLS, ROWS);
+	else fill_dboard(dboard, cols, rows);
     
     return dboard;
 }
 
-void fill_dboard(char **dboard, int COLS, int ROWS)
+void fill_dboard(char **dboard, int cols, int rows)
 {
-    int i, j;
-    for (i = 0; i < ROWS; i++)
-        for (j = 0; j < COLS; j++)
-            dboard[i][j] = BLANK;
+	int i, j;
+	for (i = 0; i < rows; i++)
+		for (j = 0; j < cols; j++)
+			dboard[i][j] = BLANK;
 }
 
-char **init_mboard(WINDOW *gamew, int COLS, int ROWS, int NMINES)
+char **init_mboard(WINDOW *gamew, int cols, int rows, int nmines)
 {
     int i;
-    char **mboard = (char **)malloc(ROWS * sizeof(char *));
-    for (i = 0; i < ROWS; i++)
-        mboard[i] = (char *)malloc(COLS);
+    char **mboard = (char **)malloc(rows * sizeof(char *));
+    for (i = 0; i < rows; i++)
+        mboard[i] = (char *)malloc(cols);
 
     if (mboard == NULL)
     {
@@ -39,68 +39,68 @@ char **init_mboard(WINDOW *gamew, int COLS, int ROWS, int NMINES)
         refresh();
         exit(EXIT_FAILURE);
     }
-    else
-    {
-        place_mines(mboard, COLS, ROWS, NMINES);
-        add_adj(mboard, COLS, ROWS);
-        fill_spaces(mboard, COLS, ROWS, NMINES);
-    }
+	else
+	{
+		place_mines(mboard, cols, rows, nmines);
+		add_adj(mboard, cols, rows);
+		fill_spaces(mboard, cols, rows, nmines);
+	}
     
     return mboard;
 }
 
-void place_mines(char **mboard, int COLS, int ROWS, int NMINES)
+void place_mines(char **mboard, int cols, int rows, int nmines)
 {
-    int i, wrand, hrand;
-    srand(time(NULL));
-    for (i = 0; i < NMINES; i++)
-    {
-        wrand = rand() % ROWS;
-        hrand = rand() % COLS;
-        mboard[wrand][hrand] = MINE;
-    }
+	int i, wrand, hrand;
+	srand(time(NULL));
+	for (i = 0; i < nmines; i++)
+	{
+		wrand = rand() % rows;
+		hrand = rand() % cols;
+		mboard[wrand][hrand] = MINE;
+	}
 }
 
-void add_adj(char **mboard, int COLS, int ROWS)
+void add_adj(char **mboard, int cols, int rows)
 {
-    int i, j;
-    for (i = 0; i < ROWS; i++)
-        for (j = 0; j < COLS; j++)
-            if (!is_mine(mboard, i, j))
-                mboard[i][j] = adj_mines(mboard, i, j, COLS, ROWS) + '0';                
+	int i, j;
+	for (i = 0; i < rows; i++)
+		for (j = 0; j < cols; j++)
+			if (!is_mine(mboard, i, j))
+				mboard[i][j] = adj_mines(mboard, i, j, cols, rows) + '0';                
 }
 
 int is_mine(char **mboard, int row, int col)
 {
-    return (mboard[row][col] == MINE) ? TRUE : FALSE;
+	return (mboard[row][col] == MINE) ? true : false;
 }
 
-int outof_bounds(int row, int col, int COLS, int ROWS)
+int outof_bounds(int row, int col, int cols, int rows)
 {
-    return (row < 0 || row > ROWS-1 || col < 0 || col > COLS-1) ? TRUE : FALSE;
+	return (row < 0 || row > rows-1 || col < 0 || col > cols-1) ? true : false;
 }
 
-uint8_t adj_mines(char **mboard, int row, int col, int COLS, int ROWS)
+uint8_t adj_mines(char **mboard, int row, int col, int cols, int rows)
 {
-    int8_t nadj = 0;
+	int8_t nadj = 0;
 
-    if (!outof_bounds(row, col-1, COLS, ROWS)    && mboard[row][col-1]    == MINE) nadj++; // North
-    if (!outof_bounds(row, col+1, COLS, ROWS)    && mboard[row][col+1]    == MINE) nadj++; // South
-    if (!outof_bounds(row+1, col, COLS, ROWS)    && mboard[row+1][col]    == MINE) nadj++; // East
-    if (!outof_bounds(row-1, col, COLS, ROWS)    && mboard[row-1][col]    == MINE) nadj++; // West
-    if (!outof_bounds(row+1, col-1, COLS, ROWS)  && mboard[row+1][col-1]  == MINE) nadj++; // North-East
-    if (!outof_bounds(row-1, col-1, COLS, ROWS)  && mboard[row-1][col-1]  == MINE) nadj++; // North-West
-    if (!outof_bounds(row+1, col+1, COLS, ROWS)  && mboard[row+1][col+1]  == MINE) nadj++; // South-East
-    if (!outof_bounds(row-1, col+1, COLS, ROWS)  && mboard[row-1][col+1]  == MINE) nadj++; // South-West
+	if (!outof_bounds(row, col-1, cols, rows)    && mboard[row][col-1]    == MINE) nadj++; // north
+	if (!outof_bounds(row, col+1, cols, rows)    && mboard[row][col+1]    == MINE) nadj++; // south
+	if (!outof_bounds(row+1, col, cols, rows)    && mboard[row+1][col]    == MINE) nadj++; // east
+	if (!outof_bounds(row-1, col, cols, rows)    && mboard[row-1][col]    == MINE) nadj++; // west
+	if (!outof_bounds(row+1, col-1, cols, rows)  && mboard[row+1][col-1]  == MINE) nadj++; // north-east
+	if (!outof_bounds(row-1, col-1, cols, rows)  && mboard[row-1][col-1]  == MINE) nadj++; // north-west
+	if (!outof_bounds(row+1, col+1, cols, rows)  && mboard[row+1][col+1]  == MINE) nadj++; // south-east
+	if (!outof_bounds(row-1, col+1, cols, rows)  && mboard[row-1][col+1]  == MINE) nadj++; // south-west
 
-    return nadj;
+	return nadj;
 }
 
-void fill_spaces(char **mboard, int COLS, int ROWS, int NMINES)
+void fill_spaces(char **mboard, int cols, int rows, int nmines)
 {
-    int i, j;
-    for (i = 0; i < ROWS; i++)
-        for (j = 0; j < COLS; j++)
-            if (mboard[i][j] != MINE && mboard[i][j] == '0')
-                mboard[i][j] = '-';
+	int i, j;
+	for (i = 0; i < rows; i++)
+		for (j = 0; j < cols; j++)
+			if (mboard[i][j] != MINE && mboard[i][j] == '0')
+				mboard[i][j] = '-';
 }
