@@ -54,7 +54,7 @@ int main(int argc, char **argv)
 void cont()
 {
 	std::cout << std::endl;
-	std::cout << "Press any key to continue. . .";
+	std::cout << "Press <ENTER> to continue. . .";
 	if (std::cin.get()) system("clear");
 }
 
