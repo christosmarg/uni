@@ -14,7 +14,7 @@ CC = gcc
 CPPFLAGS += -Iinclude
 CFLAGS += -Wall
 LDFLAGS += -Llib
-LDLIBS += -lm -lncurses
+LDLIBS += -lm
 
 .PHONY: all clean
 
