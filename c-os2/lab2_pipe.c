@@ -9,11 +9,14 @@
 
 #define DEFPAGER "/usr/bin/less"
 
+static char *argv0;
+
 static void
 die(const char *str)
 {
+	(void)fprintf(stderr, "%s: ", argv0);
         perror(str);
-        exit(EXIT_FAILURE);
+        exit(1);
 }
 
 int
@@ -24,8 +27,11 @@ main(int argc, char *argv[])
         pid_t pid;
         int fd[2], n;
 
-        if (argc != 2)
-                die("usage: foo file");
+	argv0 = *argv;
+        if (argc != 2) {
+		(void)fprintf(stderr, "usage: %s file\n", argv0);
+		return 1;
+	}
         if ((fp = fopen(argv[1], "r")) == NULL)
                 die("fopen");
         if (pipe(fd) < 0)

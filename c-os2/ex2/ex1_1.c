@@ -10,12 +10,12 @@
  * Εργαστήριο ΛΣ2 (Δ6) / Εργασία 2: Άσκηση 1.1 / 2020-2021
  * Ονοματεπώνυμο: Χρήστος Μαργιώλης
  * ΑΜ: 19390133
- * Τρόπος μεταγλώττισης: `cc ex1_1.c -lpthread -lrt -o ex1_1`
+ * Τρόπος μεταγλώττισης: `cc ex1_1.c -lpthread -o ex1_1`
  */
 
 struct foo {
-	sem_t mutex;
 	char *str;
+	sem_t mutex;
 };
 
 /* Function declarations */
@@ -24,7 +24,7 @@ static void *emalloc(size_t);
 static void die(const char *);
 
 /* Global variables */
-static char *argv0; 		/* Program name */
+static char *argv0;
 static const char *nums[] = {	/* Each thread will print one of these */
 	"<one>",
 	"<two>",
@@ -37,16 +37,17 @@ tdprint(void *foo)
 	struct foo *f;
 	
 	f = (struct foo *)foo;
-	sem_wait(&f->mutex);
+	if (sem_wait(&f->mutex) == -1)
+		die("sem_wait");
 	printf("%s", f->str);
 	/* Prevent memory leak from strdup(2). */
 	free(f->str);
-	sem_post(&f->mutex);
+	if (sem_post(&f->mutex) == -1)
+		die("sem_post");
 
 	return NULL;
 }
 
-/* Error checking malloc(2) */
 static void *
 emalloc(size_t nb)
 {
@@ -54,16 +55,16 @@ emalloc(size_t nb)
 
 	if ((p = malloc(nb)) == NULL)
 		die("malloc");
+
 	return p;
 }
 
-/* Die. */
 static void
 die(const char *str)
 {
 	fprintf(stderr, "%s: ", argv0);
 	perror(str);
-	exit(EXIT_FAILURE);
+	exit(1);
 }
 
 int
@@ -78,13 +79,19 @@ main(int argc, char *argv[])
 	argv0 = *argv;
 	len = LEN(nums);
 	f = emalloc(sizeof(struct foo));
+	/*
+	 * Instead of hardcoding how many threads we want to have, the
+	 * number of threads is always equal to how many elements the
+	 * `nums` array has. That means in case we want to add/remove
+	 * entries from `nums`, everything will adapt automatically.
+	 */
 	tds = emalloc(len * sizeof(pthread_t));
 
-	sem_init(&f->mutex, 0, 1);
+	if (sem_init(&f->mutex, 0, 1) == -1)
+		die("sem_init");
 	while (n--) {
 		for (i = 0; i < len; i++) {
-			/* Get appropriate string. */
-			if ((f->str = strdup(nums[i % len])) == NULL)
+			if ((f->str = strdup(nums[i])) == NULL)
 				die("strdup");
 			if (pthread_create(&tds[i], NULL, tdprint, (void *)f) != 0)
 				die("pthread_create");
@@ -94,7 +101,7 @@ main(int argc, char *argv[])
 	}
 	printf("\n");
 
-	sem_destroy(&f->mutex);
+	(void)sem_destroy(&f->mutex);
 	pthread_exit(NULL);
 	free(tds);
 	free(f);
