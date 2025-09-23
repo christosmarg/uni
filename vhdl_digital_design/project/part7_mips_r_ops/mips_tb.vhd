@@ -18,7 +18,7 @@ end component;
 begin
 	uut: mips port map (
 		m_clk => s_m_clk,
-		m_rst => s_m_rst,
+		m_rst => s_m_rst
 	);
 
 	process begin
