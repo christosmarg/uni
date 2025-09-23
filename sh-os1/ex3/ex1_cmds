@@ -1,0 +1,39 @@
+#!/bin/sh
+
+test $# -ne 1 && echo "usage: ${0##*/} gradefile" 1>&2 && exit 1
+test ! -f "${1}" && echo "${0##*/}: ${1}: no such file" 1>&2 && exit 1
+
+file="${1}"
+
+echo "First names starting with K or N:"
+awk '$1 ~ /^K|N/ {print $2, $1}' ${file}
+echo ""
+
+echo "Last names starting with C or L:"
+awk '$2 ~ /^C|L/ {print $1, $2}' ${file}
+echo ""
+
+echo "Students with their second grade being > 85:"
+awk '{if ($5 > 85 && $5 > 85) print}' ${file}
+echo ""
+
+echo "Students in the humanities:"
+awk '{if ($3 == "Theo") print}' ${file}
+echo ""
+
+echo "Average ${file}:"
+awk '{
+sum = cnt = 0;
+for (i = 4; i <= NF; i++) {
+        sum += $i;
+        cnt++;
+}
+print $1, $2, sum / cnt}' ${file}
+echo ""
+
+echo "Students with their third grade being < 70:"
+awk 'BEGIN {cnt = 0} {if ($6 < 70) cnt++;} END {print cnt}' ${file}
+echo ""
+
+echo "How many student names end in 'is'?"
+awk 'BEGIN {cnt = 0} {if ($2 ~ /is$/) cnt++} END {print cnt}' ${file}
