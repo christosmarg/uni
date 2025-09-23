@@ -4,7 +4,7 @@ all:
 	cc ${TARG}.c -fopenmp -lomp -o ${TARG}
 
 clean:
-	rm ${TARG}
+	rm -f ${TARG} *.core
 
 run:
 	./${TARG}
