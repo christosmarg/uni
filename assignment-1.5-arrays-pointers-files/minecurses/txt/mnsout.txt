@@ -1,0 +1,9 @@
+Mine hit at position (1, 1)
+
+Board overview
+
+* 1 - - - 
+1 1 - - - 
+- - - - - 
+- - - - - 
+- - - - - 
