@@ -12,7 +12,7 @@
 #include "student.h"
 #include "xstring.h"
 
-typedef std::map<lab::xstring, lab::xstring> equivalencies;
+using equivalencies = std::map<lab::xstring, lab::xstring>;
 
 class DataHandler 
 {
@@ -70,7 +70,7 @@ DataHandler::import_data(const char *fpath)
 			lab::getline(f, skip);
 			while (f.good())
 			{
-				if constexpr (std::is_same<T, Course>::value)
+				if constexpr (std::is_same_v<T, Course>)
 				{
 					lab::xstring code, name;
 					lab::getline(f, code, ';');
@@ -78,7 +78,7 @@ DataHandler::import_data(const char *fpath)
 					if (f.eof()) break;
 					courses.insert(std::make_pair(code, new Course(code, name)));
 				}
-				else if constexpr (std::is_same<T, Student>::value)
+				else if constexpr (std::is_same_v<T, Student>)
 				{
 					lab::xstring id, lname, fname;
 					lab::getline(f, id, ';');
@@ -87,7 +87,7 @@ DataHandler::import_data(const char *fpath)
 					if (f.eof()) break;
 					studs.insert(std::make_pair(id, new Student(id, lname, fname)));
 				}
-				else if constexpr (std::is_same<T, equivalencies>::value)
+				else if constexpr (std::is_same_v<T, equivalencies>)
 				{
 					lab::xstring oldcurr, newcurr;
 					lab::getline(f, oldcurr, ';');

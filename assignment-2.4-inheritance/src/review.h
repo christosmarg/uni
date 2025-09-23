@@ -13,16 +13,19 @@ class Review
 
 	public:
 		Review();
-		Review(int stars, const std::string& username, const std::string& comment);
+		Review(int stars, const std::string& username,
+				const std::string& comment);
 		Review(const Review& r);
 
-		const std::string& get_username() const;
-		const std::string& get_comment() const;
-		constexpr int get_stars() const {return stars;}
+		inline const std::string& get_username() const {return username;}
+		inline const std::string& get_comment()  const {return comment;}
+		inline constexpr int get_stars()		 const {return stars;}
 
-		void set_stars(int stars);
-		void set_username(const std::string& username);
-		void set_comment(const std::string& comment);
+		inline void set_stars(int stars) {this->stars = stars;}
+		inline void set_username(const std::string& username)
+			{this->username = username;}
+		inline void set_comment(const std::string& comment)
+			{this->comment = comment;}
 };
 
 #endif /* REVIEW_H */

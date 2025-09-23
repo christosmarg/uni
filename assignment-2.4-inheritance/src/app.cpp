@@ -52,62 +52,8 @@ App::convsn(const char *serialnum)
 }
 
 void
-App::addrev(Review *rev)
-{
-	reviews.push_back(rev);
-}
-
-void
-App::addrevs(const std::vector<Review *> revs)
-{
-	reviews.insert(reviews.end(), revs.begin(), revs.end());
-}
-
-const std::string&
-App::get_name() const
-{
-	return name;
-}
-
-const std::string&
-App::get_os() const
-{
-	return os;
-}
-
-const Manufacturer
-App::get_manf() const
-{
-	return Manufacturer(*manf);
-}
-
-void
 App::set_serialnum(const char *serialnum)
 {
 	if (this->serialnum != nullptr) delete[] this->serialnum;
 	this->serialnum = convsn(serialnum);
-}
-
-void
-App::set_name(const std::string& name)
-{
-	this->name = name;
-}
-
-void
-App::set_os(const std::string& os)
-{
-	this->os = os;
-}
-
-void
-App::set_manf(Manufacturer *manf)
-{
-	this->manf = manf;
-}
-
-void
-App::set_price(int price)
-{
-	this->price = price;
 }
