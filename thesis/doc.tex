@@ -12,6 +12,9 @@
 \usepackage[margin=0.5in]{geometry}
 \usepackage[backend=bibtex]{biblatex}
 
+% XXX https://polynoe.lib.uniwa.gr/xmlui/handle/11400/55
+% XXX https://polynoe.lib.uniwa.gr/xmlui/bitstream/handle/11400/8820/Vangelis_18390008.pdf?sequence=1&isAllowed=y
+
 \lstset {
         basicstyle=\ttfamily,
         columns=fullflexible,
@@ -31,7 +34,8 @@
 \begin{document}
 
 \begin{titlepage}
-        \maketitle
+        \clearpage\maketitle
+	\thispagestyle{empty}
         \begin{figure}[t!]
         \begin{center}
         \includegraphics[scale=0.3]{./res/uniwalogo.png} \\
@@ -43,11 +47,14 @@
         \end{center}
         \end{figure}
         \begin{center}
-	Εισηγητής: Παναγιώτης Καρκαζής % TODO βαθμίδα
+	Εισηγητής: Παναγιώτης Καρκαζής
         \end{center}
 \end{titlepage}
 
+% TODO number page
 \shipout\null
+
+% TODO make headers bigger
 
 \begin{center}
 Διπλωματική Εργασία
@@ -65,16 +72,16 @@
 Εισηγητής:
 
 \begin{center}
-Παναγιώτης Καρκαζής % TODO βαθμίδα
+Παναγιώτης Καρκαζής, <++> % TODO βαθμίδα
 \end{center}
 
 Εξεταστική επιτροπή:
 
 \begin{center}
-FILLME % TODO
+<++>
 \linebreak
 \linebreak
-Ημερομηνία εξέτασης: FILLME % TODO
+Ημερομηνία εξέτασης: <++>
 \end{center}
 
 \pagebreak
@@ -84,12 +91,12 @@ FILLME % TODO
 \textbf{Δήλωση συγγραφέα διπλωματικής εργασίας}
 \end{center}
 
-% TODO
+<++>
 
 \begin{center}
 Ο Δηλών
 
-% TODO υπογραφή
+<++> % TODO υπογραφή
 \end{center}
 
 \pagebreak
@@ -99,7 +106,7 @@ FILLME % TODO
 \textbf{Ευχαριστίες}
 \end{center}
 
-% TODO
+<++>
 
 \pagebreak
 \shipout\null
@@ -114,13 +121,15 @@ FILLME % TODO
 θα αναπτυχθεί επέκταση του εργαλείου DTrace η οποία θα παρέχει την δυνατότητα
 παρακολούθησης οποιασδήποτε μεμονωμένης εντολής assembly εντός μιας δεδομένης
 συνάρτησης του πυρήνα του λειτουργικού συστήματος FreeBSD.
-% TODO improve
+% TODO improve: mention inline?
+
+<++> % TODO keywords
 
 \begin{center}
 \textbf{Abstract}
 \end{center}
 
-% TODO
+<++>
 
 \pagebreak
 
@@ -128,12 +137,84 @@ FILLME % TODO
 \tableofcontents
 \pagebreak
 
+\section{Συντομογραφίες}
+
+<++>
+
 \section{Εισαγωγή}
 
-% TODO
+<++>
 
+\subsection{Εισαγωγή στην παρακολούθηση (tracing)}
+
+<++>
+
+\subsection{Εισαγωγή στο DTrace}
+
+% TODO
+% See paper, slides, articles
+% Πως δουλεύει το DTrace
+% Breakpoint instructions
+% Mark presentation
+
+<++>
+
+\section{Inline tracing}
+
+% TODO
+% See paper, slides, articles
+
+<++>
+
+\subsection{Τι είναι inline συναρτήσεις}
+
+<++>
+
+\subsection{Γιατί είναι δύσκολη η παρακολούθηση inline συναρτήσεων}
+
+% TODO
+% See paper, slides, articles
+
+<++>
+
+\section{kinst}
+
+% TODO
+% See paper, slides, articles
+% Overview
+% Architecture dependent parts
+% Inline tracing
+%	Τι είναι inline functions
+%	Γιατί είναι δύσκολο να τις κάνουμε trace
+%	Πως το λύνει αυτό ο kinst
+% inlinecall, omitrbp
+
+<++>
+
+\section{Πειράματα}
+
+% TODO
+% Περιβάλλον εκτέλεσης
+% See paper, slides, articles
+
+<++>
+
+\section{Συμπεράσματα}
+
+<++>
+
+\pagebreak
 \renewcommand{\refname}{Βιβλιογραφία}
 \begin{thebibliography}{00}
 \end{thebibliography}
+
+\pagebreak
+\section{Παράρτημα}
+
+
+% TODO
+% Να αδειάσω τον κώδικα όπως είναι ή να βάλω link;
+
+<++>
 
 \end{document}

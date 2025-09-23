@@ -1,0 +1,11 @@
+\boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
+\babel@toc {english}{}
+\contentsline {section}{\numberline {1}Θεωρητικό μέρος}{2}{}%
+\contentsline {section}{\numberline {2}Υλοποίηση της εργασίας}{2}{}%
+\contentsline {section}{\numberline {3}Συνδεσμολόγηση κυκλώματος}{2}{}%
+\contentsline {section}{\numberline {4}Εφαρμογή σήματος}{3}{}%
+\contentsline {subsection}{\numberline {4.1}Θεωρητική $F_c$}{3}{}%
+\contentsline {subsection}{\numberline {4.2}Λειτουργία $R_1$}{3}{}%
+\contentsline {subsection}{\numberline {4.3}Γράφημα εξόδου}{3}{}%
+\contentsline {subsection}{\numberline {4.4}Αύξηση τριγωνικής συχνότητας}{9}{}%
+\contentsline {section}{\numberline {5}Breadboard}{10}{}%
