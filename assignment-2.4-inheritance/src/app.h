@@ -24,7 +24,7 @@ class App
     public:
         App();
         App(const char *serialnum, const std::string& name,
-                const std::string& os, Manufacturer *manf, int price);
+            const std::string& os, Manufacturer *manf, int price);
         App(const App& app);
         virtual ~App(); 
 
@@ -34,16 +34,16 @@ class App
 
         const std::string& get_name() const {return name;}
         const std::string& get_os()   const {return os;}
-        const Manufacturer get_manf() const {return Manufacturer(*manf);}
+        constexpr const Manufacturer& get_manf() const {return *manf;}
         constexpr const char *get_serialnum() const {return serialnum;}
         constexpr const std::vector<Review *>& get_revs() const {return reviews;}
-        constexpr int get_price() const {return price;}
+        constexpr const int get_price() const {return price;}
 
         void set_serialnum(const char *serialnum);
         void set_name(const std::string& name) {this->name = name;}
         void set_os(const std::string& os)     {this->os = os;}
         void set_manf(Manufacturer *manf)      {this->manf = manf;}
-        void set_price(int price)              {this->price = price;}
+        void set_price(const int price)        {this->price = price;}
 
         virtual void print(std::ostream& stream) const = 0;
     

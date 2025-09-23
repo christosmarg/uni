@@ -9,14 +9,16 @@ AppSystem::~AppSystem()
 AppSystem&
 AppSystem::operator+= (App *app)
 {
-    apps.push_back(app);
+    if (!exists<App>(apps, app)) apps.push_back(app);
+    else throw std::logic_error("App exists already.");
     return *this;
 }
 
 AppSystem&
-AppSystem::operator+= (Manufacturer *man)
+AppSystem::operator+= (Manufacturer *manf)
 {
-    manfs.push_back(man);
+    if (!exists<Manufacturer>(manfs, manf)) manfs.push_back(manf);
+    else throw std::logic_error("Manufacturer exists already.");
     return *this;
 }
 
@@ -32,7 +34,7 @@ AppSystem::parse_office_exts(std::ifstream& f)
 }
 
 void
-AppSystem::write_office_exts(Office *of, std::ofstream& f)
+AppSystem::write_office_exts(const Office *of, std::ofstream& f)
 {
     std::vector<std::string> exts = of->get_exts();
     for (const auto& ext : exts)
@@ -40,7 +42,7 @@ AppSystem::write_office_exts(Office *of, std::ofstream& f)
 }
 
 void
-AppSystem::removebad(Manufacturer *man)
+AppSystem::removebad(const Manufacturer *man)
 {
     apps.erase(std::remove_if(apps.begin(), apps.end(), [&](App *app)
         {

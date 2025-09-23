@@ -17,9 +17,9 @@ App::App(const char *serialnum, const std::string& name,
         throw std::runtime_error("Price can't have negative value.");
 }
 
-App::App(const App& a)
-    :serialnum(a.serialnum), name(a.name), os(a.os), manf(a.manf),
-    price(a.price) {}
+App::App(const App& app)
+    :serialnum(app.serialnum), name(app.name), os(app.os), manf(app.manf),
+    price(app.price) {}
 
 App::~App()
 {

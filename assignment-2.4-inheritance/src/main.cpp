@@ -78,8 +78,7 @@ pluseqs(AppSystem& sys)
     Manufacturer *chris = new Manufacturer("0005", "Chris", "chris@chris.com");
     sys += comp;
     sys += chris;
-    std::vector<std::string> ext = {".pdf", ".md"};
-    sys += new Office("0004", "zathura", "NiceOS 1.1", comp, 0, ext);
+    sys += new Office("0004", "zathura", "NiceOS 1.1", comp, 0, {".pdf", ".md"});
     sys += new Game("0005", "minecurses", "NiceOS 0.5", chris, 0, "Puzzle", false);
 }
 
