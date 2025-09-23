@@ -25,6 +25,7 @@ ErrLog::write(ErrType type, const lab::xstring& s) const
 			f << "Course;" << s << ";Missing" << std::endl;
 			break;
 		case ErrType::GRADE_DUPLICATE:
+			f << "Grade;" << s << ";Duplicate" << std::endl;
 			break;
 		case ErrType::DIFFERENT_GRADES:
 			f << "Grade;" << s << ";Different" << std::endl;

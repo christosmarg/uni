@@ -18,13 +18,14 @@ class DataHandler
 	private:
 		const char *datapath = "res/grades.csv";
 		const char *reppath = "res/report.csv";
-		std::vector<lab::xstring> missgrds;
 		std::map<lab::xstring, Course *> courses;
 		std::map<lab::xstring, Student *> studs;
 		std::map<Course *, float> grds;
 		std::map<Student *, std::map<Course *, float>> data;
+		std::vector<lab::xstring> missing; // bad?
 		equivalencies eqvs;
 		ErrLog errlog;
+		int misscount, errcount;
 
 	public:
 		DataHandler();
@@ -33,6 +34,7 @@ class DataHandler
 		template<typename T> bool import_data(const char *fpath);
 		bool store_data();
 		bool make_report() const;
+		void summary() const;
 		
 	private:
 		bool analyze(
@@ -40,8 +42,12 @@ class DataHandler
 				lab::xstring& AM,
 				lab::xstring& code,
 				lab::xstring& grade);
-		void missing(lab::xstring& AM, lab::xstring& code);
-		void diffgrds(lab::xstring& AM, lab::xstring& code, lab::xstring& grade);
+		void miss(lab::xstring AM, lab::xstring code, float grade);
+		void diffr(lab::xstring AM, lab::xstring code, const lab::xstring& grade);
+		void dupl(
+				const lab::xstring& AM,
+				const lab::xstring& code,
+				const lab::xstring& grade);
 		bool valid_path(const char *fpath) const;
 		const lab::xstring err_csv	(const char *fpath)	const;
 		const lab::xstring err_read	(const char *fpath)	const;
@@ -61,6 +67,7 @@ DataHandler::import_data(const char *fpath)
 		f.open(fpath);
 		if (f.is_open())
 		{
+			std::cout << "Importing data from \'" << fpath << "\'." << std::endl;
 			lab::xstring skip;
 			lab::getline(f, skip);
 			while (f.good())
@@ -84,11 +91,11 @@ DataHandler::import_data(const char *fpath)
 				}
 				else if (std::is_same<T, equivalencies>::value)
 				{
-					lab::xstring newcurr, oldcurr;
-					lab::getline(f, newcurr, ';');
-					lab::getline(f, oldcurr);
+					lab::xstring oldcurr, newcurr;
+					lab::getline(f, oldcurr, ';');
+					lab::getline(f, newcurr);
 					if (f.eof()) break;
-					eqvs.insert(std::make_pair(newcurr, oldcurr));
+					eqvs.insert(std::make_pair(oldcurr, newcurr));
 				}
 			}
 		}

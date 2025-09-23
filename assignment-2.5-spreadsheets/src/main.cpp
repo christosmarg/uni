@@ -9,6 +9,7 @@ main(int argc, char **argv)
 	if (!dh.import_data<equivalencies>("res/equivalencies.csv")) return -1;
 	if (!dh.store_data()) return -1;
 	if (!dh.make_report()) return -1;
+	dh.summary();
 
 	return 0;
 }

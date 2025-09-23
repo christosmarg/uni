@@ -1,6 +1,7 @@
 #include "datahandler.h"
 
-DataHandler::DataHandler() {}
+DataHandler::DataHandler()
+	:misscount(0), errcount(0) {}
 
 DataHandler::~DataHandler()
 {
@@ -21,6 +22,7 @@ DataHandler::store_data()
 		f.open(datapath);
 		if (f.is_open())
 		{
+			std::cout << "Making data structures and analyzing data." << std::endl;
 			lab::xstring skip;
 			lab::getline(f, skip);
 
@@ -81,21 +83,27 @@ DataHandler::analyze(
 					std::atof(grade.cstr())));
 	}
 	else if (its == studs.end())
+	{
 		errlog.write(ErrLog::ErrType::STUDENT_MISSING, AM);
+		errcount++;
+	}
 	else if (itc == courses.end())
+	{
 		errlog.write(ErrLog::ErrType::COURSE_MISSING, code);
+		errcount++;
+	}
 
 	if (its != studs.end() && itc != courses.end())
 	{
-		missing(AM, code);	
-		diffgrds(AM, code, grade);
+		miss(AM, code, std::atof(grade.cstr()));	
+		diffr(AM, code, grade);
 	}
 
 	return true;
 }
 
 void
-DataHandler::missing(lab::xstring& AM, lab::xstring& code)
+DataHandler::miss(lab::xstring AM, lab::xstring code, float grade)
 {
 	if (code.front() == 'P')
 	{
@@ -106,22 +114,44 @@ DataHandler::missing(lab::xstring& AM, lab::xstring& code)
 			for (const auto& grd : grds)
 				if (grd.first->get_code() == eqvs[code])
 					found = true;
-			if (!found) missgrds.push_back(AM + ";" + code);
+			if (!found)
+			{
+				missing.push_back(AM + ";" +
+						studs[AM]->get_lname() + ";" +
+						studs[AM]->get_fname() + ";" +
+						courses[eqvs[code]]->get_code() + ";" +
+						courses[code]->get_name() + ";" +
+						eqvs[code] + ";" +
+						courses[code]->get_name() + ";" +
+						lab::to_xstr<float>("%.1f", grade));
+				misscount++;
+			}
 		}
 	}
 }
 
 void
-DataHandler::diffgrds(lab::xstring& AM, lab::xstring& code, lab::xstring& grade)
+DataHandler::diffr(lab::xstring AM, lab::xstring code, const lab::xstring& grade)
 {
 	float g = std::atof(grade.cstr());
 	for (const auto& grd : grds)
 		if (code == grd.first->get_code() && grd.second != g)
+		{
 			errlog.write(ErrLog::ErrType::DIFFERENT_GRADES,
 					lab::xstring(AM + " in " + code + ": " +
 						lab::to_xstr<float>("%.1f", grd.second) + " | " +
-						lab::to_xstr<float>("%.1f", g))
-					);
+						lab::to_xstr<float>("%.1f", g)));
+			errcount++;
+		}
+}
+
+void
+DataHandler::dupl(
+		const lab::xstring& AM,
+		const lab::xstring& code,
+		const lab::xstring& grade)
+{
+
 }
 
 
@@ -129,12 +159,38 @@ bool
 DataHandler::make_report() const
 {
 	std::ofstream f;
-	f.open(reppath);
-	f << "Student;Course" << std::endl;
-	for (const auto& missgrd : missgrds)
-		f << missgrd << std::endl;
-	f.close();
+	f.exceptions(std::ofstream::failbit | std::ofstream::badbit);
+	try
+	{
+		if (!valid_path(reppath))
+			throw std::runtime_error(err_csv(reppath).cstr());
+		f.open(reppath);
+		if (f.is_open())
+		{
+			std::cout << "Making report." << std::endl;
+			f << "AM;Last name;First name;New course code;New course name;" <<
+				 "Old course code;Old course name;Grade" << std::endl;
+			for (const auto& m : missing) f << m << std::endl;
+			f.close();
+		}
+	}
+	catch (const std::ofstream::failure& e)
+	{
+		std::cerr << err_write(reppath) << std::endl << e.what() << std::endl;
+		return false;
+	}
 	return true;
+}
+
+
+void
+DataHandler::summary() const
+{
+	std::cout << std::endl;
+	std::cout << "Grades missing: " << misscount << std::endl;
+	std::cout << "Errors: " << errcount << std::endl;
+	std::cout << std::endl;
+	std::cout << "Thank you :)" << std::endl;
 }
 
 bool
