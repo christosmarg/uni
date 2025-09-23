@@ -141,6 +141,7 @@ Student::set_submitted_courses(Course **sc)
 {
 	if (sc != nullptr)
 	{
+		if (this->sc != nullptr) delete[] this->sc;
 		this->sc = new Course *[nsc];
 		memcpy(this->sc, sc, sizeof(Course *) * nsc);
 	}

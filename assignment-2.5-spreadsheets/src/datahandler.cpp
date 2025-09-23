@@ -8,6 +8,7 @@ DataHandler::~DataHandler()
 	dealloc<Course>(courses);
 	dealloc<Student>(studs);
 	eqvs.clear();
+	errs.clear();
 }
 
 bool
@@ -84,13 +85,21 @@ DataHandler::analyze(
 	}
 	else if (its == studs.end())
 	{
-		errlog.write(ErrLog::ErrType::STUDENT_MISSING, AM);
-		errcount++;
+		if (std::find(errs.begin(), errs.end(), AM) == errs.end())
+		{
+			errs.push_back(AM);
+			errlog.write(ErrLog::ErrType::STUDENT_MISSING, AM);
+			errcount++;
+		}
 	}
 	else if (itc == courses.end())
 	{
-		errlog.write(ErrLog::ErrType::COURSE_MISSING, code);
-		errcount++;
+		if (std::find(errs.begin(), errs.end(), code) == errs.end())
+		{
+			errs.push_back(code);
+			errlog.write(ErrLog::ErrType::COURSE_MISSING, code);
+			errcount++;
+		}
 	}
 
 	if (its != studs.end() && itc != courses.end())
