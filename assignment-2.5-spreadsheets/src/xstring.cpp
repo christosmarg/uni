@@ -2,7 +2,10 @@
 
 namespace lab {
 xstring::xstring()
-	:str(new char[1]), len(0) {}
+	:str(new char[1]), len(0)
+{
+	str[0] = '\0';
+}
 
 xstring::xstring(const char *s)
 	:str(conv(s)), len(strlen(s)) {}
@@ -141,8 +144,7 @@ bool xstring::operator>= (const char *s) const
 
 char& xstring::operator[] (std::size_t i) const
 {
-	try {if (i >= len) throw i;}
-	catch (int i) {throw std::runtime_error("Out of bounds.");}
+	if (i >= len) throw std::runtime_error("Out of bounds.");
 	return str[i];	
 }
 
@@ -255,6 +257,16 @@ void xstring::pop_back()
 void xstring::replace(std::size_t i, char c)
 {
 	if (i < len) str[i] = c;	
+}
+
+bool xstring::find(const xstring& s) const
+{
+	return (strstr(this->cstr(), s.cstr()) != nullptr);
+}
+
+bool xstring::find(const char *s) const
+{
+	return (strstr(this->cstr(), s) != nullptr);
 }
 
 char *xstring::cstr() const

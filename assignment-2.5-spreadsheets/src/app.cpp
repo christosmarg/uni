@@ -14,13 +14,15 @@ bool App::import_matchings(const char *fpath)
 	std::ifstream f;
 	f.open(fpath);
 	// exceptions
+	lab::xstring skip;
+	lab::getline(f, skip);
 	while (f.good())
 	{
 		lab::xstring newcurr, oldcurr;
 		lab::getline(f, newcurr, ';');
 		lab::getline(f, oldcurr);
 		if (f.eof()) break;
-		matchings.emplace_back(newcurr, oldcurr);
+		matchings.emplace(newcurr, oldcurr);
 	}
 	f.close();
 	return true;
@@ -39,4 +41,10 @@ const std::vector<Grades *>& App::get_grades() const
 const std::vector<Student *>& App::get_studs() const
 {
 	return studs;
+}
+
+const std::map<lab::xstring, lab::xstring>&
+App::get_matchings() const
+{
+	return matchings;
 }

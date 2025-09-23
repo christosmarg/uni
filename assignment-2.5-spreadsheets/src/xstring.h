@@ -3,8 +3,8 @@
 
 #include <algorithm>
 #include <cstdlib>
+#include <cstring>
 #include <iostream>
-#include <string.h>
 
 namespace lab {
 class xstring
@@ -51,6 +51,8 @@ class xstring
 		void push_back(char c);
 		void pop_back();
 		void replace(std::size_t i, char c);
+		bool find(const xstring& s) const;
+		bool find(const char *s) const;
 		char *cstr() const;
 		char& front() const;
 		char& back() const;

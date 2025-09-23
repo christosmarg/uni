@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+
 #include "game.h"
 #include "office.h"
 
@@ -140,8 +141,8 @@ bool AppSystem::import_data(const char *fpath)
 	try
 	{
 		std::string strpath(fpath);
-		if (!valid_path(strpath)) throw strpath;
-
+		if (!valid_path(strpath))
+			throw std::runtime_error(err_csv(strpath));
 		f.open(fpath);
 		if (f.is_open())
 		{
@@ -178,10 +179,6 @@ bool AppSystem::import_data(const char *fpath)
 		}
 		f.close();
 	}
-	catch (const std::string& strpath)
-	{
-		throw std::runtime_error(err_csv(strpath));
-	}
 	catch (const std::ifstream::failure& e)
 	{
 		std::cerr << err_read(fpath) << std::endl << e.what() << std::endl;
@@ -198,7 +195,8 @@ bool AppSystem::export_data(const char *fpath)
 	try
 	{
 		std::string strpath(fpath);
-		if (!valid_path(strpath)) throw strpath;
+		if (!valid_path(strpath))
+			throw std::runtime_error(err_csv(strpath));
 		f.open(fpath);
 
 		if (std::is_same<T, Manufacturer>::value)
@@ -249,10 +247,6 @@ bool AppSystem::export_data(const char *fpath)
 			}
 		}
 		f.close();
-	}
-	catch (const std::string& strpath)
-	{
-		throw std::runtime_error(err_csv(strpath));
 	}
 	catch (const std::ofstream::failure& e)
 	{

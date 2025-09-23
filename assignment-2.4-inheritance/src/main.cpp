@@ -1,5 +1,4 @@
 #include "appsystem.h"
-#include <iomanip>
 
 std::ostream& operator<< (std::ostream& stream, const AppSystem& sys);
 static void cont();
@@ -41,53 +40,9 @@ std::ostream& operator<< (std::ostream& stream, const AppSystem& sys)
 		std::left << std::setw(10) << "Genre" <<
 		std::left << std::setw(10) << "Online" <<
 		std::left << std::setw(25) << "Extensions" << std::endl << std::endl;
-
 	std::vector<App *> apps = sys.get_apps();
 	for (auto& app : apps)
-	{
-
-		stream <<
-			std::left << std::setw(7) << app->get_serialnum() <<
-			std::left << std::setw(20) << app->get_name() <<
-			std::left << std::setw(20) << app->get_os() <<
-			std::left << std::setw(7) << app->get_price();
-
-		Manufacturer m = app->get_manf();
-		stream <<
-			std::left << std::setw(7) << m.get_serialnum() <<
-			std::left << std::setw(15) << m.get_name() <<
-			std::left << std::setw(25) << m.get_email();
-
-		Game *o = dynamic_cast<Game *>(app);
-		stream << std::left << std::setw(10) << (o ? o->get_genre() : "N/A");
-		stream << std::left << std::setw(10) <<
-			(o ? (o->get_online() ? "Yes" : "No") : "N/A");
-		
-		if (Office *of = dynamic_cast<Office *>(app))
-		{
-			std::vector<std::string> exts = of->get_exts();
-			for (auto& ext : exts)
-				stream << ext << " ";
-		}
-		else stream << "N/A";
-		
-		std::vector<Review *> revs = app->get_revs();
-		if (!revs.empty())
-		{
-			stream << std::endl << std::endl << std::left << "Reviews:" << std::endl;
-			stream << 
-				std::left << std::setw(7) << "Stars" <<
-				std::left << std::setw(25) << "Username" <<
-				std::left << "Comment" << std::endl << std::endl;
-
-			for (auto& rev : revs)
-				stream <<
-					std::left << std::setw(7) << rev->get_stars() <<
-					std::left << std::setw(25) << rev->get_username() <<
-					std::left << rev->get_comment() << std::endl;
-		}
-		stream << std::endl;
-	}
+		app->print(stream);
 	return stream;	
 }
 

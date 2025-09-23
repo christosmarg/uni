@@ -14,6 +14,7 @@ class Review
 	public:
 		Review();
 		Review(int stars, const std::string& username, const std::string& comment);
+		Review(const Review& r);
 
 		int	get_stars() const;
 		const std::string& get_username() const;
