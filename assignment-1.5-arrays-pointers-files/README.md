@@ -11,7 +11,7 @@
 
 ## Minesweeper
 
-![MinesweeperSCR](uni/uni-assignments/assignment-1.5-arrays-pointers-files/minesweeper/sample.png "MinesweeperSCR")
+![MinesweeperScr](https://user-images.githubusercontent.com/54286563/72887644-cad7c500-3d14-11ea-8b8b-7e91df4806ab.png)
 
 ### How to play
 
