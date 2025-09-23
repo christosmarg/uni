@@ -1,0 +1,15 @@
+# write rpc.x
+rpcgen -Ss -C > rpc_server.c
+rpcgen -Sc -C > rpc.client.c
+rpcgen -Sm > Makefile.rpc
+# fill rpc_server, rpc_client stubs
+# edit Makefile.rpc...
+	CFLAGS
+	RPCFLAGS
+	TARGETS_*
+# write sock_client
+# write Makefile
+service rpcbind onestart
+./rpc_server
+./rpc_client
+./sock_client
