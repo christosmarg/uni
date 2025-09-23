@@ -1,3 +1,4 @@
+#include <err.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,10 +26,6 @@ struct foo {
 /* Function declarations */
 static void *calc(void *);
 static void *emalloc(size_t);
-static void die(const char *);
-
-/* Global variable */
-static char *argv0; /* Program name */
 
 /* 
  * Each thread calculates the sum of the squares of each element in a specified
@@ -72,10 +69,10 @@ calc(void *foo)
 	 * to f->sums at the same time.
 	 */ 
 	if (pthread_mutex_lock(&f->mutex) != 0)
-		die("pthread_mutex_lock");
+		err(1, "pthread_mutex_lock");
 	f->sums[tid] = localsum;
 	if (pthread_mutex_unlock(&f->mutex) != 0)
-		die("pthread_mutex_unlock");
+		err(1, "pthread_mutex_unlock");
 
 	return NULL;
 }
@@ -87,17 +84,8 @@ emalloc(size_t nb)
 	void *p;
 
 	if ((p = malloc(nb)) == NULL)
-		die("malloc");
+		err(1, "malloc");
 	return p;
-}
-
-/* Die. */
-static void
-die(const char *str)
-{
-	fprintf(stderr, "%s: ", argv0);
-	perror(str);
-	exit(EXIT_FAILURE);
 }
 
 int
@@ -109,7 +97,6 @@ main(int argc, char *argv[])
 	int totalsum;	/* What its name says */
 	int i;		/* Counter */
 
-	argv0 = *argv;
 	f = emalloc(sizeof(struct foo));
 	/* 
 	 * We do error checks for `n` and `ntd` but in case we read from a
@@ -140,7 +127,7 @@ main(int argc, char *argv[])
 		f->arr[i] = rand() % (ULIM - LLIM) + LLIM;
 
 	if (pthread_mutex_init(&f->mutex, NULL) != 0)
-		die("pthread_mutex_init");
+		err(1, "pthread_mutex_init");
 	/* 
 	 * Start multithreading. For each thread we assign `calc`
 	 * to be the callback function that each thread will call
@@ -150,9 +137,9 @@ main(int argc, char *argv[])
 	for (i = 0; i < f->ntd; i++) {
 		f->tid = i;
 		if (pthread_create(&tds[i], NULL, calc, (void *)f) != 0)
-			die("pthread_create");
+			err(1, "pthread_create");
 		if (pthread_join(tds[i], NULL) != 0)
-			die("pthread_join");
+			err(1, "pthread_join");
 	}
 	totalsum = 0;
 	while (f->ntd--)

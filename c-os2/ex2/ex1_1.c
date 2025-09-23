@@ -21,10 +21,8 @@ struct foo {
 /* Function declarations */
 static void *tdprint(void *);
 static void *emalloc(size_t);
-static void die(const char *);
 
 /* Global variables */
-static char *argv0;
 static const char *nums[] = {	/* Each thread will print one of these */
 	"<one>",
 	"<two>",
@@ -38,12 +36,12 @@ tdprint(void *foo)
 	
 	f = (struct foo *)foo;
 	if (sem_wait(&f->mutex) < 0)
-		die("sem_wait");
+		err(1, "sem_wait");
 	printf("%s", f->str);
 	/* Prevent memory leak from strdup(2). */
 	free(f->str);
 	if (sem_post(&f->mutex) < 0)
-		die("sem_post");
+		err(1, "sem_post");
 
 	return NULL;
 }
@@ -54,17 +52,9 @@ emalloc(size_t nb)
 	void *p;
 
 	if ((p = malloc(nb)) == NULL)
-		die("malloc");
+		err(1, "malloc");
 
 	return p;
-}
-
-static void
-die(const char *str)
-{
-	fprintf(stderr, "%s: ", argv0);
-	perror(str);
-	exit(1);
 }
 
 int
@@ -74,7 +64,6 @@ main(int argc, char *argv[])
 	pthread_t *tds;
 	int i, len, n = 5;
 
-	argv0 = *argv;
 	len = LEN(nums);
 	f = emalloc(sizeof(struct foo));
 	/*
@@ -86,15 +75,15 @@ main(int argc, char *argv[])
 	tds = emalloc(len * sizeof(pthread_t));
 
 	if (sem_init(&f->mutex, 0, 1) < 0)
-		die("sem_init");
+		err(1, "sem_init");
 	while (n--) {
 		for (i = 0; i < len; i++) {
 			if ((f->str = strdup(nums[i])) == NULL)
-				die("strdup");
+				err(1, "strdup");
 			if (pthread_create(&tds[i], NULL, tdprint, (void *)f) != 0)
-				die("pthread_create");
+				err(1, "pthread_create");
 			if (pthread_join(tds[i], NULL) != 0)
-				die("pthread_join");
+				err(1, "pthread_join");
 		}
 	}
 	printf("\n");

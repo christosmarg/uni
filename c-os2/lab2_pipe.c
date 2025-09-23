@@ -11,14 +11,6 @@
 
 static char *argv0;
 
-static void
-die(const char *str)
-{
-	fprintf(stderr, "%s: ", argv0);
-        perror(str);
-        exit(1);
-}
-
 int
 main(int argc, char *argv[])
 {
@@ -33,18 +25,18 @@ main(int argc, char *argv[])
 		return 1;
 	}
         if ((fp = fopen(argv[1], "r")) == NULL)
-                die("fopen");
+                err(1, "fopen");
         if (pipe(fd) < 0)
-                die("pipe");
+                err(1, "pipe");
         
         switch (pid = fork()) {
         case -1:
-                die("fork");
+                err(1, "fork");
         case 0:
                 close(fd[1]);
                 if (fd[0] != STDIN_FILENO) {
                         if (dup2(fd[0], STDIN_FILENO) != STDIN_FILENO)
-                                die("dup2");
+                                err(1, "dup2");
                         close(fd[0]);
                 }
                 if ((pager = getenv("PAGER")) == NULL)
@@ -54,19 +46,19 @@ main(int argc, char *argv[])
                 else
                         argv0 = pager;
                 if (execlp(pager, argv0, NULL) < 0)
-                        die("execlp");
+                        err(1, "execlp");
         default:
                 close(fd[0]);
                 while (fgets(buf, BUFSIZ, fp) != NULL) {
                         n = strlen(buf);
                         if (write(fd[1], buf, n) != n)
-                                die("write");
+                                err(1, "write");
                 }
                 if (ferror(fp))
-                        die("fgets");
+                        err(1, "fgets");
                 close(fd[1]);
                 if (waitpid(pid, NULL, 0) < 0)
-                        die("waitpid");
+                        err(1, "waitpid");
                 exit(0);
         }
 

@@ -142,11 +142,6 @@ Engine::init_entities()
 	srand(time(nullptr));
 
 	calc_pos(&x, &y);
-	/* 
-	 * Passing the parameters in reverse order (i.e `y, x` instead of
-	 * `x, y`) so that mvwaddch(3) doesn't print the entity on the
-	 * wrong coordinates.
-	 */
 	entities.push_back(new Potter(x, y, Movable::Direction::DOWN, 'P'));
 	for (i = 0; i < nenemies; i++) {
 		calc_pos(&x, &y);
@@ -267,7 +262,7 @@ Engine::enemies_move()
 {
 	std::map<int, int> dists;
 	int ex, ey;
-	auto mindist = [](const std::pair<int, int>& a, const std::pair<int, int>& b) {
+	auto distcmp = [](const std::pair<int, int>& a, const std::pair<int, int>& b) {
 		return a.first < b.second;
 	};
 
@@ -292,7 +287,7 @@ Engine::enemies_move()
 
 		if (!dists.empty()) {
 			auto min = std::min_element(dists.begin(),
-			    dists.end(), mindist);
+			    dists.end(), distcmp);
 			e->set_newpos(min->second, wxmax, wymax);
 		}
 	}
