@@ -5,11 +5,11 @@ void play_minesweeper(WINDOW *gameWin, char **dispboard, char **mineboard, int C
     int mbx = 0, mby = 0;
     bool gameOver = false;
     int numDefused = 0;
-    int yMax, xMax, yMiddle, xMiddle;
+    int ymax, xmax, ymid, xmid;
     char move;
-    getmaxyx(stdscr, yMax, xMax);
-    yMiddle = yMax/2;
-    xMiddle = xMax/2;
+    getmaxyx(stdscr, ymax, xmax);
+    ymid = ymax/2;
+    xmid = xmax/2;
 
 	print_board(gameWin, dispboard, COLS, ROWS);
     
@@ -33,15 +33,15 @@ void play_minesweeper(WINDOW *gameWin, char **dispboard, char **mineboard, int C
         else if (move == PAUSE_AUDIO) pause_audio(); // handle audio
         else if (move == VOLUME_UP || move == VOLUME_DOWN) volume(move);
 
-        mvprintw(1, xMiddle-8, "Defused mines: %d/%d", numDefused, NMINES);
+        mvprintw(1, xmid-8, "Defused mines: %d/%d", numDefused, NMINES);
         
     } while (((mby >= 0 && mby < ROWS) && (mbx >= 0 && mbx < COLS)) &&
              numDefused < NMINES && !gameOver && move != QUIT);	
 
     if (gameOver == true)
-		handle_gameover(gameWin, mineboard, yMiddle, xMiddle, COLS, ROWS, mby, mbx);
+		handle_gameover(gameWin, mineboard, ymid, xmid, COLS, ROWS, mby, mbx);
     if (numDefused == NMINES)
-		handle_win(gameWin, mineboard, yMiddle, xMiddle, COLS, ROWS, mby, mbx, numDefused);
+		handle_win(gameWin, mineboard, ymid, xmid, COLS, ROWS, mby, mbx, numDefused);
 }
 
 bool open_cell(WINDOW *gameWin, char **dispboard, char **mineboard, int mby, int mbx, bool gameOver)
@@ -83,17 +83,17 @@ bool is_defused(char **dispboard, char **mineboard, int mby, int mbx)
     return ((dispboard[mby][mbx] == DEFUSED)) ? true : false;
 }
 
-void handle_gameover(WINDOW *gameWin, char **mineboard, int yMiddle, int xMiddle, int COLS, int ROWS, int mby, int mbx)
+void handle_gameover(WINDOW *gameWin, char **mineboard, int ymid, int xmid, int COLS, int ROWS, int mby, int mbx)
 {
-	game_over(gameWin, mineboard, yMiddle, xMiddle);
+	game_over(gameWin, mineboard, ymid, xmid);
 	getchar();
 	print_board(gameWin, mineboard, COLS, ROWS);
 	session_write(mineboard, COLS, ROWS, mbx, mby, "lost");
 }
 
-void handle_win(WINDOW *gameWin, char **mineboard, int yMiddle, int xMiddle, int COLS, int ROWS, int mby, int mbx, int numDefused)
+void handle_win(WINDOW *gameWin, char **mineboard, int ymid, int xmid, int COLS, int ROWS, int mby, int mbx, int numDefused)
 {
-	game_won(gameWin, yMiddle, xMiddle);
+	game_won(gameWin, ymid, xmid);
 	getchar();
 	session_write(mineboard, COLS, ROWS, mbx, mby, "won");
 	score_write(numDefused, COLS, ROWS);

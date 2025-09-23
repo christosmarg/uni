@@ -1,6 +1,6 @@
 # minescurses
 
-A simplistic minesweeper game using the `ncurses` and `SDL2` libraries. The game was originally made as a university assignment of mine, but I decided to take it a bit further afterwards.
+A minesweeper game using the `ncurses` and `SDL2` libraries. The game was originally made as a university assignment of mine, but I decided to take it a bit further afterwards.
 
 ## How to play
 
@@ -45,7 +45,7 @@ Additional controls
 * `SDL2_mixer`
 
 ```shell
-$ cd path_to/minesweeper
+$ cd path_to/minecurses
 $ make
 $ make run
 $ make clean # optional

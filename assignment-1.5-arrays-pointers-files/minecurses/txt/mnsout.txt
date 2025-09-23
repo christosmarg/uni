@@ -1,9 +1,9 @@
-Mine hit at position (1, 1)
+Mine hit at position (2, 3)
 
 Board overview
 
-* 1 - - - 
-1 1 - - - 
 - - - - - 
-- - - - - 
+1 1 1 - - 
+1 * 1 - - 
+1 1 1 - - 
 - - - - - 
