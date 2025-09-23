@@ -12,7 +12,6 @@ class Student
         unsigned int semester;
         unsigned int pcourses;
         float *grades;
-        std::size_t size;
 
     public:
         Student(const char *id, const std::string& name);

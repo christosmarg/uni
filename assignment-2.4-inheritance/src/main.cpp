@@ -38,7 +38,7 @@ main(int argc, char **argv)
     if (!sys.export_data<Manufacturer>("res/manfdata_out.csv")) return -1;
     if (!sys.export_data<App>("res/appdata_out.csv")) return -1;
     if (!sys.export_data<Review>("res/revs_out.csv")) return -1;
-    std::cout << std::endl << "Thank you :)" << std::endl;
+    std::printf("\nThank you :)\n");
 
     return 0;
 }
@@ -66,10 +66,9 @@ operator<< (std::ostream& stream, const AppSystem& sys)
 void
 cont(const char *s)
 {
-    std::cout << std::endl;
-    std::cout << "Press <ENTER> to continue. . .";
+    std::printf("\nPress <ENTER> to continue. . .");
     if (std::cin.get()) system("clear || cls");
-    if (strlen(s) > 0) std::cout << s << std::endl << std::endl;
+    if (strlen(s) > 0) std::printf("%s\n\n", s);
 }
 
 void
@@ -87,20 +86,24 @@ pluseqs(AppSystem& sys)
 void
 edit(AppSystem& sys)
 {
-    sys.newrev("minecurses", new Review(5, "gamer", "Good game"));
-    sys.newrevs("Vim",
+    sys.call<Review *>("minecurses", new Review(5, "gamer", "Good game"),
+            &App::addrev);
+    sys.call<const std::vector<Review *>>("Vim",
             {new Review(2, "user1", "Not so good"),
              new Review(4, "user2", "Good app"),
-             new Review(5, "user3", "Very good :)")});
-    sys.chserialnum("zathura", "1254");
-    sys.chname("minecurses", "minesweeper");
-    sys.chos("Vim", "GoodOS");
-    sys.chmanf("LibreOffice",
-            new Manufacturer("0006", "FreeSoftware", "freesoft@freesoft.com"));
-    sys.chprice("LoL", 155);
-    sys.chgenre("CS:GO", "Shooter");
-    sys.chonline("minesweeper", true);
-    sys.chexts("zathura", {".tex", ".epub", ".ms"});
+             new Review(5, "user3", "Very good :)")},
+             &App::addrevs);
+    sys.call<const char *>("zathura", "1254", &App::set_serialnum);
+    sys.call<const std::string&>("minecurses", "minesweeper", &App::set_name);
+    sys.call<const std::string&>("Vim", "GoodOS", &App::set_os);
+    sys.call<Manufacturer *>("LibreOffice",
+            new Manufacturer("0006", "FreeSoftware", "freesoft@freesoft.com"),
+            &App::set_manf);
+    sys.call<int>("LoL", 155, &App::set_price);
+    sys.cast_call<const std::string&, Game>("CS:GO", "Shooter", &Game::set_genre);
+    sys.cast_call<bool, Game>("minesweeper", true, &Game::set_online);
+    sys.cast_call<const std::vector<std::string>&, Office>("zathura",
+            {".tex", ".epub", ".ms"}, &Office::set_exts);
 }
 
 void

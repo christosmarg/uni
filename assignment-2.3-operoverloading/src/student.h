@@ -16,7 +16,6 @@ class Student
         unsigned int semester; // Current semester
         unsigned int pcourses; // Passed courses
         float *grades;         // Grades
-        std::size_t size;      // Grades array size
         Course **sc;           // Submitted courses
         unsigned int nsc;      // Number of submitted courses 
 

@@ -1,7 +1,5 @@
 #include "appsystem.h"
 
-AppSystem::AppSystem() {} 
-
 AppSystem::~AppSystem()
 {
     dealloc<App>(apps);
@@ -39,89 +37,6 @@ AppSystem::write_office_exts(Office *of, std::ofstream& f)
     std::vector<std::string> exts = of->get_exts();
     for (const auto& ext : exts)
         f << ext << '|';    
-}
-
-void
-AppSystem::newrev(const std::string& appname, Review *rev)
-{
-    for (auto&& app : apps)
-        if (app->get_name() == appname)
-            app->addrev(rev);
-}
-
-void
-AppSystem::newrevs(const std::string& appname, const std::vector<Review *> revs)
-{
-    for (auto&& app : apps)
-        if (app->get_name() == appname)
-            app->addrevs(revs);
-}
-
-void
-AppSystem::chserialnum(const std::string& appname, const char *serialnum)
-{
-    for (auto&& app : apps)
-        if (app->get_name() == appname)
-            app->set_serialnum(serialnum);
-}
-
-void
-AppSystem::chname(const std::string& appname, const std::string& name)
-{
-    for (auto&& app : apps)
-        if (app->get_name() == appname)
-            app->set_name(name);
-}
-
-void
-AppSystem::chos(const std::string& appname, const std::string& os)
-{
-    for (auto&& app : apps)
-        if (app->get_name() == appname)
-            app->set_os(os);
-}
-
-void
-AppSystem::chmanf(const std::string& appname, Manufacturer *manf)
-{
-    for (auto&& app : apps)
-        if (app->get_name() == appname)
-            app->set_manf(manf);
-}
-
-void
-AppSystem::chprice(const std::string& appname, int price)
-{
-    for (auto&& app : apps)
-        if (app->get_name() == appname)
-            app->set_price(price);
-}
-
-void
-AppSystem::chgenre(const std::string& appname, const std::string& genre)
-{
-    for (const auto& app : apps)
-        if (Game *o = dynamic_cast<Game *>(app))
-            if (o->get_name() == appname)
-                o->set_genre(genre);
-}
-
-void
-AppSystem::chonline(const std::string& appname, bool online)
-{
-    for (const auto& app : apps)
-        if (Game *o = dynamic_cast<Game *>(app))
-            if (o->get_name() == appname)
-                o->set_online(online);
-}
-
-void
-AppSystem::chexts(const std::string& appname, const std::vector<std::string> exts)
-{
-    for (const auto& app : apps)
-        if (Office *o = dynamic_cast<Office *>(app))
-            if (o->get_name() == appname)
-                o->set_exts(exts);
 }
 
 void
