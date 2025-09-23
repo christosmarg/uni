@@ -119,7 +119,7 @@ void constructor3(const Student& s3)
 
 	float *gr = s3.get_grades();
 	std::cout << "s3.get_grades(): ";
-	for (int i = 0; i < s3.get_psubj(); i++)
+	for (unsigned int i = 0; i < s3.get_psubj(); i++)
 	{
 		if (i != s3.get_psubj()-1) std::cout << gr[i] << ", ";
 		else std::cout << gr[i] << std::endl << std::endl;
@@ -142,10 +142,6 @@ void setters(Student& s3)
 	float gg[2] = {0.1f, 2.2f};
 	s3.set_grades(gg);
 
-	std::string ss[3] = {"Math", "Physics", "Programming"};
-	s3.set_num_submitted_subjects(3);
-	s3.set_submitted_subjects(ss);
-
 	std::cout << "Setters example using s3" << std::endl;
 	std::cout << "----------------------------" << std::endl;
 	std::cout << "Input: s3.set_AM(\"01010101\")" << '\t';
@@ -157,10 +153,11 @@ void setters(Student& s3)
 	std::cout << "Input: s3.set_psubj(2):" << '\t';
 	std::cout << "Output: s3.get_psubj(): " << s3.get_psubj() << std::endl;
 
-	float *gr = s3.get_grades();
+	float *gr = new float[s3.get_psubj()];
+	gr = s3.get_grades();
 	std::cout << "Input: {0.1f, 2.2f}" << '\t' << '\t';
 	std::cout << "Output: s3.get_grades(): ";
-	for (int i = 0; i < s3.get_psubj(); i++)
+	for (unsigned int i = 0; i < s3.get_psubj(); i++)
 	{
 		if (i != s3.get_psubj()-1)	std::cout << gr[i] << ", ";
 		else std::cout << gr[i] << std::endl;
@@ -169,7 +166,7 @@ void setters(Student& s3)
 	gr = s3.get_grades();
 	std::cout << "Input: s3.add_grade(7.5f)" << '\t';
 	std::cout << "Output: s3.get_grades(): ";
-	for (int i = 0; i < s3.get_psubj(); i++)
+	for (unsigned int i = 0; i < s3.get_psubj(); i++)
 	{
 		if (i != s3.get_psubj()-1) std::cout << gr[i] << ", ";
 		else std::cout << gr[i] << std::endl;
@@ -179,14 +176,24 @@ void setters(Student& s3)
 	std::cout << "Input: s3.set_num_submitted_subjects(3)" << std::endl;;
 	std::cout << "Output: s3.get_num_submitted_subjects(): " << s3.get_num_submitted_subjects() << std::endl << std::endl;
 
-	std::string *ssj = s3.get_submitted_subjects();
+	std::string ss[3] = {"Math", "Physics", "Programming"};
+	s3.set_num_submitted_subjects(3);
+	s3.set_submitted_subjects(ss);
+
+	std::string *ssj = new std::string[s3.get_num_submitted_subjects()];
+	ssj = s3.get_submitted_subjects();
 	std::cout << "Input: {\"Math\", \"Physics\", \"Programming\"}" << std::endl;;
 	std::cout << "Output: s3.get_submitted_subjects(): ";
-	for (int i = 0; i < s3.get_num_submitted_subjects(); i++)
+	for (unsigned int i = 0; i < s3.get_num_submitted_subjects(); i++)
 	{
 		if (i != s3.get_num_submitted_subjects()-1) std::cout << ssj[i] << ", ";
 		else std::cout << ssj[i] << std::endl;
 	}
+	
+	gr = nullptr;
+	ssj = nullptr;
+	delete[] gr;
+	delete[] ssj;
 }
 
 void getters(const Subject& sb)

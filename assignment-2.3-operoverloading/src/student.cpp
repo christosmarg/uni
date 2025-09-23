@@ -45,15 +45,18 @@ float *Student::convert_PSG(const float *grades)
 void Student::add_grade(float grade)
 {
 	float *tmp = new float[psubj+1];
-	std::copy(this->grades, this->grades+psubj, tmp);
-	tmp[this->psubj] = grade;
-	this->grades = tmp;
+	std::copy(grades, grades+psubj, tmp);
+	tmp[psubj] = grade;
+	delete[] grades;
+	grades = new float[psubj+1];
+	std::copy(tmp, tmp+psubj+1, grades);
 	psubj++;
+	delete[] tmp;
 }
 
 void Student::detailed_print() const
 {
-	for (int i = 0; i < psubj; i++)
+	for (unsigned int i = 0; i < psubj; i++)
 	{
 		std::cout << "Subject " << i+1 << ": ";
 		std::cout << grades[i] << std::endl;		
@@ -64,7 +67,7 @@ void Student::detailed_print() const
 float Student::calc_average() const
 {
 	float sum = 0;
-	for (int i = 0; i < psubj; i++)
+	for (unsigned int i = 0; i < psubj; i++)
 		sum += grades[i];
 	float average = sum / psubj;
 	return average;
