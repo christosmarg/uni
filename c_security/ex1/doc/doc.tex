@@ -1,0 +1,252 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[greek,english]{babel}
+\usepackage{alphabeta}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{mathtools}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{siunitx}
+\usepackage[margin=0.5in]{geometry}
+\usepackage[backend=bibtex]{biblatex}
+
+\lstset{basicstyle=\footnotesize\ttfamily,breaklines=true}
+
+\title{Εργαστήριο Ασφάλειας στην Τεχνολογία της Πληροφορίας -- Εργασία 1}
+\author{Χρήστος Μαργιώλης -- 19390133}
+\date{Απρίλιος 2022}
+
+\begin{document}
+
+\begin{titlepage}
+        \maketitle
+        \begin{figure}[t!]
+        \begin{center}
+        \includegraphics[scale=0.3]{./res/uniwalogo.png} \\
+        \Large
+        \textbf{Πανεπιστήμιο Δυτικής Αττικής} \\
+        \large
+        Τμήμα Μηχανικών Πληροφορικής και Ηλεκτρονικών Υπολογιστών
+        \end{center}
+        \end{figure}
+\end{titlepage}
+
+\renewcommand{\contentsname}{Περιεχόμενα}
+\tableofcontents
+\pagebreak
+
+\section{Δομή αρχείων}
+
+\subsection{Αρχεία C}
+
+Ο κώδικας C, για δική μου διευκόλυνση στην δοκιμή διαφόρων εισόδων, περιέχει και
+ρουτίνες διαβάσματος αρχείων, πέρα από την επίλυση των προβλημάτων. Τα περισσότερα
+προγράμματα χρησιμοποιούνται σε συνδυασμό με κάποιο από τα scripts που αναλύονται
+παρακάτω. Αυτό προσθέτει μεν πολυπλοκότητα, αλλά κάνει τα προγράμματα πιο ευέλικτα.
+Σε κάθε δραστηριότητα εξηγώ πως πρέπει να τρέξουμε το πρόγραμμα.
+
+\subsection{Scripts}
+
+Υπάρχουν τα εξής 3 βοηθητικά scripts:
+\begin{itemize}
+	\item \lstinline{atoh}: Μετατρέπει ένα string από ASCII σε Hex.
+	\item \lstinline{htoa}: Μετατρέπει ένα string από Hex σε ASCII.
+	\item \lstinline{tests}: Αναδεικνύει/αυτοματοποιεί την λειτουργία
+		όλων των προγραμμάτων.
+\end{itemize}
+
+\subsection{Αρχεία δεδομένων}
+
+Στο directory \lstinline{src/dat} βρίσκονται αρχεία δεδομένων που
+χρησιμοποιούνται από τα προγράμματα. 'Ολα τα αρχεία ακολουθούν την ονομασία
+\lstinline{<program>.in} όπου \lstinline{program} το όνομα του προγράμματος που
+το χρησιμοποιεί. Προκειμένου να αποφευχθεί τυχόν περιττή πολυπλοκότητα, τα
+προγράμματα δεν κάνουν ελέγχους εγκυρότητας των αρχείων εισόδου.
+
+\subsection{Makefile}
+
+Το \lstinline{Makefile} διαθέτει τις παρακάτω επιλογές:
+\begin{itemize}
+	\item \lstinline{make}: Κάνει compile όλα τα προγράμματα.
+	\item \lstinline{make clean}: Σβήνει τα εκτελέσιμα αρχεία που έχουν
+		παραχθεί.
+\end{itemize}
+
+\section{Δραστηριότητα 1: Δημιουργία ιδιωτικού κλειδιού}
+
+Κώδικας: \lstinline{priv.c} \\
+Χρήση: \lstinline{priv [-v] input} \\
+
+Για να δημιουργήσουμε ένα ιδιωτικό κλειδί RSA, πρέπει αρχικά να υπολογίσουμε
+την συνάρτηση:
+\[\phi(n) = (p-1)(q-1)\]
+Στην συνέχεια, θα υπολογίσουμε την εξίσωση:
+\[e \cdot d \mod \phi(n) = 1\]
+Λύνοντας ως προς $d$. Ο υπολογισμός του ιδιωτικού κλειδιού μέσα στο πρόγραμμα
+γίνεται με τις εξής εντολές: \\
+
+\begin{lstlisting}[language=C]
+	...
+	BN_dec2bn(&one, "1");
+	BN_sub(foo, p, one);
+	BN_sub(bar, q, one);
+	BN_mul(phi, foo, bar, ctx);
+	BN_mod_inverse(d, e, phi, ctx);
+\end{lstlisting}
+
+Το πρόγραμμα, όταν το τρέξουμε απλώς με το αρχείο εισόδου, τυπώνει το
+ιδιωτικό κλειδί. Αν του δώσουμε και την επιλογή \lstinline{-v}, τυπώνει
+αναλυτικά τα $e$, $n$ και $d$. Η επιλογή αυτή είναι χρήσιμη για την
+παραγωγή του αρχείου εισόδου που χρησιμοποιείται για την κρυπτογράφηση
+μηνυμάτων.
+
+Ενδεικτικά τρεξίματα: \\
+
+\begin{lstlisting}
+	$ ./priv dat/priv.in
+	63F67E805D8DEB0B4182C57C3DC24F3C1350CF182E8ABF85FD24062A3BC7F2EB
+
+	$ ./priv -v dat/priv.in
+	e: 0D88C3
+	n: 71D9BBC5C01F9B50DDFE5F2EC331FAB21081009D014E9615C277670C61591ECF
+	d: 63F67E805D8DEB0B4182C57C3DC24F3C1350CF182E8ABF85FD24062A3BC7F2EB
+\end{lstlisting}
+
+\section{Δραστηριότητα 2: Κρυπτογράφηση μηνύματος}
+
+Κώδικας: \lstinline{encrypt.c} \\
+Χρήση: \lstinline{./atoh 'msg' | encrypt input} \\
+
+Η κρυπτογράφηση ενός μηνύματος γίνεται με τον τύπο:
+\[C = P^e \mod n\]
+Και η αποκρυπτογράφηση του:
+\[P = C^d \mod n\]
+
+Η συνάρτηση OpenSSL για την πράξη αυτή είναι η \lstinline{BN_mod_exp()}. Οι
+παρακάτω εντολές στον κώδικα εκτελούν την (απο)κρυπτογράφηση: \\
+
+\begin{lstlisting}[language=C]
+	...
+	/* Encrypt message */
+	BN_mod_exp(encrstr, str, e, n, ctx);
+	/* Decrypt message */
+	BN_mod_exp(decrstr, encrstr, d, n, ctx);
+\end{lstlisting}
+
+Παρακάτω φαίνεται ένα ενδεικτικό τρέξιμο. Το μήνυμα μετατρέπεται σε Hex με την
+χρήση του \lstinline{atoh} script. Αξίζει να σημειωθεί ότι στην υλοποίησή μου,
+τα $e$, $n$ και $d$ υπολογίζονται από το \lstinline{priv.c} και
+χρησιμοποιούνται κατευθείαν από το \lstinline{encrypt.c} ώστε να αποφευχθεί η
+επανάληψη κώδικα, εξ'ου και η χρήση του \lstinline{priv} στην αρχή: \\
+
+\begin{lstlisting}
+	$ ./priv -v dat/priv.in | awk '{print $2}' > dat/encrypt.in
+	$ ./atoh 'Christos Margiolis' | ./encrypt dat/encrypt.in
+	received: 69726843736F747372614D206C6F69677369
+	encrypted: 192FDF7BCA2F402253E344F1A25476D4276523750DED4BE6FC058F179219BA6D
+	decrypted: 69726843736F747372614D206C6F69677369
+\end{lstlisting}
+
+\section{Δραστηριότητα 3: Αποκρυπτογράφηση μηνύματος}
+
+Κώδικας: \lstinline{decrypt.c} \\
+Χρήση: \lstinline{decrypt input | htoa} \\
+
+'Οπως και στην δραστηριότητα 3, χρησιμοποιείται ο ίδιος τύπος για την
+αποκρυπτογράφηση ενός μηνύματος. Η υλοποίηση είναι η ίδια, με την διαφορά ότι
+τα δεδομένα εισόδου είναι διαφορετικά. Το πρόγραμμα τυπώνει το
+αποκρυπτογραφημένο μήνυμα σε Hex, οπότε διοχετεύουμε την έξοδό του στο
+\lstinline{htoa} script ώστε να μετατραπεί σε ASCII: \\
+
+\begin{lstlisting}
+	$ ./decrypt dat/decrypt.in | ./htoa
+	INFOSEC Spring 2022
+\end{lstlisting}
+
+\section{Δραστηριότητα 4: Υπογραφή μηνύματος}
+
+Κώδικας: \lstinline{sign.c} \\
+Χρήση: \lstinline{atoh 'msg' | sign input} \\
+
+Η υπογραφή ενός μηνύματος γίνεται με τον τύπο:
+\[S = H(P)^d \mod n\]
+
+Στον κώδικα, υλοποίηση είναι γίνεται ως εξής: \\
+\begin{lstlisting}[language=C]
+	...
+	BN_mod_exp(sign, str, d, n, ctx);
+\end{lstlisting}
+
+Στο παρακάτω ενδεικτικό τρέξιμο, παρατηρούμε ότι μία πολύ μικρή αλλαγή στο
+μήνυμα θα παράξει τελείως διαφορετική υπογραφή, οπότε είμαστε και σίγουροι ότι
+τα μηνύματα δεν ήτανε ίδια: \\
+
+\begin{lstlisting}
+	$ ./atoh 'This is a message' | ./sign dat/decrypt.in
+	96798DC95A5ECBBEF35D6D68588157CA2DAD163B45453B4B6D80FCC3BE15E8ED
+
+	$ ./atoh 'This iz a message' | ./sign dat/decrypt.in
+	D7562984FFA684E2850A2763F4DD1DA045EFD2DB4CFBF6F40E6579F3E3AD9536
+\end{lstlisting}
+
+\section{Δραστηριότητα 5: Επαλήθευση υπογραφής}
+
+Η επαλήθευση της υπογραφής γίνεται με τον τύπο:
+\[Digest = S^e \mod n\]
+
+Στον κώδικα, υλοποίηση είναι γίνεται ως εξής: \\
+\begin{lstlisting}[language=C]
+	...
+	BN_mod_exp(str, sign, e, n, ctx);
+\end{lstlisting}
+
+\subsection{Περίπτωση Α}
+
+Αρχικά θα δώσουμε ως είσοδο την έγκυρη υπογραφή:
+
+\begin{lstlisting}
+	$ ./verify dat/verify1_cor.in
+	e: 010001
+	n: AE1CD4DC432798D933779FBD46C6E1247F0CF1233595113AA51B450F18116115
+	sign: 643D6F34902D9C7EC90CB0B2BCA36C47FA37165C0005CAB026C0542CBDB6802F
+	str: 4C61756E63682061206D697373696C652E
+
+	$ ./verify dat/verify1_cor.in | tail -1 | awk '{print $2}' | ./htoa
+	Launch a missile.
+\end{lstlisting}
+
+'Οταν αλλάξουμε το τελευταίο byte της υπογραφής, παρατηρούμε ότι η επαλήθευση
+δεν είναι έγκυρη:
+
+\begin{lstlisting}
+	$ ./verify dat/verify1_inc.in
+	e: 010001
+	n: AE1CD4DC432798D933779FBD46C6E1247F0CF1233595113AA51B450F18116115
+	sign: 643D6F34902D9C7EC90CB0B2BCA36C47FA37165C0005CAB026C0542CBDB6803F
+	str: 91471927C80DF1E42C154FB4638CE8BC726D3D66C83A4EB6B7BE0203B41AC294
+
+	$ ./verify dat/verify1_cor.in | tail -1 | awk '{print $2}' | ./htoa
+	??,O?c??rm=f?:N?????
+\end{lstlisting}
+
+\subsection{Περίπτωση Β}
+
+Από το παρακάτω τρέξιμο, βλέπουμε ότι η υπόγραφη είναι πράγματι της Alice:
+
+\begin{lstlisting}
+	$ ./verify dat/verify2.in
+	e: 010001
+	n: DCBFFE3E51F62E09CE7032E2677A78946A849DC4CDDE3A4D0CB81629242FB1A5
+	sign: DB3F7CDB93483FC1E70E4EACA650E3C6505A3E5F49EA6EDF3E95E9A7C6C7A320
+	str: 506C65617365207472616E73666572206D652024323030302E416C6963652E
+
+	$ ./verify dat/verify2.in | tail -1 | awk '{print $2}' | ./htoa
+	Please transfer me $2000.Alice.
+\end{lstlisting}
+
+\section{Δραστηριότητα 6: Μη-αυτόματη επαλήθευση πιστοποιητικού X.509}
+
+<++>
+
+\end{document}
