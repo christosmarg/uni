@@ -1,7 +1,8 @@
+#include <algorithm>
 #include <cstring>
 #include <iostream>
 #include <iomanip>
-#include <algorithm>
+#include <memory>
 #include <string>
 
 class Student
@@ -224,28 +225,26 @@ static void addgrd(Student& s3);
 int
 main(int argc, char **argv)
 {
-    Student *s1 = new Student("12345678", std::string("Name Surname"));
+    std::unique_ptr<Student> s1 =
+        std::make_unique<Student>("12345678", std::string("Name Surname"));
     system("clear || cls");
     constructor1(*s1); cont();
     ostream_overload(*s1); cont();
-    delete s1;
     
-    Student *s2 = new Student("92345678", std::string("Name Surnamington"), 2);
+    std::unique_ptr<Student> s2 =
+        std::make_unique<Student>("92345678", std::string("Name Surnamington"), 2);
     constructor2(*s2); cont();
 
-    Student *copystud = new Student(*s2);
+    std::unique_ptr<Student> copystud = std::make_unique<Student>(*s2);
     copy_constructor(*copystud); cont();
-    delete copystud;
-    delete s2;
 
-    float *grd = new float[4]{9.4f, 8.4f, 5.5f, 6.3f};
-    Student *s3 = new Student("72345678", std::string("Name Surnaming"), 2, 4, grd);
-    delete[] grd;
+    std::unique_ptr<float[]> grd(new float[4]{9.4f, 8.4f, 5.5f, 6.3f});
+    std::unique_ptr<Student> s3 = 
+        std::make_unique<Student>("72345678", std::string("Name Surnaming"), 2, 4, grd.get());
     constructor3(*s3); cont();
     detprint(*s3); cont();
     setters(*s3);
     addgrd(*s3); cont();
-    delete s3;
 
     return 0;
 }
@@ -345,9 +344,8 @@ setters(Student& s3)
     s3.set_name("AAAA");
     s3.set_semester(100);
     s3.set_pcourses(2);
-    float *gg = new float[2]{0.1f, 2.2f};
-    s3.set_grades(gg);
-    delete[] gg;
+    std::unique_ptr<float> gg(new float[2]{0.1f, 2.2f});
+    s3.set_grades(gg.get());
 
     std::cout << "Setters example using s3" << std::endl;
     std::cout << "----------------------------" << std::endl;

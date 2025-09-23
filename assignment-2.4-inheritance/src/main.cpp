@@ -1,3 +1,4 @@
+#include <memory>
 #include "appsystem.h"
 
 std::ostream& operator<< (std::ostream& stream, const AppSystem& sys);
@@ -10,34 +11,34 @@ static void getapps(const AppSystem& sys);
 int
 main(int argc, char **argv)
 {
-    AppSystem sys;
+    std::unique_ptr<AppSystem> sys = std::make_unique<AppSystem>();
     system("clear || cls");
-    if (!sys.import_data<Manufacturer>("res/manfdata.csv")) return -1;
-    if (!sys.import_data<App>("res/appdata.csv")) return -1;
-    if (!sys.import_data<Review>("res/revs.csv")) return -1;
+    if (!sys->import_data<Manufacturer>("res/manfdata.csv")) return -1;
+    if (!sys->import_data<App>("res/appdata.csv")) return -1;
+    if (!sys->import_data<Review>("res/revs.csv")) return -1;
 
     cont("Imported data");
-    std::cout << sys << std::endl;
+    std::cout << *sys << std::endl;
     
-    pluseqs(sys);
+    pluseqs(*sys);
     cont("Additional data");
-    std::cout << sys << std::endl;
+    std::cout << *sys << std::endl;
 
-    edit(sys);
+    edit(*sys);
     cont("Editing data");
-    std::cout << sys << std::endl;
+    std::cout << *sys << std::endl;
 
-    remove(sys);
+    remove(*sys);
     cont("Removing data");
-    std::cout << sys << std::endl;
+    std::cout << *sys << std::endl;
 
     cont("");
-    getapps(sys);
+    getapps(*sys);
 
     cont("");
-    if (!sys.export_data<Manufacturer>("res/manfdata_out.csv")) return -1;
-    if (!sys.export_data<App>("res/appdata_out.csv")) return -1;
-    if (!sys.export_data<Review>("res/revs_out.csv")) return -1;
+    if (!sys->export_data<Manufacturer>("res/manfdata_out.csv")) return -1;
+    if (!sys->export_data<App>("res/appdata_out.csv")) return -1;
+    if (!sys->export_data<Review>("res/revs_out.csv")) return -1;
     std::printf("\nThank you :)\n");
 
     return 0;
