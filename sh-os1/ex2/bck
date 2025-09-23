@@ -1,24 +1,40 @@
 #!/bin/sh
 
+# ΧΡΗΣΤΟΣ ΜΑΡΓΙΩΛΗΣ - [REDACTED]
+
 main() {
-        # allow > 3?
+        # We could allow more than 4 command line arguments
+        # since it's not going to make a difference, but for
+        # safety, we'll exit if they're not exactly 4.
         test $# -eq 3 || usage
 
+        # Give readable names to each argument.
         username=${1}
         src=${2}
         dst=${3}
 
+        # Error checks.
+        # In order for `username` to really be a user's name, it
+        # has to exist in `/etc/passwd`.
         test ! -z "$(grep -w "^${username}" /etc/passwd)" ||
         err "'${username}' is not in /etc/passwd"
+
+        # The -e options means anything (file, directory, device, etc.).
         test -e ${src} || err "${src}: no such file or directory"
         test -e ${dst} || err "${dst}: no such file or directory"
 
+        # Create an archive if `dst` is a directory.
         test -d ${dst} && tar -cvf "${dst}/${src##*/}.tar" ${src}
-        # handle tar.*
+
+        # Append to `dst` only if it is a tar archive. If it's a non-archive
+        # then we cannot append since that would not make sense.
+        # `{dst##*.}` means that we want to get only its extension, if any.
         test ${dst##*.} = "tar" && tar -rf ${dst} ${src}
 }
 
 usage() { 
+        # `{0##*/}` means the first argument (i.e the script's name) with
+        # its path stripped, if it exists. 
         echo "usage: ${0##*/} username src dst" 1>&2
         exit 1
 }
@@ -28,4 +44,5 @@ err() {
         exit 1
 }
 
+# Pass all command line arguments to `main`.
 main "$@"

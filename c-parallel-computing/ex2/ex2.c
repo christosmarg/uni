@@ -2,18 +2,18 @@
 #include <stdlib.h>
 #include <mpi.h>
 
-/* constants */
+/* Flags */
 #define FIND_XMIN       1 << 0
 #define FIND_XMAX       1 << 1
 #define COUNT_BELOW_AVG 1 << 2
 #define COUNT_ABOVE_AVG 1 << 3
 
-struct Pair {
-        float val;      /* max value in array */
-        int i;          /* index of max */
-};
+typedef struct {
+        float val;      /* Max value in array */
+        int i;          /* Index of max */
+} Pair;
 
-/* function declarations */
+/* Function declarations */
 static float     input(const char *, int);
 static float     find(int);
 static float     findavg(float *, int);
@@ -21,18 +21,19 @@ static float     calcavg(void);
 static int       count(float, int);
 static float     calcvar(float);
 static float    *calcd(float, float);
-struct Pair      findmax(float *);
+static Pair      findmax(float *);
 static float    *calcpfxsums(void);
 static void      printv(const char *, const float *);
 static void     *emalloc(size_t);
 
-/* global variables */
+/* Global variables */
 static int rank, nproc, root = 0;
 static int *scounts, *displs;
 static float *vec, *localvec;
 static int n, localn;
 
-/* function implementations */
+/* Function implementations */
+/* Formatted input */
 static float
 input(const char *fmt, int i)
 {
@@ -43,9 +44,11 @@ input(const char *fmt, int i)
         printf("%s", buf);
         scanf("%f", &n);
         getchar();
+
         return n;
 }
 
+/* Find `xmin` and `xmax` depending on the `flag` argument. */
 static float
 find(int flag)
 {
@@ -55,35 +58,47 @@ find(int flag)
         int i;
 
         res = emalloc(nproc * sizeof(float));
+        /*
+         * Loop through each local vector and assign the local
+         * result depending on which of the two flags is set 
+         */
         for (i = 0; i < localn; i++)
                 if ((flag & FIND_XMIN && localvec[i] < localres)
                 ||  (flag & FIND_XMAX && localvec[i] > localres))
                         localres = localvec[i];
+        /* Send local results to `root` */
         MPI_Gather(&localres, 1, MPI_FLOAT, res, 1, MPI_FLOAT, root, MPI_COMM_WORLD);
 
         if (rank == root)
+                /* Same process as above */
                 for (i = 0; i < nproc; i++)
                         if ((flag & FIND_XMIN && res[i] < finalres)
                         ||  (flag & FIND_XMAX && res[i] > finalres))
                                 finalres = res[i];
 
+        /* Everyone has to know the final result */
         MPI_Bcast(&finalres, 1, MPI_FLOAT, root, MPI_COMM_WORLD);
         free(res);
         
         return finalres;
 }
 
+/*
+ * Small utility function for `calcavg` to avoid code duplication.
+ * Calcuates the average for a given vector
+ */
 static float
-findavg(float *vec, int len)
+findavg(float *v, int len)
 {
         float sum = 0.0f;
         int i = 0;
 
         for (; i < len; i++)
-                sum += vec[i];
+                sum += v[i];
         return (sum / (float)len);
 }
 
+/* Calculate the global average */
 static float
 calcavg(void)
 {
@@ -101,6 +116,10 @@ calcavg(void)
         return finalavg;
 }
 
+/* 
+ * Count how many elements are below or above average based on the
+ * `flag` argument. Similar logic as with `find` above.
+ */
 static int
 count(float avg, int flag)
 {
@@ -122,6 +141,7 @@ count(float avg, int flag)
         return finalres;
 }
 
+/* Calculate the global variance */
 static float
 calcvar(float avg)
 {
@@ -145,6 +165,9 @@ calcvar(float avg)
         return finalvar;
 }
 
+/* Generate D. A vector where each element is 
+ * ((xi - xmin) / (xmax - xmin)) * 100.
+*/
 static float *
 calcd(float xmin, float xmax)
 {
@@ -165,49 +188,49 @@ calcd(float xmin, float xmax)
         return finald;
 }
 
-struct Pair
+/* Find global max and MAXLOC */
+static Pair
 findmax(float *d)
 {
-        struct Pair in, out;
-        float *locald;
-        int i = 0;
+        Pair in, out;
+        int i = 1;
 
-        locald = emalloc(localn * sizeof(float));
-        MPI_Scatterv(d, scounts, displs, MPI_FLOAT, locald, localn, MPI_FLOAT,
-                root, MPI_COMM_WORLD);
-
-        in.val = *locald;
+        in.val = *d;
         in.i = 0;
-        for (; i < localn; i++) {
-                if (in.val < locald[i]) {
-                        in.val = locald[i];
+        for (; i < n; i++) {
+                if (in.val < d[i]) {
+                        in.val = d[i];
                         in.i = i;
                 }
         }
         in.i += rank * localn;
         MPI_Reduce(&in, &out, 1, MPI_FLOAT_INT, MPI_MAXLOC, root, MPI_COMM_WORLD);
-        free(locald);
 
         return out;
 }
 
+/* Calucate the prefix sums of `vec`. Only world when
+ * n == nproc
+ */
 static float *
 calcpfxsums(void)
 {
-        float *localsums, *finalsums;
+        float *pfxsums;
         float sum = 0.0f;
 
-        localsums = emalloc(nproc * sizeof(float));
-        finalsums = emalloc(n * sizeof(float));
+        pfxsums = emalloc(n * sizeof(float));
 
-        MPI_Scan(localsums, &sum, 1, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
-        /*MPI_Gather(&sum, 1, MPI_FLOAT, finalsums, 1, MPI_FLOAT, root, MPI_COMM_WORLD);*/
+        /* Scan each local vector and assign the result to `sum`. */
+        MPI_Scan(localvec, &sum, 1, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
+        /* Be in sync. */
+        MPI_Barrier(MPI_COMM_WORLD);
+        /* Get results in `pfxsums` */
+        MPI_Gather(&sum, 1, MPI_FLOAT, pfxsums, 1, MPI_FLOAT, root, MPI_COMM_WORLD);
 
-        free(localsums);
-
-        return finalsums;
+        return pfxsums;
 }
 
+/* Utility function to print a vector in a prettier way. */
 static void
 printv(const char *str, const float *v)
 {
@@ -219,6 +242,7 @@ printv(const char *str, const float *v)
         printf("]\n");
 }
 
+/* Error checking `malloc(3)`. */
 static void *
 emalloc(size_t nb)
 {
@@ -234,16 +258,20 @@ emalloc(size_t nb)
 int
 main(int argc, char *argv[])
 {
-        struct Pair dmax;
+        Pair dmax;
         float avg, var, xmin, xmax;
         float *d, *pfxsums;
         int belowavg, aboveavg;
-        int i;
+        int i, rc;
 
-        MPI_Init(&argc, &argv);
+        if ((rc = MPI_Init(&argc, &argv)) != 0) {
+                fprintf(stderr, "%s: cannot initialize MPI.\n", argv[0]);
+                MPI_Abort(MPI_COMM_WORLD, rc);
+        }
         MPI_Comm_size(MPI_COMM_WORLD, &nproc);
         MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
+        /* Read global vector. */
         if (rank == root) {
                 n = input("N: ", 0);
                 vec = emalloc(n * sizeof(float));
@@ -251,51 +279,54 @@ main(int argc, char *argv[])
                         vec[i] = input("vec[%d]: ", i);
         }
 
-        /* move? */
+        /* Send `n` to everyone. */
         MPI_Bcast(&n, 1, MPI_INT, root, MPI_COMM_WORLD);
 
+        /* Will be used for `MPI_Scatterv(3)` and `MPI_Gatherv(3)` later on. */
         scounts = emalloc(nproc * sizeof(int));
         displs = emalloc(nproc * sizeof(int));
-        
         for (i = 0; i < nproc; i++) {
-                /* TODO: explain */
+                /* make it work even if `n` is not a multiple of `nproc`. */
                 scounts[i] = (i != nproc - 1) ? n / nproc : n / nproc + n % nproc;
+                /* take the last `scounts` so that we don't offset +1 each time. */
                 displs[i] = i * scounts[i != 0 ? i-1 : i];
         }
 
+        /* 
+         * Each local `n` is the same as the `scounts` of each process, so we
+         * assign it to `localn` for readablity.
+         */
         localn = scounts[rank];
         localvec = emalloc(localn * sizeof(float));
 
+        /* Scatter the array to each process. */
         MPI_Scatterv(vec, scounts, displs, MPI_FLOAT, localvec, localn,
                 MPI_FLOAT, root, MPI_COMM_WORLD);
         
-        /* part 0.1 - calculate min and max */
+        /* Part 0.1 - Calculate global minimum and maximum. */
         xmin = find(FIND_XMIN);
         xmax = find(FIND_XMAX); 
 
-        /* part 0.2 - calculate average */
+        /* Part 0.2 - Calculate average. */
         avg = calcavg();
 
-        /* part 1 - find how many elements are above or below average */
+        /* Part 1 - Find how many elements are above or below average. */
         belowavg = count(avg, COUNT_BELOW_AVG);
         aboveavg = count(avg, COUNT_ABOVE_AVG);
 
-        /* part 2 - calculate variance */
+        /* Part 2 - Calculate variance. */
         var = calcvar(avg);
 
-        /*
-         * part 3 - make a new vector where each element is:
-         * ((xi - xmin) / (xmax - xmin)) * 100
-         */
+        /* Part 3 - Generate D. */
         d = calcd(xmin, xmax);
 
-        /* part 4 - find dmax and dmaxloc */
+        /* Part 4 - Find dmax and dmaxloc. */
         dmax = findmax(d);
 
-        /* part 5 - prefixs sum of vec */
+        /* Part 5 - Prefix sums of `vec`. */
         pfxsums = calcpfxsums();
 
-        /* print all results */
+        /* Print all results */
         if (rank == root) {
                 printf("\n");
                 printv("X:              ", vec);

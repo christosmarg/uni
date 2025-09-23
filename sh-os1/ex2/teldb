@@ -1,8 +1,12 @@
 #!/bin/sh
 
+# ΧΡΗΣΤΟΣ ΜΑΡΓΙΩΛΗΣ - [REDACTED]
+
+# We'll use this later.
 emptylnregex="^\ *$"
 
 main() {
+        # Parse command line options, exit if no option was passed.
         case ${1} in
                 -a) newentry ;;
                 -l) list ;;
@@ -15,6 +19,10 @@ main() {
 }
 
 usage() {
+        # `{0##*/}` means the first argument (i.e the script's name) with
+        # its path stripped, if it exists. 
+        # The {} around the options denote that only one option has to be
+        # passed to the script.
         echo "usage: ${0##*/} {-a | -l | -n | -c keyword | -d keyword {-b | -r} | -s col}" 1>&2
         echo "" 1>&2
         echo "options:" 1>&2
@@ -30,15 +38,21 @@ usage() {
         exit 1
 }
 
+# Exit with a `usage` message if the string that was passed is empty.
+# This is used to make sure that we'll not write empty fields in `catalog`.
 errempty() {
         test ! -z "${1}" || usage
 }
 
+# Skip empty lines
 skipempty() {
         grep -v "${emptylnregex}"
 }
 
+# -a option - Make a new entry for `catalog`.
 newentry() {
+        # Read fields and include an error check so that
+        # we don't pass an empty field.
         read -erp "First name: " fname
         errempty "${fname}"
 
@@ -51,38 +65,50 @@ newentry() {
         read -erp "Phone number: " phone
         errempty "${phone}"
 
+        # Append all the things we've read to `catalog`.
         printf "%s %s %s %s\n" "${fname}" "${lname}" "${town}" "${phone}" >> catalog
 }
 
+# -l option - Print `catalog` with each line numbered. It also skips empty lines.
 list() {
         nl catalog | skipempty
 }
 
+# -s option - Sort `catalog` by column. We pass the desired column in `main`.
 sortcol() {
         errempty "${1}"
         sort -k "${1}" catalog | skipempty
 }
 
+# -c option - Print only the lines that match a specific keyword.
 filter() {
         errempty "${1}"
         grep "${1}" catalog
 }
 
+# -d option - Delete a line.
 deleteln() {
         errempty "${1}"
         errempty "${2}"
 
+        # Parse sub-options.
         case ${2} in
+                # Replace line with an empty line.
                 -b) sed -i "s/.*${1}.*//" catalog ;;
+                # Just delete the line.
                 -r) sed -i "/${1}/d" catalog ;;
         esac
 }
 
+# -n option - Count empty lines and delete them if the user answers with `y`.
 emptyln() {
         printf "Empty lines in 'catalog': "
         grep "${emptylnregex}" catalog | wc -l
         read -erp "Delete them (y/n)? " del
+        # Delete lines using `deleteln` with `-r` option so that it
+        # just deletes the line, without replacing it with an empty one.
         test "${del}" = "y" && deleteln "${emptylnregex}" "-r"
 }
 
+# Pass all command line arguments to `main`.
 main "$@"

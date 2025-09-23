@@ -1,24 +1,37 @@
 #!/bin/sh
 
+# ΧΡΗΣΤΟΣ ΜΑΡΓΙΩΛΗΣ - [REDACTED]
+
 main() {
+        # We could allow more than 4 command line arguments
+        # since it's not going to make a difference, but for
+        # safety, we'll exit if they're not exactly 4.
         test $# -eq 4 || usage
 
+        # Give readable names to each argument.
         rootdir=${1}
         ndbdirs=${2}
         ndatadirs=${3}
         username=${4}
 
+        # Error checks.
         test -d "${rootdir}" || err "${rootdir}: no such directory"
         isnumber ${ndbdirs} || err "'${ndbdirs}' is not a number"
         isnumber ${ndatadirs} || err "'${ndatadirs}' is not a number"
+
+        # In order for `username` to really be a user's name, it
+        # has to exist in `/etc/passwd`.
         test ! -z "$(grep -w "^${username}" /etc/passwd)" ||
         err "'${username}' is not in /etc/passwd"
 
+        # The actual exercise.
         makedirs "dbfolder" ${ndbdirs}
         makedirs "datafolder" ${ndatadirs}
 }
 
 usage() {
+        # `{0##*/}` means the first argument (i.e the script's name) with
+        # its path stripped, if it exists. 
         echo "usage: ${0##*/} root_dir num_dbdirs num_datadirs username" 1>&2
         exit 1
 }
@@ -29,20 +42,40 @@ err() {
 }
 
 isnumber() {
+        # If the argument does not begin *and* end in a number, then
+        # it's not a number. This also excludes negative numbers, but
+        # we shouldn't accept negative numbers anyway.
         test ! -z "$(echo "${1}" | grep "^[0-9]\+$")"
 }
 
+# Make directories in the following format: dir1, dir2, dir3...
+# If there are already directories with the same name (e.g dir1, dir2), we need
+# to number the new ones taking the existing ones into account (i.e dir3, dir4....).
 makedirs() {
+        # Number of directories to create.
         n=${2}
+
+        # Get the last directory, if any, so that we know what the last number was.
         lastdir=$(ls ${rootdir} | grep "${1}" | sed "s/${1}//g" | sort -V | tail -1)
+
+        # If we didn't find any, we'll start numbering them from 1.
         test -z ${lastdir} && lastdir=0
 
+        # If `n` was already 0 we won't do anything.
         while ! [ $(expr ${n}) = 0 ]; do
+                # `lastdir` now holds the next number.
                 lastdir=$(expr ${lastdir} + 1)
+
+                # Make a directory using the format described above
+                # and change the owner to `username`.
                 mkdir "${rootdir}/${1}${lastdir}" &&
                 chown ${username}: "${rootdir}/${1}${lastdir}"
+
+                # Decrement by 1 until we reach `n = 0` so that
+                # we can exit the loop.
                 n=$(expr ${n} - 1)
         done 
 }
 
+# Pass all command line arguments to `main`.
 main "$@"
