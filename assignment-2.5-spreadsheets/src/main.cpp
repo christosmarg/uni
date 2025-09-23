@@ -7,16 +7,15 @@ main(int argc, char **argv)
 {
 	App app;
 	if (!app.import_data<Course>("res/courses.csv")) return -1;
-	if (!app.import_data<Grades>("res/grades.csv")) return -1;
+	if (!app.import_data<Grade>("res/grades.csv")) return -1;
 	if (!app.import_data<Student>("res/students.csv")) return -1;
-	if (!app.import_matchings("res/matchings.csv")) return -1;
-	//std::cout << app << std::endl;
+	if (!app.import_data<equivalencies>("res/equivalencies.csv")) return -1;
 	
-	std::map<lab::xstring, lab::xstring> a = app.get_matchings();
-	std::map<lab::xstring, lab::xstring>::const_iterator it;
+	equivalencies a = app.get_eqvs();
+	equivalencies::const_iterator it;
 	for (it = a.begin(); it != a.end(); it++)
 		std::cout << it->first << " " << it->second << std::endl;
-	
+
 	return 0;
 }
 

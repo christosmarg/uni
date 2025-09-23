@@ -43,10 +43,10 @@ class xstring
 		friend std::istream& operator>> (std::istream& stream, const xstring& s);
 
 		xstring& append(const xstring& s);
-		xstring& append(const xstring& s, std::size_t i);
 		xstring& append(const char *s);
-		xstring& append(const char *s, std::size_t i);
 		xstring& append(char c);
+		xstring& insert(const xstring& s, std::size_t i);
+		xstring& insert(const char *s, std::size_t i);
 
 		void push_back(char c);
 		void pop_back();
@@ -71,24 +71,24 @@ template<typename T> xstring to_xstr(T val);
 template<typename T> xstring to_xstr(const char *fs, T val);
 template<typename T> const char *getformat();
 
-template<typename T>
-xstring to_xstr(T val)
+template<typename T> xstring
+to_xstr(T val)
 {
 	char buf[25];
 	snprintf(buf, sizeof(buf), getformat<T>(), val);
 	return xstring(buf);
 }
 
-template<typename T>
-xstring to_xstr(const char *fs, T val)
+template<typename T> xstring
+to_xstr(const char *fs, T val)
 {
 	char buf[25];
 	snprintf(buf, sizeof(buf), fs, val);
 	return xstring(buf);
 }
 
-template<typename T>
-const char *getformat()
+template<typename T> const char *
+getformat()
 {
 	if (std::is_same<T, short>::value) return "%hi";
 	if (std::is_same<T, int>::value) return "%d";

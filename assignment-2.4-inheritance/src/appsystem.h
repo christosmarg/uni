@@ -55,8 +55,8 @@ class AppSystem
 		template<typename T> void dealloc(std::vector<T *>& vec);
 };
 
-template<typename T>
-bool AppSystem::parse(std::ifstream& f)
+template<typename T> bool
+AppSystem::parse(std::ifstream& f)
 {
 	try
 	{
@@ -133,8 +133,8 @@ bool AppSystem::parse(std::ifstream& f)
 	return true;
 }
 
-template<typename T>
-bool AppSystem::import_data(const char *fpath)
+template<typename T> bool
+AppSystem::import_data(const char *fpath)
 {
 	std::ifstream f;
 	f.exceptions(std::ifstream::badbit);
@@ -187,8 +187,8 @@ bool AppSystem::import_data(const char *fpath)
 	return true;
 }
 
-template<typename T>
-bool AppSystem::export_data(const char *fpath)
+template<typename T> bool
+AppSystem::export_data(const char *fpath)
 {
 	std::ofstream f;
 	f.exceptions(std::ofstream::failbit | std::ofstream::badbit);
@@ -256,8 +256,8 @@ bool AppSystem::export_data(const char *fpath)
 	return true;
 }
 
-template<typename T>
-void AppSystem::dealloc(std::vector<T *>& vec)
+template<typename T> void
+AppSystem::dealloc(std::vector<T *>& vec)
 {
 	for (auto& v : vec)
 		if (v != nullptr)

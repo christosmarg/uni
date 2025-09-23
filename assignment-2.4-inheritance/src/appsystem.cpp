@@ -217,5 +217,5 @@ AppSystem::err_read(const char *fpath)
 const std::string
 AppSystem::err_write(const char *fpath)
 {
-	return "Error writing to file (" + std::string(fpath) + ").";
+	return "Error writing to file \'" + std::string(fpath) + "\'.";
 }
