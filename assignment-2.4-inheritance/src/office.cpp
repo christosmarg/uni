@@ -7,8 +7,8 @@ Office::Office(const char *serialnum, const std::string& name,
         const int price, const std::vector<std::string>& ext)
     :App(serialnum, name, os, manf, price), extensions(ext) {}
 
-Office::Office(const Office& o)
-    :App(o.serialnum, o.name, o.os, o.manf, o.price) {}
+Office::Office(const Office& of)
+	:App(of.serialnum, of.name, of.os, of.manf, of.price) {}
 
 Office::~Office()
 {

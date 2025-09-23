@@ -13,7 +13,7 @@ class Office final: public App
         Office(const char *serialnum, const std::string& name,
                const std::string& os, Manufacturer *manf,
                const int price, const std::vector<std::string>& ext);
-        Office(const Office& o);
+        Office(const Office& of);
         ~Office();
 
         const std::vector<std::string> get_exts() const {return extensions;}

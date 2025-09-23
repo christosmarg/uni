@@ -18,7 +18,7 @@ App::App(const char *serialnum, const std::string& name,
 }
 
 App::App(const App& app)
-    :serialnum(app.serialnum), name(app.name), os(app.os), manf(app.manf),
+    :serialnum(convsn(app.serialnum)), name(app.name), os(app.os), manf(app.manf),
     price(app.price) {}
 
 App::~App()
@@ -33,6 +33,11 @@ App::~App()
     }
 }
 
+/* 
+ * Makes a copy of a const char array and returns
+ * a temporary array which is meant to be stored in
+ * a member variable.
+ */
 char *
 App::convsn(const char *serialnum)
 {

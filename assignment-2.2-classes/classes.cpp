@@ -81,6 +81,10 @@ Student::get_name() const
     return this->name;
 }
 
+/* 
+ * The function below are marked as constexpr just so they 
+ * can be computed at compile time since everything is hardcoded.
+ */
 constexpr const char *
 Student::get_id() const
 {
@@ -179,6 +183,11 @@ Student::avg() const
     else return 0.0f;
 }
 
+/* 
+ * Makes a copy of a given array of type T and returns a temporary array
+ * which is meant to be stored in a member variable.
+ * If the array is empty it returns nullptr.
+ */
 template<typename T> T *
 Student::conv(const T *arr, std::size_t len) const
 {
@@ -214,6 +223,11 @@ static void detprint (const Student& s3);
 static void setters(Student& s3);
 static void addgrd(Student& s3);
 
+/*
+ * main uses smart pointers since there are quite a few dynamically
+ * allocated objects and so it looks cleaner to let them handle the
+ * deletions.
+ */
 int
 main(int argc, char **argv)
 {
