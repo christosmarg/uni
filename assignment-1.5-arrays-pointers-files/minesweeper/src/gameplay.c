@@ -7,7 +7,7 @@ void selection(WINDOW *gameWin, char **dispboard, char **mineboard, int WIDTH, i
     int chrow, chcol;
     bool gameOver;
     int yMax, xMax, yMiddle, xMiddle;
-    getmaxyx(gameWin, yMax, xMax);
+    getmaxyx(stdscr, yMax, xMax);
     yMiddle = yMax / 2;
     xMiddle = xMax / 2;
 
@@ -23,7 +23,7 @@ void selection(WINDOW *gameWin, char **dispboard, char **mineboard, int WIDTH, i
         gameOver = transfer(dispboard, mineboard, chrow, chcol);
         reveal(gameWin, dispboard, chrow, chcol);
         getchar();
-    } while ((chrow < 0 || chrow > WIDTH-1 || chcol < 0 || chcol > HEIGHT-1) || !gameOver);
+    } while (chrow < 0 || chrow > WIDTH-1 || chcol < 0 || chcol > HEIGHT-1 || !gameOver);
     
     if (gameOver == true)
     {
@@ -51,6 +51,8 @@ void reveal(WINDOW *gameWin, char **dispboard, int chrow, int chcol)
 void game_over(WINDOW *gameWin, char **mineboard, int yMiddle, int xMiddle)
 {
     wclear(gameWin);
-    mvwprintw(gameWin, yMiddle, xMiddle, "Game over :(");
+    mvwprintw(gameWin, yMiddle-11, xMiddle-12, "You hit a mine!");
+    mvwprintw(gameWin, yMiddle-10, xMiddle-10, "Game over :(");
     wrefresh(gameWin);
+    wclear(gameWin);
 }

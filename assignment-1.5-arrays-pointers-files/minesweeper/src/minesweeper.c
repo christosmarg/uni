@@ -41,7 +41,7 @@ void start()
 }
 
 
-void set_mode(WINDOW *menuWin) // later
+void set_mode(WINDOW *menuWin) // loop
 {
     char mode;
     mvwprintw(menuWin, 1, 1, "Keyboard or text mode (k/t): ");
@@ -126,7 +126,7 @@ void game_win(int WIDTH, int HEIGHT, int NMINES)
     int yMax, xMax;
     getmaxyx(stdscr, yMax, xMax);
 
-    WINDOW *gameWin = newwin(43, xMax-10, (yMax/2) - 24, 5);
+    WINDOW *gameWin = newwin(43, xMax-10, (yMax/2) - 24, 5); // fix 43
     box(gameWin, 0, 0);
     refresh();
     wrefresh(gameWin);
@@ -290,10 +290,10 @@ void filewrite(char **mineboard, int WIDTH, int HEIGHT, int hitrow, int hitcol)
     }
     else
     {
-        fprintf(mnsOut, "Mine hit at position (%d, %d)\n\n", hitrow, hitcol); // add actual position
+        fprintf(mnsOut, "Mine hit at position (%d, %d)\n\n", hitrow, hitcol);
         fprintf(mnsOut, "Board overview\n\n");
 
-        for (i = 0; i < WIDTH; i++)
+        for (i = 0; i < WIDTH; i++) // fix inversion
         {
             for (j = 0; j < HEIGHT; j++)
                 fprintf(mnsOut, "%c ", mineboard[i][j]);
