@@ -55,49 +55,55 @@ class Student
 		inline void set_grades(float *grades) {this->grades = convert_PSG(grades);}
 		inline void print_3first() {std::cout << AM << " " << name << " " << semester << std::endl;}
 
-		char *convert_AM(const char *AM)
-		{
-			int len = strlen(AM);
-			this->AM = new char[len+1];
-			std::copy(AM, AM+len, this->AM);
-			return this->AM;
-		}
-
-		float *convert_PSG(const float *grades)
-		{
-			this->grades = new float[psubj];
-			std::copy(grades, grades+psubj, this->grades);
-			return this->grades;	
-		}
-
-		void add_grade(float grade)
-		{
-			float *tmp = new float[psubj+1];
-			std::copy(this->grades, this->grades+psubj, tmp);
-			tmp[psubj] = grade;
-			this->grades = tmp;
-			psubj++;
-		}
-
-		void detailed_print()
-		{
-			for (int i = 0; i < psubj; i++)
-			{
-				std::cout << "Subject " << i+1 << ": ";
-				std::cout << grades[i] << std::endl;		
-			}
-			std::cout << "Average grade: " << std::setprecision(2) << calc_average() << std::endl;
-		}
-
-		float calc_average()
-		{
-			float sum = 0;
-			for (int i = 0; i < psubj; i++)
-				sum += grades[i];
-			float average = sum / psubj;
-			return average;
-		}
+		char *convert_AM(const char *AM);
+		float *convert_PSG(const float *grades);
+		void add_grade(float grade);
+		void detailed_print();
+		float calc_average();
 };
+
+char *Student::convert_AM(const char *AM)
+{
+	int len = strlen(AM);
+	this->AM = new char[len+1];
+	std::copy(AM, AM+len, this->AM);
+	return this->AM;
+}
+
+float *Student::convert_PSG(const float *grades)
+{
+	this->grades = new float[psubj];
+	std::copy(grades, grades+psubj, this->grades);
+	return this->grades;	
+}
+
+void Student::add_grade(float grade)
+{
+	float *tmp = new float[psubj+1];
+	std::copy(this->grades, this->grades+psubj, tmp);
+	tmp[psubj] = grade;
+	this->grades = tmp;
+	psubj++;
+}
+
+void Student::detailed_print()
+{
+	for (int i = 0; i < psubj; i++)
+	{
+		std::cout << "Subject " << i+1 << ": ";
+		std::cout << grades[i] << std::endl;		
+	}
+	std::cout << "Average grade: " << std::setprecision(2) << calc_average() << std::endl;
+}
+
+float Student::calc_average()
+{
+	float sum = 0;
+	for (int i = 0; i < psubj; i++)
+		sum += grades[i];
+	float average = sum / psubj;
+	return average;
+}
 
 int main(int argc, char **argv)
 {
