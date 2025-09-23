@@ -6,7 +6,17 @@ Game::Game()
 Game::Game(const char *serialnum, const std::string& name,
 		const std::string& os, Manufacturer *manf, int price,
 		const std::string& genre, bool online)
-	:App(serialnum, name, os, manf, price), genre(genre), online(online) {}
+	:App(serialnum, name, os, manf, price), genre(genre), online(online)
+{
+	try
+	{
+		if (genre.empty() || genre == "") throw genre;
+	}
+	catch (const std::string& genre)
+	{
+		throw std::runtime_error("Empty game genre.");
+	}
+}
 
 const std::string Game::get_genre() const
 {

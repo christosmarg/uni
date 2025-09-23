@@ -1,9 +1,9 @@
 #ifndef MANUFACTURER_H
 #define MANUFACTURER_H
 
+#include <stdexcept>
 #include <string>
 #include <string.h>
-#include <stdexcept>
 
 class Manufacturer
 {
