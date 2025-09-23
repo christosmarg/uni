@@ -22,7 +22,10 @@ DataHandler::store_data()
 		f.open(datapath);
 		if (f.is_open())
 		{
+			std::cout << "Importing data from \'" << datapath << "\'." << std::endl;
+			std::cout << std::endl;
 			std::cout << "Making data structures and analyzing data." << std::endl;
+
 			lab::xstring skip;
 			lab::getline(f, skip);
 
@@ -34,8 +37,7 @@ DataHandler::store_data()
 			std::map<lab::xstring, Student *>::const_iterator its = studs.find(AM);
 			std::map<lab::xstring, Course *>::const_iterator itc = courses.find(code);
 			if (its != studs.end() && itc != courses.end())
-				grds.insert(std::make_pair(courses[code],
-							std::atof(grade.cstr())));
+				grds.insert(std::make_pair(courses[code], std::atof(grade.cstr())));
 
 			while (f.good())
 			{
@@ -46,8 +48,7 @@ DataHandler::store_data()
 					lab::getline(f, code, ';');
 					lab::getline(f, grade);
 					if (f.eof()) break;
-					if (!analyze(currAM, AM, code,
-								std::atof(grade.cstr()))) break;
+					if (!analyze(currAM, AM, code, std::atof(grade.cstr()))) break;
 				}
 			}
 		}
@@ -119,7 +120,7 @@ DataHandler::miss(lab::xstring AM, lab::xstring code, float grade)
 						studs[AM]->get_lname() + ";" +
 						studs[AM]->get_fname() + ";" +
 						courses[eqvs[code]]->get_code() + ";" +
-						courses[code]->get_name() + ";" +
+						courses[eqvs[code]]->get_name() + ";" +
 						eqvs[code] + ";" +
 						courses[code]->get_name() + ";" +
 						lab::to_xstr<float>("%.1f", grade));
@@ -174,7 +175,15 @@ DataHandler::make_report() const
 void
 DataHandler::summary() const
 {
+	int datacount = 0;
+	for (const auto& dat : data)
+		datacount += dat.second.size();
+
 	std::cout << std::endl;
+	std::cout << "Students: " << studs.size() << std::endl;
+	std::cout << "Courses: " << courses.size() << std::endl;
+	std::cout << "Equivalencies: " << eqvs.size() << std::endl;
+	std::cout << "Total grades stored: " << datacount << std::endl;
 	std::cout << "Grades missing: " << misscount << std::endl;
 	std::cout << "Errors: " << errcount << std::endl;
 	std::cout << std::endl;
@@ -190,23 +199,18 @@ DataHandler::valid_path(const char *fpath) const
 const lab::xstring 
 DataHandler::err_csv(const char *fpath) const
 {
-	lab::xstring err = "Error. File must be of format \'.csv\'. ().";
-	err.insert(fpath, 39);
-	return err;
+	return lab::xstring("Error. File must be of format \'.csv\'. ()").
+		insert(fpath, 39);
 }
 
 const lab::xstring
 DataHandler::err_read(const char *fpath) const
 {
-	lab::xstring err = "Error reading file \'\'.";
-	err.insert(fpath, 20);
-	return err;
+	return lab::xstring("Error reading file \'\'.").insert(fpath, 20);
 }
 
 const lab::xstring
 DataHandler::err_write(const char *fpath) const
 {
-	lab::xstring err = "Error writing to file \'\'.";
-	err.insert(fpath, 23);
-	return err;
+	return lab::xstring("Error writing to file \'\'.").insert(fpath, 23);
 }

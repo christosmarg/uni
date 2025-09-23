@@ -1,6 +1,6 @@
 Type,SN,Name,OS,Manf,Price,Genre,Online,Extensions
-Game,0001,LoL,MAD Robot 4.5,Riot,155,MOBA,Yes,N/A
-Game,0002,CS:GO,MAD Robot 3.0,Valve,14,Shooter,Yes,N/A
-Office,0003,LibreOffice,MAD Robot 2.0,FreeSoftware,0,N/A,N/A,.doc|.xls|.odt|.ods|.ppt|
-Office,1254,zathura,MAD Robot 2.2,Company,0,N/A,N/A,.exe|.bin|.dat|
-Game,0005,minesweeper,MAD Robot 1.0,Chris,0,Puzzle,Yes,N/A
+Game,0001,LoL,NiceOS 4.5,Riot,155,MOBA,Yes,N/A
+Game,0002,CS:GO,GoodOS 3.0,Valve,14,Shooter,Yes,N/A
+Office,0003,LibreOffice,EpicOS 2.0,FreeSoftware,0,N/A,N/A,.doc|.xls|.odt|.ods|.ppt|
+Office,1254,zathura,NiceOS 1.1,Company,0,N/A,N/A,.exe|.bin|.dat|
+Game,0005,minesweeper,NiceOS 0.5,Chris,0,Puzzle,Yes,N/A

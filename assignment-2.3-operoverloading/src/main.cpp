@@ -20,16 +20,12 @@ static void setters(Course& c);
 int
 main(int argc, char **argv)
 {
-	std::string n1 = "Name Surname";
-	std::string n2 = "Name Surnamington";
-	std::string n3 = "Name Surnaming";
-
-	Student *s1 = new Student("12345678", n1);
+	Student *s1 = new Student("12345678", std::string("Name Surname"));
 	system("clear || cls");
 	constructor1(*s1); cont();
 	ostream_overload(*s1); cont();
 	
-	Student *s2 = new Student("92345678", n2, 2);
+	Student *s2 = new Student("92345678", std::string("Name Surnamington"), 2);
 	constructor2(*s2); cont();
 
 	Student *copystud = new Student(*s2);
@@ -41,7 +37,7 @@ main(int argc, char **argv)
 	delete s2;
 
 	float *grd = new float[4]{9.4f, 8.4f, 5.5f, 6.3f};
-	Student *s3 = new Student("72345678", n3, 2, 4, grd);
+	Student *s3 = new Student("72345678", std::string("Name Surnaming"), 2, 4, grd);
 	delete[] grd;
 	constructor3(*s3); cont();
 	detprint(*s3); cont();
@@ -50,9 +46,7 @@ main(int argc, char **argv)
 	submcourses(*s3); cont();
 	Student *s4 = new Student(*s3);
 
-	std::string c = "356431";
-	std::string n = "OOP";
-	Course *oop = new Course(c, n, 2);
+	Course *oop = new Course(std::string("356431"), std::string("OOP"), 2);
 	plusequals_overload(*s3, oop); cont();
 
 	getters(*oop); cont();
@@ -129,11 +123,11 @@ conditional_overload(const Student& s1, const Student& s2, const Student& copyst
 	std::cout << "Conditional operator overloading" << std::endl;
 	std::cout << "----------------------------" << std::endl;
 	if (s2 == copystud) std::cout << "s2 == copystud" << std::endl;
-	if (s1 != s2) std::cout << "s1 != s2" << std::endl;
-	if (s1 < s2) std::cout << "s1 < s2" << std::endl;
-	if (s1 <= s2) std::cout << "s1 <= s2" << std::endl;
-	if (s2 > s1) std::cout << "s2 > s1" << std::endl;
-	if (s2 >= s1) std::cout << "s2 >= s1" << std::endl;
+	if (s1 != s2)		std::cout << "s1 != s2" << std::endl;
+	if (s1 < s2)		std::cout << "s1 < s2" << std::endl;
+	if (s1 <= s2)		std::cout << "s1 <= s2" << std::endl;
+	if (s2 > s1)		std::cout << "s2 > s1" << std::endl;
+	if (s2 >= s1)		std::cout << "s2 >= s1" << std::endl;
 	std::cout << std::endl;
 }
 
@@ -238,13 +232,8 @@ addgrd(Student& s3)
 static void
 submcourses(Student& s3)
 {
-	std::string c1 = "11231";
-	std::string c2 = "56562";
-	std::string n1 = "Discrete Math";
-	std::string n2 = "Physics";
-	
-	Course *a = new Course(c1, n1, 1);
-	Course *b = new Course(c2, n2, 1);
+	Course *a = new Course(std::string("11231"), std::string("Discrete Math"), 1);
+	Course *b = new Course(std::string("56562"), std::string("Physics"), 1);
 	Course **c = new Course *[2]{a, b};
 	s3.set_num_submitted_courses(2);
 	s3.set_submitted_courses(c);
@@ -301,11 +290,8 @@ getters(const Course& c)
 static void
 setters(Course& c)
 {
-	std::string code = "14556";
-	std::string name = "Calculus I";
-
-	c.set_code(code);
-	c.set_cname(name);
+	c.set_code(std::string("14556"));
+	c.set_cname(std::string("Calculus I"));
 	c.set_csemester(1);
 
 	std::cout << "Setters example using Course object" << std::endl;
