@@ -15,8 +15,8 @@ class Office: public App
 				int price, const std::vector<std::string>& ext);
 		~Office();
 
-		const std::vector<std::string> get_exts() const override;
-		void set_exts(const std::vector<std::string>& extensions) override;
+		const std::vector<std::string> get_exts() const;
+		void set_exts(const std::vector<std::string>& extensions);
 };
 
 #endif /* OFFICE_H */

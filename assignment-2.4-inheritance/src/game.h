@@ -15,11 +15,11 @@ class Game: public App
 				const std::string& os, Manufacturer *manf, int price,
 				const std::string& genre, bool online);
 
-		const std::string get_genre() const override;
-		bool get_online() const override;
+		const std::string get_genre() const;
+		bool get_online() const;
 
-		void set_genre(const std::string& genre) override;
-		void set_online(bool online) override;
+		void set_genre(const std::string& genre);
+		void set_online(bool online);
 };
 
 #endif /* GAME_H */
