@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "arrhandler.h"
 #include "fcombinations.h"
+#include "ccolors.h"
 
 
 int *fill_array(int N)
@@ -11,8 +12,10 @@ int *fill_array(int N)
 
     if (arr == NULL)
     {
+        set_color(BOLD_RED);
         printf("Error! Not enough memory, exiting...\n");
         exit(EXIT_FAILURE);
+        set_color(STANDARD);
     }
     else
     {    
