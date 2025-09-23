@@ -9,7 +9,7 @@
 .text
 .globl main
 
-main:
+main:	
         li      $v0, SYS_READ_WORD
         syscall
         
@@ -23,8 +23,7 @@ main:
 nonzero:
         li      $v0, SYS_PRINT_STRING
         la      $a0, nzstr
-        syscall 
-        j       exit
+        syscall
         
 exit:   
         li      $v0, SYS_EXIT

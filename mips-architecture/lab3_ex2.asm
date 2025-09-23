@@ -45,7 +45,7 @@ main:
         # 3. read a string and print its 2nd char
         li      $v0, SYS_READ_STRING
         la      $a0, name
-        la      $a1, 64
+        li      $a1, 64
         syscall
         lb      $a0, name + 1
         li      $v0, SYS_PRINT_CHAR

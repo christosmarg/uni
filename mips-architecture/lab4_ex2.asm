@@ -28,8 +28,6 @@ pos:
         la      $a0, posstr
         syscall
         
-        j exit
-        
 exit:
         li      $v0, SYS_EXIT
         syscall
