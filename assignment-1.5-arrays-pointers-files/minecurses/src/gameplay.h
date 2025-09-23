@@ -23,15 +23,15 @@
 #define VOLUME_DOWN '-'
 #define QUIT 'q'
 
-void play				(struct _win_st* gamew, Board *brd);
-int open_cell			(struct _win_st* gamew, Board *brd, int mby, int mbx, int gameover);
-void handle_flags		(struct _win_st* gamew, Board *brd, int mby, int mbx);
-void defuse_mine		(struct _win_st* gamew, Board *brd, int mby, int mbx);
-void transfer			(Board *brd, int mby, int mbx);
-void reveal				(struct _win_st* gamew, Board *brd, int mby, int mbx, int y, int x);
-int is_defused			(Board *brd, int mby, int mbx);
-void handle_menu		(struct _win_st*, Board *brd);
-void handle_gameover	(struct _win_st* gamew, Board *brd, int ymid, int xmid, int mby, int mbx);
-void handle_win			(struct _win_st* gamew, Board *brd, int ymid, int xmid, int mby, int mbx, int ndefused);
+void play			(struct _win_st* gw, Board *b);
+int open_cell		(struct _win_st* gw, Board *b, int mby, int mbx, int gameover);
+void handle_flags	(struct _win_st* gw, Board *b, int mby, int mbx);
+void defuse_mine	(struct _win_st* gw, Board *b, int mby, int mbx);
+void transfer		(Board *b, int mby, int mbx);
+void reveal			(struct _win_st* gw, Board *b, int mby, int mbx, int y, int x);
+int is_defused		(Board *b, int mby, int mbx);
+void handle_menu	(struct _win_st*, Board *b);
+void handle_gameover(struct _win_st* gw, Board *b, int mby, int mbx);
+void handle_win		(struct _win_st* gw, Board *b, int mby, int mbx, int ndefused);
 
 #endif /* GAMEPLAY_H */
