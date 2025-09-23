@@ -10,6 +10,9 @@ struct Course
 
         Course(const lab::xstring& code, const lab::xstring& name)
             :code(code), name(name) {}
+
+        Course(lab::xstring&& code, lab::xstring&& name)
+            :code(std::move(code)), name(std::move(name)) {}
 };
 
 #endif /* COURSE_H */

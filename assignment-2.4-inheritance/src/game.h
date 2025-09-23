@@ -3,7 +3,7 @@
 
 #include "app.h"
 
-class Game: public App
+class Game final: public App
 {
     private:
         std::string genre;

@@ -17,6 +17,7 @@ class xstring
         xstring();
         xstring(const char *s);
         xstring(const xstring& s);
+        xstring(xstring&& s) noexcept;
         ~xstring();
         
         xstring  operator=  (const xstring& s);
@@ -69,8 +70,8 @@ class xstring
         constexpr char *cstr()  const {return str;}
         constexpr char& front() const {return str[0];}
         constexpr char& back()  const
-            {return (!this->empty()) ? str[len-1] : str[0];};
-        constexpr bool empty()  const {return len == 0;}
+            {return (!empty()) ? str[len-1] : str[0];};
+        constexpr bool empty() const {return len == 0;}
         constexpr std::size_t length() const {return std::strlen(str);}
     
     private:
@@ -104,17 +105,22 @@ to_xstr(const char *fs, T val)
 template<typename T> constexpr const char *
 getformat()
 {
-    if constexpr (std::is_same_v<T, short>) return "%hi";
-    if constexpr (std::is_same_v<T, int>) return "%d";
-    if constexpr (std::is_same_v<T, long>) return "%ld";
-    if constexpr (std::is_same_v<T, long long>) return "%lld";
+    if constexpr (std::is_same_v<T, char>)           return "%c";
+    if constexpr (std::is_same_v<T, unsigned char>)  return "%c";
+    if constexpr (std::is_same_v<T, short>)          return "%hi";
+    if constexpr (std::is_same_v<T, int>)            return "%d";
+    if constexpr (std::is_same_v<T, long>)           return "%ld";
+    if constexpr (std::is_same_v<T, long long>)      return "%lld";
     if constexpr (std::is_same_v<T, unsigned short>) return "%hu";
-    if constexpr (std::is_same_v<T, unsigned int>) return "%u";
-    if constexpr (std::is_same_v<T, unsigned long>) return "%lu";
-    if constexpr (std::is_same_v<T, unsigned long>) return "%llu";
-    if constexpr (std::is_same_v<T, float>) return "%f";
-    if constexpr (std::is_same_v<T, double>) return "%f";
-    if constexpr (std::is_same_v<T, long double>) return "%Lf";
+    if constexpr (std::is_same_v<T, unsigned>)       return "%u";
+    if constexpr (std::is_same_v<T, unsigned int>)   return "%u";
+    if constexpr (std::is_same_v<T, unsigned long>)  return "%lu";
+    if constexpr (std::is_same_v<T, unsigned long>)  return "%llu";
+    if constexpr (std::is_same_v<T, float>)          return "%f";
+    if constexpr (std::is_same_v<T, double>)         return "%f";
+    if constexpr (std::is_same_v<T, long double>)    return "%Lf";
+    if constexpr (std::is_same_v<T, void *>)         return "%p";
+    if constexpr (std::is_same_v<T, char *>)         return "%s";
 }
 }
 
