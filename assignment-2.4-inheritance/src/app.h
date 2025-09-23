@@ -39,10 +39,9 @@ class App
 		void set_manf(Manufacturer *manf);
 		void set_price(int price);
 
-		// add some default functionality
 		virtual const std::string& get_genre() const {}
 		virtual bool get_online() const {}
-		virtual const std::vector<std::string>& get_exts() const {}
+		virtual const std::vector<std::string>& get_exts() const {} 
 };
 
 #endif /* APP_H */

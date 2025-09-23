@@ -1,6 +1,4 @@
 #include "appsystem.h"
-#include <iostream>
-#include <sstream>
 
 AppSystem::AppSystem() {} 
 
@@ -33,22 +31,47 @@ AppSystem& AppSystem::operator+= (Manufacturer *man)
 
 bool AppSystem::read_data(const char *fpath)
 {
-	std::ifstream f(fpath);
-	std::string s;
-	while (f.good())
+	std::ifstream f;
+	f.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+	try
 	{
-		std::getline(f, s, ',');
-		std::cout << s << std::endl; 
+		f.open(fpath);
+		std::string s;
+		while (f.good())
+		{
+			std::getline(f, s, ',');
+		}
+		f.close();
 	}
+	catch (const std::ifstream::failure& e)
+	{
+		std::cerr << "Cannot read file \'" << fpath << "\'." << std::endl <<
+			e.what() << std::endl;
+		return false;
+	}
+	return true;
 }
 
 bool export_data(const char *fpath)
 {
-	std::ofstream f(fpath);
-	while (f.good())
+	std::ofstream f;
+	f.exceptions(std::ofstream::failbit | std::ofstream::badbit);
+	try
 	{
-	
+		f.open(fpath);
+		while (f.good())
+		{
+
+		}
+		f.close();
 	}
+	catch (const std::ofstream::failure& e)
+	{
+		std::cerr << "Cannot read file \'" << fpath << "\'." << std::endl <<
+			e.what() << std::endl;
+		return false;
+	}
+	return true;
 }
 
 void AppSystem::newrev(const std::string& appname, Review *rev)

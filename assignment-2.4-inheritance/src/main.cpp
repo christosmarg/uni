@@ -51,7 +51,7 @@ int main(int argc, char **argv)
 	Manufacturer *cm = new Manufacturer("5678", "Chris", "chris@cm.com");
 	sys += gnu;
 	sys += cm;
-	sys.read_data("res/data.csv");
+	if (!sys.read_data("res/data.csv")) return -1;
 	std::vector<std::string> ext = {".doc", ".xls", ".ppt"};
 	sys += new Office("132456", "LibreOffice", "Linux 2.2", gnu, 15, ext);
 	sys += new Game("731234", "minecurses", "Linux 4.5", cm, 0, "Puzzle", false);
