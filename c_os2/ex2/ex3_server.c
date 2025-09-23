@@ -98,7 +98,6 @@ srv(struct foo *foo)
 			break;
 	}
 	rc = 0;
-
 fail:
 	printf("[%s] connection with client %d closed\n", argv0, f->cfd);
 	(void)close(f->cfd);
@@ -220,10 +219,11 @@ main(int argc, char *argv[])
 
 		/* 
 		 * We'll try and see if the input is an IPv4 address. If
-		 * inet_aton(3) does not fail, the user passed an IPv4 address.
-		 * However if inet_addr(3) fail, we'll assume the user passed
-		 * an hostname. That lets us use both hostnames and IPv4
-		 * addresses as arguments.
+		 * inet_aton(3) does not fail, the user did pass an IPv4 address.
+		 * However if inet_addr(3) fails, we'll assume the user passed
+		 * a hostname. If the hostname was wrong, gethostbyname(3) will
+		 * fail. That lets us use both hostnames and IPv4 addresses
+		 * as arguments.
 		 */
 		if (!inet_aton(*argv, &sin.sin_addr)) {
 			/* 

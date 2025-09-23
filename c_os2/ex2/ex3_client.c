@@ -127,7 +127,6 @@ main(int argc, char *argv[])
 		do {
 			printf("\r%s> n: ", argv0);
 			rc = scanf("%d", &n);
-			/* Flush input buffer */
 			(void)getchar();
 		} while (rc != 1);
 		arr = emalloc(n * sizeof(int));

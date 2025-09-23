@@ -98,6 +98,7 @@ main(int argc, char *argv[])
 	struct foo *f;	/* Each callback will receive this */
 	pthread_t *tds; /* Threads */
 	int totalsum;	/* What its name says */
+	int rc;		/* scanf(3) return value. */
 	int i;		/* Counter */
 
 	f = emalloc(sizeof(struct foo));
@@ -109,16 +110,23 @@ main(int argc, char *argv[])
 	 * we can just give it a new number until it's correct.
 	 */
 	do {
-		printf("p: ");
-		scanf("%d", &f->ntd);
+		printf("\rp: ");
+		/* 
+		 * Keep scanf(3)'s return value to make sure we
+		 * did read valid input.
+		 */
+		rc = scanf("%d", &f->ntd);
+		/* Flush input buffer. */
+		(void)getchar();
 	/* Cannot have < 0 threads. */
-	} while (f->ntd < 0);
+	} while (f->ntd < 0 || rc != 1);
 
 	do {
-		printf("n: ");
+		printf("\rn: ");
 		scanf("%d", &f->n);
+		(void)getchar();
 	/* Make sure `n` is positive and also a multiple of `ntd`. */
-	} while (f->n < 0 || f->n % f->ntd != 0);
+	} while (f->n < 0 || f->n % f->ntd != 0 || rc != 1);
 
 	tds = emalloc(f->ntd * sizeof(pthread_t));
 	f->arr = emalloc(f->n * sizeof(int));
