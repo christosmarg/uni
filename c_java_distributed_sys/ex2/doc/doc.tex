@@ -39,15 +39,46 @@
 \renewcommand{\contentsname}{Περιεχόμενα}
 \tableofcontents
 
-\section{<++>}
+\section{Δομή αρχείων}
+
+\begin{itemize}
+	\item \lstinline{HRInterface}: Interface που περιέχει τις δηλώσεις των
+		μεθόδων του server.
+	\item \lstinline{HRImpl}: Υλοποίηση του interface.
+	\item \lstinline{Room}: Βοηθητική κλάση για την υλοποίηση των δωματίων
+		του ξενοδοχείου.
+	\item \lstinline{HRServer}: Ο server.
+	\item \lstinline{HRClient}: Ο client.
+\end{itemize}
 
 \section{Εκτέλεση κώδικα}
 
-<++>
+Κάνουμε compile τον κώδικα:
+
+\begin{lstlisting}
+	$ javac *.java
+\end{lstlisting}
+
+Ανοίγουμε δύο terminals. Στο ένα ξεκινάμε το \lstinline{rmiregistry} και στο
+άλλο τον server. Σε τρίτο terminal εκτελούμε τον client, ο οποίος μπορεί
+να εκτελεστεί με έναν από τους 4 τρόπους:
+
+\begin{lstlisting}
+	java HRClient list <hostname>
+	java HRClient book <type> <number> <name> <hostname>
+	java HRClient guests <hostname>
+	java HRClient cancel <type> <number> <name> <hostname>
+\end{lstlisting}
 
 \section{Ενδεικτικά τρεξίματα}
 
-<++>
+Τα παρακάτω τρεξίματα δείχνουν τους 4 διαφορετικούς τρόπους εκτέλεσης του
+client, καθώς και τους χειρισμούς περιπτώσεων που μπορούν να προκείψουν (π.χ
+δεν υπάρχουν ελεύθερα δωμάτια, υπάρχουν λιγότερα δωμάτια από όσα θέλει να
+κρατήσει ο πελάτης)
+
+\includegraphics[width=\linewidth]{res/run1.png}
+\includegraphics[width=\linewidth]{res/run2.png}
 
 \section{Κώδικας}
 
