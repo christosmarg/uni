@@ -57,6 +57,7 @@ DataHandler::load_grades()
     catch (const std::ifstream::failure& e)
     {
         errlog.write(ErrLog::ErrType::RUNTIME_ERR, err_read(datapath));
+        throw std::runtime_error(err_read(datapath) + " (" + e.what() + ")");
         return false;
     }
     return true;

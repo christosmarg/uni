@@ -97,7 +97,8 @@ DataHandler::import_data(const char *fpath)
     }
     catch (const std::ifstream::failure& e)
     {
-        errlog.write(ErrLog::ErrType::RUNTIME_ERR, err_read(fpath));
+        errlog.write(ErrLog::ErrType::RUNTIME_ERR, err_read(fpath); 
+        throw std::runtime_error(err_read(fpath) + " (" + e.what() + ")");
     }
 }
 

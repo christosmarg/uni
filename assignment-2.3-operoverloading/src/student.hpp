@@ -32,10 +32,10 @@ class Student
         void operator+= (Course *c);
         Student operator= (const Student& s);
 
-		/* 
-		 * The functions below are marked as constexpr just so they 
-		 * can be computed at compile time since everything is hardcoded.
-		 */
+        /* 
+         * The functions below are marked as constexpr just so they 
+         * can be computed at compile time since everything is hardcoded.
+         */
         constexpr bool operator== (const Student& s) const {return this->semester == s.semester;}
         constexpr bool operator!= (const Student& s) const {return this->semester != s.semester;}
         constexpr bool operator<  (const Student& s) const {return this->semester <  s.semester;}
