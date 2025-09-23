@@ -5,14 +5,14 @@
 #include <string.h>
 #include <unistd.h>
 
+#define LEN(x) (sizeof(x) / sizeof(x[0]))
+
 /*
  * Εργαστήριο ΛΣ2 (Δ6) / Εργασία 2: Άσκηση 1.2 / 2020-2021
  * Ονοματεπώνυμο: Χρήστος Μαργιώλης
  * ΑΜ: 19390133
  * Τρόπος μεταγλώττισης: `cc ex1_2.c -lpthread -o ex1_2`
  */
-
-#define LEN(x) (sizeof(x) / sizeof(x[0]))
 
 struct foo {
 	char *str;
@@ -87,7 +87,6 @@ usage(void)
 	exit(1);
 }
 
-/* Code shared with `ex1_1` is explained in `ex1_1.c`. */
 int
 main(int argc, char *argv[])
 {
