@@ -29,7 +29,7 @@ void x_pair(int *x1, int *x2)
         scanf("%d", x1);
         printf("x2: ");
         scanf("%d", x2);
-    } while (*x1 < 0 || *x1 > *x2 || *x2 > 6); // 0 ≤ Χ1 ≤ Χ2  ≤ 6
+    } while (*x1 < 0 || *x1 > *x2 || *x2 > 6);
 }
 
 
@@ -41,7 +41,7 @@ void y_pair(int *y1, int *y2)
         scanf("%d", y1);
         printf("y2: ");
         scanf("%d", y2);
-    } while (*y1 < 21 || *y1 > *y2 || *y2 > 279); // 21 ≤ Υ1 ≤ Υ2 ≤ 279
+    } while (*y1 < 21 || *y1 > *y2 || *y2 > 279);
 }
 
 
