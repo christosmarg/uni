@@ -81,7 +81,7 @@ thread_callback(void *foo)
 	f->l_max[f->tid] = max;
 
 	/* Calculate the global max right away, no need for more functions. */
-	if (pthread_mutex_lock(&f->mtx) != 0)
+	if (pthread_mutex_lock(&fHandle termination signals->mtx) != 0)
 		err(1, "pthread_mutex_lock");
 	if (f->tid == 0)
 		f->g_max = *f->l_max;

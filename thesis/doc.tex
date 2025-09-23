@@ -8,6 +8,7 @@
 \usepackage{float}
 \usepackage{hyperref}
 \usepackage{tikz}
+\usepackage{csquotes}
 \usetikzlibrary{shapes.geometric, shapes.multipart, arrows}
 \usepackage[margin=0.5in]{geometry}
 \usepackage[nottoc,numbib]{tocbibind}
@@ -17,6 +18,8 @@
 
 % XXX https://polynoe.lib.uniwa.gr/xmlui/handle/11400/55
 % XXX https://polynoe.lib.uniwa.gr/xmlui/bitstream/handle/11400/8820/Vangelis_18390008.pdf?sequence=1&isAllowed=y
+% TODO μεταφορά τα πάντα από άρθρα και paper
+% TODO https://ice.uniwa.gr/wp-content/uploads/2022/12/%CE%9A%CE%B1%CE%BD%CE%BF%CE%BD%CE%B9%CF%83%CE%BC%CF%8C%CF%82-%CE%95%CE%BA%CF%80%CF%8C%CE%BD%CE%B7%CF%83%CE%B7%CF%82-%CE%94%CE%B9%CF%80%CE%BB%CF%89%CE%BC%CE%B1%CF%84%CE%B9%CE%BA%CF%8E%CE%BD-%CE%95%CF%81%CE%B3%CE%B1%CF%83%CE%B9%CF%8E%CE%BD-%CE%A4%CE%9C%CE%A0%CE%A5.pdf
 
 \lstset {
         basicstyle=\ttfamily,
@@ -26,16 +29,16 @@
 	showstringspaces=false
 }
 
-\tikzstyle{header} = [rectangle, minimum width=3cm, minimum
-	height=1cm, text centered, text width=3cm]
-\tikzstyle{box} = [rectangle, minimum width=3cm, minimum
-	height=1cm, text centered, text width=3cm, draw=black]
+\tikzstyle{header} = [rectangle, minimum width=4cm, minimum
+	height=1cm, text centered, text width=4cm]
+\tikzstyle{box} = [rectangle, minimum width=4cm, minimum
+	height=1cm, text centered, text width=4cm, draw=black]
 \tikzstyle{instr} = [trapezium, trapezium left angle=70, trapezium right
-	angle=110, minimum width=3cm, minimum height=1cm, text centered,
+	angle=110, minimum width=4cm, minimum height=1cm, text centered,
 	draw=black]
-\tikzstyle{func} = [rectangle, rounded corners, minimum width=3cm, minimum
-	height=1cm, text centered, text width=3cm, draw=black]
-\tikzstyle{decision} = [diamond, minimum width=3cm, minimum height=1cm, text
+\tikzstyle{func} = [rectangle, rounded corners, minimum width=4cm, minimum
+	height=1cm, text centered, text width=4cm, draw=black]
+\tikzstyle{decision} = [diamond, minimum width=4cm, minimum height=1cm, text
 	centered, draw=black]
 \tikzstyle{arrow} = [thick,->,>=stealth, rounded corners]
 \tikzstyle{chain} = [thick,-,>=stealth]
@@ -108,7 +111,21 @@
 \textbf{Δήλωση συγγραφέα διπλωματικής εργασίας}
 \end{center}
 
-<++>
+Ο κάτωθι υπογεγραμμένος \textbf{Μαργιώλης Χρήστος} του \textbf{Δημητρίου}, με
+αριθμό μητρώου \textbf{19390133}, φοιτητής του Τμήματος Μηχανικών Πληροφορικής
+και Υπολογιστών της Σχολής Μηχανικών του Πανεπιστημίου Δυτικής Αττικής, δηλώνω
+υπεύθυνα ότι: \\
+
+«Βεβαιώνω ότι είμαι συγγραφέας αυτής της Διπλωματικής εργασίας και κάθε βοήθεια
+την οποία είχα για την προετοιμασία της, είναι πλήρως αναγνωρισμένη και
+αναφέρεται στην εργασία. Επίσης, οι όποιες πηγές από τις οποίες έκανα χρήση
+δεδομένων, ιδεών ή λέξεων, είτε ακριβώς είτε παραφρασμένες, αναφέρονται στο
+σύνολό τους, με πλήρη αναφορά στους συγγραφείς, τον εκδοτικό οίκο ή το
+περιοδικό, συμπεριλαμβανομένων και των πηγών που ενδεχομένως χρησιμοποιήθηκαν
+από το διαδίκτυο. Επίσης, βεβαιώνω ότι αυτή η εργασία έχει συγγραφεί από μένα
+αποκλειστικά και αποτελεί προϊόν πνευματικής ιδιοκτησίας τόσο δικής μου, όσο
+και του Ιδρύματος. Παράβαση της ανωτέρω ακαδημαϊκής μου ευθύνης αποτελεί
+ουσιώδη λόγο για την ανάκληση του πτυχίου μου».
 
 \begin{center}
 Ο Δηλών
@@ -126,7 +143,12 @@
 % TODO
 % Mark, Mitchell, καθηγητής, οικογένεια, FBSDF, ...
 
-<++>
+Την προσπάθειά μου αυτή υποστήριξε ο επιβλέπων καθηγητής μου Παναγιώτης
+Καρκαζής, τον οποίο θα ήθελα να ευχαριστήσω.
+
+Ακόμα θα ήθελα να ευχαριστήσω την οικογένειά μου για τη συμπαράσταση κατά τη
+διάρκεια των σπουδών μου, καθώς και τους Mark Johnston, Mitchell Horne και
+FreeBSD Foundation, για την πολύτιμη βοήθειά τους.
 
 \pagebreak
 \shipout\null
@@ -188,6 +210,10 @@
 % used in productions systems, mostly by sysadmins and systems/os developers
 % history: tamches paper
 % REFERENCES
+% https://zinascii.com/2020/fbt-args-and-stack.html
+% https://wiki.freebsd.org/DTrace/Tutorial
+% https://myaut.github.io/dtrace-stap-book/dtrace-stap-book.pdf
+% https://freebsdfoundation.org/wp-content/uploads/2019/01/Debugging-the-FreeBSD-Kernel.pdf
 
 \section{Εισαγωγή στο DTrace}
 
@@ -206,6 +232,16 @@
 %	how do you load kmods?
 % Userspace dtrace
 % REFERENCES
+% new man pages (tracing.7, ...)
+
+Το DTrace είναι ένα framework δυναμικής παρακολούθησης (dynamic tracing
+framework), το οποίο προήλθε από το λειτουργικό σύστημα Solaris το 2005 και
+έπειτα μεταφέρθηκε στο FreeBSD. Μεταξύ άλλων, χρησιμοποιείται για μετρήσεις
+επιδόσεων, αποσφαλμάτωση και παρακολούθηση σε πραγματικό χρόνο, καθώς και
+παρατήρηση συμπεριφοράς συγκεκριμένων υποσυστημάτων. Το DTrace είναι ιδιαίτερα
+ισχυρό χάρη στην γλώσσα D (βλέπε ενότητα \ref{dlang}) --- μία γλώσσα scripting
+που παρομοιάζει την C και την AWK, η οποία περιέχει μεγάλη γκάμα λειτουργιών
+και συναρτήσεων και χρησιμοποιείται για την σύνταξη DTrace scripts.
 
 <++>
 
@@ -214,17 +250,20 @@
 % TODO
 % Providers
 %	mark 00:29:00
+
+Στην ορολογία του DTrace, provider ορίζεται 
+
+<++>
+
+\subsubsection{FBT} \label{fbt}
+
+% TODO
 %	fbt
 %		entry and return points of a func (with args) only
 %		Breakpoint instructions
 %		caveats: tail calls, inline funcs
 %		pid -> fbt for userspace
 %			00:57:00
-
-<++>
-
-\subsubsection{FBT} \label{fbt}
-
 <++>
 
 \subsection{Probes}
@@ -238,7 +277,7 @@
 
 <++>
 
-\subsection{Γλώσσα D}
+\subsection{Γλώσσα D} \label{dlang}
 
 % TODO
 % D language
@@ -252,6 +291,7 @@
 %		collect data and summarize them later
 %		printed when dtrace(1) exits (or SIGINFO -> ctrl+t)
 %		mark 00:39:00-00:54:00
+%	d.7
 
 <++>
 
@@ -300,6 +340,7 @@
 
 % TODO
 %	CTF
+%	ctf(5)
 %	link to docs
 %	diagrams
 %		dwarf
@@ -385,40 +426,13 @@ buffer. Με άλλα λόγια, το kernel γράφει στον ενεργό
 
 <++>
 
-\section{Inline tracing}
-
-% TODO
-% See paper, slides, articles, diagrams
-% Μήπως να το ενσωματώσω σε κάποια άλλη ενότητα;
-
-<++>
-
-\subsection{Τι είναι inline συναρτήσεις}
-
-<++>
-
-\subsection{Γιατί είναι δύσκολη η παρακολούθηση inline συναρτήσεων}
-
-% TODO
-% See paper, slides, articles, links to docs
-
-<++>
-
 \section{kinst}
 
 % TODO
 % See paper, slides, articles, commits, manpage
 %	https://reviews.freebsd.org/D40874
-% Overview
 % Architecture dependent parts
 %	emulation
-% Inline tracing
-%	Τι είναι inline functions
-%	Γιατί είναι δύσκολο να τις κάνουμε trace
-%	Πως το λύνει αυτό ο kinst
-%	dwarf
-%	elf
-%	inlinecall, omitrbp
 % diagrams
 % tail-calls?
 %
@@ -429,15 +443,16 @@ buffer. Με άλλα λόγια, το kernel γράφει στον ενεργό
 %instead of up to two (entry and return) in the case of FBT.  A result of
 %this is that dtrace -l -P kinst will not match any probes.
 
+Ο \lstinline{kinst} είναι ένας νέος DTrace provider χαμηλού επιπέδου, ο οποίος
+αναπτύχθηκε από τον συντάκτη της παρούσας εργασίας, σε συνεργασία με τον Mark
+Johnston \cite{markpres}, ως μέρος του FreeBSD. Δημιουργήθηκε με στόχο να
+αντιμετωπίσει τους περιορισμούς του FBT (βλέπε ενότητα \ref{fbt}), δηλαδή την
+έλλειψη δυνατότητας παρακολούθησης inline συναρτήσεων, καθώς και γενικότερα της
+πιο εξειδικευμένής παρακολουθήσης πέραν της αρχής ή/και του τέλους μίας
+συνάρτησης.
 
-Ο \lstinline{kinst} είναι ένας νέος DTrace provider, ο οποίος αρχικά
-δημιουργήθηκε με στόχο να αντιμετωπίσει τους περιορισμούς του FBT (βλέπε
-ενότητα \ref{fbt}), δηλαδή την έλλειψη δυνατότητας παρακολούθησης inline
-συναρτήσεων, καθώς και γενικότερα της πιο εξειδικευμένής παρακολουθήσης πέραν
-της αρχής ή/και του τέλους μίας συνάρτησης.
-
-Στον πηγαίο κώδικα του FreeBSD, ο κώδικας του \lstinline{kinst} βρίσκεται στο
-\lstinline{sys/cddl/dev/kinst} \cite{kinstsrc} και υποστηρίζεται στις
+Εντός του πηγαίου κώδικα του FreeBSD, ο κώδικας του \lstinline{kinst} βρίσκεται
+στο \lstinline{sys/cddl/dev/kinst} \cite{kinstsrc} και υποστηρίζεται στις
 αρχιτεκτονικές x86-64 (AMD64), ARM64 και RISC-V.
 
 Το όνομα "kinst" είναι εμπνευσμένο από την δημοσίευση των Tamches \& Miller
@@ -452,26 +467,94 @@ buffer. Με άλλα λόγια, το kernel γράφει στον ενεργό
 
 \begin{itemize}
 	\item \lstinline{kinst::<function>:}
+\end{itemize}
+
+Με αυτή την σύνταξη παρακολουθούνται \textit{όλες} οι εντολές assembly της
+συνάρτησης \lstinline{function}. Για παράδειγμα:
+
+\begin{lstlisting}
+	# dtrace -n 'kinst::vm_fault:'
+	dtrace: description 'kinst::vm_fault:' matched 1481 probes
+	CPU     ID                    FUNCTION:NAME
+	  1  71225                       vm_fault:0
+	  1  71226                       vm_fault:1
+	  1  71227                       vm_fault:4
+	  1  71228                       vm_fault:6
+	  1  71229                       vm_fault:8
+	  1  71230                      vm_fault:10
+	  1  71231                      vm_fault:12
+	  1  71232                      vm_fault:13
+	  1  71233                      vm_fault:20
+	[...]
+\end{lstlisting}
+
+Όπως φαίνεται στην έξοδο της παραπάνω εντολής, ο \lstinline{kinst} έφτιαξε
+probes για 1481 εντολές εντός της συνάρτησης \lstinline{vm_fault()}.
+Παρατηρόντας το disassembly της \lstinline{vm_fault()}, βλέπουμε ότι το 1481
+αντιστοιχεί στον συνολικό αριθμό εντολών της συνάρτησης.
+
+Η εύρεση του disassembly μπορεί να γίνει με την χρήση ενός debugger, όπως του
+GDB \cite{gdb}. Στα συγκεκριμένα παραδείγματα χρησιμοποείται o KGDB
+\cite{kgdb}, μία παραλλαγή του GDB που παρέχεται από το FreeBSD, με μερικές
+επιπλέον λειτορυγίες για την καλύτερη αποσφαλμάτωση του πυρήνα του:
+
+\begin{lstlisting}
+	# kgdb
+	(kgdb) set logging on
+	(kgdb) set pagination off
+	(kgdb) disas vm_fault
+	[...]
+	(kgdb) exit
+	$ grep 0x gdb.txt | wc -l
+	    1481
+\end{lstlisting}
+
+\begin{itemize}
 	\item \lstinline{kinst::<function>:<instruction>}
+\end{itemize}
+
+Με αυτή την σύνταξη παρακολουθείται εντός της συνάρτησης \lstinline{function}
+μόνο η εντολή που βρίσκεται στο offset που ορίστηκε στο πεδίο
+\lstinline{instruction}. Το offset αυτό μπορεί να βρεθεί στo disassembly της
+συνάρτησης. Για παράδειγμα:
+
+\begin{lstlisting}
+	# kgdb
+	(kgdb) disas /r vm_fault
+	Dump of assembler code for function vm_fault:
+	   0xffffffff80f4e470 <+0>:     55      push   %rbp
+	   0xffffffff80f4e471 <+1>:     48 89 e5        mov    %rsp,%rbp
+	   0xffffffff80f4e474 <+4>:     41 57   push   %r15
+	[...]
+\end{lstlisting}
+
+Αν υποτεθεί ότι θέλουμε να παρακολουθήσουμε την τρίτη εντολή (\lstinline{push %r15})
+εντός της συνάρτησης \lstinline{vm_fault()}, στην δεύτερη στήλη βλέπουμε ότι η
+εντολή αυτή βρίσκεται στο offset 4. Δίνοντας το offset αυτό στον
+\lstinline{kinst}, μπορούμε να παρακολουθήσουμε μόνο αυτή την εντολή όποτε
+εκτελείται. Επιπλέον θα τυπώσουμε και τα περιεχόμενα του καταχωρητή
+\lstinline{RSI}:
+
+\begin{lstlisting}
+	# dtrace -n 'kinst::vm_fault:4 {printf("%#x", regs[R_RSI]);}'
+	dtrace: description 'kinst::vm_fault:4 ' matched 1 probe
+	CPU     ID                    FUNCTION:NAME
+	  1  71225                       vm_fault:4 0x10652b411000
+	  1  71225                       vm_fault:4 0x10652c341000
+	  1  71225                       vm_fault:4 0x10652c342000
+	  1  71225                       vm_fault:4 0x10652c343000
+	[...]
+\end{lstlisting}
+
+\begin{itemize}
 	\item \lstinline{kinst::<inline_function>:<entry|return>}
 \end{itemize}
 
-Με την πρώτη σύνταξη παρακολουθούνται \textit{όλες} οι εντολές assembly της
-συνάρτησης \lstinline{function}. Για παράδειγμα:
+Με αυτή την σύνταξη παρακολουθείται η αρχή (\lstinline{entry}) ή/και το τέλος
+(\lstinline{return}) μίας \textit{inline} συνάρτησης
+\lstinline{inline_function}. Για παράδειγμα:
 
-<++>
-
-Με την δεύτερη σύνταξη παρακολουθείται εντός της συνάρτησης
-\lstinline{function} μόνο η εντολή που βρίσκεται στο offset που ορίστηκε στο
-πεδίο \lstinline{instruction}. Για παράδειγμα:
-
-<++>
-
-Με την τρίτη σύνταξη παρακολουθείται η αρχή (\lstinline{entry}) ή/και το τέλος
-(\lstinline{return}) μίας inline συνάρτησης \lstinline{inline_function}. Για
-παράδειγμα:
-
-\begin{lstlisting}[caption={Inline tracing}, captionpos=b]
+\begin{lstlisting}
 	# dtrace -n 'kinst::critical_enter:return'
 	dtrace: description 'kinst::critical_enter:return' matched 130 probes
 	CPU     ID                    FUNCTION:NAME
@@ -485,14 +568,19 @@ buffer. Με άλλα λόγια, το kernel γράφει στον ενεργό
 	  0  71024                spinlock_enter:53
 	  0  70947         _epoch_enter_preempt:122
 	  0  70949           _epoch_exit_preempt:28
-	  ^C
+	[...]
 \end{lstlisting}
 
 <++>
 
-\subsection{Ενορχήστρωση εντολών assembly}
+\subsection{Γιατί είναι χρήσιμο κάτι τέτοιο;}
+
+<++>
+
+\subsection{Ενορχήστρωση εντολών assembly} \label{instrumentation}
 
 % TODO
+% kinst_patch_tracepoint
 %Ο \lstinline{kinst} διαθέτει ένα αρχείο συσκευής στο
 %\lstinline{/dev/dtrace/kinst}, το οποίο χρησιμοποιείται για <++>
 
@@ -508,10 +596,10 @@ buffer. Με άλλα λόγια, το kernel γράφει στον ενεργό
 
 Ο \lstinline{kinst} κάνει χρήση τραμπολίνων για την εκτέλεση των εντολών των
 οποίων παρακολουθεί, σε αντίθεση με τον FBT (\ref{fbt}), ο οποίος τις
-«μιμείται»/υλοποιεί (emulation). Ωστόσο, μία βασική διαφορά του FBT είναι ότι
-εφόσον έχει την δυνατότητα να παρακολουθήσει μόνο την αρχή και το τέλος μίας
-συνάρτησης, τα οποία σημεία ορίζονται με συγκεκριμένες εντολές assembly για
-κάθε αρχιτεκτονική
+«μιμείται»/υλοποιεί σε λογισμικό (emulation). Ωστόσο, μία βασική διαφορά του
+FBT είναι ότι εφόσον έχει την δυνατότητα να παρακολουθήσει μόνο την αρχή και το
+τέλος μίας συνάρτησης, τα οποία σημεία ορίζονται με συγκεκριμένες εντολές
+assembly για κάθε αρχιτεκτονική
 \footnote{
 	Για παράδειγμα, στην αρχιτεκτονική x86-64, η εντολή \lstinline{push
 	\%rbp} δηλώνει το ξεκίνημα του \textit{προλόγου} μίας συνάρτησης, και η
@@ -520,36 +608,366 @@ buffer. Με άλλα λόγια, το kernel γράφει στον ενεργό
 το σύνολο των εντολών που πρέπει να υλοποίησει ο FBT είναι μικρό, καθώς και οι
 εντολές απλές, με αποτέλεσμα να μην χρειάζεται η επιπλέον πολυπλοκότητα που
 προσθέτει το τραμπολίνο. Ο \lstinline{kinst} όμως μπορεί να παρακολουθήσει εν
-δυνάμει (σχεδόν) όλες τις εντολές assembly για κάθε αρχιτεκτονική που
+δυνάμει (σχεδόν) % TODO ref to which ones we cannot trace
+όλες τις εντολές των ISA (Instruction Set Architecture) των αρχιτεκτονικών που
 υποστηρίζει, οπότε είναι προφανές πως η προσέγγιση της υλοποίησης εντολών, δεν
 μπορεί να λειτουργήσει σε αυτήν την περίπτωση. Παρ' όλα αυτά, υπάρχουν μερικές
 εξαιρέσεις που θα συζητηθούν παρακάτω. % TODO ref to emulation
 
-Η χρήση του τραμπολίνου γίνεται ως εξής. <++>
-
-\subsubsection{Διάταξη}
+Η χρήση του τραμπολίνου γίνεται ως εξής. Αρχικά, η εντολή προς παρακολούθηση
+αντιγράφεται στο τραμπολίνο και αλλάζοντας την τιμή του PC (program counter), η
+εκτέλεση μεταφέρεται σε αυτό, όταν το kernel εισέλθει στον \lstinline{kinst} με
+σκοπό την παρακόλουθηση της συγκεκριμένης εντολής. Αφού εκτελεστεί η
+αντιγραμμένη εντολή εντός του τραμπολίνου, η εκτέλεση επιστρέφει στην επόμενη
+εντολή και το kernel επανέρχεται στην κανονική ροή εκτέλεσης.
 
 <++>
 
-\subsubsection{Σημειώσεις υλοποίησης για x86-64}
+\subsubsection{Εσωτερική διάταξη} \label{tramplayout}
+
+Ο \lstinline{kinst} κρατάει μία ουρά \lstinline{TAILQ(9)} από «κομμάτια»
+(chunks) μνήμης μεγέθους \lstinline{PAGE_SIZE}, διαιρεμένα σε επιμέρους
+τραμπολίνα, χρησιμοποιώντας το \lstinline{BITSET(9)}.
+
+Η μνήμη δεσμέυεται με την συνάρτηση \lstinline{vm_map_find(9)} σε συνδυασμό με
+το όρισμα \lstinline{VM_PROT_EXECUTE}, ώστε να επιτρέπεται η εκτέλεση εντολών
+εντός αυτών των θέσεων μνήμης. Όλες οι δεσμεύσεις γίνονται σε διευθύνσεις
+μεγαλύτερες της διεύθυνσης \lstinline{KERNBASE} στην αρχιτεκτονική AMD64 και
+της \lstinline{VM_MIN_KERNEL_ADDRESS} σε ARM64 και RISC-64 αντίστοιχα. %TODO γιατί;
+
+Όπως φαίνεται στο σχήμα \ref{tramp}, το τραμπολίνο περιέχει την εντολή προς
+παρακολούθηση, ακολουθούμενη από την εντολή breakpoint στις αρχιτεκτονικές
+ARM64 και RISC-V και \lstinline{jmp} αντίστοιχα στην AMD64. Η δεύτερη εντολή
+χρησιμοποιείται για την επιστροφή από το τραμπολίνο και την συνέχιση της ροής
+εκτέλεσης (βλέπε ενότητες \ref{amdnotes} και \ref{armriscvnotes}).
+
+\begin{figure}[H]
+\begin{center}
+\begin{tikzpicture}[every node/.style={transform shape}, node distance=1cm]
+	\node (chunkhdr) [header] {\lstinline{trampchunk}};
+	\node (tramp) [box, below of=chunkhdr] {\lstinline{tramp}};
+	\node (dots) [box, below of=tramp] {...};
+	\node (lasttramp) [box, below of=dots] {\lstinline{tramp}};
+	\node (trampinstr) [box, right of=tramp, xshift=4cm] {\lstinline{instruction}};
+	\node (trampbpt) [box, below of=trampinstr] {\lstinline{breakpoint/jmp}};
+
+	\node (chunkhdr1) [header, below of=lasttramp] {\lstinline{trampchunk}};
+	\node (dots1) [box, below of=chunkhdr1] {...};
+
+	\draw [latex-latex] ([xshift=-0.2cm] tramp.west) -- node [auto,swap]
+		{\lstinline{PAGE_SIZE}} ([xshift=-0.2cm] lasttramp.west);
+	\draw [chain] (tramp) -- (trampinstr);
+	\draw [latex-latex] ([xshift=0.2cm] trampinstr.east) -- node
+		[auto,swap,xshift=3.8cm] {\lstinline{KINST_TRAMP_SIZE}}
+		([xshift=0.2cm] trampbpt.east);
+\end{tikzpicture}
+\caption{Διάταξη τραμπολίνου.}
+\label{tramp}
+\end{center}
+\end{figure}
 
 <++>
 
-\subsubsection{Σημειώσεις υλοποίησης για ARM64 και RISC-V}
+\subsubsection{Σημειώσεις υλοποίησης για x86-64}\label{amdnotes}
+
+Όπως αναφέρθηκε στην ενότητα \ref{tramplayout}, το τραμπολίνο στην
+αρχιτεκτονική AMD64 περιέχει την εντολή προς παρακολούθηση, ακολουθούμενη από
+ένα far-jump στην επόμενη εντολή από αυτή που παρακολουθείται, προκειμένου να
+συνεχίσει η ροή εκτέλεσης.
+
+\begin{figure}[H]
+\begin{center}
+\begin{tikzpicture}[every node/.style={transform shape}, node distance=1cm]
+	\node (instr1) [instr] {instr1 (breakpoint)};
+	\node (instr2) [instr, right of=instr1, xshift=4cm] {instr2};
+	\node (trap) [func, below of=instr1, yshift=-1cm] {trap handler};
+	\node (kinstinvop) [func, below of=trap, yshift=-1cm] {\lstinline{kinst_invop()}};
+	\node (pc) [box, below of=kinstinvop, yshift=-1cm] {relocate
+		pc-relative instruction offsets, set pc to trampoline};
+	\node (tramp) [func, below of=pc, yshift=-1cm] {trampoline
+		[instr, jmp]};
+
+	\draw [chain] (instr1) -- (instr2);
+	\draw [arrow] (instr1) -- (trap);
+	\draw [arrow] (trap) -- (kinstinvop);
+	\draw [arrow] (kinstinvop) -- (pc);
+	\draw [arrow] (pc) -- (tramp);
+	\draw [arrow] (tramp.east) -| (instr2);
+\end{tikzpicture}
+\caption{Διάγραμμα ροής amd64.}
+\label{amd64flow}
+\end{center}
+\end{figure}
+
+Για κάθε thread και CPU ορίζεται ένα τραμπολίνο, του οποίου τα περιεχόμενα
+αντικαθιστόνται σε κάθε <++> (instrumentation). Ο λόγος για τον οποίο έχουμε
+τραμπολίνα και ανά thread, αλλά και ανά CPU, είναι ότι τα τραμπολίνα ανά thread
+δεν μπορούν να χρησιμοποιηθούν με ασφάλεια όταν το thread που εκτελείται είχε
+απενεργοποιημένα τα interrupts πριν το breakpoint. Αυτός ο μηχανισμός, αν και
+αποδοτικός από άποψη διαχείρισης μνήμης, μίας και ο αριθμός των τραμπολίνων
+είναι πάντα ίσος με τον αριθμό των threads και CPUs που έχει το σύστημα, έχει
+αποδειχθεί προβληματικός όταν τρέχει σε εικονικές μηχανές με πάνω από ένα vCPU,
+λόγω των συνεχών διαβασμάτων και επανεγγραφών του τραμπολίνου, κάθε φορά που το
+kernel εισέρχεται στην \lstinline{kinst_invop()}. Γίνεται ήδη προσπάθεια ώστε
+να αντικατασταθούν τα τραμπολίνα ανά thread/CPU με τραμπολίνα ανά probe, όπως
+γίνεται στις αρχιτεκτονικές ARM64 και RISC-V.
+
+Όταν μία εντολή αντιγράφεται στο τραμπολίνο, ο \lstinline{kinst} έχει ειδικό
+χειρισμό για τις εντολές που κωδικοποιηθούν offsets συναρτήσει του καταχωρητή
+RIP (Instruction Pointer). Για τις εντολές αυτές το offset πρέπει να
+επανακωδικοποιηθεί, ώστε να είναι συνάρτηση της θέσης του τραμπολίνου,
+προκειμένου να μπορούν να εκτελεστούν εντός του τραμπολίνου. % TODO give example
+
+Επιπλέον, η εντολές \lstinline{call} πρέπει να υλοποιηθούν σε λογισμικό, διότι
+η επανακωδικοποιήση ενός offset ως προς το τραμπολίνο προϋποθέτει δέσμευση
+χώρου στο stack (βλέπε \lstinline{bp_call} στο
+\lstinline{sys/cddl/dev/dtrace/amd64/dtrace_asm.S}).
+
+<++>
+
+\subsubsection{Σημειώσεις υλοποίησης για ARM64 και RISC-V}\label{armriscvnotes}
+
+Σε αντίθεση με την αρχιτεκτονική AMD64, στις αρχιτεκτονικές ARM64 και RISC-V
+δεν είναι εφικτό να κωδικοποιηθεί far-jump σε μία μόνο εντολή, όπως και δεν
+είναι εφικτή η απευθείας αλλαγή τιμών καταχωρητών εντός του τραμπολίνου, με
+σκοπό την υλοποίηση του far-jump σε δύο εντολές. Μία εναλλακτική προσέγγιση για
+την επιστροφή από το τραμπολίνο σε αυτήν την περίπτωση, είναι η χρήση της
+εντολής breakpoint, αντί για far-jump.
+
+Μόλις έχει εκτελεστεί η εντολή προς παρακολούθηση εντός του τραμπολίνου και ο
+CPU φτάσει στην εντολή breakpoint, το kernel θα αναπηδήσει πίσω στον trap
+handler και θα επανεισέλθει στην \lstinline{kinst_invop()} (βλέπε ενότητα
+\ref{instrumentation}). Ο \lstinline{kinst} κρατάει μία εσωτερική ανά CPU δομή
+προκειμένου να διαφοροποιεί μεταξύ breakpoints που προκλήθηκαν από το
+τραμπολίνο, ή από probe που ενεργοποιήθηκε. Στην πρώτη περίπτωση, η
+\lstinline{kinst_invop()} αποθηκεύει τον τρέχον καταχωρητή κατάστασης (state
+register), απενεργοποιεί τα interrupts ώστε να μην μπορεί να διακοπεί το thread
+κατά την διάρκεια της εκτέλεσης του «διπλού breakpoint», καθώς και ορίζει τον
+program counter στην διεύθυνση του τραμπολίνου. Στην δεύτερη περίπτωση, δηλαδή
+όταν έχουμε επιστρέψει από το τραμοπολίνο και πρέπει να συνεχίστει η ροή
+εκτέλεσης, η \lstinline{kinst_invop()} επαναφέρει τον καταχωρητή κατάστασης και
+ενεργοποιεί τα interrupts και χειροκίνητα ορίζει τον program counter στην
+επόμενη εντολή από αυτή που μόλις παρακολουθήθηκε. Το σχήμα \ref{armriscvflow}
+δείχνει το διάγραμμα ροής αυτού του μηχανισμού.
+
+\begin{figure}[H]
+\begin{center}
+\begin{tikzpicture}[every node/.style={transform shape}, node distance=1cm]
+	\node (instr1) [instr] {instr1 (breakpoint)};
+	\node (instr2) [instr, right of=instr1, xshift=4cm] {instr2};
+	\node (trap) [func, below of=instr1, yshift=-1cm] {trap handler};
+	\node (kinstinvop) [func, below of=trap, yshift=-1cm] {\lstinline{kinst_invop()}};
+	\node (state) [decision, below of=kinstinvop, yshift=-2cm]
+		{\lstinline{KINST_STATE_FIRED}};
+	\node (secbpt) [box, right of=state, xshift=4cm] {restore state and
+		interrupts, set pc to next instruction};
+	\node (firstbpt) [box, left of=state, xshift=-4cm] {save state,
+		disable interrupts, set pc to trampoline};
+	\node (tramp) [func, below of=firstbpt, yshift=-1cm] {trampoline
+		[instr, breakpoint]};
+
+	\draw [chain] (instr1) -- (instr2);
+	\draw [arrow] (instr1) -- (trap);
+	\draw [arrow] (trap) -- (kinstinvop);
+	\draw [arrow] (kinstinvop) -- (state);
+	\draw [arrow] (state) -- node[anchor=south] {yes} (secbpt);
+	\draw [arrow] (state) -- node[anchor=south] {no} (firstbpt);
+	\draw [arrow] (secbpt) -- (instr2);
+	\draw [arrow] (firstbpt) -- (tramp);
+	\draw [arrow] (tramp.west) -| ++(-0.5, 1) ++(0, 0) |- (trap);
+\end{tikzpicture}
+\end{center}
+\caption{Διάγραμμα ροής arm64 \& riscv.}
+\label{armriscvflow}
+\end{figure}
+
+Κάθε probe έχει το δικό της τραμπολίνο, το οποίο γράφεται κατά την διάρκεια
+ανάλυσης της εντολής, το οποίο σε αντίθεση με την αρχιτεκτονική AMD64,
+αποφεύγει την ανάγκη για διάβασμα και επανεγγραφή τραμπολίνων ανά thread/CPU
+κάθε φορά που εκτελείται η \lstinline{kinst_invop()}.
 
 <++>
 
 \subsection{Παρακολούθηση inline συναρτήσεων}
 
 % TODO
-% https://margiolis.net/w/kinst_inline/
+% See paper, slides, articles, links to docs
+
+Η παρακολούθηση inline συναρτήσεων στον \lstinline{kinst} δεν είναι τίποτα
+παραπάνω από ένα συντακτικό στρώμα που έχει προστεθεί στην libdtrace. Όταν ο
+χρήστης ζητάει ένα probe της μορφής
+\lstinline{kinst::<function>:<entry|return>}
+\footnote{
+	Σε αντίθεση με τον FBT, ο \lstinline{kinst} δεν μπορεί να δεχθεί άδειο
+	το πεδίο probe όταν πρόκειται για παρακολούθηση inline συναρτήσεων.
+	Προκειμένου να μπορέσει να ενεργοποιηθεί ο κώδικας εντοπισμού inline
+	συναρτήσεων εντός του libdtrace, πρέπει αναγκαστικά να οριστεί είτε η
+	λέξη \lstinline{entry} είτε \lstinline{return}.
+},
+η libdtrace αναλύει τις πληροφορίες DWARF (βλέπε ενότητα \ref{dwarf}) όλων των
+φορτωμένων kernel modules, με σκοπό να βρει αν η συνάρτηση
+\lstinline{<function>} είναι inline. Σε αυτή την περίπτωση, δημιουργεί
+\lstinline{kinst} probes στις συναρτήσεις και ακριβή offset(s), στα οποία έχει
+βρεθεί inline αντίγραφο της \lstinline{<function>}. Ωστόσο, αν η
+\lstinline{<function>} δεν είναι inline, το probe μετατρέπεται αυτόματα σε FBT
+probe, μίας ο FBT είναι ιδανικός για την παρακολούθηση της αρχής και τέλους
+μη-inline συναρτήσεων. Το σχήμα \ref{sugar} παρουσιάζει ένα παράδειγμα του πώς
+η libdtrace χειρίζεται inline και μη-inline συναρτήσεις.
+
+\begin{figure}[H]
+\begin{center}
+\begin{tabular}{ll}
+
+Inline function & Non-inline function \\
+
+\begin{tikzpicture}[every node/.style={transform shape}, node distance=1cm]
+	\node (initial) [box, text width=9cm] {
+		\begin{lstlisting}
+kinst::cam_iosched_has_more_trim:entry
+{
+	printf("\t%d\t%s", pid, execname);
+}\end{lstlisting}
+	};
+	\node (outkinst) [box, text width=9cm, below of=initial, yshift=-3cm] {
+		\begin{lstlisting}
+kinst::cam_iosched_get_trim:13,
+kinst::cam_iosched_next_bio:13,
+kinst::cam_iosched_schedule:40
+{
+	printf("\t%d\t%s", pid, execname);
+}\end{lstlisting}
+	};
+
+	\draw [arrow] (initial) -- (outkinst);
+\end{tikzpicture} &
+
+\begin{tikzpicture}[every node/.style={transform shape}, node distance=1cm]
+	\node (initial) [box, text width=5cm] {
+		\begin{lstlisting}
+kinst::malloc:entry
+{
+	exit(0);
+}\end{lstlisting}
+	};
+	\node (outkinst) [box, text width=5cm, below of=initial, yshift=-3.42cm] {
+		\begin{lstlisting}
+fbt::malloc:entry
+{
+	exit(0);
+}\end{lstlisting}
+	};
+
+	\draw [arrow] (initial) -- (outkinst);
+\end{tikzpicture} \\
+
+\end{tabular}
+\end{center}
+\caption{
+	Συντακτικοί μετασχηματισμοί υλοποιημένοι στο
+	\lstinline{cddl/contrib/opensolaris/lib/libdtrace/common/dt_sugar.c}
+}
+\label{sugar}
+\end{figure}
 
 <++>
 
-\subsubsection{Πρότυπο DWARF}
+\subsubsection{Τι είναι inline συναρτήσεις}
+
+<++>
+
+\subsubsection{Γιατί είναι δύσκολη η παρακολούθηση inline συναρτήσεων}
+
+<++>
+
+\subsubsection{Πως λύνει ο kinst αυτό το πρόβλημα}
+
+% TODO
+% https://margiolis.net/w/kinst_inline/
+% link to patch? post code?
+
+Στην πραγματικότητα, ο \lstinline{kinst} \textit{δεν} διαθέτει επιπλέον λογική
+όσον αφορά τις inline συναρτήσεις --- η λύση αυτού του προβλήματος βρίσκεται
+σε προηγούμενο στάδιο, αυτό της συντακτικής ανάλυσης του D script από την
+βιβλιοθήκη DTrace (\lstinline{libdtrace}). <++> % TODO link to section about d lang
+
+<++>
+
+\subsubsection{Πρότυπο DWARF} \label{dwarf}
 
 % TODO
 % https://margiolis.net/w/dwarf_inline/
+% how to compile kernel/stuff with dwarf
+
+Το πρότυπο αποσφαλμάτωσης DWARF \cite{dwarfstd} είναι ένα πρότυπο το οποίο
+χρησιμοποείται από μεταγλωττιστές και προγράμματα αποσφαλμάτωσης (debuggers)
+για την κωδικοποίηση χρήσιμων πληροφοριών, όπως ονόματα συναρτήσεων ή θέσεις
+μεταβλητών, και πολλών άλλων, για κάθε μονάδα μεταγλώττισης (compilation unit).
+
+% TODO link to what stuff it encodes
+
+\begin{displayquote}
+	This document defines a format for describing programs to facilitate
+	user source level debugging. This description can be generated by
+	compilers, assemblers and linkage editors. It can be used by debuggers
+	and other tools. \\
+
+	-- The DWARF Standard:
+	\href{https://dwarfstd.org/}{https://dwarfstd.org/}
+\end{displayquote}
+
+Οι πληροφορίες αυτές αναπαριστώνται ως ένα δέντρο από εγγραφές, οι οποίες
+ονομάζονται DIEs (Debugging Information Entries). Η κάθε μονάδα μεταγλώττισης
+αντιστοιχεί σε ένα τέτοιο δέντρο. Για καλύτερη κατανόηση, ας θεωρήσουμε το
+παρακάτω θεωρητικό δέντρο:
+
+% TODO διάγραμμα από manual
+<++>
+
+Κατά την μεταγλώττιση ενός C προγράμματος, η ενσωμάτωση των πληροφοριών DWARF
+εντός του μεταγλωττισμένου αρχείου μπορεί να γίνει με την χρήση της επιλογής
+\lstinline{-g} (παραγωγή πληροφοριών αποσφαλμάτωσης):
+
+\begin{lstlisting}
+	$ cc <file>.c -g -o <file>
+\end{lstlisting}
+
+Οι πληροφορίες DWARF μπορούν έπειτα να διαβαστούν είτε με το πρόγραμμα
+\lstinline{readelf} (με την επιλογή \lstinline{-wi}), είτε με το
+\lstinline{dwarfdump}:
+
+\begin{lstlisting}
+	$ readelf -wi <file>
+	$ dwarfdump <file>
+\end{lstlisting}
+
+<++>
+
+Οι δηλώσεις των inline συναρτήσεων στο πρότυπο DWARF αναπαριστώνται με την
+ετικέτα \lstinline{DW_TAG_subprogram}, σε συνδυασμό με την ιδιότητα
+\lstinline{DW_AT_inline}. Ωστόσο για κάθε δήλωση μίας inline συνάρτησης,
+υπάρχουν και αντίγραφο της, ένα για κάθε σημείο στο οποίο η συνάρτηση έχει
+μετατραπεί σε inline, εντός μίας άλλης συνάρτησης. Τα αντίγραφα αυτά
+αναπαριστώνται με την ετικέτα \lstinline{DW_TAG_inlined_subroutine} και μπορούν
+να περιέχουν τις παρακάτω ιδιότητες:
+
+% TODO word better
+
+\begin{itemize}
+	\item \lstinline{DW_AT_abstract_origin}: Offset του DIE σε σχέση με την
+		δήλωση της inline συνάρτησης.
+	\item \lstinline{DW_AT_call_file}: Ακέραιος αριθμός που δηλώνει το
+		αρχείο στο οποίο καλαίτει η συνάρτηση. % TODO how do we match to file?
+	\item \lstinline{DW_AT_call_line}: Γραμμή κώδικα εντός του αρχείου, στο
+		οποίο καλείται η συνάρτηση.
+	\item \lstinline{DW_AT_call_column}: Στήλη εντός της γραμμής, όπου
+		ξεκινάει η κλήση της συνάρτησης.
+	\item \lstinline{DW_AT_low_pc} και \lstinline{DW_AT_high_pc}: Κάτω και
+		άνω όρια (διευθύνσεις μνήμης) εντός των οποίων βρίσκεται το
+		αντίγραφο.
+	\item \lstinline{DW_AT_ranges}: Σειρές ορίων εντός των οποίων βρίσκεται
+		το αντίγραφο, σε περίπτωση που το αντίγραφο δεν βρίσκεται σε
+		ενιαίες θέσεις μνήμης.
+\end{itemize}
 
 <++>
 
@@ -562,6 +980,9 @@ buffer. Με άλλα λόγια, το kernel γράφει στον ενεργό
 <++>
 
 \subsubsection{Υπολογισμός ορίων κλήσεων}
+
+% TODO
+%	inlinecall, omitrbp
 
 <++>
 
@@ -578,6 +999,7 @@ buffer. Με άλλα λόγια, το kernel γράφει στον ενεργό
 % TODO
 % Περιβάλλον εκτέλεσης
 % See paper, slides, articles
+% how to compile (buildtrace)
 
 <++>
 
@@ -612,6 +1034,10 @@ buffer. Με άλλα λόγια, το kernel γράφει στον ενεργό
 	\href{https://github.com/christosmarg/inlinecall}{https://github.com/christosmarg/inlinecall}
 \bibitem{markpres} Mark Johnston ``Introduction to DTrace on FreeBSD''.
 	\href{https://www.youtube.com/watch?v=E06GVdH-LX0}{https://www.youtube.com/watch?v=E06GVdH-LX0}
+\bibitem{gdb} GNU ``GDB: The GNU Project Debugger''.
+	\href{https://www.sourceware.org/gdb/}{https://www.sourceware.org/gdb/}
+\bibitem{kgdb} FreeBSD manual pages ``kgdb(1)''.
+	\href{https://man.freebsd.org/cgi/man.cgi?query=kgdb(1)}{https://man.freebsd.org/cgi/man.cgi?query=kgdb(1)}
 \end{thebibliography}
 
 \pagebreak
