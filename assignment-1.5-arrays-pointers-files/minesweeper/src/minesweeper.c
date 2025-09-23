@@ -1,49 +1,5 @@
 #include "minesweeper.h"
 
-void start()
-{
-    int yMax, xMax;
-    int numSettings = 3;
-    getmaxyx(stdscr, yMax, xMax);
-
-    WINDOW *menuWin = newwin(numSettings+2, xMax-10, yMax-7, 5);
-    box(menuWin, 0, 0);
-    refresh();
-    wrefresh(menuWin);
-    keypad(menuWin, true);
-
-    set_mode(menuWin);
-
-    int COLS = set_cols(menuWin, xMax);
-    int ROWS = set_rows(menuWin, yMax);
-    int NMINES = set_nmines(menuWin, COLS * ROWS);
-
-    game_win(COLS, ROWS, NMINES);
-    getchar();
-}
-
-
-void game_win(int COLS, int ROWS, int NMINES)
-{
-    int yMax, xMax;
-    getmaxyx(stdscr, yMax, xMax);
-
-    WINDOW *gameWin = newwin(43, xMax-10, (yMax/2) - 24, 5); // fix 43
-    box(gameWin, 0, 0);
-    refresh();
-    wrefresh(gameWin);
-    keypad(gameWin, true);
-
-    char **dispboard = init_dispboard(gameWin, COLS, ROWS);
-    char **mineboard = init_mineboard(gameWin, COLS, ROWS, NMINES);
-
-	selection(gameWin, dispboard, mineboard, COLS, ROWS, NMINES);
-
-    free(dispboard);
-    free(mineboard);
-}
-
-
 char **init_dispboard(WINDOW *gameWin, int COLS, int ROWS)
 {
     int i;
@@ -60,7 +16,6 @@ char **init_dispboard(WINDOW *gameWin, int COLS, int ROWS)
     {
         fill_dispboard(dispboard, COLS, ROWS);
         print_board(gameWin, dispboard, COLS, ROWS);
-        getchar();
     }
     
     return dispboard;
@@ -73,7 +28,7 @@ void fill_dispboard(char **dispboard, int COLS, int ROWS)
 
     for (i = 0; i < COLS; i++)
         for (j = 0; j < ROWS; j++)
-            dispboard[i][j] = HIDDEN;
+            dispboard[i][j] = BLANK;
 }
 
 
@@ -94,8 +49,6 @@ char **init_mineboard(WINDOW *gameWin, int COLS, int ROWS, int NMINES)
         place_mines(mineboard, COLS, ROWS, NMINES);
         add_adj(mineboard, COLS, ROWS);
         fill_spaces(mineboard, COLS, ROWS, NMINES);
-
-        // tests
         //print_board(gameWin, mineboard, COLS, ROWS);
         //filewrite(mineboard, COLS, ROWS, 1, 2);
     }
@@ -112,8 +65,8 @@ void place_mines(char **mineboard, int COLS, int ROWS, int NMINES)
 
     for (i = 0; i < NMINES; i++)
     {
-        wRand = rand() % COLS;
-        hRand = rand() % ROWS;
+        wRand = rand() % ROWS;
+        hRand = rand() % COLS;
         mineboard[wRand][hRand] = MINE;
     }
 }

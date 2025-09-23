@@ -4,7 +4,7 @@
 #include "minesweeper.h"
 
 void main_win();
-void start();
-void game_win(int, int, int);
+WINDOW *menu_win(int *, int *);
+WINDOW *game_win(int, int, int);
 
 #endif

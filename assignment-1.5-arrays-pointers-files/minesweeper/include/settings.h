@@ -3,10 +3,10 @@
 
 #include "minesweeper.h"
 
-void main_win();
-void set_mode(struct _win_st*);
+
 int set_cols(struct _win_st*, int);
 int set_rows(struct _win_st*, int);
 int set_nmines(struct _win_st*, int);
+void init_colors();
 
 #endif
