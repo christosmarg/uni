@@ -1,0 +1,50 @@
+\frametitle{Παρακολούθηση inline συναρτήσεων}
+
+\begin{center}
+\begin{tabular}{ll}
+
+Inline function & Non-inline function \\
+
+\begin{tikzpicture}[scale=0.8, every node/.style={transform shape}, node distance=1cm]
+	\node (initial) [box, text width=7.2cm] {
+		\begin{lstlisting}
+kinst::cam_iosched_has_more_trim:entry
+{
+	printf("\t%d\t%s", pid, execname);
+}\end{lstlisting}
+	};
+	\node (outkinst) [box, text width=7.2cm, below of=initial, yshift=-3cm] {
+		\begin{lstlisting}
+kinst::cam_iosched_get_trim:13,
+kinst::cam_iosched_next_bio:13,
+kinst::cam_iosched_schedule:40
+{
+	printf("\t%d\t%s", pid, execname);
+}\end{lstlisting}
+	};
+
+	\draw [arrow] (initial) -- (outkinst);
+\end{tikzpicture} &
+
+\begin{tikzpicture}[scale=0.8, every node/.style={transform shape}, node distance=1cm]
+	\node (initial) [box, text width=4cm] {
+		\begin{lstlisting}
+kinst::malloc:entry
+{
+	exit(0);
+}\end{lstlisting}
+	};
+	\node (outkinst) [box, text width=4cm, below of=initial, yshift=-3.42cm] {
+		\begin{lstlisting}
+fbt::malloc:entry
+{
+	exit(0);
+}\end{lstlisting}
+	};
+
+	\draw [arrow] (initial) -- (outkinst);
+\end{tikzpicture} \\
+
+\end{tabular}
+\end{center}
+

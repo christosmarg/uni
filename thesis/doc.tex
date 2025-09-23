@@ -4,30 +4,27 @@
 \usepackage{cite}
 \usepackage{alphabeta}
 \usepackage{fancyhdr}
+\usepackage{fancyvrb}
 \usepackage{listings}
 \usepackage{float}
-\usepackage{hyperref}
+\usepackage[breaklinks=true]{hyperref}
 \usepackage{tikz}
 \usepackage{csquotes}
+\usepackage{pmboxdraw}
 \usepackage{amsmath,amssymb,amsfonts}
 \usetikzlibrary{shapes.geometric, shapes.multipart, arrows}
 \usepackage[margin=0.5in]{geometry}
 \usepackage[nottoc,numbib]{tocbibind}
-%\usepackage[backend=bibtex]{biblatex}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
-
-% XXX https://polynoe.lib.uniwa.gr/xmlui/handle/11400/55
-% XXX https://polynoe.lib.uniwa.gr/xmlui/bitstream/handle/11400/8820/Vangelis_18390008.pdf?sequence=1&isAllowed=y
-% TODO https://ice.uniwa.gr/wp-content/uploads/2022/12/%CE%9A%CE%B1%CE%BD%CE%BF%CE%BD%CE%B9%CF%83%CE%BC%CF%8C%CF%82-%CE%95%CE%BA%CF%80%CF%8C%CE%BD%CE%B7%CF%83%CE%B7%CF%82-%CE%94%CE%B9%CF%80%CE%BB%CF%89%CE%BC%CE%B1%CF%84%CE%B9%CE%BA%CF%8E%CE%BD-%CE%95%CF%81%CE%B3%CE%B1%CF%83%CE%B9%CF%8E%CE%BD-%CE%A4%CE%9C%CE%A0%CE%A5.pdf
-% TODO references παντού (also man pages)
 
 \lstset {
         basicstyle=\ttfamily,
         columns=fullflexible,
         breaklines=true,
         keepspaces=true,
-	showstringspaces=false
+	showstringspaces=false,
+	frame=single
 }
 
 \tikzstyle{header} = [rectangle, minimum width=4cm, minimum
@@ -68,17 +65,14 @@
         \end{center}
         \end{figure}
         \begin{center}
-	Εισηγητής: Παναγιώτης Καρκαζής
+	Εισηγητής: Παναγιώτης Καρκαζής, Αν. Καθηγητής
         \end{center}
 \end{titlepage}
 
-% TODO number page
 \shipout\null
 
-% TODO make headers bigger
-
 \begin{center}
-Διπλωματική Εργασία
+\textbf{Διπλωματική Εργασία}
 \linebreak
 \linebreak
 Μελέτη και ανάπτυξη τεχνικών για την παρακολούθηση και την αποσφαλμάτωση της
@@ -93,22 +87,20 @@
 Εισηγητής:
 
 \begin{center}
-Παναγιώτης Καρκαζής, Καθηγητής
+Παναγιώτης Καρκαζής, Αν. Καθηγητής
 \end{center}
 
 Εξεταστική επιτροπή:
 
 \begin{center}
-\begin{tabular}{|l|l|}
-	\hline
-	\textbf{Ονοματεπώνυμο} & \textbf{Υπογραφή} \\
-	\hline
-	<++> & <++> \\
-	\hline
+\begin{tabular}{ll}
+	Παναγιώτης Καρκαζής, Αν. Καθηγητής & \\
+	Νικόλαος Μυριδάκης, Αν. Καθηγητής & \\
+	Κωνσταντίνος Μαυρομμάτης, Λέκτορας & \\
 \end{tabular}
 \linebreak
 \linebreak
-Ημερομηνία εξέτασης: <++>
+Ημερομηνία εξέτασης: 15 Οκτωβρίου 2025
 \end{center}
 
 \pagebreak
@@ -190,38 +182,50 @@ Instruction set architecture.
 \tableofcontents
 \pagebreak
 
-\section{Συντομογραφίες}
+\section{Εισαγωγή στα εργαλεία παρακολούθησης (tracing)}
 
-\begin{tabular}{ll}
-	CTF & Compact C Type Format \\
-	DIE & Debugging Information Entry \\
-	DIF & D Intermediate Format \\
-	DWARF & Debugging with Attributed Record Formats \\
-	ELF & Executable and Linkable Format \\
-	FBT & Function Boundary Tracing \\
-	GDB & GNU Debugger \\
-	ISA & Instruction Set Architecture \\
-	PC & Program Counter \\
-	eBPF & Extended Berkley Packet Filter \\
-\end{tabular}
+Η ανάπτυξη πυρήνων λειτουργικών συστημάτων είναι από την φύση της περίπλοκη. Ο
+πυρήνας δεν είναι ένα τυπικό γραφικό πρόγραμμα, αλλά ένα πρόγραμμα που τρέχει
+στο παρασκήνιο και είναι υπεύθυνο για την διαχείριση των πόρων του υπολογιστή,
+των συστημάτων αρχείων, του χρονοπρογραμματισμού των διεργασιών, την
+επικοινωνία του λειτουργικού συστήματος με το υλικό, και πολλές άλλες
+λειτουργίες χαμηλού επιπέδου. Ο προγραμματισμός λοιπόν ενός τέτοιου συστήματος
+περιλαμβάνει την κατανόηση υποσυστημάτων χαμηλού επιπέδου, τις πολύπλοκες
+διασυνδέσεις μεταξύ τους, η οποία είναι απαραίτητη για την αποσφαλμάτωση, όταν
+το σφάλμα προκύψει. Η αποσφαλμάτωση πυρήνων είναι επίσης μία ιδιάζουσα
+περίπτωση, διότι ακόμα και ένα απλό σφάλμα μπορεί να έχει ως αποτέλεσμα από
+απρόβλεπτη συμπεριφορά/δυσλειτουργία του λειτουργικού συστήματος, αλλοίωση
+αρχείων και υλικού, μέχρι και ολική κατάρρευση του λειτουργικού συστήματος.
+Στην περίπτωση τέτοιων σφαλμάτων, με άλλα λόγια, η αποσφαλμάτωση απαιτεί
+σύνθετη κατανόηση του πυρήνα, αλλά σε κάποιες περιπτώσεις μπορεί να είναι ακόμα
+και αδύνατη, ή τουλάχιστον πολύ περιορισμένη. Επιπλέον, προκειμένου να
+αποκτηθεί εξαρχής αυτή η κατανόηση του πυρήνα, η απλή ανάγνωση του κώδικά του, αν και
+προφανώς απαραίτητη, δεν είναι πάντα η βέλτιση λύση, ειδικά όταν πρόκειται για
+πολύ περίπλοκα συστήματα που μπορεί να αποτελούνται από δεκάδες ή εκατοντάδες
+χιλιάδες γραμμές κώδικα, οι οποίες αλληλεπιδρούν με πολλαπλά συστήματα και
+δημιουργούν μία μεγάλη αλυσίδα πολυπλοκότητας, της οποίας η κατανόηση απαιτεί
+πιο εξεζητημένες τεχνικές.
 
-\section{Εισαγωγή στην παρακολούθηση (tracing)}
-
-Με τον όρο tracing εννοούμε την παρακολούθηση της ροής εκτέλεσης ενός
-προγράμματος σε πραγματικό χρόνο (real-time), με σκοπό την εξαγωγή δεδομένων,
-που είναι χρήσιμα κυρίως στην αποσφαλμάτωση (debugging) του προγράμματος, στην
-καλύτερη κατανόση της ροής εκτέλεσης, καθώς και στην εύρεση τυχόν σημείων που
-προκαλούν καθυστερήσεις (bottleneck). Κατά μία έννοια το tracing μπορεί να
-θεωρηθεί ως μία καλύτερη και πιο δυναμική μορφή καταγραφής πληροφοριών
-(logging), διότι δίνεται η δυνατότητα στον χρήστη να εξάγει μη-συγκεκριμένες
-πληροφορίες από ένα πρόγραμμα, χωρίς να χρειάζεται αναγκαστικά η συγγραφή
-περαιτέρω πηγαίου κώδικα μέσα στο πρόγραμμα και η επαναμεταγλώττισή του, κάτι
-το οποίο, στην περίπτωση μεγάλων προγραμμάτων όπως ο πυρήνας ενός λετουργικού
-συστήματος, τείνει να είναι μία χρονοβόρα και δυσκίνητη διαδικασία.
+Όλα αυτά καθιστούν αναγκαία την ύπαρξη εργαλείων που μπορούν να βοηθήσουν στην
+αποσφαλμάτωση, όμως εξίσου αναγκαία είναι και η ύπαρξη εργαλείων που βοηθούν
+στην κατανόηση της ροής εκτέλεσης του πυρήνα, δηλαδή της
+\textit{παρακολούθησής} του. Με τον όρο tracing εννοούμε την παρακολούθηση της
+ροής εκτέλεσης ενός προγράμματος σε πραγματικό χρόνο (real-time), με σκοπό την
+εξαγωγή δεδομένων, που είναι χρήσιμα κυρίως στην αποσφαλμάτωση (debugging) του
+προγράμματος, στην καλύτερη κατανόση της ροής εκτέλεσης, καθώς και στην εύρεση
+τυχόν σημείων που προκαλούν καθυστερήσεις (bottlenecks). Κατά μία έννοια το
+tracing μπορεί να θεωρηθεί ως μία πιο εξειδικευμένη και πιο δυναμική μορφή
+καταγραφής πληροφοριών (logging), διότι δίνεται η δυνατότητα στον χρήστη να
+εξάγει μη-συγκεκριμένες πληροφορίες από ένα πρόγραμμα, χωρίς να χρειάζεται
+αναγκαστικά η συγγραφή περαιτέρω πηγαίου κώδικα μέσα στο πρόγραμμα και η
+επαναμεταγλώττισή του, κάτι το οποίο, στην περίπτωση μεγάλων προγραμμάτων όπως
+ο πυρήνας ενός λετουργικού συστήματος, τείνει να είναι μία χρονοβόρα και
+δυσκίνητη διαδικασία.
 
 Προγράμματα παρακολούθησης χρησιμοποιούνται κατά κόρον από προγραμματιστές
 πυρήνων λειτουργικών συστημάτων και διαχειριστές συστημάτων (ασφάλεια, servers,
-βάσεις δεδομένων).
+βάσεις δεδομένων), και είναι διαθέσιμα σε όλα τα λειτουργικά συστήματα,
+ανοιχτού και μη κώδικα.
 
 Συνοπτικά μεταξύ άλλων, μερικές από τις συνηθισμένες χρήσεις προγραμμάτων
 παρακολούθησης, είναι οι καταγραφή χρόνων εκτέλεσης συναρτήσεων, εξαγωγή
@@ -230,11 +234,20 @@ Instruction set architecture.
 συμβάντων (event logging), εισαγωγή breakpoints, κατανόηση ροής εκτέλεσης, και
 πολλές άλλες.
 
+Στην παρούσα εργασία θα ασχοληθούμε με το λειτουργικό σύστημα FreeBSD, το οποίο
+είναι το πιο δημοφιλές από την οικογένεια των BSD (Berkley Software
+Distribution) λειτουργικών συστημάτων. Εμφανίστηκε το 1993 ως κλώνος του UNIX
+και ο κώδικας του είναι ανοιχτός (open source). Έχει μικρότερο αριθμό χρηστών
+από τα λειτουργικά συστήματα Linux, ωστόσο, πάρα της μικρότερης κοινότητας του,
+διακρίνεται για την σταθερότητά του και την αποδοτικότητα του, αλλά και του
+προσεγμένου και καθαρού του πηγαίου κώδικα, και χρησιμοποιείται εκτενώς από
+διάφορες μεγάλες (και μη) εταιρίες για το στήσιμο των server τους.
+
 \subsection{Παρακολούθηση στο FreeBSD}
 
-Το FreeBSD παρέχει πληθώρα προγραμμάτων παρακολούθησης και καταγραφής, για
-διάφορους τομείς του λειτουργικού συστήματος. Ενδεικτικά, μερικά από αυτά τα
-εργαλεία είναι τα εξής:
+Το FreeBSD παρέχει πληθώρα προγραμμάτων παρακολούθησης και καταγραφής
+\cite{fbsdjournal}, για διάφορους τομείς του λειτουργικού συστήματος.
+Ενδεικτικά, μερικά από αυτά τα εργαλεία είναι τα εξής:
 
 \begin{center}
 \begin{tabular}{|l|l|}
@@ -259,6 +272,8 @@ Instruction set architecture.
 	\hline
 	\lstinline{lockstat(1)} & Πληροφορίες locking εντός του πυρήνα. \\
 	\hline
+	\lstinline{plockstat(1)} & Πληροφορίες pthread locking. \\
+	\hline
 	\lstinline{truss(1)} & Παρακολούθηση κλήσεων συστήματος (system calls).
 	\\
 	\hline
@@ -269,58 +284,33 @@ Instruction set architecture.
 	\hline
 	\lstinline{pmcstat(8)} & Μετρήσεις επίδοσης συστήματος. \\
 	\hline
+	\lstinline{ktrdump(8)} & Εκτύπωση \lstinline{ktr(4)} buffer. \\
+	\hline
 \end{tabular}
 \end{center}
 
 Όλα τα παραπάνω εργαλεία χρησιμοποιούνται εκτενώς από τους χρήστες του FreeBSD,
-ωστόσο δύο βασικοί περιορισμοί μερικών από αυτά, είναι ότι 1) δεν λειτουργούν
-σε πραγματικό χρόνο, 2) δεν είναι πάντα ευέλικτα, διότι κάνουν συγκεκριμένες
-«ερωτήσεις» για την κατάσταση του συστήματος που παρακολουθούν, αλλά και
-παράγουν συγκεκριμένες εξόδους με συγκεκριμένα δεδομένα. Κάτι τέτοιο είναι
-ιδανικό και αρκετό σε πολλές περιπτώσεις, όμως υπάρχουν και περιπτώσεις που ο
-διαχειριστής/προγραμματιστής χρειάζεται να κάνει «ερωτήσεις» οι οποίες δεν
-καλύπτονται από κάποιο υπάρχον πρόγραμμα, καθώς και να κάνει καταγραφή
+ωστόσο δύο βασικοί περιορισμοί μερικών από αυτά είναι ότι 1) δεν λειτουργούν
+σε πραγματικό χρόνο (real-time), 2) δεν είναι πάντα ευέλικτα, διότι κάνουν
+συγκεκριμένες «ερωτήσεις» για την κατάσταση του συστήματος που παρακολουθούν,
+αλλά και παράγουν συγκεκριμένες εξόδους με συγκεκριμένα δεδομένα. Κάτι τέτοιο
+είναι ιδανικό και αρκετό σε πολλές περιπτώσεις, όμως υπάρχουν και περιπτώσεις
+που ο διαχειριστής/προγραμματιστής χρειάζεται να κάνει «ερωτήσεις» οι οποίες
+δεν καλύπτονται από κάποιο υπάρχον πρόγραμμα, καθώς και να κάνει καταγραφή
 δεδομένων με πιο εξειδικευμένο τρόπο. Αυτά είναι μερικά από τα βασικά
 προβλήματα που λύνουν τα προγράμματα δυναμικής παρακόλουθησης (dynamic
-tracing). Στο FreeBSD, το DTrace μαζί με διάφορα προεγκατεστημένα scripts
-(\ref{highscripts}) που το χρησιμοποιούν εσωτερικά, είναι τα πιο συνηθισμένα
-εργαλεία δυναμικής παρακολούθησης σε πραγματικό χρόνο.
-
-% TODO
-% realtime
-% history: tamches paper
-% REFERENCES
-
-<++>
+tracing). Στο FreeBSD, το DTrace είναι τo πιο συνηθισμένο εργαλείο δυναμικής
+παρακολούθησης σε πραγματικό χρόνο.
 
 \section{Εισαγωγή στο DTrace}
 
-% TODO
-% https://www.brendangregg.com/DTrace/dtrace_topics_intro.pdf
-% https://zinascii.com/2020/fbt-args-and-stack.html
-% https://wiki.freebsd.org/DTrace/Tutorial
-% https://myaut.github.io/dtrace-stap-book/dtrace-stap-book.pdf
-% https://freebsdfoundation.org/wp-content/uploads/2019/01/Debugging-the-FreeBSD-Kernel.pdf
-% https://www.illumos.org/books/dtrace/
-% https://www.youtube.com/watch?v=E06GVdH-LX0
-% https://www.youtube.com/watch?v=ctTyYlDbAIM
-% gsoc emails with mark
-% https://www.bsdcan.org/2017/schedule/attachments/432_dtrace_internals.pdf
-% εργαλεία χτισμένα πάνω στο dtrace
-%
-% performance overhead from dtrace
-% kernel module
-%	what is a kmod
-%	how do you load kmods?
-% Userspace dtrace
-% REFERENCES
-% new man pages (tracing.7, ...)
-
-Το DTrace είναι ένα framework δυναμικής παρακολούθησης (dynamic tracing
-framework), το οποίο προήλθε από το λειτουργικό σύστημα Solaris το 2005 και
-έπειτα μεταφέρθηκε στο FreeBSD το 2006-2008. Μεταξύ άλλων, χρησιμοποιείται για
-μετρήσεις επιδόσεων, αποσφαλμάτωση και παρακολούθηση σε πραγματικό χρόνο, καθώς
-και παρατήρηση συμπεριφοράς συγκεκριμένων υποσυστημάτων του λειτουργικού
+Το DTrace \cite{dtracebook} \cite{oracledtrace} \cite{markpres}
+\cite{greggdintro} \cite{usenix04} \cite{dinternals} είναι ένα framework
+δυναμικής παρακολούθησης (dynamic tracing framework) \cite{tamches}, το οποίο
+προήλθε από το λειτουργικό σύστημα Solaris το 2005 και έπειτα μεταφέρθηκε στο
+FreeBSD μεταξύ 2006 και 2008. Μεταξύ άλλων, χρησιμοποιείται για μετρήσεις
+επιδόσεων, αποσφαλμάτωση και παρακολούθηση σε πραγματικό χρόνο, καθώς και
+παρατήρηση συμπεριφοράς συγκεκριμένων υποσυστημάτων του λειτουργικού
 συστήματος. Το DTrace είναι ιδιαίτερα ισχυρό χάρη στην γλώσσα D (βλέπε ενότητα
 \ref{dlang}), η οποία περιέχει μεγάλη γκάμα δυνατοτήτων και χρησιμοποιείται για
 την σύνταξη D scripts, \textit{τα οποία φορτώνονται δνυαμικά στον πυρήνα} του
@@ -332,111 +322,124 @@ framework), το οποίο προήλθε από το λειτουργικό σ
 αλλάξουν την λογική/ροή της εκτέλεσης του ή τον ίδιο τον κώδικά του πυρήνα
 \footnote{
 	Μόνη εξαίρεση σε αυτό είναι ορισμένες «καταστροφικές», όπως
-	ονομάζονται, συναρτήσεις (βλέπε ενότητα \ref{actions}), οι οποίες όμως
-	χρησιμοποιούνται μόνο \textit{σκόπιμα} .
+	ονομάζονται, συναρτήσεις (βλέπε ενότητα \ref{functions}), οι οποίες
+	όμως χρησιμοποιούνται μόνο \textit{σκόπιμα} .
 }.
 Στην ουσία, αυτό που κάνει ένα D script αφού φορτωθεί στον πυρήνα, είναι να
-συλλέξει πληροφορίες από τον πυρήνα δυναμικά, να τις επεξεργαστεί, και να τις
-μεταφέρει πίσω στον χρήστη. Αυτό σημαίνει ότι τα D scripts \textit{είναι
-ασφαλή} για χρήση σε συστήματα που χρησιμοποιούνται σε παραγωγή, το οποίο είναι
-και αυτό που κάνει το DTrace ιδιαίτερα εύχρηστο.
+συλλέξει πληροφορίες από τον πυρήνα, να τις επεξεργαστεί, και να τις μεταφέρει
+πίσω στον χρήστη. Αυτό σημαίνει ότι τα D scripts \textit{είναι ασφαλή} για
+χρήση σε συστήματα που χρησιμοποιούνται σε παραγωγή, το οποίο είναι και αυτό
+που κάνει το DTrace ιδιαίτερα εύχρηστο.
 
-<++>
+Η χρήση του DTrace γίνεται είτε μέσω του προγράμματος \lstinline{dtrace(1)},
+είτε έμμεσα μέσω επιπλέον διαφόρων προγραμμάτων, όπως το
+\lstinline{lockstat(1)}, \lstinline{truss(1)}, και άλλα.
 
 \subsection{Γλώσσα D} \label{dlang}
 
-% TODO
-% D language
-%	link to docs
-%	dtrace handbook
-%	Kind of like C + awk
-%	safe to execute (i.e., cannot crash). gives you a limited but powerful
-%	set of tools so that crashing the kernel or a program is not possible
-%	post-processing: data aggregation, graphs, histograms
-%	aggregations
-%		collect data and summarize them later
-%		printed when dtrace(1) exits (or SIGINFO -> ctrl+t)
-%		mark 00:39:00-00:54:00
-%	provider:module:function:name /predicate/ {actions}
-%		GIVE EXAMPLES
-%
-%		provider: set of logically related probes
-%			kind of like a namespace for probes: syscall, sched, ip, fbt, ...
-%		module: explain
-%		function: roughly corresponds to a C function inside the program we're tracing
-%			mark 00:17:00
-%		name: the probe itself: point of instrumentation (entry, return, instruction)
-%			"piece of kernel code that gets executed" -> piece of code we care about
-%			when the probe is enabled, dtrace is called when the code hits
-%			that point, does whatever actions we asked it to do, and then
-%			hands execution back to the program.
-%
-%			probes fire when an event happens (e.g., io, signal, ...)
-%		predicate (optional): quick filters, like awk
-%		action (optional): the probe body: data collection, aggregation, printing, processing
-%			mark 00:35:00
-%
-%		module, function, name can take wildcarding
-%	d.7
-
 Η D είναι η γλώσσα προγραμματισμού που χρησιμοποιείται για την σύνταξη DTrace
-scripts και εντολών, η οποία παρομοιάζει την C και την AWK. Η δομή ενός D
-script είναι αντίστοιχη με αυτή της AWK:
+scripts, η οποία παρομοιάζει την C και την AWK. Η δομή ενός D script είναι
+αντίστοιχη με αυτή της AWK:
 
 \begin{lstlisting}
-	<options>
+<options>
 
-	BEGIN
-	{
-		<actions>
-	}
+<variables, structs, ...>
 
-	<provider>:<module>:<function>:<name>
-	/<predicate>/
-	{
-		<actions>
-	}
+<provider>:<module>:<function>:<name>
+/<predicate>/
+{
+	<actions>
+}
 
-	...
-
-	END
-	{
-		<actions>
-	}
+[...]
 \end{lstlisting}
 
-% TODO
-% https://docs.oracle.com/cd/E18752_01/html/819-5488/gcfqr.html
-% mark 00:17:00
-<++>
-
 Αξίζει να σημειωθεί ότι δεν είναι απαραίτητο να ορίζονται όλα τα πεδία --- το
-παραπάνω κομμάτι κώδικα απλώς δείχνει την γενική δομή ενός D script.
-
-<++>
+παραπάνω απλώς δείχνει την γενική δομή ενός D script.
 
 \subsubsection{Probes}
 
-% TODO
-%		name: the probe itself: point of instrumentation (entry, return, instruction)
-%			"piece of kernel code that gets executed" -> piece of code we care about
-%			when the probe is enabled, dtrace is called when the code hits
-%			that point, does whatever actions we asked it to do, and then
-%			hands execution back to the program.
-
 Στην ορολογία του DTrace, probe ονομάζεται κάθε σημείο ή κομμάτι κώδικα προς
-παρακολούθηση. Αυτά τα σημεία μπορούν να αντιστοιχούν σε συμβάντα (events) ή
-κατηγορίες συμβάντων σε κάποιο υποσύστημα του kernel ή του userpsace,
-συγκεκριμένα σημεία εντός συναρτήσεων, και άλλα. Τα probes επιλέγονται και
+παρακολούθηση. Αυτά τα σημεία μπορούν να αντιστοιχούν σε συμβάντα (events),
+κατηγορίες συμβάντων σε κάποιο υποσύστημα του kernel ή του userpsace, και
+συγκεκριμένα σημεία εντός συναρτήσεων. Τα probes επιλέγονται και
 ενεργοποιούνται από τον χρήστη κατά την εκτέλεση του προγράμματος
-\lstinline{dtrace(1)}, το οποίο στην συνέχεια φορτώνει το D script στον
-πυρήνα, και στο οποίο επιστρέφονται --- από το thread που εκτέλεσε τον κώδικα
-προς παρακολούθηση --- οι πληροφορίες που συλλέχθηκαν για κάθε probe,
-προκειμένου να τυπωθούν και να αξιοποιηθούν από τον χρήστη.
+\lstinline{dtrace(1)}, το οποίο στην συνέχεια φορτώνει το D script στον πυρήνα,
+και στο οποίο επιστρέφονται --- από το thread που εκτέλεσε τον κώδικα προς
+παρακολούθηση, με άλλα λόγια όταν πυροδοτηθεί το probe --- οι πληροφορίες που
+συλλέχθηκαν για κάθε probe, προκειμένου να τυπωθούν και να αξιοποιηθούν από τον
+χρήστη.
 
-<++>
+Τα probes ορίζονται ως πλείαδες όπου κάθε πεδίο χωρίζεται με \lstinline{:}. Τα
+πεδία είναι τα εξής:
 
-\subsubsection{Providers}
+\begin{lstlisting}
+<provider>:<module>:<function>:<name>
+\end{lstlisting}
+
+Πιο συγκεκριμένα:
+
+\begin{itemize}
+	\item \lstinline{<provider>}: Όνομα του συνόλου/namespace στο οποίο
+		ανήκει το probe που θέλουμε να δημιουργήσουμε. Περισσότερα στην
+		ενότητα \ref{providers}.
+	\item \lstinline{<module>} (προαιρετικό): Υποσύστημα/module. Σε ορισμένους
+		providers αυτό αντιστοιχεί σε κανονικά kernel modules
+		(\lstinline{kernel}, \lstinline{sound}, κλπ.), σε άλλους σε
+		κατηγορίες ABI (\lstinline{freebsd}, \lstinline{freebsd32}),
+		και σε άλλους σε νοητές υποκατηγορίες.
+	\item \lstinline{<function>} (προαιρετικό): Συνήθως αναφέρεται σε
+		συναρτήσεις C του προγράμματος/υποσυστήματος που
+		παρακολουθείται, αλλά δεν ισχύει πάντα αυτό.
+	\item \lstinline{<name>} (προαιρετικό): Όνομα probe.
+\end{itemize}
+
+Τα πεδία \lstinline{<module>}, \lstinline{<function>} και \lstinline{<name>}
+επίσης μπορούν να οριστούν κάνοντας χρήση wildcarding, δηλαδή με την χρήση του
+χαρακτήρα \lstinline{*}, όπως συμβαίνει και στις κανονικές εκφράσεις (regex).
+Για παράδειγμα αν θέλουμε να παρακολουθήσουμε όλες τις συναρτήσεις που ξεκινάνε
+με το όνομα \lstinline{open} (δηλαδή \lstinline{open}, \lstinline{openat},
+κλπ.), μπορούμε να ορίσουμε το πεδίο ως \lstinline{open*}.
+
+Πολλοί providers δημιουργούν τα probes τους κατά την φόρτωση τους. Η εντολή
+\lstinline{dtrace(1)} μπορεί να τυπώσει όλα τα διαθέσιμα probes (χωρίς να τα
+ενεργοποιήσει) με την επιλογή \lstinline{-l}:
+
+\begin{lstlisting}
+# dtrace -l
+   ID   PROVIDER            MODULE                          FUNCTION NAME
+    1     dtrace                                                     BEGIN
+    2     dtrace                                                     END
+    3     dtrace                                                     ERROR
+    4        fbt            kernel                camstatusentrycomp entry
+    5        fbt            kernel                camstatusentrycomp return
+    6        fbt            kernel            cam_compat_handle_0x18 entry
+    7        fbt            kernel            cam_compat_handle_0x18 return
+[...]
+\end{lstlisting}
+
+Επίσης μπορεί να γίνει φιλτράρισμα των probes βάσει:
+
+\begin{center}
+\begin{tabular}{|l|l|}
+	\hline
+	\textbf{Φίλτρο} & \textbf{Επιλογή \lstinline{dtrace(1)}} \\  
+	\hline
+	Probe ID & \lstinline{-i <probeid>} \\
+	\hline
+	Provider & \lstinline{-P <provider>} \\
+	\hline
+	Module & \lstinline{-m <module>} \\
+	\hline
+	Συνάρτησης & \lstinline{-f <function>} \\
+	\hline
+	Ονόματος probe & \lstinline{-n <probename>} \\
+	\hline
+\end{tabular}
+\end{center}
+
+\subsubsection{Providers} \label{providers}
 
 Ως providers ορίζονται τα διάφορα modules που είναι υπεύθυνα για συγκεκριμένες
 κατηγορίες παρακολούθησης --- με άλλα λόγια, μπορούμε να ορίσουμε έναν provider
@@ -448,62 +451,63 @@ userspace.
 Στο FreeBSD υπάρχουν αρκετοί providers που καλύπτουν διάφορα υποσυστήματα του
 kernel και του userspace αντίστοιχα, ένας εκ των οποίων είναι και ο
 \lstinline{kinst} (βλέπε ενότητα \ref{kinst}), στον οποίο έχει βασιστεί το
-αντικείμενο της παρούσας εργασίας. Ενδεικτικά, \textit{μερικοί} από τους
-σημαντικούς providers που βρίσκονται στο FreeBSD:
+αντικείμενο της παρούσας εργασίας. Ενδεικτικά, μερικοί από τους σημαντικούς
+providers που βρίσκονται στο FreeBSD:
 
 \begin{center}
-\begin{tabular}{|l|l|p{12cm}|}
+\begin{tabular}{|p{9cm}|p{9cm}|}
 	\hline
-	\textbf{Provider} & \textbf{Κατηγορία} & \textbf{Είδος/τομέας
-		παρακολούθησης} \\
+	\textbf{Provider} & \textbf{Είδος/τομέας παρακολούθησης} \\
 	\hline
-	\lstinline{syscall} & Kernel & Κλήσεις συστήματος \\
+	\lstinline{dtrace} & Ορίζει τα probes
+		\lstinline{BEGIN}, \lstinline{END} και \lstinline{ERROR} \\
 	\hline
-	\lstinline{dtmalloc} & Kernel & Δεσμεύσεις μνήμης στον πυρήνα \\
+	\lstinline{profile} & Περιέχει probes που
+		πυροδοτούνται βάσει ορισμένου χρονικού διαστήματος. \\
 	\hline
-	\lstinline{proc} & Kernel & Συμβάντα σχετικά με διεργασίες \\
+	\lstinline{syscall} & Κλήσεις συστήματος \\
 	\hline
-	\lstinline{ip} & Kernel & Συμβάντα σχετικά με τα προτόκολλα IPv4 και
+	\lstinline{dtmalloc} & Δεσμεύσεις μνήμης στον πυρήνα \\
+	\hline
+	\lstinline{proc} & Συμβάντα σχετικά με διεργασίες \\
+	\hline
+	\lstinline{ip} & Συμβάντα σχετικά με τα προτόκολλα IPv4 και
 		IPv6 \\
 	\hline
-	\lstinline{tcp}/\lstinline{udp} & Kernel & Συμβάντα TCP ή UDP \\
+	\lstinline{tcp}/\lstinline{udp} & Συμβάντα TCP ή UDP \\
 	\hline
-	\lstinline{sched} & Kernel & Συμβάντα χρονοπρογραμματισμού (scheduling)
+	\lstinline{sched} & Συμβάντα χρονοπρογραμματισμού (scheduling)
 		\\
 	\hline
-	\lstinline{fbt} & Kernel & Αρχή ή/και τέλος συναρτήσεων πυρήνα \\
+	\lstinline{fbt} & Αρχή ή/και τέλος συναρτήσεων πυρήνα \\
 	\hline
-	\lstinline{kinst} & Kernel & Οποιαδήποτε εντολή assembly εντός
+	\lstinline{kinst} & Οποιαδήποτε εντολή assembly εντός
 		συναρτήσεων πυρήνα, καθώς και inline συναρτήσεις \\
 	\hline
-	\lstinline{lockstat} & Kernel & Locking εντός του πυρήνα \\
+	\lstinline{lockstat} & Locking εντός του πυρήνα \\
 	\hline
-	\lstinline{io} & Kernel & I/O δίσκων \\
+	\lstinline{io} & I/O δίσκων \\
 	\hline
-	\lstinline{sdt} & Kernel & Στατικά probes εντός του πηγαίου κώδικα του
+	\lstinline{sdt} & Στατικά probes εντός του πηγαίου κώδικα του
 		πυρήνα \\
 	\hline
-	\lstinline{usdt} & Userspace & Όπως ο \lstinline{sdt} αλλά για το
+	\lstinline{usdt} & Όπως ο \lstinline{sdt} αλλά για το
 		userspace \\
 	\hline
-	\lstinline{pid} & Userspace & Όπως ο FBT αλλά για το userpsace \\
-	% TODO markj 00:58:00
+	\lstinline{pid} & Όπως ο \lstinline{fbt} αλλά για το
+		userpsace \\
 	\hline
 \end{tabular}
 \end{center}
 
-<++>
-
 \subsubsection{Μεταβλητές}
 
-% TODO
-%	they are context-dependent, i.e., different for every thread
-%	dtrace book
-
-Μερικές συνηθισμένες και χρήσιμες μεταβλητές είναι οι παρακάτω:
+Η γλώσσα D περιλαμβάνει built-in μεταβλητές οι οποίες μπορούν να
+χρησιμοποιηθούν στα scripts. Μερικές συνηθισμένες και χρήσιμες μεταβλητές είναι
+οι παρακάτω:
 
 \begin{center}
-\begin{tabular}{|p{4cm}|p{13cm}|}
+\begin{tabular}{|p{9cm}|p{9cm}|}
 	\hline
 	\textbf{Μεταβλητή} & \textbf{Περιγραφή} \\
 	\hline
@@ -544,29 +548,60 @@ kernel και του userspace αντίστοιχα, ένας εκ των οπο
 \end{tabular}
 \end{center}
 
-% TODO examples
-<++>
+Πέρα από τις μεταβλητές που παρέχονται από την γλώσσα D ωστόσο, ο χρήστης
+μπορεί να ορίσει και δικές του --- global και τοπικές --- μεταβλητές.
 
-\subsubsection{Συναρτήσεις} \label{actions}
+\subsubsection{Συναρτήσεις} \label{functions}
 
-% TODO
-%	dtrace book
-% https://docs.oracle.com/cd/E18752_01/html/819-5488/gcfbn.html
-% https://docs.oracle.com/cd/E19253-01/819-5488/gcfsm/index.html
-
-<++>
-
-Μερικές συνηθισμένες και χρήσιμες συναρτήσεις είναι οι παρακάτω:
+Όπως και με τις μεταβλητές, η γλώσσα D επίσης περιλαμβάνει και built-in
+συναρτήσεις. Μερικές συνηθισμένες και χρήσιμες συναρτήσεις είναι οι παρακάτω:
 
 \begin{center}
-\begin{tabular}{|p{4cm}|p{13cm}|}
+\begin{tabular}{|p{9cm}|p{9cm}|}
 	\hline
 	\textbf{Συνάρτηση} & \textbf{Περιγραφή} \\
 	\hline
-	\lstinline{printf(...), printa(...), print(...)} & Εκτύπωση κειμένου.
-		\\
+	\lstinline{printf(...), printa(...), print(...)} & Εκτύπωση κειμένου. \\
 	\hline
-	\lstinline{quantize(val)} & Κβαντισμός συχνότητας σε δυνάμεις του 2. \\
+	\lstinline{stack(), ustack()} & Στοίβα κλήσεων kernel/userspace του
+		thread που εκτελεί το τρέχον probe. \\
+	\hline
+	\lstinline{breakpoint()} & Ορισμός kernel breakpoint και μεταφορά
+		ελέγχου στον kernel debugger \lstinline{ddb(4)}. \\
+	\hline
+	\lstinline{panic()} & Πρόκληση kernel panic. \\
+	\hline
+\end{tabular}
+\end{center}
+
+\subsubsection{Συσσωματώσεις (Aggregations)}
+
+Οι συσσωματώσεις είναι ένας τρόπος σύλλεξης και οργάνωσης δεδομένων κατά την
+παρακολούθηση, και εκτύπωσής τους στο τέλος της παρακολούθησης, με διάφορους
+τρόπους κατανομής τους ή ανάλυσής τους.
+
+Η γενική σύνταξη των συσσωματώσεων είναι η παρακάτω:
+
+\begin{lstlisting}
+@aggname[<key1>, ...] = aggfunc(args);
+\end{lstlisting}
+
+Με τον χαρακτήρα \lstinline{@} δηλώνουμε μία συσσωμάτωση, στην οποία μπορούμε
+επίσης να δώσουμε και κάποιο όνομα. Η σύλλεξη των δεδομένων πολύ συχνά γίνεται
+βάσει ενός ή παραπάνω κλειδιών. Τέλος για κάθε συσσωμάτωση ορίζεται και μία
+συνάρτηση, η οποία δρα πάνω στα συλλεγμένα δεδομένα.
+
+Μερικές συνηθισμένες συναρτήσεις είναι οι εξής:
+
+\begin{center}
+\begin{tabular}{|p{9cm}|p{9cm}|}
+	\hline
+	\textbf{Συνάρτηση} & \textbf{Περιγραφή} \\
+	\hline
+	\lstinline{quantize(val)} & Κατανομή συχνότητας δεδομένων σε δυνάμεις του 2. \\
+	\hline
+	\lstinline{lquantize(val, factor, low, high, nsteps)} & Γραμμική
+		κατανομή συχνότητας δεδομένων. \\
 	\hline
 	\lstinline{min(val)} & Ελάχιστο. \\
 	\hline
@@ -580,49 +615,92 @@ kernel και του userspace αντίστοιχα, ένας εκ των οπο
 	\hline
 	\lstinline{stddev(val)} & Τυπική απόκλιση. \\
 	\hline
-	\lstinline{stack(), ustack()} & Στοίβα κλήσεων kernel/userspace του
-		thread που εκτελεί το τρέχον probe. \\
-	\hline
-	\lstinline{breakpoint()} & Ορισμός kernel breakpoint και μεταφορά
-		ελέγχου στον kernel debugger \lstinline{ddb(4)}. \\
-	\hline
-	\lstinline{panic()} & Πρόκληση kernel panic. \\
-	\hline
 \end{tabular}
 \end{center}
 
+Οι συσσωματώσεις τυπώνονται είτε στο τέλος της παρακολούθησης, είτε με την
+αποστολή του POSIX σήματος \lstinline{SIGINFO}, το οποίο μπορεί να γίνει εύκολα
+με τον συνδυασμό πληκτρολογίου \lstinline{CTRL-T} στην γραμμή εντολών.
+
+Για παράδειγμα, η παρακάτω εντολή δηλώνει μία συσσωμάτωση με όνομα
+\lstinline{progs}, συλλέγει όλες τις κλήσεις στα \lstinline{write(2)} system
+calls και τις οργανώνει/αποθηκεύει βάσει του ονόματος του προγράμματος που τις
+εκτελεί (μεταβλητή \lstinline{execname}), και τυπώνει το όνομα του κάθε
+προγράμματος στα αριστερά, και τον αριθμό τον κλήσεων που πραγματοποίησε στα
+δεξιά, με την χρήση της συνάρτησης \lstinline{count()}, η οποία θα μετρήσει
+πόσες φορές εμφανίζεται κάθε κλειδί.
+
+\begin{lstlisting}
+# dtrace -n 'syscall::write*:entry { @progs[execname] = count(); }'
+dtrace: description 'syscall::write*:entry ' matched 3 probes
+^T
+load: 0.29  cmd: dtrace 25176 [uwait] 4.35r 0.04u 0.11s 0% 42372k
+  irssi                                                             1
+  st                                                                1
+  librewolf                                                         5
+  dwm                                                               8
+  calcurse                                                         13
+  slstatus                                                         44
+  Xorg                                                            680
+  mpv                                                             798
+
+^C
+
+  irssi                                                             1
+  tmux                                                              6
+  st                                                                9
+  dtrace                                                           11
+  dwm                                                              14
+  librewolf                                                        18
+  calcurse                                                         22
+  slstatus                                                         77
+  Xorg                                                           1043
+  mpv                                                            1394
+\end{lstlisting}
+
+Ο λόγος που η συσσωμάτωση τυπώθηκε δύο φορές είναι διότι το πρώτο τύπωμα έγινε
+με την αποστολή του σήματος \lstinline{SIGINFO}, ενώ η δεύτερη έγινε λόγω του
+ότι τελείωσε η παρακολούθηση.
+
 \subsubsection{Φίλτρα (Predicates)}
 
-<++>
+Τα predicates είναι ένας γρήγορος τρόπος φιλτραρίσματος των παρακολουθούμενων
+probes, με παρόμοιο τρόπο και σύνταξη όπως στην γλώσσα AWK. Κάθε predicate
+αξιολογείται κατά την πυροδότηση του probe και αν η συνθήκη που έχει οριστεί
+είναι αληθής, τότε εκτελείται και το σώμα του probe, ειδάλλως το συγκεκριμένο
+probe αγνοείται. Εντός της συνθήκης που ορίζεται στο probe μπορεί να γίνει
+χρήση μεταβλητών.
 
-\subsubsection{Συσσωματώσεις (Aggregations)}
+Για παράδειγμα, αν θέλαμε να φιλτράρουμε τις αποστολές πακέτων IP, μόνο όταν
+προέρχονται από το \lstinline{firefox}, θα ορίζαμε το παρακάτω probe και
+predicate:
 
-% TODO mark 00:38:00
+\begin{lstlisting}
+ip:::send
+/execname == "firefox"/
+{
+}
+\end{lstlisting}
 
-<++>
-
-% TODO examples
-<++>
-
-\subsubsection{CTF}
+\subsubsection{CTF} \label{ctf}
 
 Υπάρχουν πολλές περιπτώσεις που ο χρήστης θέλει να εξάγει από το κομμάτι που
-παρακολουθείται πληροφορίες σχετικά με κάποια δομή δεδομένων, ορίσματα
-συναρτήσεων, και ούτω καθεξής. Προκειμένου όμως να μπορέσει ένα probe να
-συλλέξει αυτές τις πληροφορίες από τον πυρήνα και να είναι χρήσιμες για τον
-χρήστη, πρέπει επίσης να γνωρίζει τον τύπο και την αναπαράστασή τους.
-Αντίστοιχο πρόβλημα αντιμετωπίζουν και τα πρόγραμματα αποσφαλμάτωσης
-(debuggers). Στην περίπτωση πολλών debuggers (όπως του GDB) χρησιμοποιείται ένα
-πρότυπο κωδικοποίησης αυτών των πληροφοριών που ονομάζεται «DWARF», καθώς
-επίσης χρησιμοποιείται και για την υλοποίηση της παρούσας εργασίας και στο
-οποίο γίνεται αναφορά στην ενότητα \ref{dwarf}. Ωστόσο αυτό το πρότυπο είναι
-αρκετά περίπλοκο και «μεγάλο» για την περίπτωση του DTrace, το οποίο χρειάζεται
-μόνο να αναπαριστά τύπους δεδομένων (integers, structs, unions, κλπ.) της
-γλώσσας C.
+παρακολουθεί πληροφορίες σχετικά με κάποια δομή δεδομένων του πυρήνα που
+παρακολουθεί, ορίσματα των probes, και ούτω καθεξής. Προκειμένου όμως να
+μπορέσει ένα probe να συλλέξει αυτές τις πληροφορίες από τον πυρήνα και να
+είναι χρήσιμες και κατανοητές για τον χρήστη, πρέπει επίσης να γνωρίζει τον
+τύπο και την αναπαράστασή τους. Αντίστοιχο πρόβλημα αντιμετωπίζουν και τα
+πρόγραμματα αποσφαλμάτωσης (debuggers). Στην περίπτωση πολλών debuggers (όπως
+του GDB) χρησιμοποιείται ένα πρότυπο κωδικοποίησης πληροφοριών που ονομάζεται
+«DWARF», καθώς επίσης χρησιμοποιείται και για την υλοποίηση της παρούσας
+εργασίας και στο οποίο γίνεται αναφορά στην ενότητα \ref{dwarf}. Ωστόσο αυτό το
+πρότυπο είναι αρκετά περίπλοκο και «μεγάλο» για την περίπτωση του DTrace, το
+οποίο χρειάζεται μόνο να αναπαριστά τύπους δεδομένων (integers, structs,
+unions, κλπ.) της γλώσσας C.
 
-Το πρότυπο που χρησιμοποείται από το DTrace είναι το CTF, το οποίο μπορεί να
-θεωρηθεί ως ένα υποσύνολο του DWARF, και στο FreeBSD χρησιμοποιείται κάτα κύριο
-λόγο από το DTrace.
+Το πρότυπο που χρησιμοποείται από το DTrace είναι το CTF \cite{ctf}, το οποίο
+μπορεί είναι ένα υποσύνολο του DWARF, και στο FreeBSD χρησιμοποιείται κάτα
+κύριο λόγο από το DTrace.
 
 Το τεχνικό κομμάτι του CTF δεν αφορά το κομμάτι της εργασίας, οπότε δεν
 χρειάζεται να γίνει αναλυτική αναφορά σε αυτό. Η εμφάνιση του γραφήματος τύπων
@@ -630,146 +708,346 @@ CTF μπορεί να γίνει με την εντολή \lstinline{ctfdump(1)}
 παρακάτω εντολή θα τυπώσει το γράφημα τύπων CTF για τον πυρήνα του FreeBSD:
 
 \begin{lstlisting}
-	ctfdump -t /boot/kernel/kernel
+# ctfdump -t /boot/kernel/kernel
 
-	- Types ----------------------------------------------------------------------
+- Types ----------------------------------------------------------------------
 
-	  <1> INTEGER char encoding=SIGNED CHAR offset=0 bits=8
-	  <2> INTEGER long encoding=SIGNED offset=0 bits=64
-	  [3]
-	  <4> INTEGER unsigned int encoding=0x0 offset=0 bits=32
-	  <5> TYPEDEF uInt refers to 4
-	  [6] INTEGER unsigned char encoding=CHAR offset=0 bits=8
-	  ...
+  <1> INTEGER char encoding=SIGNED CHAR offset=0 bits=8
+  <2> INTEGER long encoding=SIGNED offset=0 bits=64
+  [3]
+  <4> INTEGER unsigned int encoding=0x0 offset=0 bits=32
+  <5> TYPEDEF uInt refers to 4
+  [6] INTEGER unsigned char encoding=CHAR offset=0 bits=8
+
+  [...]
 \end{lstlisting}
 
-% TODO
-%	ctf(5)
-%	link to docs
-%	probe arguments are defined using ctf, roughly like C types (dtrace_ip.4)
-%		dtrace -n 'probe' -lv -> print(*args[0]);
+Το DTrace κάνει χρήση αυτής της κωδικοποίησης τύπων δεδομένων C, ωστέ να μπορεί
+ο χρήστης να έχει πρόσβαση στους τύπους δεδομένων του πυρήνα εντός του D
+script. Για παράδειγμα, ας υποθέσουμε την συνάρτηση \lstinline{vm_fault()}
+(\lstinline{sys/vm/vm_fault.c}):
 
-<++>
+\begin{lstlisting}[language=C]
+int
+vm_fault(vm_map_t map, vm_offset_t vaddr, vm_prot_t fault_type,
+    int fault_flags, vm_page_t *m_hold)
+{
+	[...]
+}
+\end{lstlisting}
+
+Η παρακάτω εντολή τυπώνει το πρώτο όρισμα της συνάρτησης
+\lstinline{vm_fault()}, δηλαδή το \lstinline{vm_map_t map}, κάθε φορά που ο
+πυρήνας εισέρχεται στην συνάρτηση:
+
+\begin{lstlisting}
+# dtrace -n 'fbt::vm_fault:entry { print(*args[0]); }'
+dtrace: description 'fbt::vm_fault:entry ' matched 1 probe
+CPU     ID                    FUNCTION:NAME
+  0  50203                   vm_fault:entry struct vm_map {
+    struct vm_map_entry header = {
+        struct vm_map_entry *left = 0xfffff809a5098ea0
+        struct vm_map_entry *right = 0xfffff8002ecad840
+        vm_offset_t start = 0x800000000000
+        vm_offset_t end = 0x1000
+        vm_offset_t next_read = 0
+        vm_size_t max_free = 0
+        union vm_map_object object = {
+            struct vm_object *vm_object = 0
+            struct vm_map *sub_map = 0
+        }
+        vm_ooffset_t offset = 0
+        vm_eflags_t eflags = 0x80000
+        vm_prot_t protection = 0
+        vm_prot_t max_protection = 0
+        vm_inherit_t inheritance = '\0'
+        uint8_t read_ahead = 0
+        int wired_count = 0
+        struct ucred *cred = 0
+        struct thread *wiring_thread = 0
+    }
+    struct sx lock = {
+        struct lock_object lock_object = {
+            const char *lo_name = 0xffffffff811cbe73
+            u_int lo_flags = 0x2330000
+            u_int lo_data = 0
+            struct witness *lo_witness = 0
+        }
+        volatile uintptr_t sx_lock = 0x1
+    }
+    struct mtx system_mtx = {
+        struct lock_object lock_object = {
+            const char *lo_name = 0xffffffff810d7c8f
+            u_int lo_flags = 0x1430000
+            u_int lo_data = 0
+            struct witness *lo_witness = 0
+        }
+        volatile uintptr_t mtx_lock = 0
+    }
+    int nentries = 0x99
+    vm_size_t size = 0x6ab8000
+    u_int timestamp = 0x385
+    u_char needs_wakeup = 0
+    u_char system_map = 0
+    vm_flags_t flags = 0x98
+    vm_map_entry_t root = 0xfffff805835c5d20
+    pmap_t pmap = 0xfffff8000e536ad0
+    vm_offset_t anon_loc = 0x3869fde00000
+    int busy = 0
+}
+^C
+\end{lstlisting}
+
+Όπως βλέπουμε, χάρη στην κωδικοποίηση CTF, μπορούμε να τυπώσουμε το όρισμα που
+είναι τύπου \lstinline{vm_map_t}, ενός τύπου ορισμένου στον πυρήνα του FreeBSD,
+και να δούμε τα περιεχόμενα του σε αναγνώσιμη μορφή κατά την στιγμή της
+πυροδότησης του probe.
 
 \subsubsection{DIF}
 
-% TODO
-%	Compilation: DIF (D intermediary format)
-%		link to docs
-%		https://www.usenix.org/legacy/event/usenix04/tech/general/full_papers/cantrill/cantrill_html/
-%		diagram
-%		dtrace -S -> dump bytecode for a given d script
-%	mark 00:25:00
-
 Για να εισαχθεί ένα D script στον πυρήνα του λειτουργικού συστήματος,
 χρησιμοποιείται η κωδικοποίηση DIF. Η κωδικοποίηση αυτή έχει ως στόχο την
-μεταγλώττιση του D script σε μία ενδιάμεση byte κωδικοποίηση (byte code), η
-οποία μπορεί να εκτελεστεί από το kernel. Αφού το script έχει μεταγλωττιστεί,
-φορτώνεται στο kernel από το DTrace, και εκτελείται για τα probes που έχουν
-οριστεί όταν αυτά ενεργοποιηθούν.
+μεταγλώττιση του D script σε ενδιάμεσο byte κώδικα (byte code), ο οποίος μπορεί
+να εκτελεστεί από το kernel. Αφού το script έχει μεταγλωττιστεί, φορτώνεται στο
+kernel από το DTrace, και εκτελείται για τα probes που έχουν οριστεί όταν αυτά
+ενεργοποιηθούν.
+
+Η κωδικοποίηση DIF για ένα δεδομένο D script μπορεί να εμφανιστεί
+χρησιμοποιώντας την επιλογή \lstinline{-S} στην εντολή \lstinline{dtrace(1)}:
+
+\begin{lstlisting}
+# dtrace -Sn 'ip:::send { printf("%s", execname); exit(0); }'
+
+DIFO 0x2241cb7f41c0 returns string (unknown) by ref (size 256)
+OFF OPCODE      INSTRUCTION
+00: 29011801    ldgs DT_VAR(280), %r1           ! DT_VAR(280) = "execname"
+01: 23000001    ret  %r1
+
+NAME             ID   KND SCP FLAG TYPE
+execname         280  scl glb r    string (unknown) by ref (size 256)
+
+DIFO 0x2241cb7f4230 returns D type (integer) (size 4)
+OFF OPCODE      INSTRUCTION
+00: 25000001    setx DT_INTEGER[0], %r1         ! 0x0
+01: 23000001    ret  %r1
+dtrace: description 'ip:::send ' matched 1 probe
+^C
+\end{lstlisting}
 
 Αντίστοιχα στο Linux, χρησιμοποείται η κωδικοποίηση \lstinline{eBPF}.
 
-<++>
+\subsection{\lstinline{fbt}} \label{fbt}
 
-\subsection{Επικοινωνία δεδομένων μεταξύ kernel και userspace}
+Ο \lstinline{fbt} παρακολουθεί την έναρξη ή/και το τέλος μίας kernel συνάρτησης με την
+χρήση δύο probes, \lstinline{entry} και \lstinline{return} αντίστοιχα.
 
-Η επικονωνία δεδομένων μεταξύ kernel και userspace επιτυχάνεται μέσω ενός
-ζευγαριού buffers, διαφορετικό για κάθε πυρήνα (per-CPU). Aνά πάσα στιγμή ο
-ένας buffer είναι ανενεργός και ο άλλος ενεργός, και κάθε ένα δευτερόλεπτο, οι
-buffers ανταλλάσονται, οπότε αυτός που ήταν ενεργός τώρα είναι ανενεργός και
-αυτός που ήταν ανενεργός τώρα είναι ενεργός. Στον ενεργό buffer γράφονται τα
-δεδομένα από το kernel τα οποία οποία με την ανταλλαγή των buffers στέλνονται
-και γίνονται διαθέσιμα προς διάβασμα από το userspace μέσω του πλέον ανενεργού
-buffer. Με άλλα λόγια, το kernel γράφει στον ενεργό buffer, και το userspace
-διαβάζει από τον ανενεργό. Αυτό έχει ως αποτέλεσμα την συνεχή ροή δεδομένων από
-το kernel προς το userspace, διότι ταυτόχρονα γίνονται διάβασμα και καταγραφή
-δεδομένων.
+Για κάθε probe ο \lstinline{fbt} εκθέτει ορίσματα. Για τα \lstinline{entry} probes τα
+ορίσματα αντιστοιχούν στα ορίσματα της συνάρτησης που παρακολουθείται, όπως
+ορίζονται στον κώδικά της. Για παράδειγμα:
 
-% TODO
-% Buffers
-%	https://www.illumos.org/books/dtrace/chp-buf.html#chp-buf
-%	what parameters can be modified? do they introduce overhead (switchrate
-%	yes)?
-%	diagrams
-% ioctls?
+\begin{lstlisting}
+# dtrace -lvn 'fbt:kernel:malloc:entry'
+   ID   PROVIDER            MODULE                          FUNCTION NAME
+30144        fbt            kernel                            malloc entry
+[...]
+	Argument Types
+		args[0]: size_t
+		args[1]: struct malloc_type *
+		args[2]: int
+\end{lstlisting}
 
-<++>
+Για τα \lstinline{return} probes τα ορίσματα \textit{δεν} αντιστοιχούν στα
+ορίσματα της συνάρτησης, αλλά είναι μόνο δύο, και αντιστοιχούν σε:
 
-\subsection{FBT} \label{fbt}
+\begin{itemize}
+	\item \lstinline{args[0]}: Offset στην εντολή επιστροφής.
+	\item \lstinline{args[1]}: Τιμή επιστροφής (return value) της
+		συνάρτησης, όπως ορίζεται στον κώδικά της.
+\end{itemize}
 
-% TODO
-%	fbt
-%		entry and return points of a func (with args) only
-%		Breakpoint instructions
-%		caveats: tail calls, inline funcs
-%		pid -> fbt for userspace
-%			00:57:00
-<++>
+\begin{lstlisting}
+# dtrace -lvn 'fbt:kernel:malloc:return'
+   ID   PROVIDER            MODULE                          FUNCTION NAME
+30145        fbt            kernel                            malloc return
+[...]
+Argument Types
+	args[0]: int
+	args[1]: void *
+\end{lstlisting}
 
-% TODO <++> more providers (explain at least all the basic ones?)
+Για παράδειγμα:
 
-\subsection{Scripts υψηλότερου επιπέδου} \label{highscripts}
+\begin{lstlisting}
+# dtrace -n 'fbt:kernel:malloc:entry { printf("alloc size: %d", args[0]); }'
+dtrace: description 'fbt:kernel:malloc:entry ' matched 1 probe
+CPU     ID                    FUNCTION:NAME
+  5  30144                     malloc:entry alloc size: 608
+  5  30144                     malloc:entry alloc size: 608
+  5  30144                     malloc:entry alloc size: 88
+  5  30144                     malloc:entry alloc size: 388
+  5  30144                     malloc:entry alloc size: 64
+  5  30144                     malloc:entry alloc size: 96
+[...]
 
-% TODO
-% higher-level scripts
-%	lockstat
-%	flamegraphs
-%	dwatch
-%	truss, ...
+# dtrace -n 'fbt:kernel:malloc:return { printf("alloc addr: %p", args[1]); }'
+dtrace: description 'fbt:kernel:malloc:return ' matched 1 probe
+CPU     ID                    FUNCTION:NAME
+ 12  30145                    malloc:return alloc addr: fffff80647b7e400
+ 12  30145                    malloc:return alloc addr: fffff80647b7e400
+  6  30145                    malloc:return alloc addr: fffff8089a666660
+  5  30145                    malloc:return alloc addr: fffff80003fbe4f0
+  2  30145                    malloc:return alloc addr: fffff807e9977df0
+[...]
+\end{lstlisting}
 
-<++>
+Ο \lstinline{fbt} δημιουργεί \textit{όλα} τα probes κατά την φόρτωση του
+module, και μπορούν να τυπωθούν με την χρήση της παρακάτω εντολής
+\lstinline{dtrace -l -P fbt}.
 
-\subsection{Παραδείγματα}
+\subsection{Περισσότερα παραδείγματα χρήσης DTrace}
 
-% TODO
-% examples
-%	mark 00:30:00
-%	mark 00:36:00
-%	mark 00:39:00-00:54:00
-%	/usr/share/examples/dtrace
-%	/usr/lib/dtrace
-%	flamegraphs
-%		mark 01:11:00
-%	writing a provider
+Παρακολούθηση ανοιγμάτων αρχείων (\lstinline{open(2)} syscall) και εκτύπωση του
+προγράμματος που εκτελεί το άνοιγμα:
 
-<++>
+\begin{lstlisting}
+# dtrace -n 'syscall::open*:entry { printf("%s", execname); }'
+dtrace: description 'syscall::open*:entry ' matched 4 probes
+CPU     ID                    FUNCTION:NAME
+  1  69846                       open:entry sshd
+  5  69846                       open:entry sshd-session
+  5  69846                       open:entry sshd-session
+  5  69846                       open:entry sshd-session
+\end{lstlisting}
 
-\section{kinst} \label{kinst}
+Μέτρηση χρόνου εκτέλεσης (σε nanoseconds) της kernel συνάρτησης
+\lstinline{vm_fault}. Η συνάρτηση \lstinline{quantize()} θα εκτυπώσει
+\textit{στο τέλος της παρακολούθησης} ένα ιστόγραμμα όπου στην αριστερή στήλη
+εμφανίζονται οι χρόνοι εκτέλεσης (στρογγυλοποιημένοι σε δυνάμεις του δύο), και
+στην δεξιά στήλη το πλήθος των κλήσεων για κάθε χρόνο εκτέλεσης:
 
-% TODO
-% See commits, manpage
-%	https://reviews.freebsd.org/D40874
-% Architecture dependent parts
-%	emulation
-% diagrams
-% tail-calls?
-% rip/pc-relative instrs
-%
-%kinst creates probes on-demand, meaning it searches for and parses the
-%function's instructions each time dtrace(1) is run, and not at module
-%load time.  This is in contrast to FBT's load-time parsing, since kinst
-%can potentially create thousands of probes for just a single function,
-%instead of up to two (entry and return) in the case of FBT.  A result of
-%this is that dtrace -l -P kinst will not match any probes.
+\begin{lstlisting}
+# cat > timing.d
+fbt::vm_fault:entry
+{
+	self->ts = timestamp;
+}
 
-Ο \lstinline{kinst} είναι ένας νέος DTrace provider χαμηλού επιπέδου, ο οποίος
-αναπτύχθηκε από τον συντάκτη της παρούσας εργασίας, σε συνεργασία με τον Mark
-Johnston \cite{markpres}, ως μέρος του FreeBSD. Δημιουργήθηκε με στόχο να
-αντιμετωπίσει τους περιορισμούς του FBT (βλέπε ενότητα \ref{fbt}), δηλαδή την
-έλλειψη δυνατότητας παρακολούθησης inline συναρτήσεων, καθώς και γενικότερα της
-πιο εξειδικευμένής παρακολουθήσης πέραν της αρχής ή/και του τέλους μίας
-συνάρτησης.
+fbt::vm_fault:return
+/self->ts/
+{
+	@ = quantize(timestamp - self->ts);
+	self->ts = 0;
+}
+^D
 
-Εντός του πηγαίου κώδικα του FreeBSD, ο κώδικας του \lstinline{kinst} βρίσκεται
-στο \lstinline{sys/cddl/dev/kinst} \cite{kinstsrc} και υποστηρίζεται στις
-αρχιτεκτονικές x86-64 (AMD64), ARM64 και RISC-V.
+# dtrace -s timing.d
+dtrace: script 'timing.d' matched 2 probes
+^C
+
+
+           value  ------------- Distribution ------------- count
+             256 |                                         0
+             512 |@@@@@                                    272
+            1024 |@                                        42
+            2048 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         1671
+            4096 |@                                        44
+            8192 |                                         21
+           16384 |                                         9
+           32768 |                                         1
+           65536 |
+\end{lstlisting}
+
+Παρακολούθηση της kernel συνάρτησης \lstinline{malloc(9)} και εκτύπωση του
+προγράμματος που κάλεσε την \lstinline{malloc()}, την αρχική διεύθυνση του
+κομματιού μνήμης που δεσμεύθηκε, το μέγεθος της δέσμευσης σε bytes, καθώς και
+την στοίβα κλήσεων (call stack):
+
+\begin{lstlisting}
+# cat > malloc.d
+fbt::malloc:entry
+{
+        self->bytes = args[0];
+}
+
+fbt::malloc:return
+/self->bytes/
+{
+        printf("%s addr=%p bytes=%d", execname, args[1], self->bytes);
+        self->bytes = 0;
+	stack();
+}
+^D
+
+# dtrace -s malloc.d
+dtrace: script 'malloc.d' matched 2 probes
+CPU     ID                    FUNCTION:NAME
+  0  30145                    malloc:return dtrace addr=fffff805c90b7800 bytes=608
+              dtrace.ko`dtrace_dof_create+0x18
+              dtrace.ko`dtrace_ioctl+0x970
+              kernel`devfs_ioctl+0xcb
+              kernel`vn_ioctl+0xce
+              kernel`devfs_ioctl_f+0x1e
+              kernel`kern_ioctl+0x255
+              kernel`sys_ioctl+0xff
+              kernel`amd64_syscall+0x10e
+              kernel`0xffffffff80fb312b
+
+  3  30145                    malloc:return acpi_thermal addr=fffff809ddc3f580 bytes=88
+              kernel`AcpiOsAllocateZeroed+0xe
+              kernel`AcpiEvaluateObject+0x27
+              kernel`acpi_GetInteger+0x3e
+              kernel`acpi_tz_get_temperature+0x21
+              kernel`acpi_tz_monitor+0x19
+              kernel`acpi_tz_thread+0x18c
+              kernel`fork_exit+0x7f
+              kernel`0xffffffff80fb387e
+ 13  30145                    malloc:return devd addr=fffff80a42780d00 bytes=256
+              kernel`sysctl_handle_string+0x4e
+              kernel`sysctl_hostname+0xb0
+              kernel`sysctl_root_handler_locked+0x91
+              kernel`sysctl_root+0x23e
+              kernel`userland_sysctl+0x188
+              kernel`sys___sysctl+0x60
+              kernel`amd64_syscall+0x10e
+              kernel`0xffffffff80fb312b
+^C
+\end{lstlisting}
+
+Ακόμη περισσότερα χρήσιμα και πιο εξεζητημένα παραδείγματα μπορεί κανείς να
+βρει παρακάτω:
+
+\begin{itemize}
+	\item \href{https://www.brendangregg.com/Articles/FreeBSDwiki\_DTrace\_Tutorial\_2014.pdf}
+		{Brendan Gregg: The DTrace One-Liner Tutorial}
+	\item \href{https://www.brendangregg.com/DTrace/dtrace\_oneliners.txt}
+		{Brendan Gregg: DTrace One-Liners}
+	\item \lstinline{/usr/share/examples/dtrace}
+\end{itemize}
+
+\section{\lstinline{kinst}} \label{kinst}
+
+Ο \lstinline{kinst} είναι ένας νέος DTrace provider, ο οποίος αναπτύχθηκε από
+τον συντάκτη της παρούσας εργασίας, σε συνεργασία με τον Mark Johnston, ως
+μέρος του FreeBSD. Δημιουργήθηκε με στόχο να αντιμετωπίσει τους περιορισμούς
+του \lstinline{fbt} (βλέπε ενότητα \ref{fbt}), δηλαδή την έλλειψη δυνατότητας
+παρακολούθησης inline συναρτήσεων, καθώς και γενικότερα της πιο εξειδικευμένής
+παρακολουθήσης πέραν της αρχής και του τέλους μίας συνάρτησης. Υποστηρίζεται
+στις αρχιτεκτονικές AMD64, ARM64 και RISC-V.
 
 Το όνομα "kinst" είναι εμπνευσμένο από την δημοσίευση των Tamches \& Miller
 \cite{tamches}, στην οποία κάνουν αναφορά στο πειραματικό εργαλείο
 παρακολούθησης που ανέπτυξαν, ως "KernInst".
 
-<++>
+Ο kinst δημιουργεί τα probes κατόπιν αιτήματος (on-demand) και όχι κατά το
+φόρτωμα του module, όπως συμβαίνει στην περίπτωση του \lstinline{fbt}, ο οποίος
+δημιουργεί \textit{όλα} τα probes κατά την φόρτωσή του. Ο λόγος που συμβαίνει
+αυτό είναι ότι σε αντίθεση με τον \lstinline{fbt}, ο οποίος για κάθε συνάρτηση
+που μπορεί να παρακολουθήσει, δημιουργεί δύο probes (\lstinline{entry} και
+\lstinline{return}), ο \lstinline{kinst} μπορεί να δημιουργήσει ακόμα και
+χιλιάδες probes για \textit{κάθε} συνάρτηση, ανάλογα με το πόσες εντολές
+assembly περιέχει, κάτι το οποίο σε καμία περίπτωση δεν είναι αποδοτικό από
+άποψη διαχείρισης χωρητικότητας. Ένα αποτέλεσμα αυτής της προσέγγισης ωστόσο
+είναι ότι η εντολή \lstinline{dtrace -l -P kinst} δεν τυπώνει κανένα probe.
 
 \subsection{Χρήση}
 
@@ -780,62 +1058,62 @@ Johnston \cite{markpres}, ως μέρος του FreeBSD. Δημιουργήθη
 \end{itemize}
 
 Με αυτή την σύνταξη παρακολουθούνται \textit{όλες} οι εντολές assembly της
-συνάρτησης \lstinline{function}. Για παράδειγμα:
+συνάρτησης \lstinline{<function>}. Για παράδειγμα:
 
 \begin{lstlisting}
-	# dtrace -n 'kinst::vm_fault:'
-	dtrace: description 'kinst::vm_fault:' matched 1481 probes
-	CPU     ID                    FUNCTION:NAME
-	  1  71225                       vm_fault:0
-	  1  71226                       vm_fault:1
-	  1  71227                       vm_fault:4
-	  1  71228                       vm_fault:6
-	  1  71229                       vm_fault:8
-	  1  71230                      vm_fault:10
-	  1  71231                      vm_fault:12
-	  1  71232                      vm_fault:13
-	  1  71233                      vm_fault:20
-	[...]
+# dtrace -n 'kinst::vm_fault:'
+dtrace: description 'kinst::vm_fault:' matched 1481 probes
+CPU     ID                    FUNCTION:NAME
+  1  71225                       vm_fault:0
+  1  71226                       vm_fault:1
+  1  71227                       vm_fault:4
+  1  71228                       vm_fault:6
+  1  71229                       vm_fault:8
+  1  71230                      vm_fault:10
+  1  71231                      vm_fault:12
+  1  71232                      vm_fault:13
+  1  71233                      vm_fault:20
+[...]
 \end{lstlisting}
 
 Όπως φαίνεται στην έξοδο της παραπάνω εντολής, ο \lstinline{kinst} έφτιαξε
 probes για 1481 εντολές εντός της συνάρτησης \lstinline{vm_fault()}.
-Παρατηρόντας το disassembly της \lstinline{vm_fault()}, βλέπουμε ότι το 1481
-αντιστοιχεί στον συνολικό αριθμό εντολών της συνάρτησης.
-
-Η εύρεση του disassembly μπορεί να γίνει με την χρήση ενός debugger, όπως του
-GDB \cite{gdb}. Στα συγκεκριμένα παραδείγματα χρησιμοποείται o KGDB
-\cite{kgdb}, μία παραλλαγή του GDB που παρέχεται από το FreeBSD, με μερικές
-επιπλέον λειτορυγίες για την καλύτερη αποσφαλμάτωση του πυρήνα του:
+Παρατηρόντας το disassembly της \lstinline{vm_fault()}, για παράδειγμα με την
+χρήση του GDB \cite{gdb}, βλέπουμε ότι το 1481 αντιστοιχεί στον συνολικό αριθμό
+εντολών της συνάρτησης:
 
 \begin{lstlisting}
-	# kgdb
-	(kgdb) set logging on
-	(kgdb) set pagination off
-	(kgdb) disas vm_fault
-	[...]
-	(kgdb) exit
-	$ grep 0x gdb.txt | wc -l
-	    1481
+# kgdb
+(kgdb) set logging on
+(kgdb) set pagination off
+(kgdb) disas vm_fault
+[...]
+(kgdb) exit
+# grep 0x gdb.txt | wc -l
+    1481
 \end{lstlisting}
+
+Στα συγκεκριμένα παραδείγματα χρησιμοποείται o KGDB \cite{kgdb}, μία παραλλαγή
+του GDB που παρέχεται από το FreeBSD, με μερικές επιπλέον λειτορυγίες για την
+καλύτερη αποσφαλμάτωση του πυρήνα.
 
 \begin{itemize}
 	\item \lstinline{kinst::<function>:<instruction>}
 \end{itemize}
 
-Με αυτή την σύνταξη παρακολουθείται εντός της συνάρτησης \lstinline{function}
+Με αυτή την σύνταξη παρακολουθείται εντός της συνάρτησης \lstinline{<function>}
 μόνο η εντολή που βρίσκεται στο offset που ορίστηκε στο πεδίο
-\lstinline{instruction}. Το offset αυτό μπορεί να βρεθεί στo disassembly της
+\lstinline{<instruction>}. Το offset αυτό μπορεί να βρεθεί στo disassembly της
 συνάρτησης. Για παράδειγμα:
 
 \begin{lstlisting}
-	# kgdb
-	(kgdb) disas /r vm_fault
-	Dump of assembler code for function vm_fault:
-	   0xffffffff80f4e470 <+0>:     55      push   %rbp
-	   0xffffffff80f4e471 <+1>:     48 89 e5        mov    %rsp,%rbp
-	   0xffffffff80f4e474 <+4>:     41 57   push   %r15
-	[...]
+# kgdb
+(kgdb) disas /r vm_fault
+Dump of assembler code for function vm_fault:
+   0xffffffff80f4e470 <+0>:     55      push   %rbp
+   0xffffffff80f4e471 <+1>:     48 89 e5        mov    %rsp,%rbp
+   0xffffffff80f4e474 <+4>:     41 57   push   %r15
+[...]
 \end{lstlisting}
 
 Αν υποτεθεί ότι θέλουμε να παρακολουθήσουμε την τρίτη εντολή (\lstinline{push %r15})
@@ -846,72 +1124,81 @@ GDB \cite{gdb}. Στα συγκεκριμένα παραδείγματα χρη�
 \lstinline{RSI}:
 
 \begin{lstlisting}
-	# dtrace -n 'kinst::vm_fault:4 {printf("%#x", regs[R_RSI]);}'
-	dtrace: description 'kinst::vm_fault:4 ' matched 1 probe
-	CPU     ID                    FUNCTION:NAME
-	  1  71225                       vm_fault:4 0x10652b411000
-	  1  71225                       vm_fault:4 0x10652c341000
-	  1  71225                       vm_fault:4 0x10652c342000
-	  1  71225                       vm_fault:4 0x10652c343000
-	[...]
+# dtrace -n 'kinst::vm_fault:4 {printf("%#x", regs[R_RSI]);}'
+dtrace: description 'kinst::vm_fault:4 ' matched 1 probe
+CPU     ID                    FUNCTION:NAME
+  1  71225                       vm_fault:4 0x10652b411000
+  1  71225                       vm_fault:4 0x10652c341000
+  1  71225                       vm_fault:4 0x10652c342000
+  1  71225                       vm_fault:4 0x10652c343000
+[...]
 \end{lstlisting}
 
 \begin{itemize}
 	\item \lstinline{kinst::<inline_function>:<entry|return>}
 \end{itemize}
 
-Με αυτή την σύνταξη παρακολουθείται η αρχή (\lstinline{entry}) ή/και το τέλος
+Με αυτή την σύνταξη παρακολουθείται η αρχή (\lstinline{entry}) ή το τέλος
 (\lstinline{return}) μίας \textit{inline} συνάρτησης
-\lstinline{inline_function}. Για παράδειγμα:
+\lstinline{<inline_function>}. Για παράδειγμα:
 
 \begin{lstlisting}
-	# dtrace -n 'kinst::critical_enter:return'
-	dtrace: description 'kinst::critical_enter:return' matched 130 probes
-	CPU     ID                    FUNCTION:NAME
-	  1  71024                spinlock_enter:53
-	  0  71024                spinlock_enter:53
-	  1  70992                uma_zalloc_arg:49
-	  1  70925    malloc_type_zone_allocated:21
-	  1  70994                uma_zfree_arg:365
-	  1  70924             malloc_type_freed:21
-	  1  71024                spinlock_enter:53
-	  0  71024                spinlock_enter:53
-	  0  70947         _epoch_enter_preempt:122
-	  0  70949           _epoch_exit_preempt:28
-	[...]
+# dtrace -n 'kinst::critical_enter:return'
+dtrace: description 'kinst::critical_enter:return' matched 130 probes
+CPU     ID                    FUNCTION:NAME
+  1  71024                spinlock_enter:53
+  0  71024                spinlock_enter:53
+  1  70992                uma_zalloc_arg:49
+  1  70925    malloc_type_zone_allocated:21
+  1  70994                uma_zfree_arg:365
+  1  70924             malloc_type_freed:21
+  1  71024                spinlock_enter:53
+  0  71024                spinlock_enter:53
+  0  70947         _epoch_enter_preempt:122
+  0  70949           _epoch_exit_preempt:28
+[...]
 \end{lstlisting}
-
-<++>
 
 \subsection{Γιατί είναι χρήσιμο κάτι τέτοιο;}
 
-<++>
+Σε αντίθεση με τον \lstinline{fbt}, η δυνατότητα παρακολούθησης οποιασδήποτε
+μεμονωμένης εντολής assembly δίνει στον προγραμματιστή την επιλογή
+παρακολούθησης κομματιών κώδικα ή συγκεκριμένων σημείων \textit{εντός} μίας
+συνάρτησης --- if-statements, loops, εντόπιση διαδρομών κώδικα κλπ. Αυτό είναι
+ιδιαίτερα χρήσιμο για μεγάλες συναρτήσεις με πολλές διάφορες διαδρομές, όπου η
+ροή του κώδικα δεν είναι πάντα ξεκάθαρη ή εύκολη να κατανοηθεί.
 
-\subsection{Ενορχήστρωση εντολών assembly} \label{instrumentation}
+Για παράδειγμα, αν ο προγραμματιστής έχει εντοπίσει κάποιο κομμάτι κώδικα για
+το οποίο δεν είναι σίγουρος αν εκτελείται ποτέ ή όχι, τότε μπορεί να
+χρησιμοποιήσει τον \lstinline{kinst} για την παρακολούθηση εκείνου ακριβώς του
+σημείου. Αντίστοιχα, μπορεί να υπάρχει κώδικας που εκτελείται μόνο υπό
+προϋποθέσεις και ο προγραμματιστής θέλει να σιγουρευτεί αν και πότε εκτελείται.
 
-% TODO
-% kinst_patch_tracepoint
-%Ο \lstinline{kinst} διαθέτει ένα αρχείο συσκευής στο
-%\lstinline{/dev/dtrace/kinst}, το οποίο χρησιμοποιείται για <++>
+Άλλο ένα βασικό σημείο του \lstinline{kinst} είναι ότι θέτει την βάση για την
+υλοποίηση της παρακολούθησης inline συναρτήσεων, όπως αναλύεται στην ενότητα
+\ref{inlinetrace}.
 
-Οι πληροφορίες των probes στέλνονται από το \lstinline{dtrace(1)} στο
-\lstinline{kinst(4)} μέσω της libdtrace, χρησιμοποιώντας την συσκευή χαρακτήρων
-(character device) \lstinline{/dev/dtrace/kinst}. Το \lstinline{kinst(4)} είναι
-υπεύθυνο για τον εντοπισμό της συνάρτησης στο kernel, το disassembly της και
-την δημιουργία μιάς εσωτερικής δομής δεδομένων με πληροφορίες σχετικά με την
-εντολή και το probe. Έπειτα δημιουργεί DTrace probes για κάθε μία από τις
-εντολές προς παρακολούθηση. Η εντολή προς παρακολούθηση αποθηκεύεται στην δομή
-δεδομένων του probe για μετέπειτα χρήση και αντικαθιστάται με μία εντολή
-breakpoint. Μόλις ο CPU κατά την εκτέλεσή του, φτάσει στο breakpoint που έχει
-εγκατασταθεί από το DTrace, το kernel εισέρχεται στο DTrace μέσω του trap
-handler (\lstinline{sys/$ARCH/$TARGET_ARCH/trap.c}) του kernel και εφόσον το
-breakpoint έχει εγκατασταθεί από τον \lstinline{kinst} συγκεκριμένα, το kernel
-εν τέλει θα εισέλθει στην συνάρτηση \lstinline{kinst_invop()}. Αυτή η συνάρτηση
-είναι υπεύθυνη για την παρακολούθηση της εντολής, είτε με την υλοποίηση της σε
-λογισμικό (emulation), είτε με την εκτέλεσή της σε «τραμπολίνο» (βλέπε ενότητα
-\ref{tramp}.
+\subsection{Παρακολούθηση εντολών assembly} \label{instrumentation}
 
-\begin{figure}[H]
+Οι πληροφορίες των probes στέλνονται από το \lstinline{dtrace(1)} στον
+\lstinline{kinst} μέσω της \lstinline{libdtrace}, χρησιμοποιώντας την
+ψευδοσυσκευή \lstinline{/dev/dtrace/kinst}. Ο \lstinline{kinst} είναι υπεύθυνος
+για τον εντοπισμό της συνάρτησης στο kernel, το disassembly της και την
+δημιουργία μίας εσωτερικής δομής δεδομένων με πληροφορίες σχετικά με την εντολή
+και το probe. Έπειτα δημιουργεί DTrace probes για κάθε μία από τις εντολές προς
+παρακολούθηση. Η εντολή προς παρακολούθηση αποθηκεύεται στην δομή δεδομένων του
+probe για μετέπειτα χρήση και αντικαθιστάται με μία εντολή breakpoint στην
+συνάρτηση \lstinline{kinst_enable()}. Μόλις ο CPU κατά την εκτέλεσή του, φτάσει
+στο breakpoint που έχει εγκατασταθεί από το DTrace, το kernel εισέρχεται στο
+DTrace μέσω του trap handler (\lstinline{sys/$ARCH/$TARGET_ARCH/trap.c})
+\cite{trap} και εφόσον το breakpoint έχει εγκατασταθεί από τον
+\lstinline{kinst} συγκεκριμένα, το kernel εν τέλει θα εισέλθει στην συνάρτηση
+\lstinline{kinst_invop()}. Αυτή η συνάρτηση είναι υπεύθυνη για την
+παρακολούθηση της εντολής, είτε με την εκτέλεσή της σε «τραμπολίνο» (βλέπε
+ενότητα \ref{tramp}), είτε με την υλοποίηση της σε λογισμικό (emulation) (βλέπε
+ενότητα \ref{emulation}).
+
+\begin{figure}[h]
 \begin{center}
 \begin{tikzpicture}[every node/.style={transform shape}, node distance=1cm]
 	\node (header) [header] {\lstinline{func}};
@@ -929,7 +1216,7 @@ breakpoint έχει εγκατασταθεί από τον \lstinline{kinst} σ�
 		{libdtrace: \lstinline{ioctl} with probe info to
 		\lstinline{/dev/dtrace/kinst}};
 	\node (kinst) [func, right of=libdtrace, xshift=4cm]
-		{\lstinline{kinst(4)}: create probe(s), overwrite
+		{\lstinline{kinst}: create probe(s), overwrite
 		instruction(s) with breakpoints};
 
 	\node (trap1) [func, right of=stack2, xshift=4cm] {breakpoint handler};
@@ -957,67 +1244,155 @@ breakpoint έχει εγκατασταθεί από τον \lstinline{kinst} σ�
 	\draw [arrow] (dinvop2) -- (kinvop2);
 	\draw [arrow] (kinvop2) |- (stack7);
 \end{tikzpicture}
-\caption{Γενική ροή.}
+\caption{γενική ροή.}
 \label{genpipeline}
 \end{center}
 \end{figure}
 
-<++>
+\subsection{Τραμπολίνο (Trampoline)} \label{tramp}
 
-\subsection{«Τραμπολίνο»} \label{tramp}
-
-% TODO improve wording
-
-Τραμπολίνο (trampoline) ονομάζεται ένα \textit{εκτελέσιμο} κομμάτι μνήμης, το
+Τραμπολίνο ονομάζεται ένα \textit{εκτελέσιμο} κομμάτι μνήμης, το
 οποίο χρησιμοποιείται ως περιοχή αναπήδησης (jump) για την εκτέλεση κάποιας
 εντολής και επιστροφής στην κανονική ροή του προγράμματος.
 
 Ο \lstinline{kinst} κάνει χρήση τραμπολίνων για την εκτέλεση των εντολών των
-οποίων παρακολουθεί, σε αντίθεση με τον FBT (\ref{fbt}), ο οποίος τις
-«μιμείται»/υλοποιεί σε λογισμικό (emulation). Ωστόσο, μία βασική διαφορά του
-FBT είναι ότι εφόσον έχει την δυνατότητα να παρακολουθήσει μόνο την αρχή και το
-τέλος μίας συνάρτησης, τα οποία σημεία ορίζονται με συγκεκριμένες εντολές
-assembly για κάθε αρχιτεκτονική
+οποίων παρακολουθεί, σε αντίθεση με τον \lstinline{fbt} (\ref{fbt}), ο οποίος
+τις «μιμείται»/υλοποιεί σε λογισμικό (emulation). Ωστόσο, μία βασική διαφορά
+του \lstinline{fbt} είναι ότι εφόσον έχει την δυνατότητα να παρακολουθήσει μόνο
+την αρχή και το τέλος μίας συνάρτησης, τα οποία σημεία ορίζονται με
+συγκεκριμένες εντολές assembly για κάθε αρχιτεκτονική
 \footnote{
-	Για παράδειγμα, στην αρχιτεκτονική x86-64, η εντολή \lstinline{push
+	Για παράδειγμα, στην αρχιτεκτονική AMD64, η εντολή \lstinline{push
 	\%rbp} δηλώνει το ξεκίνημα του \textit{προλόγου} μίας συνάρτησης, και η
-	εντολή \lstinline{ret} το τέλος του \textit{επιλόγου}. % TODO cite
+	εντολή \lstinline{ret} το τέλος του \textit{επιλόγου}
+	\cite{prologueepilogue}.
 },
-το σύνολο των εντολών που πρέπει να υλοποίησει ο FBT είναι μικρό, καθώς και οι
-εντολές απλές, με αποτέλεσμα να μην χρειάζεται η επιπλέον πολυπλοκότητα που
-προσθέτει το τραμπολίνο. Ο \lstinline{kinst} όμως μπορεί να παρακολουθήσει εν
-δυνάμει (σχεδόν) % TODO ref to which ones we cannot trace
+το σύνολο των εντολών που πρέπει να υλοποίησει ο \lstinline{fbt} είναι μικρό,
+καθώς και οι εντολές απλές, με αποτέλεσμα να μην χρειάζεται η επιπλέον
+πολυπλοκότητα που προσθέτει το τραμπολίνο. Ο \lstinline{kinst} όμως μπορεί να
+παρακολουθήσει εν δυνάμει (σχεδόν)
+\footnote{
+	Οι εντολές και συναρτήσεις που δεν μπορεί να παρακολουθήσει ο
+	\lstinline{kinst} αναγράφονται στο manual page του. Ωστόσο το patch που
+	προσθέτει την λίστα με αυτές τις εντολές βρίσκεται σε κατάσταση
+	επιθεώρησης:
+	\href{https://reviews.freebsd.org/D40874}{https://reviews.freebsd.org/D40874}
+}
 όλες τις εντολές των ISA των αρχιτεκτονικών που υποστηρίζει, οπότε είναι
 προφανές πως η προσέγγιση της υλοποίησης εντολών, δεν μπορεί να λειτουργήσει σε
 αυτήν την περίπτωση. Παρ' όλα αυτά, υπάρχουν μερικές εξαιρέσεις που θα
-συζητηθούν παρακάτω. % TODO ref to emulation
+συζητηθούν στην ενότητα \ref{emulation}.
 
-Η χρήση του τραμπολίνου γίνεται ως εξής. Αρχικά, η εντολή προς παρακολούθηση
-αντιγράφεται στο τραμπολίνο και αλλάζοντας την τιμή του PC, η εκτέλεση
-μεταφέρεται σε αυτό, όταν το kernel εισέλθει στον \lstinline{kinst} με σκοπό
-την παρακόλουθηση της συγκεκριμένης εντολής. Αφού εκτελεστεί η αντιγραμμένη
-εντολή εντός του τραμπολίνου, η εκτέλεση επιστρέφει στην επόμενη εντολή και το
-kernel επανέρχεται στην κανονική ροή εκτέλεσης.
+Η χρήση του τραμπολίνου γίνεται ως εξής. Αρχικά, όταν το kernel εισέλθει στον
+\lstinline{kinst}, η εντολή προς παρακολούθηση αντιγράφεται στο τραμπολίνο, και
+αλλάζοντας χειροκίνητα την τιμή του PC, η εκτέλεση μεταφέρεται σε αυτό. Αφού
+εκτελεστεί η αντιγραμμένη εντολή εντός του τραμπολίνου, η εκτέλεση επιστρέφει
+στην επόμενη εντολή και το kernel επανέρχεται στην κανονική ροή εκτέλεσης.
 
-<++>
+\subsection{Υλοποίηση εντολών (Emulation)} \label{emulation}
 
-\subsubsection{Εσωτερική διάταξη} \label{tramplayout}
+Και στις τρεις αρχιτεκτονικές που υποστηρίζει ο \lstinline{kinst}, υπάρχουν
+εντολές, που για λόγους που θα αναλυθούν σε επόμενες ενότητες, δεν μπορούν να
+εκτελεστούν μέσα σε τραμπολίνο. Αυτές τις εντολές ο \lstinline{kinst} τις
+υλοποιεί σε λογισμικό κατά την πυροδότηση του probe. Το θετικό είναι ότι αυτές
+οι εντολές είναι λίγες και απλές στην υλοποίησή τους.
+
+\section{Υλοποίηση}
+
+Σε αυτό το κεφάλαιο θα παρουσιαστεί η υλοποίηση του \lstinline{kinst}, καθώς
+και της παρακολούθησης inline συναρτήσεων. Επειδή το συνολικό μέγεθος της
+υλοποίησης είναι χιλιάδες γραμμές κώδικα, στο παρόν έγγραφο θα παρουσιαστούν
+μόνο τα κομμάτια που είναι ιδιαίτερου ενδιάφεροντος ή/και απαραίτητα για την
+καλύτερη κατανόηση της υλοποίησης.
+
+Το μεγαλύτερο κομμάτι του πηγαίου κώδικα βρίσκεται στους εξής συνδέσμους:
+\cite{kinstsrc} \cite{inlinesrc} \cite{testsrc}
+
+\subsection{\lstinline{kinst}}
+
+O κώδικας του \lstinline{kinst} βρίσκεται στο \lstinline{sys/cddl/dev/kinst}
+\cite{kinstsrc}:
+
+\begin{Verbatim}
+	/usr/src/sys/cddl/dev/kinst/
+	├── aarch64
+	│   ├── kinst_isa.c
+	│   └── kinst_isa.h
+	├── amd64
+	│   ├── kinst_isa.c
+	│   └── kinst_isa.h
+	├── kinst.c
+	├── kinst.h
+	├── riscv
+	│   ├── kinst_isa.c
+	│   └── kinst_isa.h
+	└── trampoline.c
+\end{Verbatim}
+
+\subsubsection{\lstinline{kinst.*}} \label{kinstc}
+
+Στο αρχείο \lstinline{kinst.c} ορίζονται οι βασικές μέθοδοι φόρτωσης και
+αποφόρτωσης του kernel module, καθώς και επικοινωνίας του \lstinline{kinst} με
+το userspace μέσω της ψευδοσυσκευής \lstinline{/dev/dtrace/kinst}, αλλά και με
+το DTrace.
+
+Η φόρτωση και αποφόρτωση του kernel module γίνεται με τα macros
+\lstinline{SYSINIT(9)} και \lstinline{SYSUNINIT(9)} στα οποία δίνονται ως
+όρισματα οι συναρτήσεις \lstinline{kinst_load()} και \lstinline{kinst_unload()}
+αντίστοιχα, οι οποίες είναι υπεύθυνες για τα εξής:
+
+\begin{itemize}
+	\item Αρχικοποίηση και καθαρισμό του DTrace provider.
+	\item Δημιουργία και καταστροφή της ψευδοσυσκευής.
+	\item Δημιουργία και καταστροφή του τραμπολίνου.
+	\item Αρχικοποίηση και καθαρισμό μερικών παραμέτρων σχετικών με την
+		αρχιτεκτονική στην οποία εκτελείται ο \lstinline{kinst}.
+	\item Δέσμευση και αποδέσμευση μνήμης για το hashtable με τα probes.
+	\item Εγκατάσταση και απεγκατάσταση της συνάρτησης
+		\lstinline{kinst_invop()} στο DTrace, η οποία πραγματοποιεί την
+		παρακολούθηση.
+\end{itemize}
+
+Έπειτα, υλοποιούνται οι μέθοδοι της ψευδοσυσκευής. Στο FreeBSD, αυτό γίνεται με
+την υλοποίηση των function pointers της δομής \lstinline{cdevsw}, την οποία
+δώσαμε ως όρισμα κατά την δημιουργία της ψευδοσυσκευής, στην
+\lstinline{kinst_load()}. Οι κύριες μέθοδοι που υλοποιούνται συνήθως
+αντιστοιχούν σε syscalls. Στην προκειμένη περίπτωση, τα syscalls που θέλουμε να
+υλοποιήσουμε είναι τα \lstinline{open(2)}, \lstinline{close(2)}, αλλά κυρίως το
+\lstinline{ioctl(2)}, στο οποίο πραγματοποιείται η επικοινωνία του
+\lstinline{kinst} με την \lstinline{libdtrace}, από την οποία λαμβάνει τα
+απαραίτητα δεδομένα για την δημιουργία του κάθε probe, όπως είδαμε στο σχήμα
+\ref{genpipeline}. Η συνάρτηση \lstinline{kinst_ioctl()}, αφού λάβει το όνομα
+της συνάρτησης και το/τα offset/s προς παρακολούθηση, ψάχνει στα αρχεία linker
+του πυρήνα και των φορτωμένων kernel modules για το σύμβολο που αντιστοιχεί
+στην συνάρτηση που ζητήθηκε. Αν την βρει, καλεί την συνάρτηση
+\lstinline{kinst_make_probe()}, η οποία υλοποιείται από κάθε αρχιτεκτονική
+ξεχωριστά, και είναι υπεύθυνη για την ανάλυση του disassembly της συνάρτησης,
+την εύρεση της εντολής, και προφανώς την δημιουργία probes.
+
+Τέλος, υλοποιούνται και οι συναρτήσεις \lstinline{kinst_enable()} και
+\lstinline{kinst_disable()}, υπεύθυνες για την ενεργοποίηση και απενεργοποίηση
+των probes. Αυτές οι συναρτήσεις καλούνται από το DTrace.
+
+\subsubsection{\lstinline{trampoline.c}}
+
+Σε αυτό το αρχείο βρίσκεται η υλοποίηση του τραμπολίνου (βλέπε \ref{tramp}).
 
 Ο \lstinline{kinst} κρατάει μία ουρά \lstinline{TAILQ(9)} από «κομμάτια»
 (chunks) μνήμης μεγέθους \lstinline{PAGE_SIZE}, διαιρεμένα σε επιμέρους
-τραμπολίνα, χρησιμοποιώντας το \lstinline{BITSET(9)}.
+τραμπολίνα. Το μέγεθος των τραμπολίνων ορίζεται ξεχωριστά για κάθε
+αρχιτεκτονική, ανάλογα με τις ανάγκες της. Η μνήμη για κάθε chunk δεσμέυεται με
+την συνάρτηση \lstinline{vm_map_find(9)} με την παράμετρο
+\lstinline{VM_PROT_EXECUTE}, ώστε να επιτρέπεται η εκτέλεση εντολών εντός του
+τραμπολίνου. Όλες οι δεσμεύσεις γίνονται σε διευθύνσεις μεγαλύτερες της
+διεύθυνσης \lstinline{KERNBASE} στην αρχιτεκτονική AMD64 και της
+\lstinline{VM_MIN_KERNEL_ADDRESS} στις υπόλοιπες αρχιτεκτονικές αντίστοιχα.
 
-Η μνήμη δεσμέυεται με την συνάρτηση \lstinline{vm_map_find(9)} σε συνδυασμό με
-το όρισμα \lstinline{VM_PROT_EXECUTE}, ώστε να επιτρέπεται η εκτέλεση εντολών
-εντός αυτών των θέσεων μνήμης. Όλες οι δεσμεύσεις γίνονται σε διευθύνσεις
-μεγαλύτερες της διεύθυνσης \lstinline{KERNBASE} στην αρχιτεκτονική AMD64 και
-της \lstinline{VM_MIN_KERNEL_ADDRESS} σε ARM64 και RISC-64 αντίστοιχα. %TODO γιατί;
-
-Όπως φαίνεται στο σχήμα \ref{tramp}, το τραμπολίνο περιέχει την εντολή προς
-παρακολούθηση, ακολουθούμενη από την εντολή breakpoint στις αρχιτεκτονικές
-ARM64 και RISC-V και \lstinline{jmp} αντίστοιχα στην AMD64. Η δεύτερη εντολή
-χρησιμοποιείται για την επιστροφή από το τραμπολίνο και την συνέχιση της ροής
-εκτέλεσης (βλέπε ενότητες \ref{amdnotes} και \ref{armriscvnotes}).
+Το τραμπολίνο περιέχει την εντολή προς παρακολούθηση, ακολουθούμενη από την
+εντολή \lstinline{jmp} στην AMD64, και breakpoint στις αρχιτεκτονικές ARM64 και
+RISC-V αντίστοιχα. Η δεύτερη εντολή χρησιμοποιείται για την επιστροφή από το
+τραμπολίνο και την συνέχιση της ροής εκτέλεσης (βλέπε ενότητες \ref{amdimpl}
+και \ref{armriscvimpl}).
 
 \begin{figure}[H]
 \begin{center}
@@ -1040,18 +1415,82 @@ ARM64 και RISC-V και \lstinline{jmp} αντίστοιχα στην AMD64. 
 		([xshift=0.2cm] trampbpt.east);
 \end{tikzpicture}
 \caption{Διάταξη τραμπολίνου.}
-\label{tramp}
+\label{trampfig}
 \end{center}
 \end{figure}
 
-<++>
+Όπως αναφέρθηκε προηγουμένως, κατά την φόρτωση του \lstinline{kinst}
+δημιουργείται και το τραμπολίνο μέσω της συνάρτησης
+\lstinline{kinst_trampoline_init()}. Η συνάρτηση αυτή λειτουργεί διαφορετικά
+για την αρχιτεκτονική AMD64 και τις υπόλοιπες --- o λόγος εξηγείται στις
+ενότητες \ref{amdimpl} και \ref{armriscvimpl}. Πιο συγκεκριμένα, για την AMD64,
+η \lstinline{kinst_trampoline_init()} δημιουργεί τραμπολίνα για κάθε thread
+κάθε διεργασίας. Για τις υπόλοιπες αρχιτεκτονικές, απλώς αρχικοποιεί την λίστα
+των chunks, εφόσον το κάθε probe έχει το δικό του τραμπολίνο, οπότε και
+δημιουργούνται και καταστρέφονται μαζί με το probe.
 
-\subsubsection{Σημειώσεις υλοποίησης για x86-64}\label{amdnotes}
+\subsubsection{\lstinline{amd64/kinst_isa.*}} \label{amdimpl}
 
-Όπως αναφέρθηκε στην ενότητα \ref{tramplayout}, το τραμπολίνο στην
-αρχιτεκτονική AMD64 περιέχει την εντολή προς παρακολούθηση, ακολουθούμενη από
-ένα far-jump στην επόμενη εντολή από αυτή που παρακολουθείται, προκειμένου να
-συνεχίσει η ροή εκτέλεσης.
+Στην ενότητα \ref{kinstc} έγινε αναφορά στην συνάρτηση
+\lstinline{kinst_make_probe()} και στο ποιά είναι η λειτουργία της. Αφού
+προηγουμένως έχει βρεθεί ότι η συνάρτηση πράγματι υπάρχει στον πυρήνα ή σε
+kernel module, είναι ώρα για την \lstinline{kinst_make_probe()} να αναλύσει το
+disassembly της συνάρτησης --- το οποίο λαμβάνει ως όρισμα --- και να
+δημιουργήσει probe(s), αφού ωστόσο έχει αποφασίσει ότι η συγκεκριμένη εντολή
+(αλλά και η συνάρτηση γενικότερα) είναι εφικτό να παρακολουθηθεί.
+
+Αρχικά, το πρώτο πράγμα που κάνει είναι να δει αν η συνάρτηση βρίσκεται στην
+λίστα με τις συναρτήσεις που δεν μπορούν να παρακολουθηθούν. Οι συναρτήσεις
+αυτές συνήθως αντιστοιχούν σε exception handlers χαμηλού επιπέδου, οπότε
+αποφεύγουμε την οποιαδήποτε παρεμβολή σε αυτές. Έπειτα ξεκινάει η ανάλυση του
+disassembly. Μία προϋπόθεση που πρέπει να καλυφθεί είναι η συνάρτηση οπωσδήποτε
+να ξεκινάει με τον κλασικό πρόλογο συνάρτησης, δηλαδή με την εντολή
+\lstinline{pushl %rbp},
+ειδάλλως η συνάρτηση μπορεί να είναι κάποιος exception handler. Έπειτα, ψάχνει
+να βρει σε ποιά εντολή αντιστοιχεί το offset προς παρακολούθηση. Αν η εντολή
+μπορεί να ενεργοποιήσει interrupts (δηλαδή οι \lstinline{STI} και
+\lstinline{POPF}), τότε την απορρίπτουμε διότι η παρακολούθησή της μπορεί να
+προκαλέσει προβλήματα. Σε κάθε άλλη περίπτωση, προχωράμε και δημιουργούμε probe
+για την εντολή που βρέθηκε, ωστόσο χρειάζεται επιπλέον ανάλυση του disassembly.
+
+Στο δεύτερο στάδιο ανάλυσης του disassembly, ψάχνουμε για εντολές που απαιτούν
+ειδικό χειρισμό κατά την παρακολούθησή τους \cite{x86spec}. Αυτές κατά κύριο
+λόγο αντιστοιχούν σε εντολές που κωδικοποιούν διευθύνσεις μνήμης συναρτήσει του
+καταχωρητή RIP (Instruction Pointer). Ο καταχωρητής αυτός έχει ως τιμή την
+διεύθυνση μνήμης της \textit{επόμενης} εντολής από αυτή που εκτελείται σε κάθε
+δεδομένη στιγμή \cite{riprel}. Η διευθυνσιοδότηση αυτή ονομάζεται RIP-relative
+addressing \cite{riprel}. Ο λόγος που αυτού του είδους η διευθυνσιοδότηση
+χρειάζεται ειδικό χειρισμό από τον \lstinline{kinst}, είναι διότι η τυφλή
+αντιγραφή μίας τέτοιας εντολής στο τραμπολίνο και η εκτέλεσή της δεν θα
+λειτουργήσει. Ο λόγος μπορεί να εξηγηθεί με το εξής πείραμα. Ας υποθέσουμε την
+παρακάτω εντολή:
+
+\begin{Verbatim}
+	movl $0x01, 0x02(%rip)
+\end{Verbatim}
+
+Υποθέτοντας ότι ο RIP κατά την στιγμή εκτέλεσης της εντολής έχει τιμή
+\lstinline{0x100}, η ως προς τον RIP διεύθυνση αντιστοιχεί σε
+\lstinline{0x02(%rip) -> 0x02(0x100) -> 0x102},
+οπότε θεωρητικά έχουμε την παρακάτω εντολή:
+
+\begin{Verbatim}
+	movl $0x01, [0x102]
+\end{Verbatim}
+
+Αν αντιγράφαμε την αρχική εντολή τυφλά στο τραμπολίνο και προσπαθούσαμε να την
+εκτελέσουμε, θα καταλήγαμε με μία διαφορετική λάθος διεύθυνση, διότι η τιμή του
+RIP θα ήταν επίσης διαφορετική. Εφόσον ο RIP έχει ως τιμή την διεύθυνση της
+επόμενης εντολής από αυτήν που εκτελείται, τότε η τιμή του RIP κατά την
+εκτέλεση της αντιγραμμένης εντολής στο τραμπολίνο, θα είναι η διεύθυνση της
+δεύτερης εντολής του τραμπολίνου. Με άλλα λόγια, η διεύθυνση που θα καταλήξει
+να ορίζει η εντολή δεν θα είναι η επιθυμητή. Οπότε, κατά την αντιγραφή ως προς
+τον RIP εντολών στο τραμπολίνο, φροντίζουμε να επανακωδικοποιούμε την διεύθυνση
+συναρτήσει του τραμπολίνου.
+
+Το τραμπολίνο στην αρχιτεκτονική AMD64 περιέχει την εντολή προς παρακολούθηση,
+ακολουθούμενη από ένα far-jump στην επόμενη εντολή από αυτή που
+παρακολουθείται, προκειμένου να συνεχιστεί η ροή εκτέλεσης του πυρήνα.
 
 \begin{figure}[H]
 \begin{center}
@@ -1077,33 +1516,67 @@ ARM64 και RISC-V και \lstinline{jmp} αντίστοιχα στην AMD64. 
 \end{center}
 \end{figure}
 
-Για κάθε thread και CPU ορίζεται ένα τραμπολίνο, του οποίου τα περιεχόμενα
-αντικαθιστόνται σε κάθε <++> (instrumentation). Ο λόγος για τον οποίο έχουμε
-τραμπολίνα και ανά thread, αλλά και ανά CPU, είναι ότι τα τραμπολίνα ανά thread
-δεν μπορούν να χρησιμοποιηθούν με ασφάλεια όταν το thread που εκτελείται είχε
-απενεργοποιημένα τα interrupts πριν το breakpoint. Αυτός ο μηχανισμός, αν και
-αποδοτικός από άποψη διαχείρισης μνήμης, μίας και ο αριθμός των τραμπολίνων
-είναι πάντα ίσος με τον αριθμό των threads και CPUs που έχει το σύστημα, έχει
-αποδειχθεί προβληματικός όταν τρέχει σε εικονικές μηχανές με πάνω από ένα vCPU,
-λόγω των συνεχών διαβασμάτων και επανεγγραφών του τραμπολίνου, κάθε φορά που το
-kernel εισέρχεται στην \lstinline{kinst_invop()}. Γίνεται ήδη προσπάθεια ώστε
-να αντικατασταθούν τα τραμπολίνα ανά thread/CPU με τραμπολίνα ανά probe, όπως
+Για κάθε thread
+\footnote{
+	Με την έννοια "thread" στην προκειμένη περίπτωση, \textit{δεν}
+	αναφερόμαστε σε threads του επεξεργαστή, αλλά στην δομή
+	\lstinline{thread} του πυρήνα του FreeBSD, η οποία αναπαριστά ένα
+	runnable context εντός μίας διεργασίας (\lstinline{struct proc}). Κάθε
+	διεργασία μπορεί να έχει πολλαπλές δομές \lstinline{thread}.
+}
+και CPU ορίζεται ένα τραμπολίνο, του οποίου τα περιεχόμενα αντικαθιστόνται σε
+κάθε πυροδότηση probe. Ο λόγος για τον οποίο έχουμε τραμπολίνα και ανά thread,
+αλλά και ανά CPU, είναι ότι τα τραμπολίνα ανά thread δεν μπορούν να
+χρησιμοποιηθούν με ασφάλεια όταν το thread που εκτελείται είχε απενεργοποιημένα
+τα interrupts πριν το breakpoint. Αυτός ο μηχανισμός, αν και αποδοτικός από
+άποψη διαχείρισης μνήμης, μίας και ο αριθμός των τραμπολίνων είναι πάντα ίσος
+με τον αριθμό των threads και CPUs που έχει το σύστημα, έχει αποδειχθεί
+προβληματικός όταν τρέχει σε εικονικές μηχανές με πάνω από ένα vCPU, λόγω των
+συνεχών διαβασμάτων και επανεγγραφών του τραμπολίνου, κάθε φορά που το kernel
+εισέρχεται στην \lstinline{kinst_invop()}. Μελλοντικός στόχος είναι να
+αντικατασταθούν τα τραμπολίνα ανά thread/CPU με τραμπολίνα ανά probe, όπως
 γίνεται στις αρχιτεκτονικές ARM64 και RISC-V.
 
-Όταν μία εντολή αντιγράφεται στο τραμπολίνο, ο \lstinline{kinst} έχει ειδικό
-χειρισμό για τις εντολές που κωδικοποιηθούν offsets συναρτήσει του καταχωρητή
-RIP (Instruction Pointer). Για τις εντολές αυτές το offset πρέπει να
-επανακωδικοποιηθεί, ώστε να είναι συνάρτηση της θέσης του τραμπολίνου,
-προκειμένου να μπορούν να εκτελεστούν εντός του τραμπολίνου. % TODO give example
+Εξαίρεση σε όλα τα παραπάνω ωστόσο είναι οι εντολές \lstinline{call}, οι οποίες
+πρέπει να υλοποιηθούν σε λογισμικό, διότι η επανακωδικοποιήση μίας διεύθυνσης
+ως προς το τραμπολίνο προϋποθέτει δέσμευση χώρου στο stack (βλέπε
+\lstinline{bp_call} στο \lstinline{sys/cddl/dev/dtrace/amd64/dtrace_asm.S}).
 
-Επιπλέον, η εντολές \lstinline{call} πρέπει να υλοποιηθούν σε λογισμικό, διότι
-η επανακωδικοποιήση ενός offset ως προς το τραμπολίνο προϋποθέτει δέσμευση
-χώρου στο stack (βλέπε \lstinline{bp_call} στο
-\lstinline{sys/cddl/dev/dtrace/amd64/dtrace_asm.S}).
+\subsubsection{\lstinline{aarch64/kinst_isa.*} και \lstinline{riscv/kinst_isa.*}} \label{armriscvimpl}
 
-<++>
+Όπως και στην αρχιτεκτονική AMD64 (βλέπε ενότητα \ref{amdimpl}), έτσι και στην
+ARM64 και RISC-V, η συνάρτηση \lstinline{kinst_make_probe()}, αφού κάνει όλους
+τους απαραίτητους ελέγχους και σιγουρευτεί ότι η συνάρτηση επιτρέπεται να
+παρακολουθηθεί, δημιουργεί τα probes που ζητήθηκαν.
 
-\subsubsection{Σημειώσεις υλοποίησης για ARM64 και RISC-V}\label{armriscvnotes}
+Πιο συγκεκριμένα, στην αρχιτεκτονική ARM64, η \lstinline{kinst_make_probe()}
+αρχικά σιγουρεύει ότι η συνάρτηση δεν ξεκινάει με την εντολή \lstinline{NOP},
+διότι αυτό υποδεικνύει κάποια ειδική συνάρτηση assembly που ίσως να μην είναι
+ασφαλής η παρακολούθησή της. Επίσης σιγουρεύει ότι η συνάρτηση περιέχει τον
+κλασικό πρόλογο \cite{arm64prologueepilogue}, δηλαδή είτε μία εντολή
+\lstinline{STP} της μορφής \lstinline{stp xt1, xt2, [xn, <const>]!}, είτε
+\lstinline{SUB} της μορφής \lstinline{sub sp, sp, <const>}. Έπειτα ελέγχει ότι
+η εντολή που αντιστοιχεί στο offset προς παρακολούθηση, δεν βρίσκεται εντός
+\lstinline{LDX/STX} block, διότι τα blocks αυτά ορίζουν ατομικές λειτουργίες
+\cite{ldxstx}, οπότε η εγκατάσταση breakpoint εντός του block θα ακυρώσει την
+ατομικότητα, οπότε και δεν είναι δυνατή η παρακολούθηση εντός αυτών των blocks.
+Τέλος, ελέγχει αν η εντολή πρέπει να υλοποιηθεί από τον \lstinline{kinst}
+(βλέπε πίνακα \ref{emulateinstrs}) ή αν μπορεί να αντιγραφεί κανονικά στο
+τραμπολίνο, και δημιουργεί το probe.
+
+Στην αρχιτεκτονική RISC-V, η \lstinline{kinst_make_probe()} ελέγχει ότι η
+συνάρτηση ξεκινάει με τον κλασικό πρόλογο και ότι η εντολή προς παρακολούθηση
+δεν είναι τύπου SYSTEM (ενότητα 2.8 του \textit{The RISC-V Instruction Set
+Manual Volume I: Unprivileged ISA} \cite{riscvspecs}).
+η εντολή που αντιστοιχεί στο offset προς παρακολούθηση, δεν βρίσκεται εντός
+\lstinline{LR/SC} block, διότι τα blocks αυτά ορίζουν ατομικές λειτουργίες
+\cite{ldxstx}, οπότε η εγκατάσταση breakpoint εντός του block θα ακυρώσει την
+ατομικότητα, οπότε και δεν είναι δυνατή η παρακολούθηση εντός αυτών των blocks
+(ενότητα 13.3 του \textit{The RISC-V Instruction Set Manual Volume I:
+Unprivileged ISA} \cite{riscvspecs}).
+Τέλος, ελέγχει αν η εντολή πρέπει να υλοποιηθεί από τον \lstinline{kinst}
+(βλέπε πίνακα \ref{emulateinstrs}) ή αν μπορεί να αντιγραφεί κανονικά στο
+τραμπολίνο, και δημιουργεί το probe.
 
 Σε αντίθεση με την αρχιτεκτονική AMD64, στις αρχιτεκτονικές ARM64 και RISC-V
 δεν είναι εφικτό να κωδικοποιηθεί far-jump σε μία μόνο εντολή, όπως και δεν
@@ -1112,21 +1585,21 @@ RIP (Instruction Pointer). Για τις εντολές αυτές το offset �
 την επιστροφή από το τραμπολίνο σε αυτήν την περίπτωση, είναι η χρήση της
 εντολής breakpoint, αντί για far-jump.
 
-Μόλις έχει εκτελεστεί η εντολή προς παρακολούθηση εντός του τραμπολίνου και ο
-CPU φτάσει στην εντολή breakpoint, το kernel θα αναπηδήσει πίσω στον trap
-handler και θα επανεισέλθει στην \lstinline{kinst_invop()} (βλέπε ενότητα
-\ref{instrumentation}). Ο \lstinline{kinst} κρατάει μία εσωτερική ανά CPU δομή
-προκειμένου να διαφοροποιεί μεταξύ breakpoints που προκλήθηκαν από το
-τραμπολίνο, ή από probe που ενεργοποιήθηκε. Στην πρώτη περίπτωση, η
-\lstinline{kinst_invop()} αποθηκεύει τον τρέχον καταχωρητή κατάστασης (state
-register), απενεργοποιεί τα interrupts ώστε να μην μπορεί να διακοπεί το thread
-κατά την διάρκεια της εκτέλεσης του «διπλού breakpoint», καθώς και ορίζει τον
-program counter στην διεύθυνση του τραμπολίνου. Στην δεύτερη περίπτωση, δηλαδή
-όταν έχουμε επιστρέψει από το τραμοπολίνο και πρέπει να συνεχίστει η ροή
-εκτέλεσης, η \lstinline{kinst_invop()} επαναφέρει τον καταχωρητή κατάστασης και
-ενεργοποιεί τα interrupts και χειροκίνητα ορίζει τον program counter στην
-επόμενη εντολή από αυτή που μόλις παρακολουθήθηκε. Το σχήμα \ref{armriscvflow}
-δείχνει το διάγραμμα ροής αυτού του μηχανισμού.
+Αφού εκτελεστεί η εντολή προς παρακολούθηση στο τραμπολίνο και ο CPU φτάσει
+στην εντολή breakpoint (την δεύτερη εντολή του τραμπολίνου), το kernel θα
+αναπηδήσει πίσω στον trap handler και θα επανεισέλθει στην
+\lstinline{kinst_invop()} (βλέπε ενότητα \ref{instrumentation}). Ο
+\lstinline{kinst} κρατάει μία εσωτερική ανά CPU δομή προκειμένου να
+διαφοροποιεί μεταξύ breakpoints που προκλήθηκαν από το τραμπολίνο, ή από probe
+που πυροδοτήθηκε. Στην πρώτη περίπτωση, η \lstinline{kinst_invop()} αποθηκεύει
+τον τρέχον καταχωρητή κατάστασης (state register), απενεργοποιεί τα interrupts
+ώστε να μην μπορεί να διακοπεί το thread κατά την διάρκεια της εκτέλεσης του
+«διπλού breakpoint», καθώς και ορίζει τον program counter στην διεύθυνση του
+τραμπολίνου. Στην δεύτερη περίπτωση, δηλαδή όταν έχουμε επιστρέψει από το
+τραμοπολίνο και πρέπει να συνεχίστει η ροή εκτέλεσης, η
+\lstinline{kinst_invop()} επαναφέρει τον καταχωρητή κατάστασης και ενεργοποιεί
+τα interrupts και χειροκίνητα ορίζει τον program counter στην επόμενη εντολή
+από αυτή που μόλις παρακολουθήθηκε.
 
 \begin{figure}[H]
 \begin{center}
@@ -1155,7 +1628,7 @@ program counter στην διεύθυνση του τραμπολίνου. Στ�
 	\draw [arrow] (tramp.west) -| ++(-0.5, 1) ++(0, 0) |- (trap);
 \end{tikzpicture}
 \end{center}
-\caption{Διάγραμμα ροής arm64 \& riscv.}
+\caption{Διάγραμμα ροής arm64 \& riscv στην περίπτωση χρήσης τραμπολίνου.}
 \label{armriscvflow}
 \end{figure}
 
@@ -1164,29 +1637,125 @@ program counter στην διεύθυνση του τραμπολίνου. Στ�
 αποφεύγει την ανάγκη για διάβασμα και επανεγγραφή τραμπολίνων ανά thread/CPU
 κάθε φορά που εκτελείται η \lstinline{kinst_invop()}.
 
-<++>
+Όπως αναφέρθηκε προηγουμένως, υπάρχουν εντολές που δεν εκτελούνται σε
+τραμπολίνο, αλλά υλοποιούνται σε λογισμικό. Ο λόγος και για την αρχιτεκτονική
+ARM64 και για την RISC-V, είναι ο ίδιος. Σε αντίθεση με την AMD64, όπου για τις
+εντολές που κωδικοποιούν διευθύνσεις συναρτήσει του PC, μπορούμε απλώς να
+επανακωδικοποιήσουμε την διεύθυνση συναρτήσει του τραμπολίνου, αυτό δεν μπορεί
+να γίνει στην ARM64 και RISC-V. Και οι δύο αυτές αρχιτεκτονικές δεν επιτρέπουν
+την κωδικοποίηση μεγάλων μετατοπίσεων (displacements) σε μία μόνο εντολή, όπως
+και δεν επιτρέπεται η αλλαγή τιμών καταχωρητών εντός του τραμπολίνου, με σκοπό
+την κωδικοποίηση της μετατόπισης σε δύο εντολές αντί για μία. Αυτό έχει ως
+αποτέλεσμα να μην μπορεί να χρησιμοποιηθεί το τραμπολίνο για ως προς τον PC
+εντολές. Για αυτόν τον λόγο οι εντολές αυτές υλοποιούνται από τον
+\lstinline{kinst} κατά την εκτέλεση της \lstinline{kinst_invop()}. Ευτυχώς, οι
+εντολές είναι απλές οπότε η υλοποίησή τους δεν είναι ιδιαίτερα περίπλοκη
+διαδικασία. Οι εντολές \cite{riscvisa} \cite{armisa} που υλοποιούνται μέχρι
+στιγμής από τον \lstinline{kinst} είναι:
 
-\subsection{Παρακολούθηση inline συναρτήσεων}
+\begin{figure}[H]
+\begin{center}
+\begin{tabular}{|l|p{10cm}|l|}
+	\hline
+	\textbf{Εντολή} & \textbf{Περιγραφή} & \textbf{Αρχιτεκτονική} \\
+	\hline
+	\lstinline{adr} & Form PC-relative address & ARM64 \\
+	\hline
+	\lstinline{adrp} & From PC-relative address to 4KB page & ARM64 \\
+	\hline
+	\lstinline{b} & Branch & ARM64 \\
+	\hline
+	\lstinline{b.<condition>} & Conditional branch & ARM64 \\
+	\hline
+	\lstinline{bl} & Branch with link & ARM64 \\
+	\hline
+	\lstinline{cbnz} & Compare and branch on non-zero & ARM64 \\
+	\hline
+	\lstinline{cbz} & Compare and branch on zero & ARM64 \\
+	\hline
+	\lstinline{tbnz} & Test bit and branch if non-zero & ARM64 \\
+	\hline
+	\lstinline{tbz} & Test bit and branch if zero & ARM64 \\
+	\hline
+	\lstinline{jal} & Jump and link & RISC-V \\
+	\hline
+	\lstinline{jalr} & Jump and link register & RISC-V \\
+	\hline
+	\lstinline{branch} & Branch & RISC-V \\
+	\hline
+	\lstinline{auipc} & Add upper immediate to PC & RISC-V \\
+	\hline
+	\lstinline{c.j} & (Compressed) Unconditional jump & RISC-V \\
+	\hline
+	\lstinline{c.jr} & (Compressed) Jump register & RISC-V \\
+	\hline
+	\lstinline{c.jalr} & (Compressed) Jump and link register & RISC-V \\
+	\hline
+	\lstinline{c.beqz} & (Compressed) Branch if zero & RISC-V \\
+	\hline
+	\lstinline{c.bnez} & (Compressed) Branch if non-zero & RISC-V \\
+	\hline
+\end{tabular}
+\end{center}
+\caption{Εντολές ARM64 και RISC-V assembly που υλοποιούνται από τον \lstinline{kinst}.}
+\label{emulateinstrs}
+\end{figure}
 
-\subsubsection{Τι είναι inline συναρτήσεις και γιατί είναι δύσκολη η
+Και στις δύο αρχιτεκτονικές, οι εντολές υλοποιούνται στις συναρτήσεις
+\lstinline{kinst_emulate()}.
+
+\begin{figure}[H]
+\begin{center}
+\begin{tikzpicture}[every node/.style={transform shape}, node distance=1cm]
+	\node (instr1) [instr] {instr1 (breakpoint)};
+	\node (instr2) [instr, right of=instr1, xshift=4cm] {instr2};
+	\node (trap) [func, below of=instr1, yshift=-1cm] {trap handler};
+	\node (kinstinvop) [func, below of=trap, yshift=-1cm] {\lstinline{kinst_invop()}};
+	\node (kinstemulate) [box, below of=kinstinvop, yshift=-1cm]
+		{\lstinline{kinst_emulate()}};
+
+	\draw [chain] (instr1) -- (instr2);
+	\draw [arrow] (instr1) -- (trap);
+	\draw [arrow] (trap) -- (kinstinvop);
+	\draw [arrow] (kinstinvop) -- (kinstemulate);
+	\draw [arrow] (kinstemulate.east) -| (instr2);
+\end{tikzpicture}
+\end{center}
+\caption{Διάγραμμα ροής arm64 \& riscv στην περίπτωση υλοποίησης εντολής.}
+\label{armriscvflow}
+\end{figure}
+
+\subsection{Παρακολούθηση inline συναρτήσεων} \label{inlinetrace}
+
+Όλος ο κώδικας της παρακολούθησης inline συναρτήσεων βρίσκεται στο αρχείο
+\lstinline{cddl/contrib/opensolaris/lib/libdtrace/common/dt_sugar.c}
+\cite{inlinesrc}, το οποίο είναι μέρος του compiler των D scripts.
+
+Το \lstinline{dt_sugar.c} διαχειρίζεται μία συνδεδεμένη λίστα με όλα τα clauses
+ενός δεδομένου D script. Για την υλοποίηση της inline παρακολούθησης,
+εφαρμόζεται πάνω σε αυτήν την συνδεδεμένη λίστα ό,τι θα εξηγηθεί στις επόμενες
+υποενότητες.
+
+\subsubsection{Τι είναι οι inline συναρτήσεις και γιατί είναι δύσκολη η
 παρακολούθησή τους;}
 
 Inline συναρτήσεις είναι συναρτήσεις τις οποίες ο μεταγλωττιστής μετατρέπει σε
 απλά κομμάτια κώδικα τα οποία εκτελούνται \textit{εντός} της καλούσας
-συνάρτησης. Για παράδειγμα, ας υποθέσουμε το παρακάτω:
+συνάρτησης, με σκοπό την βελτίωση της επίδοσης του κώδικα. Για παράδειγμα, ας
+υποθέσουμε το παρακάτω:
 
 \begin{lstlisting}[language=C]
-	static inline void
-	foo(void)
-	{
-		printf("Hello world\n");
-	}
+static inline void
+foo(void)
+{
+	printf("Hello world\n");
+}
 
-	static void
-	bar(void)
-	{
-		foo();
-	}
+static void
+bar(void)
+{
+	foo();
+}
 \end{lstlisting}
 
 Εφόσον η συνάρτηση \lstinline{foo()} έχει οριστεί ως \lstinline{inline}
@@ -1198,11 +1767,11 @@ Inline συναρτήσεις είναι συναρτήσεις τις οποί�
 ο μεταγλωττιστής θα μετατρέψει τον κώδικα στην παρακάτω μορφή:
 
 \begin{lstlisting}[language=C]
-	static void
-	bar(void)
-	{
-		printf("Hello world\n");
-	}
+static void
+bar(void)
+{
+	printf("Hello world\n");
+}
 \end{lstlisting}
 
 Αυτή η βελτιστοποίηση ωστόσο δημιουργεί πρόβλημα για το DTrace στην περίπτωση
@@ -1210,31 +1779,28 @@ Inline συναρτήσεις είναι συναρτήσεις τις οποί�
 συνάρτηση αυτή, παρόλο που έχει οριστεί στον κώδικα, δεν υπάρχει στο τελικό
 εκτελέσιμο πρόγραμμα, με αποτέλεσμα το DTrace να μην μπορεί να βρει πληροφορίες
 για το σύμβολο \lstinline{foo()}. Αυτός είναι ένας από τους μεγάλους
-περιορισμούς του FBT, τον οποίο λύνει ο \lstinline{kinst}.
+περιορισμούς του \lstinline{fbt}, τον οποίο λύνει ο \lstinline{kinst}.
 
-\subsubsection{Πως λύνει ο kinst αυτό το πρόβλημα}
-
-% TODO
-% link to patch? post code?
+\subsubsection{Πώς o \lstinline{kinst} λύνει αυτό το πρόβλημα}
 
 Στην πραγματικότητα, ο \lstinline{kinst} \textit{δεν} διαθέτει επιπλέον λογική
-όσον αφορά τις inline συναρτήσεις --- η λύση αυτού του προβλήματος βρίσκεται
-σε προηγούμενο στάδιο, σε αυτό της συντακτικής ανάλυσης του D script από την
-βιβλιοθήκη DTrace (\lstinline{libdtrace}).
+όσον αφορά τις inline συναρτήσεις --- η λύση αυτού του προβλήματος βρίσκεται σε
+προηγούμενο στάδιο, σε αυτό της συντακτικής ανάλυσης του D script από την
+\lstinline{libdtrace}.
 
 Η παρακολούθηση inline συναρτήσεων στον \lstinline{kinst} δεν είναι τίποτα
-παραπάνω από ένα συντακτικό στρώμα που έχει προστεθεί στην libdtrace. Όταν ο
-χρήστης ζητάει ένα probe της μορφής
-\lstinline{kinst::<function>:<entry|return>}
+παραπάνω από ένα συντακτικό στρώμα που έχει προστεθεί στην
+\lstinline{libdtrace} \cite{kinstinline}. Όταν ο χρήστης ζητάει ένα probe της
+μορφής \lstinline{kinst::<function>:<entry|return>}
 \footnote{
-	Σε αντίθεση με τον FBT, ο \lstinline{kinst} δεν μπορεί να δεχθεί άδειο
+	Σε αντίθεση με τον \lstinline{fbt}, ο \lstinline{kinst} δεν μπορεί να δεχθεί άδειο
 	το πεδίο probe όταν πρόκειται για παρακολούθηση inline συναρτήσεων.
 	Προκειμένου να μπορέσει να ενεργοποιηθεί ο κώδικας εντοπισμού inline
-	συναρτήσεων εντός του libdtrace, πρέπει αναγκαστικά να οριστεί είτε η
-	λέξη \lstinline{entry} είτε \lstinline{return}.
+	συναρτήσεων εντός του \lstinline{libdtrace}, πρέπει αναγκαστικά να
+	οριστεί είτε η λέξη \lstinline{entry} είτε \lstinline{return}.
 },
-η libdtrace αναλύει τις πληροφορίες DWARF (βλέπε ενότητα \ref{dwarf}) όλων των
-φορτωμένων kernel modules
+η \lstinline{libdtrace} αναλύει τις πληροφορίες DWARF (βλέπε ενότητα
+\ref{dwarf}) όλων των φορτωμένων kernel modules
 \footnote{
 	Αυτό ωστόσο καθιστά την όλη διαδικασία ιδιαίτερα χρονοβόρα. Μελλοντικός
 	στόχος είναι να μειωθεί όσο το δυνατόν περισσότερο αυτή η επιβάρυνση
@@ -1243,10 +1809,11 @@ Inline συναρτήσεις είναι συναρτήσεις τις οποί�
 \lstinline{<function>} είναι inline. Σε αυτή την περίπτωση, δημιουργεί
 \lstinline{kinst} probes στις συναρτήσεις και ακριβή offset(s), στα οποία έχει
 βρεθεί inline αντίγραφο της \lstinline{<function>}. Ωστόσο, αν η
-\lstinline{<function>} δεν είναι inline, το probe μετατρέπεται αυτόματα σε FBT
-probe, μίας ο FBT είναι ιδανικός για την παρακολούθηση της αρχής και τέλους
-μη-inline συναρτήσεων. Το σχήμα \ref{sugar} παρουσιάζει ένα παράδειγμα του πώς
-η libdtrace χειρίζεται inline και μη-inline συναρτήσεις.
+\lstinline{<function>} δεν είναι inline, το probe μετατρέπεται αυτόματα σε
+\lstinline{fbt} probe, μίας και ο \lstinline{fbt} είναι ιδανικός για την
+παρακολούθηση της αρχής και τέλους μη-inline συναρτήσεων. Το σχήμα \ref{sugar}
+παρουσιάζει ένα παράδειγμα του πώς η \lstinline{libdtrace} χειρίζεται inline
+και μη-inline συναρτήσεις.
 
 \begin{figure}[H]
 \begin{center}
@@ -1255,45 +1822,49 @@ probe, μίας ο FBT είναι ιδανικός για την παρακολ�
 Inline function & Non-inline function \\
 
 \begin{tikzpicture}[every node/.style={transform shape}, node distance=1cm]
-	\node (initial) [box, text width=9cm] {
-		\begin{lstlisting}
+\node (initial) [text width=9cm] {
+\begin{lstlisting}
 kinst::cam_iosched_has_more_trim:entry
 {
 	printf("\t%d\t%s", pid, execname);
-}\end{lstlisting}
-	};
-	\node (outkinst) [box, text width=9cm, below of=initial, yshift=-3cm] {
-		\begin{lstlisting}
+}
+\end{lstlisting}
+};
+\node (outkinst) [text width=9cm, below of=initial, yshift=-3cm] {
+\begin{lstlisting}
 kinst::cam_iosched_get_trim:13,
 kinst::cam_iosched_next_bio:13,
 kinst::cam_iosched_schedule:40
 {
 	printf("\t%d\t%s", pid, execname);
-}\end{lstlisting}
-	};
+}
+\end{lstlisting}
+};
 
-	\draw [arrow] (initial) -- (outkinst);
+\draw [arrow] (initial) -- (outkinst);
 \end{tikzpicture} &
 
 \begin{tikzpicture}[every node/.style={transform shape}, node distance=1cm]
-	\node (initial) [box, text width=5cm] {
-		\begin{lstlisting}
+\node (initial) [text width=5cm] {
+\begin{lstlisting}
 kinst::malloc:entry
 {
 	exit(0);
-}\end{lstlisting}
-	};
-	\node (outkinst) [box, text width=5cm, below of=initial, yshift=-3.42cm] {
-		\begin{lstlisting}
+}
+\end{lstlisting}
+};
+\node (outkinst) [text width=5cm, below of=initial, yshift=-3.42cm] {
+\begin{lstlisting}
 fbt::malloc:entry
 {
 	exit(0);
-}\end{lstlisting}
-	};
+}
+\end{lstlisting}
+};
 
-	\draw [arrow] (initial) -- (outkinst);
+\draw [arrow] (initial) -- (outkinst);
+
 \end{tikzpicture} \\
-
 \end{tabular}
 \end{center}
 \caption{
@@ -1304,33 +1875,29 @@ fbt::malloc:entry
 \end{figure}
 
 Υπάρχει περίπτωση να υπάρχουν inline αλλά και μη-inline ορισμοί της ίδιας
-συνάρτησης. Σε αυτήν την περίπτωση, η libdtrace, πέρα από τα \lstinline{kinst}
-probes για τα inline αντίγραφα, δημιουργεί και ένα επιπλέον FBT probe για την
-μη-inline συνάρτηση.
+συνάρτησης. Σε αυτήν την περίπτωση, η \lstinline{libdtrace}, πέρα από τα
+\lstinline{kinst} probes για τα inline αντίγραφα, δημιουργεί και ένα επιπλέον
+\lstinline{fbt} probe για την μη-inline συνάρτηση.
 
 Για την παραγωγή των εξόδων που παρουσίαζονται στο σχήμα \ref{sugar},
 χρησιμοποείται η επιλογή \lstinline{-d} στην εντολή \lstinline{dtrace(1)}, η
 οποία τυπώνει το D script αφού έχουν εφαρμοστεί όλοι οι συντακτικοί
 μετασχηματισμοί. Η επιλογή αυτή προστέθηκε με το
 \href{https://cgit.freebsd.org/src/commit/?id=1e136a9cbd3a9d137037e47a53c1dba3be7f6925}{commit
-1e136a9cbd3a}.
+1e136a9cbd3a}. \\
 
-% TODO
-% See links to docs
-
-<++>
+\textit{
+	Μέχρι και την στιγμή της συγγραφής της παρούσας εργασίας, η υλοποίηση
+	της παρακολούθησης inline συναρτήσεων βρίσκεται σε κατάσταση
+	επιθεώρησης \cite{inlinepatch}.
+}
 
 \subsubsection{Πρότυπο DWARF} \label{dwarf}
-
-% TODO
-% how to compile kernel/stuff with dwarf
 
 Το πρότυπο αποσφαλμάτωσης DWARF \cite{dwarfstd} είναι ένα πρότυπο το οποίο
 χρησιμοποείται από μεταγλωττιστές και προγράμματα αποσφαλμάτωσης (debuggers)
 για την κωδικοποίηση χρήσιμων πληροφοριών, όπως ονόματα συναρτήσεων ή θέσεις
 μεταβλητών, και πολλών άλλων, για κάθε μονάδα μεταγλώττισης (compilation unit).
-
-% TODO link to what stuff it encodes
 
 \begin{displayquote}
 	This document defines a format for describing programs to facilitate
@@ -1346,28 +1913,25 @@ probes για τα inline αντίγραφα, δημιουργεί και ένα
 ονομάζονται DIEs. Η κάθε μονάδα μεταγλώττισης αντιστοιχεί σε ένα τέτοιο δέντρο.
 Για καλύτερη κατανόηση, ας θεωρήσουμε το παρακάτω θεωρητικό δέντρο:
 
-% TODO διάγραμμα από manual
-<++>
-
 Κατά την μεταγλώττιση ενός C προγράμματος, η ενσωμάτωση των πληροφοριών DWARF
 εντός του μεταγλωττισμένου αρχείου μπορεί να γίνει με την χρήση της επιλογής
 \lstinline{-g} (παραγωγή πληροφοριών αποσφαλμάτωσης):
 
 \begin{lstlisting}
-	cc <file>.c -g -o <file>
+# cc <file>.c -g -o <file>
 \end{lstlisting}
 
 Οι πληροφορίες DWARF μπορούν έπειτα να διαβαστούν είτε με το πρόγραμμα
 \lstinline{readelf} (με την επιλογή \lstinline{-wi}):
 
 \begin{lstlisting}
-	readelf -wi <file>
+# readelf -wi <file>
 \end{lstlisting}
 
 Είτε με το \lstinline{dwarfdump}:
 
 \begin{lstlisting}
-	dwarfdump <file>
+# dwarfdump <file>
 \end{lstlisting}
 
 Οι δηλώσεις των inline συναρτήσεων στο πρότυπο DWARF αναπαριστώνται με την
@@ -1378,13 +1942,11 @@ probes για τα inline αντίγραφα, δημιουργεί και ένα
 αναπαριστώνται με την ετικέτα \lstinline{DW_TAG_inlined_subroutine} και μπορούν
 να περιέχουν τις παρακάτω ιδιότητες:
 
-% TODO word better
-
 \begin{itemize}
-	\item \lstinline{DW_AT_abstract_origin}: Offset του DIE σε σχέση με την
-		δήλωση της inline συνάρτησης. % FIXME true?
+	\item \lstinline{DW_AT_abstract_origin}: Θέση του DIE που περιέχει την
+		δήλωση της inline συνάρτησης.
 	\item \lstinline{DW_AT_call_file}: Ακέραιος αριθμός που δηλώνει το
-		αρχείο στο οποίο καλαίτει η συνάρτηση. % TODO how do we match to file?
+		αρχείο στο οποίο καλαίτει η συνάρτηση.
 	\item \lstinline{DW_AT_call_line}: Γραμμή κώδικα εντός του αρχείου, στο
 		οποίο καλείται η συνάρτηση.
 	\item \lstinline{DW_AT_call_column}: Στήλη εντός της γραμμής, όπου
@@ -1397,78 +1959,85 @@ probes για τα inline αντίγραφα, δημιουργεί και ένα
 		ενιαίες θέσεις μνήμης.
 \end{itemize}
 
-Όσον αφορά τις inline συναρτήσεις, ας υποθέσουμε την παρακάτω εντολή DTrace:
+Όσον αφορά τις inline συναρτήσεις, ας υποθέσουμε την παρακάτω εντολή DTrace.
+Όλη η διαδικασία που παρουσιάζεται παρακάτω γίνεται προγραμματιστικά εντός της
+\lstinline{libdtrace} με την χρήση της βιβλιοθήκης DWARF
+(\lstinline{dwarf(3)}) \cite{margdwarf}, ωστόσο για χάρην κατανόησης θα παρουσιαστεί
+χειροκίνητα:
 
 \begin{lstlisting}
-	# dtrace -n 'kinst::vfs_freevnodes_dec:entry'
+# dtrace -n 'kinst::vfs_freevnodes_dec:entry'
+\end{lstlisting}
+
+Εντοπίζοντας την συνάρτηση στον κώδικα του FreeBSD
+(\lstinline{sys/kern/vfs_subr.c}):
+
+\begin{lstlisting}[language=C]
+static __inline void
+vfs_freevnodes_dec(void)
+{
+	[...]
+}
 \end{lstlisting}
 
 Εφόσον η συνάρτηση \lstinline{vfs_freevnodes_dec()} είναι μέρος του FreeBSD
-kernel, η libdtrace πρέπει αρχικά να αναλύσει τα δεδομένα DWARF του kernel, τα
-οποία βρίσκονται στο αρχείο
-\lstinline{/usr/lib/debug/boot/kernel/kernel.debug}, και να βρει αν η
-\lstinline{vfs_freevnodes_dec()} είναι inline. Αν και όλα αυτά γίνονται εντός
-της libdtrace, χάριν κατανόησης και απεικόνισης της διαδικασίας που
-ακολουθείται, θα χρησιμοποιήσουμε την παρακάτω εντολή για να εμφανίσουμε τα
-δεδομένα DWARF του kernel:
+kernel, αλλά και inline, η \lstinline{libdtrace} πρέπει αρχικά να αναλύσει τα
+δεδομένα DWARF του kernel, τα οποία βρίσκονται στο αρχείο
+\lstinline{/usr/lib/debug/boot/kernel/kernel.debug}, να βρει αν η
+\lstinline{vfs_freevnodes_dec()} είναι inline (που στην προκειμένη περίπτωση,
+είναι), και έπειτα να βρει όλα τα inline αντίγραφά της και να δημιουργήσει
+\lstinline{kinst} probes στα σημεία που εντοπίστηκαν. Αν και όλα αυτά γίνονται
+εντός της \lstinline{libdtrace}, χάριν κατανόησης και απεικόνισης της
+διαδικασίας που ακολουθείται, θα χρησιμοποιήσουμε την παρακάτω εντολή για να
+εμφανίσουμε τα δεδομένα DWARF του kernel:
 
 \begin{lstlisting}
-	readelf -wi /usr/lib/debug/boot/kernel/kernel.debug
+# readelf -wi /usr/lib/debug/boot/kernel/kernel.debug | less
 \end{lstlisting}
 
-Και έπειτα θα ψάξουμε για το παρακάτω DIE:
+Και έπειτα θα ψάξουμε για το παρακάτω DIE, το οποίο αντιστοιχεί στην συνάρτηση
+\lstinline{vfs_freevnodes_dec()}:
 
 \begin{lstlisting}[caption={DIE δήλωησης inline συνάρτησης}, captionpos=b, label=inlinedecl]
- <1><1dfa144>: Abbrev Number: 94 (DW_TAG_subprogram)
-    <1dfa145>   DW_AT_name        : (indirect string) vfs_freevnodes_dec
-    <1dfa149>   DW_AT_decl_file   : 1
-    <1dfa14a>   DW_AT_decl_line   : 1447
-    <1dfa14c>   DW_AT_prototyped  : 1
-    <1dfa14c>   DW_AT_inline      : 1
+ <1><1f03fc9>: Abbrev Number: 99 (DW_TAG_subprogram)
+    <1f03fca>   DW_AT_name        : (indirect string) vfs_freevnodes_dec
+    <1f03fce>   DW_AT_decl_file   : 1
+    <1f03fcf>   DW_AT_decl_line   : 1584
+    <1f03fd1>   DW_AT_prototyped  : 1
+    <1f03fd1>   DW_AT_inline      : 1
 \end{lstlisting}
 
-% FIXME exceeds columns
 Η ετικέτα \lstinline{DW_TAG_subprogram} υποδηλώνει ότι το DIE αναφέρεται σε
 συνάρτηση, και η ιδιότητα \lstinline{DW_AT_inline} ότι η συνάρτηση είναι
-inlined. Τώρα που η libdtrace ξέρει ότι η συνάρτηση είναι πράγματι inlined,
-πρέπει να βρει τα DIE που αντιστοιχούν στο κάθε inline αντίγραφο, όπως το
-παρακάτω:
+inlined. Τώρα που η \lstinline{libdtrace} ξέρει ότι η συνάρτηση είναι πράγματι
+inlined, πρέπει να βρει τα DIE που αντιστοιχούν στο κάθε inline αντίγραφο. Αυτό
+γίνεται αναζητώντας DIEs τα οποία ορίζουν ως \lstinline{DW_AT_abstract_origin}
+το offset της δήλωσης της συνάρτησης. Στην προκειμένη περίπτωση αυτό το offset
+είναι το \lstinline{0x1f03fc9} (βλέπε πρώτη σειρά στο Listing
+\ref{inlinedecl}). Για παράδειγμα:
 
 \begin{lstlisting}[caption={DIE αντιγράφου inline συνάρτησης}, captionpos=b]
- <3><1dfe45e>: Abbrev Number: 24 (DW_TAG_inlined_subroutine)
-    <1dfe45f>   DW_AT_abstract_origin: <0x1dfa144>
-    <1dfe463>   DW_AT_low_pc      : 0xffffffff80cf701d
-    <1dfe46b>   DW_AT_high_pc     : 0x38
-    <1dfe46f>   DW_AT_call_file   : 1
-    <1dfe470>   DW_AT_call_line   : 3458
-    <1dfe472>   DW_AT_call_column : 5
+ <3><1f09100>: Abbrev Number: 24 (DW_TAG_inlined_subroutine)
+    <1f09101>   DW_AT_abstract_origin: <0x1f03fc9>
+    <1f09105>   DW_AT_low_pc      : 0xffffffff80c60be1
+    <1f0910d>   DW_AT_high_pc     : 0x4e
+    <1f09111>   DW_AT_call_file   : 1
+    <1f09112>   DW_AT_call_line   : 3744
+    <1f09114>   DW_AT_call_column : 3
 \end{lstlisting}
 
-% FIXME linebreak
-
 Όπως αναφέρθηκε παραπάνω, τα inline αντίγραφα μίας συνάρτησης υποδηλώνονται με
-την ετικέτα \lstinline{DW_TAG_inlined_subroutine}. Η ιδιότητα
+την ετικέτα \\
+\lstinline{DW_TAG_inlined_subroutine}. Η ιδιότητα
 \lstinline{DW_AT_abstract_origin} ορίζει το offset στο οποίο βρίσκεται η δήλωση
-της δήλωσης της συνάρτησης, σε αυτή την περίπτωση $\mathtt{0x1dfa144}$, το
+της δήλωσης της συνάρτησης, σε αυτή την περίπτωση \lstinline{0x1f03fc9}, το
 οποίο αντιστοιχεί στο DIE της δήλωσης της \lstinline{vfs_freevnodes_dec()}
 (βλέπε Listing \ref{inlinedecl}).
 
-<++>
+\subsubsection{Υπολογισμός ορίων κλήσεων inline αντιγράφων} \label{bounds}
 
-\subsubsection{Πρότυπο ELF}
-
-% TODO
-% Bib
-%	https://wiki.osdev.org/ELF
-
-<++>
-
-\subsubsection{Υπολογισμός ορίων κλήσεων}
-
-% TODO
-%	inlinecall, omitrbp
-
-Το DWARF καθορίζει τα όρια κλήσεων με έναν από τους δύο τρόπους:
+Το DWARF καθορίζει τα όρια κλήσεων συναρτήσεων με έναν από τους δύο τρόπους για
+κάθε DIE:
 
 \begin{itemize}
 	\item Ορίζοντας τις ιδιότητες \lstinline{DW_AT_low_pc} και
@@ -1484,13 +2053,13 @@ inlined. Τώρα που η libdtrace ξέρει ότι η συνάρτηση ε
 ενότητας \ref{dwarf}:
 
 \begin{lstlisting}[caption={DIE με κάτω και άνω όρια PC}, captionpos=b]
- <3><1dfe45e>: Abbrev Number: 24 (DW_TAG_inlined_subroutine)
-    <1dfe45f>   DW_AT_abstract_origin: <0x1dfa144>
-    <1dfe463>   DW_AT_low_pc      : 0xffffffff80cf701d
-    <1dfe46b>   DW_AT_high_pc     : 0x38
-    <1dfe46f>   DW_AT_call_file   : 1
-    <1dfe470>   DW_AT_call_line   : 3458
-    <1dfe472>   DW_AT_call_column : 5
+ <3><1f09100>: Abbrev Number: 24 (DW_TAG_inlined_subroutine)
+    <1f09101>   DW_AT_abstract_origin: <0x1f03fc9>
+    <1f09105>   DW_AT_low_pc      : 0xffffffff80c60be1
+    <1f0910d>   DW_AT_high_pc     : 0x4e
+    <1f09111>   DW_AT_call_file   : 1
+    <1f09112>   DW_AT_call_line   : 3744
+    <1f09114>   DW_AT_call_column : 3
 \end{lstlisting}
 
 Χρησιμοποιώντας τον τύπο που αναφέρθηκε στην προηγούμενη παράγραφο, έχουμε τα
@@ -1498,10 +2067,11 @@ inlined. Τώρα που η libdtrace ξέρει ότι η συνάρτηση ε
 
 \begin{equation}
 \begin{split}
-	Bound_{low} =  PC_{low} = \mathtt{0xffffffff80cf701d} \\
-	Bound_{high} = PC_{low} + PC_{high} = \mathtt{0xffffffff80cf701d} +
-	\mathtt{0x38} = \\ \mathtt{0xffffffff80cf7055}
+	Bound_{low} =  PC_{low} = \mathtt{0xffffffff80c60be1} \\
+	Bound_{high} = PC_{low} + PC_{high} = \mathtt{0xffffffff80c60be1} +
+	\mathtt{0x4e} = \\ \mathtt{0xffffffff80c60c2f}
 \end{split}
+\label{lohipc}
 \end{equation}
 
 Η δεύτερη περίπτωση είναι λίγο πιο περίπλοκη. Ας υποθέσουμε το παρακάτω DIE
@@ -1509,48 +2079,52 @@ inlined. Τώρα που η libdtrace ξέρει ότι η συνάρτηση ε
 ιδιότητα \lstinline{DW_AT_ranges}:
 
 \begin{lstlisting}[caption={DIE με όρια \lstinline{DW_AT_ranges}}, captionpos=b]
- <3><1dfd2e2>: Abbrev Number: 58 (DW_TAG_inlined_subroutine)
-    <1dfd2e3>   DW_AT_abstract_origin: <0x1dfa144>
-    <1dfd2e7>   DW_AT_ranges      : 0x1f1290
-    <1dfd2eb>   DW_AT_call_file   : 1
-    <1dfd2ec>   DW_AT_call_line   : 3405
-    <1dfd2ee>   DW_AT_call_column : 3
+ <3><1f0774a>: Abbrev Number: 28 (DW_TAG_inlined_subroutine)
+    <1f0774b>   DW_AT_abstract_origin: <0x1f03fc9>
+    <1f0774f>   DW_AT_ranges      : 0x203730
+    <1f07753>   DW_AT_call_file   : 1
+    <1f07754>   DW_AT_call_line   : 3744
+    <1f07756>   DW_AT_call_column : 3
 \end{lstlisting}
 
 Η ιδιότητα \lstinline{DW_AT_ranges} αναφέρεται στην ενότητα
 \lstinline{.debug_ranges} που βρίσκεται εντός των debug αρχείων και μπορεί να
 εμφανισθεί τρέχοντας την εντολή \lstinline{dwarfdump -N <file>}. Αναζητώντας
-για την παραπάνω τιμή \lstinline{DW_AT_ranges} $\mathtt{0x1f1290}$, βρίσκουμε
-την αντίστοιχη ομάδα εύρους:
+για την παραπάνω τιμή \lstinline{DW_AT_ranges} \lstinline{0x203730}, βρίσκουμε
+την αντίστοιχη ομάδα εύρους, τρέχοντας την εντολή
+\lstinline{dwarfdump -N /usr/lib/debug/boot/kernel/kernel.debug}:
 
 \begin{lstlisting}[caption={Παράδειγμα \lstinline{DW_AT_ranges}}, captionpos=b]
-Ranges group 38809:
-ranges: 3 at .debug_ranges offset 2036368 (0x001f1290) (48 bytes)
-[ 0] range entry    0x000025c8 0x000025f9
-[ 1] range entry    0x0000261a 0x00002621
-[ 2] range end      0x00000000 0x00000000
+ Ranges group 40228:
+                ranges: 3 at .debug_ranges offset 2111280 (0x00203730) (48 bytes)
+                        [ 0] range entry    0x0000271b 0x00002754
+                        [ 1] range entry    0x000027ca 0x000027e5
+                        [ 2] range end      0x00000000 0x00000000
 \end{lstlisting}
 
 Όλες οι γραμμές «range entry» αντιστοιχούν σε διαφορετικά εύρη διευθύνσεων στα
-οποία έχει χωριστεί το inline αντίγραφο, συνήθως ως αποτέλεσμα πρόωρων return.
-Τα όρια κλήσεων υπολογίζονται προσθέτοντας κάθε τιμή των «range entries» στο
-κάτω όριο (\lstinline{DW_AT_low_pc}) του root DIE, δηλαδή του DIE ανώτατου
-επιπέδου, που αντιστοιχεί στο αρχείο εντός του οποίου είναι υλοποιημένη η
-inline συνάρτηση:
+οποία έχει χωριστεί το inline αντίγραφο, συνήθως ως αποτέλεσμα πρόωρων return
+εντός της συνάρτησης. Τα όρια κλήσεων υπολογίζονται προσθέτοντας κάθε τιμή των
+«range entries» στο κάτω όριο (\lstinline{DW_AT_low_pc}) του root DIE, δηλαδή
+του DIE ανώτατου επιπέδου, που αντιστοιχεί στο αρχείο εντός του οποίου είναι
+υλοποιημένη η inline συνάρτηση. Ένας εύκολος τρόπος να βρεθεί χειροκίνητα το
+DIE είναι με την αναζήτηση του ονόματος του αρχείου που είναι υλοποιημένη
+συνάρτηση, στην προκειμένη περίπτωση \lstinline{sys/kern/vfs_subr.c}:
 
 \begin{lstlisting}[caption={DIE μονάδας μεταγλώττισης}, captionpos=b]
- <0><1dee9fb>: Abbrev Number: 1 (DW_TAG_compile_unit)
-    <1dee9fc>   DW_AT_producer    : (indirect string) FreeBSD clang version 13.0.0 (git@github.com:llvm/llvm-project.git llvmorg-13.0.0-0-gd7b669b3a303)
-    <1deea00>   DW_AT_language    : 12	(C99)
-    <1deea02>   DW_AT_name        : (indirect string) /usr/src/sys/kern/vfs_subr.c
-    <1deea06>   DW_AT_stmt_list   : 0x6cb448
-    <1deea0a>   DW_AT_comp_dir    : (indirect string) /usr/obj/usr/src/amd64.amd64/sys/GENERIC
-    <1deea0e>   DW_AT_low_pc      : 0xffffffff80cf4020
-    <1deea16>   DW_AT_high_pc     : 0xde3d
+ <0><1ef6226>: Abbrev Number: 1 (DW_TAG_compile_unit)
+    <1ef6227>   DW_AT_producer    : (indirect string) FreeBSD clang version 19.1.7 (https://github.com/llvm/llvm-project.git llvmorg-19.1.7-0-gcd708029e0b
+2)
+    <1ef622b>   DW_AT_language    : 29  (C11)
+    <1ef622d>   DW_AT_name        : (indirect string) /usr/src/sys/kern/vfs_subr.c
+    <1ef6231>   DW_AT_stmt_list   : 0x6946a0
+    <1ef6235>   DW_AT_comp_dir    : (indirect string) /usr/obj/usr/src/amd64.amd64/sys/GENERIC
+    <1ef6239>   DW_AT_low_pc      : 0xffffffff80c5d810
+    <1ef6241>   DW_AT_high_pc     : 0xe9a3
 \end{lstlisting}
 
 Προσθέτοντας τα range entries στο κάτω όριο του root DIE
-($\mathtt{0xffffffff80cf4020}$), έχουμε τα παρακάτω όρια κλήσης του inline
+($\mathtt{0xffffffff80c5d810}$), έχουμε τα παρακάτω όρια κλήσης του inline
 αντιγράφου:
 
 Πρώτο range entry:
@@ -1558,12 +2132,13 @@ inline συνάρτηση:
 \begin{equation}
 \begin{split}
 	Bound0_{low} = Root_{lowpc} + Range0_{low} =
-	\mathtt{0xffffffff80cf4020} + \mathtt{0x000025c8} = \\
-	\mathtt{0xffffffff80cf65e8} \\
+	\mathtt{0xffffffff80c5d810} + \mathtt{0x0000271b} = \\
+	\mathtt{0xffffffff80c5ff2b} \\
 	Bound0_{high} = Root_{lowpc} + Range0_{high} =
-	\mathtt{0xffffffff80cf4020} + \mathtt{0x000025f9} = \\
-	\mathtt{0xffffffff80cf6619}
+	\mathtt{0xffffffff80c5d810} + \mathtt{0x00002754} = \\
+	\mathtt{0xffffffff80c5ff64}
 \end{split}
+\label{range1}
 \end{equation}
 
 Δεύτερο range entry:
@@ -1571,45 +2146,210 @@ inline συνάρτηση:
 \begin{equation}
 \begin{split}
 	Bound1_{low} = Root_{lowpc} + Range1_{low} =
-	\mathtt{0xffffffff80cf4020} + \mathtt{0x0000261a} = \\
-	\mathtt{0xffffffff80cf663a} \\
+	\mathtt{0xffffffff80c5d810} + \mathtt{0x000027ca} = \\
+	\mathtt{0xffffffff80c5ffda} \\
 	Bound1_{high} = Root_{lowpc} + Range1_{high} =
-	\mathtt{0xffffffff80cf4020} + \mathtt{0x00002621} = \\
-	\mathtt{0xffffffff80cf6641}
+	\mathtt{0xffffffff80c5d810} + \mathtt{0x000027e5} = \\
+	\mathtt{0xffffffff80c5fff5}
 \end{split}
+\label{range2}
 \end{equation}
 
-Το $Bound0_{low}$ είναι το σημείο \lstinline{entry}, και τα $Bound0_{high}$ και
-$Bound1_{high}$ τα σημεία \lstinline{return}.
+Το $Bound0_{low}$ είναι το σημείο αρχής της συνάρτησης (\lstinline{entry}), και
+τα $Bound0_{high}$ και $Bound1_{high}$ τα σημεία επιστροφής
+(\lstinline{return}).
 
-<++>
+\subsubsection{Εύρεση καλούσας συνάρτησης} \label{caller}
 
-\subsubsection{Εύρεση καλούσας συνάρτησης}
-
-Αφού έχουν υπολογισθεί τα όρια κλήσεων των inline αντιγράφων, η libdtrace
-μπορεί να προχωρήσει στην εύρεση του ονόματος των καλούντων συναρτήσεων αυτών
-των αντιγράφων. Τα ονόματα αυτά χρειάζονται για την δημιουργία
-\lstinline{kinst} probes. Αυτό γίνεται βρίσκοντας εντός ποιού συμβόλου ELF
-βρίσκονται τα όρια κλήσεων, όπως εκφράζεται από την παρακάτω συνθήκη:
+Αφού έχουν υπολογισθεί τα όρια κλήσεων των inline αντιγράφων, η
+\lstinline{libdtrace} μπορεί να προχωρήσει στην εύρεση των ονομάτων των
+καλούντων συναρτήσεων αυτών των αντιγράφων. Τα ονόματα αυτά χρειάζονται για την
+δημιουργία \lstinline{kinst} probes. Αυτό γίνεται βρίσκοντας εντός ποιού
+συμβόλου ELF βρίσκονται τα όρια κλήσεων, όπως εκφράζεται από την παρακάτω
+συνθήκη:
 
 \[
 	Sym_{low} \leq Inline_{low} \leq Inline_{high} \leq Sym_{high}
 \]
 
-% TODO https://margiolis.net/en/w/dwarf_inline/#inlinecall
+Το πρότυπο ELF \cite{elfspec} προήλθε από τα Unix System Laboratories και
+ορίζει μία τυποποιημένη μορφή εκτελέσιμων αρχείων, αντικειμενικού κώδικα
+(object code), μοιρασμένων βιβλιοθηκών (shared libraries) και core dumps. Είναι
+το καθιερωμένο πρότυπο πολλών λειτουργικών συστημάτων, ειδικά αυτών που
+προέρχονται από ή είναι παρεμφερή με το UNIX.
 
-<++>
+Όπως και στην περίπτωση της ανάλυσης των δεδομένων DWARF, έτσι και εδώ η
+διαδικασία γίνεται όλη προγραμματιστικά εντός της \lstinline{libdtrace}, με την
+χρήση της βιβλιοθήκης ELF (\lstinline{elf(3)}). Ωστόσο, και εδώ για χάρην
+κατανόησης θα παρουσιάσουμε την διαδικασία χειροκίνητα.
 
-\subsubsection{Υπολογισμός των offsets \lstinline{entry} και \lstinline{return}}
+Για την εμφάνιση των συμβόλων ELF, μπορούμε να εκτελέσουμε την εντολή
+\lstinline{readelf -s} στο εκτέλεσιμο αρχείο του kernel:
 
-Αυτό είναι το τελευταίο βήμα που πρέπει να ακολουθήσει η libdtrace προκειμένου
-να μετατρέψει το probe inline συνάρτησης σε \lstinline{kinst} probe. Εδώ
-βρίσκει τα όρια των καλούνων συναρτήσεων μέσω των πληροφοριών ELF και,
-χρησιμοποιώντας τα όρια των inline αντιγράφων, υπολογίζει τα ακριβή
-\lstinline{entry} ή \lstinline{return} offsets.
+\begin{lstlisting}
+# readelf -s /usr/lib/debug/boot/kernel/kernel.debug
+\end{lstlisting}
 
-Θεωρητικά, τα \lstinline{entry} και \lstinline{return} offsets θα υπολογίζονταν
-απλώς ως εξής:
+Η παραπάνω εντολή τυπώνει πληροφορίες για όλα τα σύμβολα εντός ενός εκτελέσιμου
+αρχείου σε μορφή πίνακα:
+
+\begin{lstlisting}
+# readelf -s /usr/lib/debug/boot/kernel/kernel.debug | head
+
+Symbol table '.symtab' contains 71137 entries:
+   Num:    Value          Size Type    Bind   Vis      Ndx Name
+     0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND
+     1: ffffffff80387100     0 NOTYPE  LOCAL  DEFAULT    9 lst
+     2: ffffffff80387087     0 NOTYPE  LOCAL  DEFAULT    9 l1
+     3: ffffffff803870d1     0 NOTYPE  LOCAL  DEFAULT    9 l2
+     4: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS cam.c
+     5: ffffffff80387600    10 FUNC    LOCAL  DEFAULT    9 camstatusentrycomp
+     6: ffffffff81804000   112 OBJECT  LOCAL  DEFAULT   50 sysctl___kern_features_scbus
+\end{lstlisting}
+
+Στην τέταρτη στήλη αναγράφεται ο τύπος του συμβόλου. Εφόσον έχουμε να κάνουμε
+μόνο με συναρτήσεις, ο τύπος που μάς ενδιαφέρει είναι ο τύπος \lstinline{FUNC},
+οπότε η έξοδος θα φιλτραριστεί ανάλογα. Η δεύτερη στήλη ορίζει την διεύθυνση
+μνήμης (σε δεκαεξαδικό) στην οποία είναι τοποθετημένο το κάθε σύμβολο, και η
+τρίτη στήλη το μέγεθος του συμβόλου (σε δεκαδικό). Με αυτές τις δύο στήλες
+μπορούμε να βρούμε τα όρια κάθε συμβόλου.
+
+Ας υποθέσουμε μία τυχαία γραμμή που ορίζει σύμβολο τύπου \lstinline{FUNC},
+δηλαδή μία συνάρτηση:
+
+\begin{lstlisting}
+ 15143: ffffffff80fc7540  4286 FUNC    GLOBAL DEFAULT    9 pmap_enter
+\end{lstlisting}
+
+Παρατηρούμε στην δεύτερη στήλη ότι η διεύθυνση μνήμης στην οποία είναι
+τοποθετημένη η συνάρτηση \lstinline{pmap_enter()} είναι η
+\lstinline{0xffffffff80fc7540}. Με άλλα λόγια αυτό είναι και το κάτω όριο της
+συνάρτησης. Στην τρίτη στήλη ορίζεται το μέγεθος της, δηλαδή 4286, οπότε
+προστίθοντας την τιμή αυτή στο κάτω όριο, μπορούμε να υπολογίσουμε και το άνω
+όριο της συνάρτησης:
+
+\[
+	Sym_{low} = \mathtt{0xffffffff80fc7540}
+\]
+\[
+	Sym_{high} = \mathtt{0xffffffff80fc7540} + \mathtt{4286} =
+	\mathtt{0xffffffff80fc85fe}
+\]
+
+Με αυτά τα δεδομένα, σε συνδυασμό με τα όρια των inline αντιγράφων που
+υπολογίστηκαν στην ενότητα \ref{bounds}, μπορούμε να βρούμε τα ονόματα των
+καλούσων συναρτήσεων, καθώς και τα ακριβή offsets στα οποία εμφανίζονται τα
+inline αντίγραφα.
+
+Το παρακάτω Lua script δέχεται ως είσοδο την έξοδο της εντολής
+\lstinline{readelf -s} και υλοποιεί τον μηχανισμό που αναλύθηκε σε αυτήν την
+ενότητα. Δεν είναι μέρος της υλοποίησης, αλλά απλώς ένα script επίδειξης του
+μηχανισμού επαλήθευσής της υλοποίησης:
+
+\lstinputlisting{./res/caller.lua}
+
+Για παράδειγμα, χρησιμοποιώντας τα όρια ενός εκ των inline αντιγράφων της
+\lstinline{vfs_freevnodes_dec()}, που υπολογίστηκαν στην εξίσωση \ref{lohipc},
+μπορούμε να βρούμε εντός ποιάς συνάρτησης έχει μετατραπεί σε inline:
+
+\begin{lstlisting}
+# readelf -s /usr/lib/debug/boot/kernel/kernel.debug | ./caller.lua 0xffffffff80c60be1 0xffffffff80c60c2f
+vget_prep
+        sym_lo=         0xffffffff80c60ba0
+        sym_hi=         0xffffffff80c60c36
+        inl_lo=         0xffffffff80c60be1
+        inl_hi=         0xffffffff80c60c2f
+\end{lstlisting}
+
+Οπότε το inline αντίγραφο της \lstinline{vfs_freevnodes_dec()} με όρια \\
+\lstinline{[0xffffffff80c60be1, 0xffffffff80c60c2f]} έχει μετατραπεί σε inline
+εντός της συνάρτησης \\ \lstinline{vget_prep()}. Το script τυπώνει επιπλέον και
+τα όρια της καλούσας συνάρτησης και του inline αντιγράφου, τα οποία θα
+χρησιμεύσουν στην επόμενη ενότητα (\ref{offs}).
+
+\subsubsection{Υπολογισμός των offsets \lstinline{entry} και \lstinline{return}} \label{offs}
+
+Αυτό είναι το τελευταίο βήμα που πρέπει να ακολουθήσει η \lstinline{libdtrace}
+προκειμένου να μετατρέψει ένα probe inline συνάρτησης σε \lstinline{kinst}
+probe(s) στα ακριβή offsets (\lstinline{entry} ή \lstinline{return}) που
+εμφανίζεται κάθε inline αντίγραφο μίας inline συνάρτησης. Στην ενότητα
+\ref{caller} παρουσιάστηκε ο μηχανισμός με τον οποίο βρίσκεται το όνομα της
+καλούσας συνάρτησης μίας inline συνάρτησης, και έγινε επίδειξη του μηχανισμού
+μέσω ενός Lua script, το οποίο τυπώνει το όνομα της καλούσας συνάρτησης, καθώς
+και τα όρια της και του inline αντιγράφου. Με αυτά τα δεδομένα μπορούν να
+υπολογιστούν τα \lstinline{entry} και \lstinline{return} offsets.
+
+Αρχικά, παρατίθεται το disassembly της συνάρτησης \lstinline{vget_prep()}, στην
+οποία εμφανίζεται το inline αντίγραφο που εξετάσαμε στην ενότητα \ref{caller},
+διότι οι πληροφορίες αυτές θα είναι χρήσιμες:
+
+\begin{lstlisting}
+(gdb) disas vget_prep
+Dump of assembler code for function vget_prep:
+   0xffffffff80c60ba0 <+0>:     push   %rbp
+   0xffffffff80c60ba1 <+1>:     mov    %rsp,%rbp
+   0xffffffff80c60ba4 <+4>:     mov    0x1a4(%rdi),%eax
+   0xffffffff80c60baa <+10>:    test   %eax,%eax
+   0xffffffff80c60bac <+12>:    jle    0xffffffff80c60bc2 <vget_prep+34>
+   0xffffffff80c60bae <+14>:    lea    0x1(%rax),%ecx
+   0xffffffff80c60bb1 <+17>:    lock cmpxchg %ecx,0x1a4(%rdi)
+   0xffffffff80c60bb9 <+25>:    jne    0xffffffff80c60baa <vget_prep+10>
+   0xffffffff80c60bbb <+27>:    mov    $0x2,%eax
+   0xffffffff80c60bc0 <+32>:    pop    %rbp
+   0xffffffff80c60bc1 <+33>:    ret
+   0xffffffff80c60bc2 <+34>:    mov    $0x2,%eax
+   0xffffffff80c60bc7 <+39>:    je     0xffffffff80c60bcb <vget_prep+43>
+   0xffffffff80c60bc9 <+41>:    pop    %rbp
+   0xffffffff80c60bca <+42>:    ret
+   0xffffffff80c60bcb <+43>:    mov    $0x1,%eax
+   0xffffffff80c60bd0 <+48>:    mov    $0x1,%ecx
+   0xffffffff80c60bd5 <+53>:    lock xadd %ecx,0x1a0(%rdi)
+   0xffffffff80c60bdd <+61>:    test   %ecx,%ecx
+   0xffffffff80c60bdf <+63>:    jne    0xffffffff80c60bc9 <vget_prep+41>
+   0xffffffff80c60be1 <+65>:    mov    %gs:0x0,%rcx
+   0xffffffff80c60bea <+74>:    incl   0x4fc(%rcx)
+   0xffffffff80c60bf0 <+80>:    mov    %gs:0x180,%rdi
+   0xffffffff80c60bf9 <+89>:    movzbl 0x88(%rdi),%edx
+   0xffffffff80c60c00 <+96>:    dec    %dl
+   0xffffffff80c60c02 <+98>:    mov    %dl,0x88(%rdi)
+   0xffffffff80c60c08 <+104>:   cmp    $0x82,%dl
+   0xffffffff80c60c0b <+107>:   je     0xffffffff80c60c23 <vget_prep+131>
+   0xffffffff80c60c0d <+109>:   decl   0x4fc(%rcx)
+   0xffffffff80c60c13 <+115>:   cmpb   $0x0,0x138(%rcx)
+   0xffffffff80c60c1a <+122>:   je     0xffffffff80c60bc9 <vget_prep+41>
+   0xffffffff80c60c1c <+124>:   call   0xffffffff80b7ce70 <critical_exit_preempt>
+   0xffffffff80c60c21 <+129>:   jmp    0xffffffff80c60c2f <vget_prep+143>
+   0xffffffff80c60c23 <+131>:   add    $0x88,%rdi
+   0xffffffff80c60c2a <+138>:   call   0xffffffff80c6a960 <vfs_freevnodes_rollup>
+   0xffffffff80c60c2f <+143>:   mov    $0x1,%eax
+   0xffffffff80c60c34 <+148>:   pop    %rbp
+   0xffffffff80c60c35 <+149>:   ret
+End of assembler dump.
+\end{lstlisting}
+
+Σε αυτό το σημείο είναι ενδιαφέρον να τονιστεί ότι οι επιπλέον γραμμές με
+διευθύνσεις που τύπωσε το Lua script στην ενότητα \ref{caller}, εμφανίζονται
+όλες στο παραπάνω disassembly. Προς υπενθύμιση, οι διευθύνσεις που τύπωσε το
+script είναι οι εξής:
+
+\begin{lstlisting}
+        sym_lo=         0xffffffff80c60ba0
+        sym_hi=         0xffffffff80c60c36
+        inl_lo=         0xffffffff80c60be1
+        inl_hi=         0xffffffff80c60c2f
+\end{lstlisting}
+
+Τα \lstinline{sym_lo} και \lstinline{sym_hi} αντιστοιχούν στα όρια της καλούσας
+συνάρτησης, δηλαδή της \lstinline{vget_prep()}. Πράγματι, στο παραπάνω
+disassembly της \lstinline{vget_prep()} βλέπουμε ότι οι διευθύνσεις
+\lstinline{0xffffffff80c60ba0} και \lstinline{0xffffffff80c60c36} αντιστοιχούν
+στην πρώτη και την τελευταία αντίστοιχα εντολή της συνάρτησης. Τα
+\lstinline{inl_lo} και \lstinline{inl_hi} αντιστοιχούν στα όρια του inline
+αντιγράφου της \lstinline{vfs_freevnodes_dec()} που εντοπίστηκε εντός της
+\lstinline{vget_prep()}.
+
+Τα \lstinline{entry} και \lstinline{return} offsets, λοιπόν, υπολογίζονται ως
+εξής:
 
 \[
 	Entry = Inline_{low} - Caller_{low}
@@ -1618,90 +2358,939 @@ $Bound1_{high}$ τα σημεία \lstinline{return}.
 	Return = Inline_{high} - Caller_{low}
 \]
 
-Ωστόσο, προκύπτει ότι υπάρχουν πολλαπλά προβλήματα που περιπλέκουν τους
-υπολογισμούς.
+Χρησιμοποιώντας το παράδειγμα της ενότητας \ref{caller}, μπορούμε να
+υπολογίσουμε τα offsets:
 
-% TODO https://margiolis.net/en/w/kinst_inline/#heuristic-entry-return
-% nested inline funcs
+\begin{equation}
+\begin{split}
+	Entry = Inline_{low} - Caller_{low} =
+	\mathtt{0xffffffff80c60be1} - \mathtt{0xffffffff80c60ba0} = 65 \\
+	Return = Inline_{high} - Caller_{low} =
+	\mathtt{0xffffffff80c60c2f} - \mathtt{0xffffffff80c60ba0} = 143
+\end{split}
+\label{offsetswrong}
+\end{equation}
 
-<++>
+\textit{Ωστόσο}, ύστερα από αρκετά πειράματα και ανάγνωση των disassembly
+διαφόρων συναρτήσεων, διαπιστώθηκε ότι υπάρχουν προβλήματα που περιπλέκουν τους
+υπολογισμούς των $Return$ offsets, και η διαδικασία δεν είναι πάντα τόσο απλή,
+και το $Return$ offset που μόλις υπολογίστηκε στην εξίσωση \ref{offsetswrong},
+στην πραγματικότητα \textit{δεν είναι σωστό}.
 
-Τέλος, τα offsets που υπολογίσθηκαν χρησιμοποιούνται για την δημιουργία
-κανονικών \lstinline{kinst} probes της μορφής
-\lstinline{kinst::<function>:<instruction>}:
+\begin{itemize}
+	\item Το DIE inline αντιγράφου ορίζει τα όρια του με τις ιδιότητες
+		\lstinline{DW_AT_lowpc} και \lstinline{DW_AT_highpc}, τότε η
+		διεύθυνση επιστροφής του άνω ορίου είναι \textit{πάντα} εκτός
+		των ορίων του inline αντιγράφου.
+	\item Το DIE inline αντιγράφου ορίζει τα όρια του με την ιδιότητα
+		\lstinline{DW_AT_ranges}, στην οποία περίπτωση μόνο το άνω όριο
+		του \textit{τελευταίου} range είναι εκτός των ορίων του inline
+		αντιγράφου.
+	\item Με βάση τα δύο παραπάνω σενάρια, αν το άνω όριο του inline
+		αντιγράφου είναι το \textit{ίδιο} με το άνω όριο της καλούσας
+		συνάρτησης, τότε η διεύθυνση είναι εκτός και του inline
+		αντιγράφου αλλά και της καλούσας συνάρτησης.
+\end{itemize}
 
-\begin{lstlisting}[caption={Μετατροπή inline probe σε κανονικό}, captionpos=b]
-# dtrace -dn 'kinst::cam_iosched_has_more_trim:entry'
-kinst::cam_iosched_get_trim:13,
-kinst::cam_iosched_next_bio:13,
-kinst::cam_iosched_schedule:40
+Αυτό είναι αποτέλεσμα της ίδιας της κωδικοποίησης DWARF. Σε αυτές τις 3
+περιπτώσεις, μεταφέρουμε το άνω όριο του inline αντιγράφου \textit{μία εντολή
+πίσω}. Οπότε, στην προκειμένη περίπτωση, το άνω όριο που βρέθηκε στην εξίσωση
+\ref{lohipc} και χρησιμοποιήθηκε μέχρι και τώρα ως παράδειγμα, στην
+πραγματικότητα πρέπει να μεταφερθεί μία εντολή πίσω. Σε όλες τις υπόλοιπες
+περιπτώσεις, το $Return$ offset μπορεί να υπολογιστεί όπως παρουσιάστηκε
+αρχικά.
+
+Οπότε, βάσει του disassembly της \lstinline{vget_prep()}, το άνω όριο του
+inline αντιγράφου πρέπει να μεταφερθεί στην διεύθυνση
+\lstinline{0xffffffff80c60c2a}, οπότε και θα καταλήξουμε με ένα νέο offset, το
+138, αντί για το 143:
+
+\begin{lstlisting}
+   0xffffffff80c60c2a <+138>:   call   0xffffffff80c6a960 <vfs_freevnodes_rollup>
+\end{lstlisting}
+
+Μπορούμε να επαληθεύσουμε περαιτέρω ότι αυτό είναι έγκυρο, κοιτώντας στην
+υλοποίηση της \\
+\lstinline{vfs_freevnodes_dec()}:
+
+\begin{lstlisting}[language=C]
+static __inline void
+vfs_freevnodes_dec(void)
+{
+	int8_t *lfreevnodes;
+
+	critical_enter();
+	lfreevnodes = PCPU_PTR(vfs_freevnodes);
+	(*lfreevnodes)--;
+	if (__predict_false(*lfreevnodes == -VNLRU_FREEVNODES_SLOP))
+		vfs_freevnodes_rollup(lfreevnodes);
+	else
+		critical_exit();
+}
+\end{lstlisting}
+
+Στο offset που υπολογίσαμε ως άνω όριο του inline αντιγράφου της
+\lstinline{vfs_freevnodes_dec()} εκτελείται η εντολή assembly
+\lstinline{call vfs_freevnodes_rollup}, η οποία πράγματι είναι και η τελευταία
+εντολή του παραπάνω κομματιού κώδικα.
+
+Επομένως, επιστρέφοντας στους υπολογισμούς, τα \lstinline{entry} και
+\lstinline{return} offsets του inline αντιγράφου εντός της
+\lstinline{vget_prep()}, καταλήγουμε ότι είναι τα εξής:
+
+\begin{equation}
+\begin{split}
+	Entry = Inline_{low} - Caller_{low} =
+	\mathtt{0xffffffff80c60be1} - \mathtt{0xffffffff80c60ba0} = 65 \\
+	Return = Inline_{high} - Caller_{low} =
+	\mathtt{0xffffffff80c60c2a} - \mathtt{0xffffffff80c60ba0} = 138
+\end{split}
+\label{offsetscorrect}
+\end{equation}
+
+Τέλος, τα offsets που υπολογίσθηκαν για κάθε inline αντίγραφο της
+\lstinline{vfs_freevnodes_dec()}, χρησιμοποιούνται για την δημιουργία κανονικών
+\lstinline{kinst} probes της μορφής
+\lstinline{kinst::<function>:<instruction>}. Θα χρησιμοποιήσουμε και την
+επιλογή \lstinline{-d} στην εντολή \lstinline{dtrace(1)}, ώστε να εμφανισθεί το
+D script μετά τους συντακτικούς μετασχηματισμούς της \lstinline{libdtrace},
+δηλαδή της δημιουργίας των \lstinline{kinst} probes.
+
+Αρχικά, το \lstinline{entry} probe, το οποίο θα δημιουργήσει \lstinline{kinst}
+probes για την αρχή κάθε inline αντιγράφου της
+\lstinline{vfs_freevnodes_dec()}:
+
+\begin{lstlisting}
+# dtrace -dn 'kinst::vfs_freevnodes_dec:entry'
+kinst::vnlru_free_impl:190,
+kinst::bgetvp:203,
+kinst::vhold:21,
+kinst::vget_prep_smr:98,
+kinst::vhold_smr:44,
+kinst::vget_prep:65,
+kinst::vflush:243,
+kinst::mnt_vnode_next_lazy:257,
+kinst::vop_rename_pre:33,
+kinst::vop_rename_pre:127,
+kinst::vop_rename_pre:215,
+kinst::vop_rename_pre:300,
+kinst::vfs_kqfilter:131,
+kinst::vnlru_proc:2244,
+kinst::sched_sync:798
 {
 }
 
-dtrace: description 'kinst::cam_iosched_has_more_trim:entry ' matched 4 probes
+kinst_enable:252: kinst: This provider is experimental, exercise caution
+dtrace: description 'kinst::vfs_freevnodes_dec:entry' matched 15 probes
 CPU     ID                    FUNCTION:NAME
-  0  81502          cam_iosched_schedule:40
-  0  81501          cam_iosched_next_bio:13
-  2  81502          cam_iosched_schedule:40
-  1  81502          cam_iosched_next_bio:13
-  1  81503          cam_iosched_schedule:40
-^C
+  1  85174                 vget_prep_smr:98
+  1  85174                 vget_prep_smr:98
+  5  85176                     vget_prep:65
+  4  85174                 vget_prep_smr:98
+  4  85174                 vget_prep_smr:98
+  4  85176                     vget_prep:65
+  5  85174                 vget_prep_smr:98
+  5  85174                 vget_prep_smr:98
+[...]
 \end{lstlisting}
 
+Αντίστοιχα, και το \lstinline{return} probe, το οποίο θα δημιουργήσει
+\lstinline{kinst} probes για όλα τα σημεία επιστροφής του κάθε inline
+αντιγράφου της \lstinline{vfs_freevnodes_dec()}:
+
+\begin{lstlisting}
+# dtrace -dn 'kinst::vfs_freevnodes_dec:return'
+kinst::vnlru_free_impl:256,
+kinst::vnlru_free_impl:769,
+kinst::vnlru_free_impl:1110,
+kinst::bgetvp:260,
+kinst::bgetvp:400,
+kinst::vhold:80,
+kinst::vhold:96,
+kinst::vget_prep_smr:164,
+kinst::vget_prep_smr:175,
+kinst::vhold_smr:103,
+kinst::vhold_smr:138,
+kinst::vget_prep:138,
+kinst::vflush:310,
+kinst::vflush:1146,
+kinst::mnt_vnode_next_lazy:324,
+kinst::mnt_vnode_next_lazy:789,
+kinst::vop_rename_pre:100,
+kinst::vop_rename_pre:417,
+kinst::vop_rename_pre:457,
+kinst::vop_rename_pre:194,
+kinst::vop_rename_pre:436,
+kinst::vop_rename_pre:473,
+kinst::vop_rename_pre:274,
+kinst::vop_rename_pre:388,
+kinst::vop_rename_pre:359,
+kinst::vop_rename_pre:454,
+kinst::vop_rename_pre:492,
+kinst::vfs_kqfilter:190,
+kinst::vfs_kqfilter:247,
+kinst::vnlru_proc:2304,
+kinst::vnlru_proc:2836,
+kinst::vnlru_proc:2853,
+kinst::sched_sync:855,
+kinst::sched_sync:1758,
+kinst::sched_sync:1779
+{
+}
+
+dtrace: description 'kinst::vfs_freevnodes_dec:return' matched 35 probes
+CPU     ID                    FUNCTION:NAME
+  1  85203                   sched_sync:855
+  4  85203                   sched_sync:855
+  4  85203                   sched_sync:855
+  4  85203                   sched_sync:855
+  0  85176                         vhold:80
+  1  85203                   sched_sync:855
+\end{lstlisting}
+
+Απόδειξη ότι η υλοποίηση πράγματι λειτουργεί, είναι ότι και στα δύο
+παραδείγματα παρατηρούμε ότι δημιουργήθηκαν probes για το inline αντίγραφο που
+εξετάζαμε ως τώρα, δηλαδή αυτό εντός της \lstinline{vget_prep()}. Τα offsets
+για αυτό το inline αντίγραφο παρουσιάστηκαν στην εξίσωση \ref{offsetscorrect}
+($Entry = 65$ και $Return = 138$), και πράγματι βλέπουμε στο παράδειγμα της
+εκτέλεσης του probe \lstinline{kinst::vfs_freevnodes_dec:entry} ότι ένα από τα
+probes που δημιουργήθηκαν ήταν το \lstinline{kinst::vget_prep:65}, ενώ για το
+\lstinline{kinst::vfs_freevnodes_dec:return} δημιουργήθηκε το
+\lstinline{kinst::vget_prep:138}.
+
+\subsection{\lstinline{kinst} tests}
+
+Ο κώδικας με τα Kyua test scripts του \lstinline{kinst} βρίσκεται στο
+\lstinline{/usr/src/cddl/contrib/opensolaris/cmd/dtrace/test/tst/common/kinst}
+\cite{testsrc}:
+
+\begin{Verbatim}
+	/usr/src/cddl/contrib/opensolaris/cmd/dtrace/test/tst/common/kinst
+	├── tst.basic.ksh
+	├── tst.dtracetest_fbtconvert.ksh
+	├── tst.dtracetest_inline.ksh
+	├── tst.inline_agg.ksh
+	└── tst.inline_multiple.ksh
+\end{Verbatim}
+
+\pagebreak
 \section{Πειράματα}
 
-% TODO
-% Περιβάλλον εκτέλεσης
-% how to compile (buildtrace)
+Σε αυτό το κεφάλαιο θα παρουσιαστούν δοκιμές του \lstinline{kinst} σε διάφορα
+σενάρια.
 
-<++>
+\subsection{Περιβάλλον εκτέλεσης}
 
-\section{Συμπεράσματα}
+Τα περιβάλλοντα στα οποία έγιναν οι δοκιμές είναι εικονικές μηχανές εντός του
+προσωπικού φορητού υπολογιστή του συγγραφέα της εργασίας. Χρησιμοποιήθηκαν
+τρεις εικονικές μηχανές, μία για κάθε αρχιτεκτονική που υποστήριζει ο
+\lstinline{kinst} (AMD64, ARM64, RISC-V).
 
-<++>
+Κατά τις εγκαταστάσεις του λειτουργικού συστήματος στις εικονικές μηχανές,
+πρέπει επίσης να επιλέξουμε την εγκατάσταση του πηγαίου κώδικα
+(\lstinline{src}), test suite (\lstinline{tests}), καθώς και των debug αρχείων
+του userspace και του kernel (\lstinline{debug} και \lstinline{kernel-dbg}
+αντίστοιχα):
 
-% TODO
-% Sort, cleanup, add more for everything that can be cited and cite them
+\begin{center}
+\includegraphics[width=0.9\textwidth]{./res/install.png} \\
+\end{center}
+
+Παρόλο που δεν δεν αφορά το κομμάτι της εργασίας, πληροφοριακά, τα
+χαρακτηριστικά του φορητού υπολογιστή στον οποίον τρέχουν οι εικονικές μηχανές
+είναι τα εξής:
+
+\begin{itemize}
+	\item Λειτουργικό σύστημα: FreeBSD 14.3-RELEASE
+	\item Μοντέλο υπολογιστή: Framework 13
+	\item Επεξεργαστής: AMD Ryzen\texttrademark{} 7 7840U @3.3GHz (8 cores,
+		16 threads)
+	\item Μνήμη RAM: 48GB
+\end{itemize}
+
+\subsubsection{AMD64}
+
+\begin{itemize}
+	\item Λειτουργικό σύστημα: FreeBSD 15.0-ALPHA5
+	\item Περιβάλλον εικονικοποίησης: bhyve
+	\item Επεξεργαστής: 8 vCPU
+	\item Μνήμη RAM: 8GB
+\end{itemize}
+
+Λήψη του πιο πρόσφατου snapshot του FreeBSD 15.0-ALPHA5:
+
+\begin{lstlisting}
+# fetch https://download.freebsd.org/snapshots/amd64/amd64/ISO-IMAGES/15.0/FreeBSD-15.0-ALPHA5-amd64-20251004-1c0898edf28f-280541-disc1.iso
+\end{lstlisting}
+
+Δημιουργία άδειου αρχείου 8GB, που θα χρησιμοποιηθεί ως εικονικός σκληρός
+δίσκος για την εγκατάσταση του λειτουργικού συστήματος:
+
+\begin{lstlisting}
+# truncate -s 8G /tmp/amddisk.img
+\end{lstlisting}
+
+Έναρξη εικονικής μηχανής:
+
+\begin{lstlisting}
+# /usr/share/examples/bhyve/vmrun.sh \
+	-AEG 1234 \
+	-c 8 \
+	-m 8G \
+	-I ~/dl/FreeBSD-15.0-ALPHA5-amd64-20251004-1c0898edf28f-280541-disc1.iso \
+	-d /tmp/amddisk.img \
+	fbsdvm
+\end{lstlisting}
+
+Αφού εγκαταστήσουμε το λειτουργικό σύστημα και κάνουμε επανεκκίνηση, από εδώ
+και πέρα ξεκινάμε την εικονική μηχανή με την ίδια εντολή, αλλά χωρίς την γραμμή
+\lstinline{-I ...}, ώστε η εκκίνηση να γίνεται από τον εικονικό δίσκο που
+εγκαταστάθηκε το λειτουργικό σύστημα, και όχι από το αρχείο εγκατάστασης.
+
+\subsubsection{ARM64}
+
+\begin{itemize}
+	\item Λειτουργικό σύστημα: FreeBSD 15.0-ALPHA5
+	\item Περιβάλλον εικονικοποίησης: QEMU
+	\item Επεξεργαστής: 8 vCPU
+	\item Μνήμη RAM: 8GB
+\end{itemize}
+
+Λήψη του πιο πρόσφατου snapshot του FreeBSD 15.0-ALPHA5:
+
+\begin{lstlisting}
+# fetch https://download.freebsd.org/snapshots/arm64/aarch64/ISO-IMAGES/15.0/FreeBSD-15.0-ALPHA5-arm64-aarch64-20251004-1c0898edf28f-280541-disc1.iso
+\end{lstlisting}
+
+Εγκατάσταση απαραίτητων πακέτων για την λειτουργία της εικονικής μηχανής:
+
+\begin{lstlisting}
+# pkg install u-boot-qemu-arm64
+\end{lstlisting}
+
+Δημιουργία άδειου αρχείου 8GB, που θα χρησιμοποιηθεί ως εικονικός σκληρός
+δίσκος για την εγκατάσταση του λειτουργικού συστήματος:
+
+\begin{lstlisting}
+# truncate -s 8G /tmp/armdisk.img
+\end{lstlisting}
+
+Έναρξη εικονικής μηχανής:
+
+\begin{lstlisting}
+# qemu-system-aarch64 \
+	-s \
+	-machine virt \
+	-cpu cortex-a57 \
+	-nographic \
+	-smp 8 \
+	-m 8G \
+	-bios /usr/local/share/u-boot/u-boot-qemu-arm64/u-boot.bin \
+	-cdrom ~/dl/FreeBSD-15.0-ALPHA5-arm64-aarch64-20251004-1c0898edf28f-280541-disc1.iso \
+	-drive file=/tmp/armdisk.img,format=raw,id=hd0,if=none,media=disk \
+	-device virtio-blk-device,drive=hd0 \
+	-netdev user,hostfwd=tcp::10000-:22,id=net0 \
+	-device virtio-net-device,netdev=net0
+\end{lstlisting}
+
+Αφού εγκαταστήσουμε το λειτουργικό σύστημα και κάνουμε επανεκκίνηση, από εδώ
+και πέρα ξεκινάμε την εικονική μηχανή με την ίδια εντολή, αλλά χωρίς την γραμμή
+\lstinline{-cdrom ...}, ώστε η εκκίνηση να γίνεται από τον εικονικό δίσκο που
+εγκαταστάθηκε το λειτουργικό σύστημα, και όχι από το αρχείο εγκατάστασης.
+
+\subsubsection{RISC-V}
+
+\begin{itemize}
+	\item Λειτουργικό σύστημα: FreeBSD 15.0-ALPHA5
+	\item Περιβάλλον εικονικοποίησης: QEMU
+	\item Επεξεργαστής: 8 vCPU
+	\item Μνήμη RAM: 8GB
+\end{itemize}
+
+Λήψη του πιο πρόσφατου snapshot του FreeBSD 15.0-ALPHA5:
+
+\begin{lstlisting}
+# fetch https://download.freebsd.org/snapshots/riscv/riscv64/ISO-IMAGES/15.0/FreeBSD-15.0-ALPHA5-riscv-riscv64-20251004-1c0898edf28f-280541-disc1.iso
+\end{lstlisting}
+
+Εγκατάσταση απαραίτητων πακέτων για την λειτουργία της εικονικής μηχανής:
+
+\begin{lstlisting}
+# pkg install opensbi u-boot-qemu-riscv64
+\end{lstlisting}
+
+Δημιουργία άδειου αρχείου 8GB, που θα χρησιμοποιηθεί ως εικονικός σκληρός
+δίσκος για την εγκατάσταση του λειτουργικού συστήματος:
+
+\begin{lstlisting}
+# truncate -s 8G /tmp/riscvdisk.img
+\end{lstlisting}
+
+Έναρξη εικονικής μηχανής:
+
+\begin{lstlisting}
+# qemu-system-riscv64 \
+	-s \
+	-machine virt \
+	-nographic \
+	-smp 8 \
+	-m 8G \
+	-bios /usr/local/share/opensbi/lp64/generic/firmware/fw_jump.elf \
+	-kernel /usr/local/share/u-boot/u-boot-qemu-riscv64/u-boot.bin \
+	-cdrom ~/dl/FreeBSD-15.0-ALPHA5-riscv-riscv64-20251004-1c0898edf28f-280541-disc1.iso
+	-drive file=/tmp/riscvdisk.img,format=raw,id=hd0,if=none,media=disk \
+	-device virtio-blk-device,drive=hd0 \
+	-netdev user,hostfwd=tcp::10000-:22,id=net0 \
+	-device virtio-net-device,netdev=net0
+\end{lstlisting}
+
+Αφού εγκαταστήσουμε το λειτουργικό σύστημα και κάνουμε επανεκκίνηση, από εδώ
+και πέρα ξεκινάμε την εικονική μηχανή με την ίδια εντολή, αλλά χωρίς την γραμμή
+\lstinline{-cdrom ...}, ώστε η εκκίνηση να γίνεται από τον εικονικό δίσκο που
+εγκαταστάθηκε το λειτουργικό σύστημα, και όχι από το αρχείο εγκατάστασης.
+
+\subsection{Μεταγλώττιση DTrace}
+
+Ο \lstinline{kinst} περιλαμβάνεται στην κανονική έκδοση του DTrace από το
+FreeBSD 14.0 και έπειτα, όμως παρακάτω παρουσιάζεται η χειροκίνητη εγκατάσταση
+του kernel μέρους του DTrace --- στο οποίο περιλαμβάνεται και ο κώδικας του
+\lstinline{kinst} --- για εγκυκλοπαιδικούς σκοπούς:
+
+\begin{lstlisting}
+# cd /usr/src/sys/modules/dtrace
+# make all install DEBUG_FLAGS=-g KMODDIR=/boot/kernel
+\end{lstlisting}
+
+Ο κώδικας της παρακολούθησης inline συναρτήσεων, εφόσον βρίσκεται ακόμα σε
+κατάσταση επιθεώρησης, δεν είναι μέρος του FreeBSD, οπότε πρέπει να τον
+κατεβάσουμε από το
+\href{https://reviews.freebsd.org/D38825}{https://reviews.freebsd.org/D38825},
+να τον τοποθετήσουμε στον πηγαίο κώδικα του FreeBSD, και να τον μεταγλωττίσουμε
+χειροκίνητα:
+
+\begin{lstlisting}
+# cd /usr/src
+# fetch https://reviews.freebsd.org/D38825?download=true -o - 2>/dev/null | patch -p1
+# cd cddl/lib/libdtrace
+# make -j8 all install DEBUG_FLAGS=-g
+\end{lstlisting}
+
+\subsection{Δοκιμές}
+
+Φόρτωση του \lstinline{kinst} kernel module:
+
+\begin{lstlisting}
+# kldload kinst
+\end{lstlisting}
+
+\subsubsection{AMD64}
+
+Παρακολούθηση όλων των εντολών της συνάρτησης \lstinline{vm_fault()}:
+
+\begin{lstlisting}
+root@amd:~ # dtrace -n 'kinst::vm_fault:'
+dtrace: description 'kinst::vm_fault:' matched 1334 probes
+CPU     ID                    FUNCTION:NAME
+  2      4                       vm_fault:0
+  2      5                       vm_fault:1
+  2      6                       vm_fault:4
+  2      7                       vm_fault:6
+  2      8                       vm_fault:8
+  2      9                      vm_fault:10
+  2     10                      vm_fault:12
+  2     11                      vm_fault:13
+  2     12                      vm_fault:20
+  2     13                      vm_fault:27
+  2     14                      vm_fault:34
+  2     15                      vm_fault:39
+  2     16                      vm_fault:48
+[...]
+\end{lstlisting}
+
+Παρακολούθηση όλων των εντολών της συνάρτησης \lstinline{spinlock_enter()} και
+εκτύπωση της στοίβας κλήσεων:
+
+\begin{lstlisting}
+root@amd:~ # dtrace -n 'kinst::spinlock_enter: { stack(); }'
+dtrace: description 'kinst::spinlock_enter: ' matched 18 probes
+CPU     ID                    FUNCTION:NAME
+  1      4                 spinlock_enter:0
+              kernel`smp_rendezvous_cpus+0x92
+              dtrace.ko`dtrace_xcall+0xed
+              dtrace.ko`dtrace_state_go+0xb5d
+              dtrace.ko`dtrace_ioctl+0x10fa
+              kernel`devfs_ioctl+0xcb
+              kernel`vn_ioctl+0xc8
+              kernel`devfs_ioctl_f+0x1e
+              kernel`kern_ioctl+0x255
+              kernel`sys_ioctl+0x101
+              kernel`amd64_syscall+0x126
+              kernel`0xffffffff8105233b
+
+  1      5                 spinlock_enter:1
+              0xfffffe008c801960
+              dtrace.ko`dtrace_xcall+0xed
+              dtrace.ko`dtrace_state_go+0xb5d
+              dtrace.ko`dtrace_ioctl+0x10fa
+              kernel`devfs_ioctl+0xcb
+              kernel`vn_ioctl+0xc8
+              kernel`devfs_ioctl_f+0x1e
+              kernel`kern_ioctl+0x255
+              kernel`sys_ioctl+0x101
+              kernel`amd64_syscall+0x126
+              kernel`0xffffffff8105233b
+	      
+  2      5                 spinlock_enter:1
+              0xfffffe008c428dd0
+              kernel`cpu_idle+0xa6
+              kernel`sched_idletd+0x546
+              kernel`fork_exit+0x7b
+              kernel`0xffffffff81052a6e
+[...]
+\end{lstlisting}
+
+Παρακολούθηση της πρώτης εντολής της συνάρτησης \lstinline{kern_ioctl()} και
+εκτύπωση του καταχωρητή \lstinline{SP} (stack pointer). Τα ονόματα των
+καταχωρητών του AMD64 που μπορούν να τυπωθούν ορίζονται στο αρχείο
+\lstinline{/usr/lib/dtrace/regs_x86.d}:
+
+\begin{lstlisting}
+root@amd:~ # dtrace -n 'kinst::kern_ioctl:0 { printf("%#x", regs[R_SP]); }'
+dtrace: description 'kinst::kern_ioctl:0 ' matched 1 probe
+CPU     ID                    FUNCTION:NAME
+  6      4                     kern_ioctl:0 0xfffffe008ca77d48
+  6      4                     kern_ioctl:0 0xfffffe008ca77d48
+  6      4                     kern_ioctl:0 0xfffffe008ca77d48
+  6      4                     kern_ioctl:0 0xfffffe008ca77d48
+[...]
+\end{lstlisting}
+
+Παρακολούθηση της αρχής της \textit{inline} συνάρτησης
+\lstinline{critical_enter()} και εκτύπωση του ονόματος του thread από το οποίο
+εκτελείται το probe, καθώς και της στοίβας κλήσης:
+
+\begin{lstlisting}
+root@amd:~ # dtrace -n 'kinst::critical_enter:entry { printf("%s", curthread->td_name); stack(); }'
+dtrace: description 'kinst::critical_enter:entry ' matched 183 probes
+CPU     ID                    FUNCTION:NAME
+  2    158                spinlock_enter:53 dtrace
+              0xfffffe008caef960
+              kernel`smp_rendezvous_cpus+0x92
+              dtrace.ko`dtrace_xcall+0xed
+              dtrace.ko`dtrace_state_go+0xb5d
+              dtrace.ko`dtrace_ioctl+0x10fa
+              kernel`devfs_ioctl+0xcb
+              kernel`vn_ioctl+0xc8
+              kernel`devfs_ioctl_f+0x1e
+              kernel`kern_ioctl+0x255
+              kernel`sys_ioctl+0x101
+              kernel`amd64_syscall+0x126
+              kernel`0xffffffff8105233b
+	      
+  6    158                spinlock_enter:53 dbuf_evict_thread
+              0xfffffe008c761e00
+              kernel`sleepq_lock+0x21
+              kernel`_cv_timedwait_sbt+0x73
+              zfs.ko`dbuf_evict_thread+0x385
+              kernel`fork_exit+0x7b
+              kernel`0xffffffff81052a6e
+
+  1    158                spinlock_enter:53 swi0: uart uart++
+              0xfffffe008c635be0
+              kernel`ns8250_bus_ipend+0x21
+              kernel`uart_intr+0x80
+              kernel`intr_event_handle+0xc4
+              kernel`intr_execute_handlers+0x49
+              kernel`0xffffffff81052d4c
+              kernel`uart_tty_intr+0x242
+              kernel`ithread_loop+0x239
+              kernel`fork_exit+0x7b
+              kernel`0xffffffff81052a6e
+[...]
+\end{lstlisting}
+
+Στην δεύτερη γραμμή παρατηρούμε ότι δημιουργήθηκαν 183 probes, το οποίο
+σημαίνει ότι βρέθηκαν 183 inline αντίγραφα της αρχής της συνάρτησης
+\lstinline{critical_enter()}.
+
+\subsubsection{ARM64}
+
+Παρακολούθηση όλων των εντολών της συνάρτησης \lstinline{vm_fault()}:
+
+\begin{lstlisting}
+root@arm:~ # dtrace -n 'kinst::vm_fault:'
+dtrace: description 'kinst::vm_fault:' matched 1442 probes
+CPU     ID                    FUNCTION:NAME
+  6      4                       vm_fault:0
+  6      5                       vm_fault:4
+  6      6                       vm_fault:8
+  6      7                      vm_fault:12
+  6      8                      vm_fault:16
+  6      9                      vm_fault:20
+  6     10                      vm_fault:24
+  6     11                      vm_fault:28
+  6     12                      vm_fault:32
+  6     13                      vm_fault:44
+  6     14                      vm_fault:48
+  6     15                      vm_fault:52
+  6     16                      vm_fault:56
+  6     17                      vm_fault:60
+[...]
+\end{lstlisting}
+
+Παρακολούθηση όλων των εντολών της συνάρτησης \lstinline{spinlock_enter()} και
+εκτύπωση της στοίβας κλήσεων:
+
+\begin{lstlisting}
+root@arm:~ # dtrace -n 'kinst::spinlock_enter: { stack(); }'
+dtrace: description 'kinst::spinlock_enter: ' matched 22 probes
+CPU     ID                    FUNCTION:NAME
+  4      4                 spinlock_enter:0
+              kernel`handle_el1h_sync+0x18
+              0xffff0000c08ea32c
+
+  4      5                 spinlock_enter:4
+              kernel`handle_el1h_sync+0x18
+              0xffff0000c08ea32c
+
+  4      6                 spinlock_enter:8
+              kernel`handle_el1h_sync+0x18
+              0xffff0000c08ea39c
+
+  4      7                spinlock_enter:12
+              kernel`handle_el1h_sync+0x18
+              0xffff0000c08ea39c
+
+  4      8                spinlock_enter:16
+              kernel`handle_el1h_sync+0x18
+              0xffff0000c08ea39c
+[...]
+\end{lstlisting}
+
+Παρακολούθηση της πρώτης εντολής της συνάρτησης \lstinline{kern_ioctl()} και
+εκτύπωση του καταχωρητή \lstinline{SP} (stack pointer). Τα ονόματα των
+καταχωρητών του ARM64 που μπορούν να τυπωθούν ορίζονται στο αρχείο
+\lstinline{/usr/lib/dtrace/regs_aarch64.d}:
+
+\begin{lstlisting}
+root@arm:~ # dtrace -n 'kinst::kern_ioctl:0 { printf("%#x", regs[R_SP]); }'
+dtrace: description 'kinst::kern_ioctl:0 ' matched 1 probe
+CPU     ID                    FUNCTION:NAME
+  0  65058                     kern_ioctl:0 0xffff0000c0854750
+  0  65058                     kern_ioctl:0 0xffff0000c0854750
+  0  65058                     kern_ioctl:0 0xffff0000c0854750
+[...]
+\end{lstlisting}
+
+Παρακολούθηση της αρχής της \textit{inline} συνάρτησης
+\lstinline{critical_enter()} και εκτύπωση του ονόματος του thread από το οποίο
+εκτελείται το probe, καθώς και της στοίβας κλήσης:
+
+\begin{lstlisting}
+root@arm:~ # dtrace -n 'kinst::critical_enter:entry { printf("%s", curthread->td_name); stack(); }'
+dtrace: description 'kinst::critical_enter:entry ' matched 157 probes
+CPU     ID                    FUNCTION:NAME
+  1  65191                spinlock_enter:60 dtrace
+              kernel`handle_el1h_sync+0x18
+              kernel`arm_gic_intr+0x118
+              kernel`intr_irq_handler+0x84
+              kernel`_thread_lock+0x24
+              kernel`sigallowstop_impl+0x4c
+              kernel`ttydev_write+0x26c
+              kernel`devfs_write_f+0xf0
+              kernel`dofilewrite+0x7c
+              kernel`sys_write+0xf4
+              kernel`do_el0_sync+0x6b4
+              kernel`handle_el0_sync+0x4c
+
+  6  65190                     cpu_idle:172 idle: cpu6
+              kernel`handle_el1h_sync+0x18
+              kernel`cpu_activeclock+0x78
+              kernel`cpu_idle+0x8c
+
+  5  65100                  tc_cpu_ticks:20 bufspacedaemon-0
+              kernel`handle_el1h_sync+0x18
+              kernel`callout_lock+0x68
+              kernel`callout_reset_sbt_on+0x54
+              kernel`mi_switch+0x70
+              kernel`sleepq_timedwait+0x2c
+              kernel`_sleep+0x1b4
+              kernel`bufspace_daemon+0x4f8
+              kernel`fork_exit+0x84
+              kernel`fork_trampoline+0x18
+
+  1  65187             intr_irq_handler:100 swi0: uart
+              kernel`handle_el1h_sync+0x18
+              0xffff000041a18604
+[...]
+\end{lstlisting}
+
+Στην δεύτερη γραμμή παρατηρούμε ότι δημιουργήθηκαν 157 probes, το οποίο
+σημαίνει ότι βρέθηκαν 157 inline αντίγραφα της αρχής της συνάρτησης
+\lstinline{critical_enter()}.
+
+\subsubsection{RISC-V}
+
+Παρακολούθηση όλων των εντολών της συνάρτησης \lstinline{vm_fault()}:
+
+\begin{lstlisting}
+root@riscv:~ # dtrace -n 'kinst::vm_fault:'
+dtrace: description 'kinst::vm_fault:' matched 1658 probes
+CPU     ID                    FUNCTION:NAME
+  2  47548                       vm_fault:0
+  2  47549                       vm_fault:2
+  2  47550                       vm_fault:4
+  2  47551                       vm_fault:6
+  2  47552                       vm_fault:8
+  2  47553                      vm_fault:10
+  2  47554                      vm_fault:12
+  2  47555                      vm_fault:14
+  2  47556                      vm_fault:16
+  2  47557                      vm_fault:18
+  2  47558                      vm_fault:20
+  2  47559                      vm_fault:22
+  2  47560                      vm_fault:24
+  2  47561                      vm_fault:26
+[...]
+\end{lstlisting}
+
+Παρακολούθηση όλων των εντολών της συνάρτησης \lstinline{spinlock_enter()} και
+εκτύπωση της στοίβας κλήσεων:
+
+\begin{lstlisting}
+root@riscv:~ # dtrace -n 'kinst::spinlock_enter: { stack(); }'
+dtrace: description 'kinst::spinlock_enter: ' matched 22 probes
+  2  47554                spinlock_enter:16
+              kernel`spinlock_enter+0x10
+              kernel`do_trap_supervisor+0x78
+              kernel`cpu_exception_handler_supervisor+0x74
+              kernel`cpu_idleclock+0xc8
+              kernel`cpu_idle+0x22
+              kernel`sched_idletd+0x456
+              kernel`fork_exit+0x66
+
+  4  47558                spinlock_enter:30
+              kernel`spinlock_enter+0x1e
+              kernel`do_trap_supervisor+0x78
+              kernel`cpu_exception_handler_supervisor+0x74
+              kernel`handleevents+0x1b0
+              kernel`timercb+0x262
+              kernel`riscv_timer_intr+0x38
+              kernel`intr_event_handle+0x84
+              kernel`intr_isrc_dispatch+0x2a
+              kernel`intc_intr+0x3e
+              kernel`intr_irq_handler+0x52
+              kernel`do_trap_supervisor+0x5e
+              kernel`cpu_exception_handler_supervisor+0x74
+              kernel`smp_rendezvous_cpus+0x17e
+              dtrace.ko`dtrace_state_go+0x800
+              dtrace.ko`dtrace_ioctl+0x7a4
+              kernel`devfs_ioctl+0xa6
+              kernel`vn_ioctl+0x1c2
+              kernel`devfs_ioctl_f+0x1e
+              kernel`kern_ioctl+0x28a
+              kernel`sys_ioctl+0xea
+
+  2  47555                spinlock_enter:18
+              kernel`spinlock_enter+0x12
+              kernel`do_trap_supervisor+0x78
+              kernel`cpu_exception_handler_supervisor+0x74
+              kernel`cpu_idleclock+0xc8
+              kernel`cpu_idle+0x22
+              kernel`sched_idletd+0x456
+              kernel`fork_exit+0x66
+[...]
+\end{lstlisting}
+
+Παρακολούθηση της πρώτης εντολής της συνάρτησης \lstinline{kern_ioctl()} και
+εκτύπωση του καταχωρητή \lstinline{SP} (stack pointer). Τα ονόματα των
+καταχωρητών του RISC-V που μπορούν να τυπωθούν ορίζονται στο αρχείο
+\lstinline{/usr/lib/dtrace/regs_riscv.d}:
+
+\begin{lstlisting}
+root@riscv:~ # dtrace -n 'kinst::kern_ioctl:0 { printf("%#x", regs[R_SP]); }'
+dtrace: description 'kinst::kern_ioctl:0 ' matched 1 probe
+CPU     ID                    FUNCTION:NAME
+  0  47548                     kern_ioctl:0 0xffffffc0826c6aa0
+  0  47548                     kern_ioctl:0 0xffffffc0826c6aa0
+  0  47548                     kern_ioctl:0 0xffffffc0826c6aa0
+[...]
+\end{lstlisting}
+
+Παρακολούθηση της αρχής της \textit{inline} συνάρτησης
+\lstinline{critical_enter()} και εκτύπωση του ονόματος του thread από το οποίο
+εκτελείται το probe, καθώς και της στοίβας κλήσης:
+
+\begin{lstlisting}
+root@riscv:~ # dtrace -n 'kinst::critical_enter:entry { printf("%s", curthread->td_name); stack(); }'
+dtrace: description 'kinst::critical_enter:entry ' matched 139 probes
+CPU     ID                    FUNCTION:NAME
+  1  47570                        malloc:94 dtrace
+              kernel`malloc+0x5e
+              kernel`do_trap_supervisor+0x78
+              kernel`cpu_exception_handler_supervisor+0x74
+              dtrace.ko`dtrace_dof_create+0x1e
+              dtrace.ko`dtrace_ioctl+0xc42
+              kernel`devfs_ioctl+0xa6
+              kernel`vn_ioctl+0x1c2
+              kernel`devfs_ioctl_f+0x1e
+              kernel`kern_ioctl+0x28a
+              kernel`sys_ioctl+0xea
+              kernel`do_trap_user+0x1c6
+
+  2  47678                spinlock_enter:42 l2arc_feed_thread
+              kernel`spinlock_enter+0x2a
+              kernel`do_trap_supervisor+0x78
+              kernel`cpu_exception_handler_supervisor+0x74
+              kernel`handleevents+0x1b0
+              kernel`timercb+0x262
+              kernel`riscv_timer_intr+0x38
+              kernel`intr_event_handle+0x84
+              kernel`intr_isrc_dispatch+0x2a
+              kernel`intc_intr+0x3e
+              kernel`intr_irq_handler+0x52
+              kernel`do_trap_supervisor+0x5e
+              kernel`cpu_exception_handler_supervisor+0x74
+              kernel`mi_switch+0xf4
+              kernel`sleepq_switch+0xc8
+              kernel`sleepq_timedwait+0x24
+              kernel`_cv_timedwait_sbt+0x108
+              zfs.ko`l2arc_feed_thread+0x2fc
+              kernel`fork_exit+0x66
+[...]
+\end{lstlisting}
+
+Στην δεύτερη γραμμή παρατηρούμε ότι δημιουργήθηκαν 139 probes, το οποίο
+σημαίνει ότι βρέθηκαν 139 inline αντίγραφα της αρχής της συνάρτησης
+\lstinline{critical_enter()}.
+
+\pagebreak
+\section{Συμπεράσματα και προτάσεις μελλοντικών εργασιών}
+
+Σε αυτή την διπλωματική εργασία μελετήθηκε το αντικείμενο της παρακολούθησης,
+ξεκινώντας από μία συνοπτική περιγραφή αυτής, στα πλαίσια του FreeBSD, και
+έπειτα έγινε αναλυτική αναφορά στο DTrace, πάνω στο οποίο αναπτύχθηκε o νέος
+provider \lstinline{kinst}, του οποίου επίσης έγινε χρήση στην
+\lstinline{libdtrace}, με σκοπό την παρακολούθηση inline συναρτήσεων.
+
+Ως μέρος της ανάπτυξης του \lstinline{kinst} και της παρακολούθησης inline
+συναρτήσεων, μελετήθηκαν επίσης διάφορα κομμάτια που αφορούν την αρχιτεκτονική
+επεξεργαστών και τις γλώσσες assembly αυτών, τον πυρήνα του FreeBSD και την
+ανάπτυξη κώδικα πυρήνα, καθώς και πρότυπα αρχείων όπως το DWARF, CTF και ELF.
+
+Πέρα από την περαιτέρω ανάπτυξή του και βελτίωση της αξιοπιστίας του σε
+περιβάλλοντα παραγωγής, μελλοντικά, μερικά από τα πράγματα που θα κάνουν τον
+\lstinline{kinst} σημαντικά πιο εύχρηστο είναι η ανάπτυξη εργαλείων υψηλότερου
+επιπέδου. Ο \lstinline{kinst} είναι ένας αρκετά low-level provider, και όπως
+είδαμε, στην απλή του χρήση (δηλαδή όχι παρακολούθηση inline συναρτήσεων) ο
+χρήστης χρειάζεται να γνωρίζει ακριβή offsets εντός των συναρτήσεων που
+παρακολουθεί. Η διαδικασία εύρεσης αυτών των offsets μέσω των disassembly των
+συναρτήσεων, σε πολλές περιπτώσεις μπορεί να είναι είτε χρονοβόρα είτε και
+αδύνατη, μίας και ο χρήστης πρέπει να διαβάζει κώδικα assembly, ο οποίος
+κώδικας της συνάρτησης αν αλλάξει κάποια στιγμή, αλλάζουν και τα offsets. Πολύ
+χρήσιμο θα ήταν ένα εργαλείο το οποίο μπορεί να δεχθεί ως είσοδο την συνάρτηση
+προς παρακολούθηση, καθώς και τον αριθμό της γραμμής κώδικα που θέλει να
+παρακολουθήσει, και να κάνει την μετάφραση από αριθμό γραμμής σε offset(s)
+αυτόματα.
+
+Άλλα κομμάτια που αξίζουν να ερευνηθούν και να υλοποιηθούν εντός του
+\lstinline{kinst}, είναι η παρακολούθηση σημείων επιστροφής tail-call optimized
+συναρτήσεων \cite{tailcall}.
+
+Τέλος, ο \lstinline{kinst} θα ήταν πολύ χρήσιμο να υποστηρίζει την μεταβλητή
+\lstinline{args[]}, όπως και ο \lstinline{fbt}.
 
 \pagebreak
 \renewcommand{\refname}{Βιβλιογραφία}
 \begin{thebibliography}{00}
-\bibitem{dtracebook} Illumos Operating System ``Dynamic Tracing Guide''.
-	\href{https://illumos.org/books/dtrace}{https://illumos.org/books/dtrace} 
-\bibitem{kinstsrc} FreeBSD src ``kinst''
-	\href{https://cgit.freebsd.org/src/tree/sys/cddl/dev/kinst}
-	{https://cgit.freebsd.org/src/tree/sys/cddl/dev/kinst}
+\bibitem{fbsdjournal} Mark Johnston ``Debugging the FreeBSD Kernel'' \\
+	\href{https://freebsdfoundation.org/wp-content/uploads/2019/01/Debugging-the-FreeBSD-Kernel.pdf}{https://freebsdfoundation.org/wp-content/uploads/2019/01/Debugging-the-FreeBSD-Kernel.pdf}
 \bibitem{tamches} Tamches, Ariel \& Miller, Barton P. ``Fine-Grained Dynamic
-	Instrumentation of Commodity Operating System Kernels''.
+	Instrumentation of Commodity Operating System Kernels'' \\
 	\href{https://www.usenix.org/legacy/publications/library/proceedings/osdi99/full\_papers/tamches/tamches.pdf}
 	{https://www.usenix.org/legacy/publications/library/proceedings/osdi99/full\_papers/tamches/tamches.pdf}
-\bibitem{dwarfstd} The DWARF Standard.
+\bibitem{dtracebook} Illumos Operating System ``Dynamic Tracing Guide'' \\
+	\href{https://illumos.org/books/dtrace}{https://illumos.org/books/dtrace} 
+\bibitem{oracledtrace} Oracle ``Solaris Dynamic Tracing Guide'' \\
+	\href{https://docs.oracle.com/cd/E18752\_01/html/817-6223/toc.html}{https://docs.oracle.com/cd/E18752\_01/html/817-6223/toc.html}
+\bibitem{usenix04} Bryan M. Cantrill, Michael W. Shapiro, Adam H. Leventhal,
+	``Dynamic Instrumentation of Production Systems'' \\
+	\href{https://www.usenix.org/legacy/event/usenix04/tech/general/full\_papers/cantrill/cantrill\_html/}{https://www.usenix.org/legacy/event/usenix04/tech/general/full\_papers/cantrill/cantrill\_html/}
+\bibitem{greggdintro} Brendan Gregg ``DTrace Topics: Introduction'' \\
+	\href{https://www.brendangregg.com/DTrace/dtrace\_topics\_intro.pdf}{https://www.brendangregg.com/DTrace/dtrace\_topics\_intro.pdf}
+\bibitem{dinternals} Arun Thomas ``DTrace Internals: Digging into DTrace'' \\
+	\href{https://www.bsdcan.org/2017/schedule/attachments/432\_dtrace\_internals.pdf}{https://www.bsdcan.org/2017/schedule/attachments/432\_dtrace\_internals.pdf}
+\bibitem{markpres} Mark Johnston ``Introduction to DTrace on FreeBSD'' \\
+	\href{https://www.youtube.com/watch?v=E06GVdH-LX0}{https://www.youtube.com/watch?v=E06GVdH-LX0}
+\bibitem{kinstsrc} FreeBSD src ``kinst source code'' \\
+	\href{https://cgit.freebsd.org/src/tree/sys/cddl/dev/kinst}
+	{https://cgit.freebsd.org/src/tree/sys/cddl/dev/kinst}
+\bibitem{inlinesrc} FreeBSD src ``Inline tracing source code'' \\
+	\href{https://cgit.freebsd.org/src/tree/cddl/contrib/opensolaris/lib/libdtrace/common/dt\_sugar.c}
+	{https://cgit.freebsd.org/src/tree/cddl/contrib/opensolaris/lib/libdtrace/common/dt\_sugar.c}
+\bibitem{testsrc} FreeBSD src ``kinst tests source code'' \\
+	\href{https://cgit.freebsd.org/src/tree/cddl/contrib/opensolaris/cmd/dtrace/test/tst/common/kinst}
+	{https://cgit.freebsd.org/src/tree/cddl/contrib/opensolaris/cmd/dtrace/test/tst/common/kinst}
+\bibitem{inlinepatch} FreeBSD Code Reviews ``libdtrace: Implement inline function tracing for kinst'' \\
+	\href{https://reviews.freebsd.org/D38825}{https://reviews.freebsd.org/D38825}
+\bibitem{dwarfstd} The DWARF Standard \\
 	\href{https://dwarfstd.org/}{https://dwarfstd.org/}
 \bibitem{margdwarf} Christos Margiolis ``Using DWARF to find call sites of
-	inline functions``.
-	\href{https://margiolis.net/w/dwarf\_inline/}{https://margiolis.net/w/dwarf\_inline/}
+	inline functions`` \\
+	\href{https://margiolis.net/en/w/dwarf\_inline/}{https://margiolis.net/en/w/dwarf\_inline/}
 \bibitem{kinstinline} Christos Margiolis ``Inline function tracing with the
-	kinst DTrace provider''.
-	\href{https://margiolis.net/w/kinst\_inline/}{https://margiolis.net/w/kinst\_inline/}
-\bibitem{inlinecall} Sourcehut, inlinecall(1).
-	\href{https://github.com/christosmarg/inlinecall}{https://github.com/christosmarg/inlinecall}
-\bibitem{markpres} Mark Johnston ``Introduction to DTrace on FreeBSD''.
-	\href{https://www.youtube.com/watch?v=E06GVdH-LX0}{https://www.youtube.com/watch?v=E06GVdH-LX0}
-\bibitem{gdb} GNU ``GDB: The GNU Project Debugger''.
+	kinst DTrace provider'' \\
+	\href{https://margiolis.net/en/w/kinst\_inline/}{https://margiolis.net/en/w/kinst\_inline/}
+\bibitem{x86spec} Intel ``Intel 64 and IA-32 Architectures Software Developer Manuals'' \\
+	\href{https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html}{https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html}
+\bibitem{armisa} ARM ``A64 Instruction Set Architecture Guide'' \\
+	\href{https://developer.arm.com/documentation/102374/latest/}{https://developer.arm.com/documentation/102374/latest/}
+\bibitem{riscvspecs} RISC-V International ``RISC-V Ratified Specifications'' \\
+	\href{https://riscv.org/specifications/ratified/}{https://riscv.org/specifications/ratified/}
+\bibitem{riscvisa} msyksphinz ``RISC-V Instruction Set Specifications'' \\
+	\href{https://msyksphinz-self.github.io/riscv-isadoc/}{https://msyksphinz-self.github.io/riscv-isadoc/}
+\bibitem{riprel} Brown University Department of Computer Science ``Assembly
+	Language, Calling Convention, and the Stack'' \\
+	\href{https://cs.brown.edu/courses/csci1310/2020/notes/l08.html}{https://cs.brown.edu/courses/csci1310/2020/notes/l08.html}
+\bibitem{prologueepilogue} Wikipedia ``Function prologue and epilogue'' \\
+	\href{https://en.wikipedia.org/wiki/Function\_prologue\_and\_epilogue}{https://en.wikipedia.org/wiki/Function\_prologue\_and\_epilogue}
+\bibitem{arm64prologueepilogue} Microsoft ``The AArch64 processor (aka arm64),
+	part 21: Classic function prologues and epilogues'' \\
+	\href{https://devblogs.microsoft.com/oldnewthing/20220824-00/?p=107043}{https://devblogs.microsoft.com/oldnewthing/20220824-00/?p=107043}
+\bibitem{ldxstx} Jim Crownie ``Atomics in AArch64'' \\
+	\href{https://cpufun.substack.com/p/atomics-in-aarch64}{https://cpufun.substack.com/p/atomics-in-aarch64}
+\bibitem{elfspec} TIS Committee ``Executable and Linking Format (ELF) Specification'' \\
+	\href{https://refspecs.linuxfoundation.org/elf/elf.pdf}{https://refspecs.linuxfoundation.org/elf/elf.pdf}
+\bibitem{trap} University of Wisconsin-Madison ``Traps, interrupts, and drivers'' \\
+	\href{https://pages.cs.wisc.edu/~gerald/cs537/Summer17/handouts/traps.pdf}{https://pages.cs.wisc.edu/~gerald/cs537/Summer17/handouts/traps.pdf}
+\bibitem{tailcall} Wikipedia ``Tail call'' \\
+	\href{https://en.wikipedia.org/wiki/Tail\_call}{https://en.wikipedia.org/wiki/Tail\_call}
+\bibitem{gdb} GNU ``GDB: The GNU Project Debugger'' \\
 	\href{https://www.sourceware.org/gdb/}{https://www.sourceware.org/gdb/}
-\bibitem{kgdb} FreeBSD manual pages ``kgdb(1)''.
+\bibitem{kgdb} FreeBSD manual pages ``kgdb(1)'' \\
 	\href{https://man.freebsd.org/cgi/man.cgi?query=kgdb(1)}{https://man.freebsd.org/cgi/man.cgi?query=kgdb(1)}
-\bibitem{greggdintro} Brendan Gregg ``DTrace Topics: Introduction''.
-	\href{www.brendangregg.com/DTrace/dtrace\_topics\_intro.pdf}{www.brendangregg.com/DTrace/dtrace\_topics\_intro.pdf}
+\bibitem{ctf} FreeBSD Manual Pages ``ctf(5)'' \\
+	\href{https://man.freebsd.org/cgi/man.cgi?query=ctf\&sektion=5\&format=html}{https://man.freebsd.org/cgi/man.cgi?query=ctf\&sektion=5\&format=html}
 \end{thebibliography}
 
 \pagebreak
-\section{Παράρτημα}
+\setcounter{secnumdepth}{0}
+\section{Συντομογραφίες}
 
-
-% TODO
-% Να αδειάσω τον κώδικα όπως είναι ή να βάλω link;
-
-<++>
+\begin{tabular}{ll}
+	ABI & Application Binary Interface \\
+	CPU & Central Processing Unit \\
+	CTF & Compact C Type Format \\
+	DIE & Debugging Information Entry \\
+	DIF & D Intermediate Format \\
+	DWARF & Debugging with Attributed Record Formats \\
+	ELF & Executable and Linkable Format \\
+	FBT & Function Boundary Tracing \\
+	GDB & GNU Debugger \\
+	ISA & Instruction Set Architecture \\
+	PC & Program Counter \\
+	POSIX & Portable Operating System Interface \\
+	eBPF & Extended Berkley Packet Filter \\
+\end{tabular}
 
 \end{document}
