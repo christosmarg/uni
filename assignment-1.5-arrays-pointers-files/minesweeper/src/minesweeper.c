@@ -278,7 +278,7 @@ void print_board(WINDOW *gameWin, char **mineboard, int WIDTH, int HEIGHT)
 }
 
 
-void filewrite(char **mineboard, int WIDTH, int HEIGHT, int hitrow, int hitcol)
+void filewrite(char **mineboard, int WIDTH, int HEIGHT, int hitRow, int hitCol)
 {
     int i, j;
     FILE *mnsOut = fopen("mnsout.txt", "w");
@@ -290,7 +290,7 @@ void filewrite(char **mineboard, int WIDTH, int HEIGHT, int hitrow, int hitcol)
     }
     else
     {
-        fprintf(mnsOut, "Mine hit at position (%d, %d)\n\n", hitrow, hitcol);
+        fprintf(mnsOut, "Mine hit at position (%d, %d)\n\n", hitRow, hitCol);
         fprintf(mnsOut, "Board overview\n\n");
 
         for (i = 0; i < WIDTH; i++) // fix inversion
