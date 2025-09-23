@@ -2,14 +2,14 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 entity alu_ctrl_test_alu is generic (
-	t_dw:		natural := 4
+	t_sz:		natural := 4
 );
 port (
 	t_funct:	in std_logic_vector(5 downto 0);
 	t_alu_op:	in std_logic_vector(1 downto 0);
-	t_alu_in1:	in std_logic_vector(t_dw-1 downto 0);
-	t_alu_in2:	in std_logic_vector(t_dw-1 downto 0);
-	t_alu_out:	out std_logic_vector(t_dw-1 downto 0);
+	t_alu_in1:	in std_logic_vector(t_sz-1 downto 0);
+	t_alu_in2:	in std_logic_vector(t_sz-1 downto 0);
+	t_alu_out:	out std_logic_vector(t_sz-1 downto 0);
 	t_alu_zero:	out std_logic
 );
 end alu_ctrl_test_alu;
@@ -26,13 +26,13 @@ component alu_ctrl is port (
 end component;
 
 component alu is generic (
-	dw:		natural := 4
+	sz:		natural := 4
 );
 port (
-	alu_in1:	in std_logic_vector(dw-1 downto 0);
-	alu_in2:	in std_logic_vector(dw-1 downto 0);
+	alu_in1:	in std_logic_vector(sz-1 downto 0);
+	alu_in2:	in std_logic_vector(sz-1 downto 0);
 	alu_ctrl:	in std_logic_vector(3 downto 0);
-	alu_out:	out std_logic_vector(dw-1 downto 0);
+	alu_out:	out std_logic_vector(sz-1 downto 0);
 	alu_zero:	out std_logic
 );
 end component;
