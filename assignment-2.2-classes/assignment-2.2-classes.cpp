@@ -1,76 +1,170 @@
 #include <iostream>
+#include <iomanip>
+#include <algorithm>
 #include <string>
-#include <vector>
+#include <string.h>
 
 class Student
 {
 	private:
-		std::vector<char> AM;
+		char *AM;
 		std::string name;
 		unsigned int semester;
 		unsigned int psubj;
-		std::vector<float> psubjGrades;
+		float *grades;
+		int size;
 
 	public:
-		Student(const std::vector<char>& AM, const std::string& name)
-			:AM(AM), name(name), semester(1), psubj(0) {}
+		Student(const char *AM, const std::string& name)
+			:AM(convert_AM(AM)), name(name), semester(1), psubj(0) {}
 
-		Student(const std::vector<char>& AM, const std::string& name, unsigned int semester)
-			:psubj(0) {}
+		Student(const char *AM, const std::string& name, unsigned int semester)
+			:AM(convert_AM(AM)), name(name), semester(semester), psubj(0) {}
 
-		Student(const std::vector<char>& AM, const std::string& name, unsigned int semester,
-				unsigned int psubj, const std::vector<float>& psubjGrades)
-			:AM(AM), name(name), semester(semester), psubj(psubj), psubjGrades(psubjGrades) {}
+		Student(const char *AM, const std::string& name, unsigned int semester,
+				unsigned int psubj, const float *grades)
+			:AM(convert_AM(AM)), name(name), semester(semester), psubj(psubj), grades(convert_PSG(grades)) {}
 
 		Student(const Student& s)
-			:AM(s.AM), name(s.name), semester(s.semester), psubj(s.psubj), psubjGrades(s.psubjGrades) {}
+			:AM(s.AM), name(s.name), semester(s.semester), psubj(s.psubj), grades(s.grades) {}
 		
-		~Student() {}
-		
-		inline const std::vector<char>& get_AM() const {return AM;}
+		~Student()
+		{
+			delete[] this->AM;
+			delete[] this->grades;
+		}
+
+		inline const char *get_AM() const {return AM;}
 		inline const std::string& get_name() const {return name;}
 		inline unsigned int get_semester() const {return semester;}
 		inline unsigned int get_psubj() const {return psubj;}
-		inline const std::vector<float>& get_psubjGrades() const {return psubjGrades;}
+		inline float *get_grades() const {return grades;}
 
-		inline void set_AM(const std::vector<char>& AM) {this->AM = AM;}
+		inline void set_AM(const char *AM) {this->AM = convert_AM(AM);}
 		inline void set_name(const std::string& name) {this->name = name;}
 		inline void set_semester(unsigned int semester) {this->semester = semester;}
 		inline void set_psubj(unsigned int psubj) {this->psubj = psubj;}
-		inline void set_psubjGrades(const std::vector<float>& psubjGrades) {this->psubjGrades = psubjGrades;}
-		inline void add_grade(float grade) {psubjGrades.push_back(grade);}
+		inline void set_grades(float *grades) {this->grades = convert_PSG(grades);}
+		inline void print_3first() {std::cout << AM << " " << name << " " << semester << std::endl;}
 
-		inline void print_3first()
+		char *convert_AM(const char *AM)
 		{
-			for (std::size_t i = 0; i < AM.size(); i++)
-				std::cout << AM[i];
-			std::cout << " " << name << " " << semester << std::endl;
+			int len = strlen(AM);
+			this->AM = new char[len];
+			for (int i = 0; i < len && len; i++)
+				this->AM[i] = AM[i];
+			return this->AM;
+		}
+
+		float *convert_PSG(const float *grades)
+		{
+			this->grades = new float[psubj];
+			for (int i = 0; i < psubj && psubj; i++)
+				this->grades[i] = grades[i];
+		   return this->grades;	
+		}
+
+		void add_grade(float grade)
+		{
+			float *tmp = new float[psubj+1];
+			std::copy(this->grades, this->grades+psubj, tmp);
+			tmp[psubj] = grade;
+			this->grades = tmp;
+			psubj++;
+		}
+
+		void detailed_print()
+		{
+			for (int i = 0; i < psubj; i++)
+			{
+				std::cout << "Subject " << i+1 << ": ";
+				std::cout << grades[i] << std::endl;		
+			}
+			std::cout << "Average grade: " << std::setprecision(2) << calc_average() << std::endl;
+		}
+
+		float calc_average()
+		{
+			float sum = 0;
+			for (int i = 0; i < psubj; i++)
+				sum += grades[i];
+			float average = sum / psubj;
+			return average;
 		}
 };
 
 int main(int argc, char **argv)
 {
-	std::vector<char> AM = {'1','9','3','9','0','1','3','3'};
-	std::vector<float> psubjGrades = {9.5f, 8.4f, 5.6f};
-	Student *s1 = new Student(AM, "Christos Margiolis");
-	AM = s1->get_AM();
-	std::cout << s1->get_name() << " " << s1->get_semester() << " " << s1->get_psubj() << std::endl;
+	Student *s1 = new Student("19390133", "Christos Margiolis");
+	std::cout << "Constructor for s1 (AM, Name)" << std::endl << "----------------------------" << std::endl;
+	std::cout << "s1->get_AM(): " << s1->get_AM() << std::endl;
+	std::cout << "s1->get_name(): " << s1->get_name() << std::endl;
+	std::cout << "s1->get_semester(): " << s1->get_semester() << std::endl;
+	std::cout << "s1->get_psubj(): " << s1->get_psubj() << std::endl;
 	delete s1;
 
-	Student *s2 = new Student(AM, "Christos Margiolis", 2);
-	s2->set_AM(AM);
-	s2->set_name("AAAA");
-	s2->set_semester(2);
-	s2->set_psubj(3);
-	s2->set_psubjGrades(psubjGrades);
-	std::cout << s2->get_name() << " " << s2->get_semester() << " " << s2->get_psubj() << std::endl;
+	std::cout << std::endl;
+
+	Student *s2 = new Student("19390133", "Christos Margiolis", 2);
+	std::cout << "Constructor for s2 (AM, Name, Semester)" << std::endl << "----------------------------" << std::endl;
+	std::cout << "s2->get_AM(): " << s2->get_AM() << std::endl;
+	std::cout << "s2->get_name(): " << s2->get_name() << std::endl;
+	std::cout << "s2->get_semester(): " << s2->get_semester() << std::endl;
+	std::cout << "s2->get_psubj(): " << s2->get_psubj() << std::endl;
+
+	std::cout << std::endl;
+
+	Student *copystud = new Student(*s2);
+	std::cout << "Copy Constructor using copystud object as a copy of s2" << std::endl << "----------------------------" << std::endl;
+	std::cout << "copystud->get_AM(): " << copystud->get_AM() << std::endl;
+	std::cout << "copystud->get_name(): " << copystud->get_name() << std::endl;
+	std::cout << "copystud->get_semester(): " << copystud->get_semester() << std::endl;
+	std::cout << "copystud->get_psubj(): " << copystud->get_psubj() << std::endl;
 	delete s2;
 
-	Student *s3 = new Student(AM, "Christos Margiolis", 2, 3, psubjGrades);
-	s3->add_grade(7.5f);
-	s3->print_3first();
-	std::vector<float>().swap(psubjGrades);
-	std::vector<char>().swap(AM);
+	std::cout << std::endl;
+
+	float grd[4] = {9.4f, 8.4f, 5.5f, 6.3f};
+	Student *s3 = new Student("19390133", "Christos Margiolis", 2, 4, grd);
+	std::cout << "Constructor for s3 (AM, Name, Semester, Subjects Passed, Grades)" << std::endl << "----------------------------" << std::endl;
+	std::cout << "s3->get_AM(): " << s3->get_AM() << std::endl;
+	std::cout << "s3->get_name(): " << s3->get_name() << std::endl;
+	std::cout << "s3->get_semester(): " << s3->get_semester() << std::endl;
+	std::cout << "s3->get_psubj(): " << s3->get_psubj() << std::endl;
+	float *gr1 = s3->get_grades();
+	std::cout << "s3->get_grades(): "; // new line?
+	for (int i = 0; i < s3->get_psubj(); i++)
+		std::cout << gr1[i] << ", ";
+	std::cout << std::endl;
+
+	std::cout << std::endl;
+	std::cout << "Detailed print of s3's grades" << std::endl << "----------------------------" << std::endl;
+	s3->detailed_print();
+
+	s3->set_AM("01010101");
+	s3->set_name("AAAAAAA");
+	s3->set_semester(100);
+	s3->set_psubj(2); // πρώτα η set_psubj() και μετα η set_grades() !!!!!
+	float gg[2] = {0.1f, 2.2f};
+	s3->set_grades(gg);
+
+	std::cout << std::endl;
+
+	std::cout << "Setters example using s3" << std::endl << "----------------------------" << std::endl;
+	std::cout << "Input: s3->set_AM(\"01010101\")" << '\t';
+	std::cout << "Output: s3->get_AM(): " << s3->get_AM() << std::endl;
+	std::cout << "Input: s3->set_name(\"AAAAAAA\")" << '\t';
+	std::cout << "Output: s3->get_name(): " << s3->get_name() << std::endl;
+	std::cout << "Input: s3->set_semester(100):" << '\t';
+	std::cout << "Output: s3->get_semester(): " << s3->get_semester() << std::endl;
+	std::cout << "Input: s3->set_psubj(2):" << '\t';
+	std::cout << "Output: s3->get_psubj(): " << s3->get_psubj() << std::endl;
+	float *gr2 = s3->get_grades();
+	std::cout << "Input: {0.1f, 2.2f}" << '\t' << '\t';
+	std::cout << "Output: s3->get_grades(): "; // new line?
+	for (int i = 0; i < s3->get_psubj(); i++)
+		std::cout << gr2[i] << ", ";
+	std::cout << std::endl;
 	delete s3;
 
 	return 0;
