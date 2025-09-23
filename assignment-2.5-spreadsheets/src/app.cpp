@@ -9,7 +9,8 @@ App::~App()
 	dealloc<Student>(studs);	
 }
 
-bool App::import_matchings(const char *fpath)
+bool
+App::import_matchings(const char *fpath)
 {
 	std::ifstream f;
 	f.open(fpath);
@@ -28,17 +29,20 @@ bool App::import_matchings(const char *fpath)
 	return true;
 }
 
-const std::vector<Course *>& App::get_courses() const
+const std::vector<Course *>&
+App::get_courses() const
 {
 	return courses;
 }
 
-const std::vector<Grades *>& App::get_grades() const
+const std::vector<Grades *>&
+App::get_grades() const
 {
 	return grades;
 }
 
-const std::vector<Student *>& App::get_studs() const
+const std::vector<Student *>&
+App::get_studs() const
 {
 	return studs;
 }

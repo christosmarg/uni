@@ -16,18 +16,21 @@ Office::~Office()
 	if (!extensions.empty()) extensions.clear();
 }
 
-const std::vector<std::string> Office::get_exts() const
+const std::vector<std::string>
+Office::get_exts() const
 {
 	return extensions;
 }
 
-void Office::set_exts(const std::vector<std::string>& extensions)
+void
+Office::set_exts(const std::vector<std::string>& extensions)
 {
 	if (!this->extensions.empty()) this->extensions.clear();
 	this->extensions = extensions;
 }
 
-void Office::print(std::ostream& stream) const
+void
+Office::print(std::ostream& stream) const
 {
 	stream <<
 		std::left << std::setw(7) << serialnum <<

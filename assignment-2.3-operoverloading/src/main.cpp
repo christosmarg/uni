@@ -9,7 +9,7 @@ static void copy_constructor(const Student& copystud);
 static void conditional_overload(const Student& s1, const Student& s2, const Student& copystud);
 static void equals_overload(const Student& s1, Student& s2);
 static void constructor3(const Student& s3);
-static void detprint (const Student& s3);
+static void detprint(const Student& s3);
 static void setters(Student& s3);
 static void addgrd(Student& s3);
 static void submcourses(Student& s3);
@@ -17,7 +17,8 @@ static void plusequals_overload(Student& s3, Course *c);
 static void getters(const Course& s3);
 static void setters(Course& c);
 
-int main(int argc, char **argv)
+int
+main(int argc, char **argv)
 {
 	std::string n1 = "Name Surname";
 	std::string n2 = "Name Surnamington";
@@ -64,7 +65,8 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-std::ostream& operator<< (std::ostream& stream, const Student& s)
+std::ostream&
+operator<< (std::ostream& stream, const Student& s)
 {
 	return stream <<
 		"AM: " << s.get_AM() << std::endl <<
@@ -72,14 +74,16 @@ std::ostream& operator<< (std::ostream& stream, const Student& s)
 		"Semester: " << s.get_semester();
 }
 
-static void cont(void)
+static void
+cont(void)
 {
 	std::cout << std::endl;
 	std::cout << "Press <ENTER> to continue. . .";
 	if (std::cin.get()) system("clear || cls");
 }
 
-static void constructor1(const Student& s1)
+static void
+constructor1(const Student& s1)
 {
 	std::cout << "Constructor for s1 (AM, Name)" << std::endl;
 	std::cout << "----------------------------" << std::endl;
@@ -89,14 +93,16 @@ static void constructor1(const Student& s1)
 	std::cout << "Courses passed (default value): " << s1.get_pcourses() << std::endl;
 }
 
-static void ostream_overload(const Student& s1)
+static void
+ostream_overload(const Student& s1)
 {
 	std::cout << "std::ostream overload" << std::endl;
 	std::cout << "----------------------------" << std::endl;
 	std::cout << s1 << std::endl;
 }
 
-static void constructor2(const Student& s2)
+static void
+constructor2(const Student& s2)
 {
 	std::cout << "Constructor for s2 (AM, Name, Semester)" << std::endl;
 	std::cout << "----------------------------" << std::endl;
@@ -106,7 +112,8 @@ static void constructor2(const Student& s2)
 	std::cout << "Courses passed (default value): " << s2.get_pcourses() << std::endl;
 }
 
-static void copy_constructor(const Student& copystud)
+static void
+copy_constructor(const Student& copystud)
 {
 	std::cout << "Copy Constructor using copystud object as a copy of s2" << std::endl;
 	std::cout << "----------------------------" << std::endl;
@@ -116,7 +123,8 @@ static void copy_constructor(const Student& copystud)
 	std::cout << "Courses passed (default value): " << copystud.get_pcourses() << std::endl;
 }
 
-static void conditional_overload(const Student& s1, const Student& s2, const Student& copystud)
+static void
+conditional_overload(const Student& s1, const Student& s2, const Student& copystud)
 {
 	std::cout << "Conditional operator overloading" << std::endl;
 	std::cout << "----------------------------" << std::endl;
@@ -129,7 +137,8 @@ static void conditional_overload(const Student& s1, const Student& s2, const Stu
 	std::cout << std::endl;
 }
 
-static void equals_overload(const Student& s1, Student& s2)
+static void
+equals_overload(const Student& s1, Student& s2)
 {
 	s2 = s1;
 	std::cout << "= operator overload (s2 = s1)" << std::endl;
@@ -140,7 +149,8 @@ static void equals_overload(const Student& s1, Student& s2)
 	std::cout << "Courses passed (default value): " << s2.get_pcourses() << std::endl;
 }
 
-static void constructor3(const Student& s3)
+static void
+constructor3(const Student& s3)
 {
 	std::cout << "Constructor for s3 (AM, Name, Semester, Courses passed, Grades)" << std::endl;
 	std::cout << "----------------------------" << std::endl;
@@ -161,14 +171,16 @@ static void constructor3(const Student& s3)
 	}
 }
 
-static void detprint (const Student& s3)
+static void
+detprint(const Student& s3)
 {
 	std::cout << "Detailed print of s3's grades" << std::endl;
 	std::cout << "----------------------------" << std::endl;
 	s3.detailed_print();
 }
 
-static void setters(Student& s3)
+static void
+setters(Student& s3)
 {
 	s3.set_AM("010101");
 	s3.set_name("AAAA");
@@ -206,7 +218,8 @@ static void setters(Student& s3)
 	}
 }
 
-static void addgrd(Student& s3)
+static void
+addgrd(Student& s3)
 {
 	s3.add_grade(7.5f);
 	float *gr = s3.get_grades();
@@ -222,7 +235,8 @@ static void addgrd(Student& s3)
 	}
 }
 
-static void submcourses(Student& s3)
+static void
+submcourses(Student& s3)
 {
 	std::string c1 = "11231";
 	std::string c2 = "56562";
@@ -254,7 +268,8 @@ static void submcourses(Student& s3)
 	}
 }
 
-static void plusequals_overload(Student& s3, Course *c)
+static void
+plusequals_overload(Student& s3, Course *c)
 {
 	s3 += c;
 	Course **sc = s3.get_submitted_courses();
@@ -272,7 +287,8 @@ static void plusequals_overload(Student& s3, Course *c)
 	}
 }
 
-static void getters(const Course& c)
+static void
+getters(const Course& c)
 {
 	std::cout << "Getters example using Course object" << std::endl;
 	std::cout << "----------------------------" << std::endl;
@@ -282,7 +298,8 @@ static void getters(const Course& c)
 	std::cout << "Course semester: " << c.get_csemester() << std::endl;
 }
 
-static void setters(Course& c)
+static void
+setters(Course& c)
 {
 	std::string code = "14556";
 	std::string name = "Calculus I";

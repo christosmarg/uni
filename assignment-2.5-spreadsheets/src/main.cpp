@@ -2,7 +2,8 @@
 
 std::ostream& operator<< (std::ostream& stream, const App& app);
 
-int main(int argc, char **argv)
+int
+main(int argc, char **argv)
 {
 	App app;
 	if (!app.import_data<Course>("res/courses.csv")) return -1;
@@ -19,7 +20,8 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-std::ostream& operator<< (std::ostream& stream, const App& app)
+std::ostream&
+operator<< (std::ostream& stream, const App& app)
 {
 	return stream;	
 }

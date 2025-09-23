@@ -27,7 +27,8 @@ Manufacturer::~Manufacturer()
 	if (name != nullptr) delete[] name;
 }
 
-char *Manufacturer::convstr(const char *str)
+char *
+Manufacturer::convstr(const char *str)
 {
 	int len = strlen(str);
 	char *tmp = new char[len + 1];
@@ -35,34 +36,40 @@ char *Manufacturer::convstr(const char *str)
 	return tmp;
 }
 
-const char *Manufacturer::get_serialnum() const
+const char *
+Manufacturer::get_serialnum() const
 {
 	return serialnum;
 }
 
-const char *Manufacturer::get_name() const
+const char *
+Manufacturer::get_name() const
 {
 	return name;
 }
 
-const std::string& Manufacturer::get_email() const
+const std::string&
+Manufacturer::get_email() const
 {
 	return email;
 }
 
-void Manufacturer::set_serialnum(const char *serialnum)
+void
+Manufacturer::set_serialnum(const char *serialnum)
 {
 	if (this->serialnum != nullptr) delete[] serialnum;
 	this->serialnum = convstr(serialnum);
 }
 
-void Manufacturer::set_name(const char *name)
+void
+Manufacturer::set_name(const char *name)
 {
 	if (this->name != nullptr) delete[] name;
 	this->name = convstr(name);
 }
 
-void Manufacturer::set_email(const std::string& email)
+void
+Manufacturer::set_email(const std::string& email)
 {
 	this->email = email;
 }
