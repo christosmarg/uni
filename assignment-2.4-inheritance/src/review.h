@@ -1,9 +1,9 @@
 #ifndef REVIEW_H
 #define REVIEW_H
 
-#include "appsystem.h"
+#include <string>
 
-class Review : public AppSystem
+class Review
 {
 	private:
 		int stars;
@@ -12,7 +12,11 @@ class Review : public AppSystem
 
 	public:
 		Review();
-		virtual ~Review();
+		Review(int stars, const std::string& username, const std::string& comment);
+
+		int get_stars() const;
+		const std::string& get_username() const;
+		const std::string& get_comment() const;
 };
 
 #endif /* REVIEW_H */

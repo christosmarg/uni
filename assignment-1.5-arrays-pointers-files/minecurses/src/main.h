@@ -17,4 +17,4 @@ typedef struct
 	int rows, cols, nmines;
 } Board;
 
-#endif
+#endif /* MAIN_H */

@@ -1,20 +1,22 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "manufacturer.h"
-#include "review.h"
+#include "app.h"
 
-class Game : public Manufacturer, public Review
+class Game: public App
 {
 	private:
 		std::string genre;
-		std::string os;
 		bool online;
-		int price;
 
 	public:
 		Game();
-		~Game();
+		Game(const char *serialnum, const std::string& name,
+				const std::string& os, Manufacturer *manf, int price,
+				const std::string& genre, bool online);
+
+		const std::string& get_genre() const override;
+		bool get_online() const override;
 };
 
 #endif /* GAME_H */

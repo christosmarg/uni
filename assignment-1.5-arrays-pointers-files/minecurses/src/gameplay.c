@@ -6,7 +6,7 @@ void play_minesweeper(WINDOW *gamew, Board *brd)
 	int gameover = FALSE;
 	int ndefused = 0;
 	int ymid, xmid;
-	char move;
+	int move;
 	ymid = YMAX/2;
 	xmid = XMAX/2;
 

@@ -1,9 +1,10 @@
 #ifndef MANUFACTURER_H
 #define MANUFACTURER_H
 
-#include "appsystem.h"
+#include <string>
+#include <string.h>
 
-class Manufacturer : public AppSystem
+class Manufacturer
 {
 	private:
 		const char *serialnum;
@@ -12,7 +13,16 @@ class Manufacturer : public AppSystem
 
 	public:
 		Manufacturer();
-		virtual ~Manufacturer();
+		Manufacturer(const char *serialnum, const char *name,
+				const std::string& email);
+		Manufacturer(const Manufacturer& m);
+		~Manufacturer();
+
+		char *convstr(const char *str);
+
+		const char *get_serialnum() const;
+		const char *get_name() const;
+		const std::string& get_email() const;
 };
 
 #endif /* MANUFACTURER_H */

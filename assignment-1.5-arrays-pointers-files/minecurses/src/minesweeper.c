@@ -72,12 +72,12 @@ void add_adj(char **mboard, int cols, int rows)
 
 int is_mine(char **mboard, int row, int col)
 {
-	return (mboard[row][col] == MINE) ? true : false;
+	return (mboard[row][col] == MINE) ? TRUE : FALSE;
 }
 
 int outof_bounds(int row, int col, int cols, int rows)
 {
-	return (row < 0 || row > rows-1 || col < 0 || col > cols-1) ? true : false;
+	return (row < 0 || row > rows-1 || col < 0 || col > cols-1) ? TRUE : FALSE;
 }
 
 uint8_t adj_mines(char **mboard, int row, int col, int cols, int rows)

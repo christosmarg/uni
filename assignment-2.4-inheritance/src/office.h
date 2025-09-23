@@ -1,19 +1,20 @@
 #ifndef OFFICE_H
 #define OFFICE_H
 
-#include "manufacturer.h"
-#include "review.h"
+#include "app.h"
 
-class Office : public Manufacturer, public Review
+class Office: public App
 {
 	private:
 		std::vector<std::string> extensions;
-		std::string os;
-		int price;
 
 	public:
 		Office();
-		~Office();
+		Office(const char *serialnum, const std::string& name,
+				const std::string& os, Manufacturer *manf,
+				int price, const std::vector<std::string>& ext);
+
+		const std::vector<std::string>& get_exts() const override;
 };
 
 #endif /* OFFICE_H */
