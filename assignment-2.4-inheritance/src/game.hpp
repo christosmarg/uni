@@ -12,8 +12,8 @@ class Game final: public App
     public:
         Game();
         Game(const char *serialnum, const std::string& name,
-             const std::string& os, Manufacturer *manf, int price,
-             const std::string& genre, bool online);
+             const std::string& os, Manufacturer *manf, const int price,
+             const std::string& genre, const bool online);
         Game(const Game& g);
 
         const std::string get_genre() const {return genre;}

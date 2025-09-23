@@ -4,8 +4,8 @@ Game::Game()
     :App(), genre(""), online(false) {}
 
 Game::Game(const char *serialnum, const std::string& name,
-        const std::string& os, Manufacturer *manf, int price,
-        const std::string& genre, bool online)
+        const std::string& os, Manufacturer *manf, const int price,
+        const std::string& genre, const bool online)
     :App(serialnum, name, os, manf, price), genre(genre), online(online)
 {
     if (genre.empty() || genre == "")
