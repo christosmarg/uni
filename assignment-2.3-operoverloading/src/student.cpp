@@ -1,43 +1,63 @@
 #include "student.h"
 
 Student::Student(const char *AM, const std::string& name)
-	:AM(convert_AM(AM)), name(name), semester(1), psubj(0) {}
+	:AM(convert_AM(AM)), name(name), semester(1), psubj(0)
+{
+	numSubmittedSubjects = 0;
+	submittedSubjects = nullptr;
+}
 
 Student::Student(const char *AM, const std::string& name, unsigned int semester)
-	:AM(convert_AM(AM)), name(name), semester(semester), psubj(0) {}
+	:AM(convert_AM(AM)), name(name), semester(semester), psubj(0)
+{
+	numSubmittedSubjects = 0;
+	submittedSubjects = nullptr;
+}
 
 Student::Student(const char *AM, const std::string& name, unsigned int semester,
 			    unsigned int psubj, const float *grades)
-	:AM(convert_AM(AM)), name(name), semester(semester), psubj(psubj), grades(convert_PSG(grades)) {}
+	:AM(convert_AM(AM)), name(name), semester(semester), psubj(psubj), grades(convert_PSG(grades))
+{
+	numSubmittedSubjects = 0;
+	submittedSubjects = nullptr;
+}
 
 Student::Student(const Student& s)
 	:name(s.name), semester(s.semester), psubj(s.psubj)
 {
 	int sl = strlen(s.AM);
 	this->AM = new char[sl + 1];
-	std::copy(s.AM, s.AM+sl, AM);
-
+	memcpy(AM, s.AM, sizeof(s.AM) + (sl+1));
 	this->grades = new float[psubj];
-	std::copy(s.grades, s.grades+psubj, grades);
+	memcpy(grades, s.grades, sizeof(s.grades) * psubj);
+
+	if (numSubmittedSubjects <= 0) submittedSubjects = nullptr;
+	else memcpy(submittedSubjects, s.submittedSubjects, sizeof(s.submittedSubjects) * s.numSubmittedSubjects);
 }
 
 Student::~Student()
 {
 	delete[] this->AM;
 	delete[] this->grades;
+
+	for (int i = 0; i < numSubmittedSubjects; i++)
+		delete[] this->submittedSubjects[i];
 	delete[] this->submittedSubjects;
 }
 
-void Student::operator+= (const std::string& s)
+void Student::operator+= (const Subject& s)
 {
-	std::string *tmp = new std::string[numSubmittedSubjects+1];
-	std::copy(submittedSubjects, submittedSubjects+numSubmittedSubjects, tmp);
-	tmp[numSubmittedSubjects] = s;
-	delete[] submittedSubjects;
-	submittedSubjects = new std::string[numSubmittedSubjects+1];
-	std::copy(tmp, tmp+numSubmittedSubjects+1, submittedSubjects);
+	Subject **tmp = new Subject *[numSubmittedSubjects+1];
+	memcpy(tmp, submittedSubjects, sizeof(Subject) * numSubmittedSubjects);
+	tmp[numSubmittedSubjects][0] = s;
+	if (submittedSubjects != nullptr)
+	{
+		for (int i = 0; i < numSubmittedSubjects; i++)
+			delete[] submittedSubjects[i];
+		delete[] submittedSubjects;
+	}
+	submittedSubjects = tmp;
 	numSubmittedSubjects++;
-	delete[] tmp;
 }
 
 Student& Student::operator= (const Student& s)
@@ -56,51 +76,40 @@ Student& Student::operator= (const Student& s)
 	return *this;
 }
 
-float *Student::get_grades() const
+void Student::set_submitted_subjects(Subject **submittedSubjects)
 {
-	float *ret = new float[psubj];
-	std::copy(grades, grades+psubj, ret);
-	return ret;
-}
-
-std::string *Student::get_submitted_subjects() const
-{
-	std::string *ret = new std::string[numSubmittedSubjects];
-	std::copy(submittedSubjects, submittedSubjects+numSubmittedSubjects, ret);
-	return ret;
-}
-
-void Student::set_submitted_subjects(std::string* submittedSubjects)
-{
-	this->submittedSubjects = new std::string[numSubmittedSubjects];
-	std::copy(submittedSubjects, submittedSubjects+numSubmittedSubjects, this->submittedSubjects);
+	// handle 0 subj
+	this->submittedSubjects = new Subject *[numSubmittedSubjects];
+	memcpy(this->submittedSubjects, submittedSubjects, sizeof(Subject) * numSubmittedSubjects);
 }
 
 char *Student::convert_AM(const char *AM)
 {
 	int len = strlen(AM);
-	this->AM = new char[len+1];
-	std::copy(AM, AM+len, this->AM);
-	return this->AM;
+	char *tmp = new char[len+1];
+	memcpy(tmp, AM, len+1);
+	return tmp;
 }
 
 float *Student::convert_PSG(const float *grades)
 {
-	this->grades = new float[psubj];
-	std::copy(grades, grades+psubj, this->grades);
-	return this->grades;	
+	if (psubj > 0)
+	{
+		float *tmp = new float[psubj];
+		memcpy(tmp, grades, sizeof(grades) * psubj);
+		return tmp;
+	}
+	else return nullptr;
 }
 
 void Student::add_grade(float grade)
 {
 	float *tmp = new float[psubj+1];
-	std::copy(grades, grades+psubj, tmp);
+	memcpy(tmp, grades, sizeof(grades) * psubj);
 	tmp[psubj] = grade;
-	delete[] grades;
-	grades = new float[psubj+1];
-	std::copy(tmp, tmp+psubj+1, grades);
+	if (grades != nullptr) delete[] grades;
+	grades = tmp;
 	psubj++;
-	delete[] tmp;
 }
 
 void Student::detailed_print() const
