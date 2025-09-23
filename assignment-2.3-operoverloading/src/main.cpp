@@ -3,7 +3,8 @@
 
 inline std::ostream& operator<< (std::ostream& stream, const Student& s)
 {
-	return stream << "AM: " << s.get_AM() << std::endl << "Name: " << s.get_name() << std::endl;
+	return stream << "AM: " << s.get_AM() << std::endl << "Name: " << s.get_name() << std::endl
+		<< "Semester: " << s.get_semester() << std::endl;
 }
 
 void cont();

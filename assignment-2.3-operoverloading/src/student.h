@@ -49,7 +49,6 @@ class Student
 		inline void set_grades(float *grades) {this->grades = convert_PSG(grades);}
 		inline void set_num_submitted_subjects(unsigned int numSubmittedSubjects) {this->numSubmittedSubjects = numSubmittedSubjects;}
 		inline void set_submitted_subjects(std::string* submittedSubjects) {this->submittedSubjects = submittedSubjects;}
-		inline void print_3first() const {std::cout << this->AM << " " << this->name << " " << this->semester << std::endl;}
 
 		char *convert_AM(const char *AM);
 		float *convert_PSG(const float *grades);

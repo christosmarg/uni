@@ -53,7 +53,6 @@ class Student
 		inline void set_semester(unsigned int semester) {this->semester = semester;}
 		inline void set_psubj(unsigned int psubj) {this->psubj = psubj;}
 		inline void set_grades(float *grades) {this->grades = convert_PSG(grades);}
-		inline void print_3first() {std::cout << AM << " " << name << " " << semester << std::endl;}
 
 		char *convert_AM(const char *AM);
 		float *convert_PSG(const float *grades);
@@ -108,8 +107,15 @@ float Student::calc_average() const
 	return average;
 }
 
+inline std::ostream& operator<< (std::ostream& stream, const Student& s)
+{
+	return stream << "AM: " << s.get_AM() << std::endl << "Name: " << s.get_name() << std::endl 
+		<< "Semester: " << s.get_semester() << std::endl;
+}
+
 void cont();
 void constructor1(const Student& s1);
+void ostream_overload(const Student& s1);
 void constructor2(const Student& s2);
 void copy_constructor(const Student& copystud);
 void constructor3(const Student& s3);
@@ -121,6 +127,7 @@ int main(int argc, char **argv)
 	Student *s1 = new Student("12345678", "Name Surname");
 	system("clear");
 	constructor1(*s1); cont();
+	ostream_overload(*s1); cont();
 	delete s1;
 
 	Student *s2 = new Student("12345678", "Name Surname", 2);
@@ -156,6 +163,13 @@ void constructor1(const Student& s1)
 	std::cout << "s1.get_name(): " << s1.get_name() << std::endl;
 	std::cout << "s1.get_semester(): " << s1.get_semester() << std::endl;
 	std::cout << "s1.get_psubj(): " << s1.get_psubj() << std::endl << std::endl;
+}
+
+void ostream_overload(const Student& s1)
+{
+	std::cout << "std::ostream overload" << std::endl;
+	std::cout << "----------------------------" << std::endl;
+	std::cout << s1 << std::endl;
 }
 
 void constructor2(const Student& s2)
