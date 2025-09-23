@@ -3,13 +3,11 @@
 
 int main(int argc, char **argv)
 {	
-	int ymax, xmax;
 	init_curses();
-	getmaxyx(stdscr, ymax, xmax);
 	echo();
-	int COLS = set_cols(ymax, xmax);
-	int ROWS = set_rows(ymax);
-	int NMINES = set_nmines(ymax, COLS*ROWS);
+	int COLS = set_cols();
+	int ROWS = set_rows();
+	int NMINES = set_nmines(COLS*ROWS);
 	noecho();
 	options_menu();
 	erase();

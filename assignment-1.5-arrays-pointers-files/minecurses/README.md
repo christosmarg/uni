@@ -26,14 +26,15 @@ Additional controls
 
 ## To Do
 
-* Handle resizing
+* ~~Handle resizing~~
 * Add restart option
 * Add quit option right when game opens
 * Load score log to ui
-* Improve score log
-* Add macros for the scaled board dimensions
+* ~~Improve score log~~
 * Add colors
-* Add unicode support
+* Add UTF-8 support
+* Fix wrong mine spawning bug
+* (Perhaps) pack board info into a `struct`
 
 ## Execution
 

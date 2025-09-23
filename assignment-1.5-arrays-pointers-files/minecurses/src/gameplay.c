@@ -5,16 +5,19 @@ void play_minesweeper(WINDOW *gamew, char **dboard, char **mboard, int COLS, int
     int mbx = 0, mby = 0;
     int gameover = FALSE;
     int ndefused = 0;
-    int ymax, xmax, ymid, xmid;
+    int ymid, xmid;
     char move;
-    getmaxyx(stdscr, ymax, xmax);
-    ymid = ymax/2;
-    xmid = xmax/2;
-	print_board(gamew, dboard, COLS, ROWS);
+    ymid = YMAX/2;
+    xmid = XMAX/2;
 
     do
     {
-		session_info(mbx, mby, xmax, xmid, ndefused, NMINES);
+		erase();
+		delwin(gamew);
+		refresh();
+		gamew = game_win(COLS, ROWS, NMINES);
+		print_board(gamew, dboard, COLS, ROWS);
+		session_info(mbx, mby, xmid, ndefused, NMINES);
         navigate(gamew, dboard, &move, &mbx, &mby);
 		switch (move)
 		{

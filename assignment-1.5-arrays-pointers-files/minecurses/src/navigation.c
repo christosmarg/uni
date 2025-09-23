@@ -2,9 +2,9 @@
 
 void navigate(WINDOW *gamew, char **mboard, char *move, int *mbx, int *mby)
 {
-    int ymax, xmax;
+	int ymax, xmax;
+	getmaxyx(gamew, ymax, xmax);
     static int y = 1, x = 2;
-    getmaxyx(gamew, ymax, xmax);
     update_curs(gamew, y, x);
     *mbx = (x-2)/3;
     *mby = y-1;

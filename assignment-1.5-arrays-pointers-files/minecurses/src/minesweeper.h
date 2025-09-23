@@ -33,6 +33,9 @@
 #define VOLUME_DOWN '-'
 #define QUIT 'q'
 
+#define YMAX getmaxy(stdscr)
+#define XMAX getmaxx(stdscr)
+
 char **init_dboard	(struct _win_st* gamew, int COLS, int ROWS);
 void fill_dboard	(char **dboard, int COLS, int ROWS);
 char **init_mboard	(struct _win_st* gamew, int COLS, int ROWS, int NMINES);
