@@ -1,9 +1,9 @@
-Mine hit at position (4, 5)
+Mine hit at position (1, 5)
 
 Board overview
 
 - - - - - 
-- - 1 1 1 
-- - 1 * 1 
-- - 1 1 1 
 - - - - - 
+- - - 1 1 
+- - - 1 D 
+- - - 1 1 

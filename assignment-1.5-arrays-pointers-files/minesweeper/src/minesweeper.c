@@ -1,19 +1,5 @@
 #include "minesweeper.h"
 
-void main_win()
-{
-    initscr();
-    noecho();
-    cbreak();
-    
-    WINDOW *mainWin = newwin(0, 0, 0, 0);
-    box(mainWin, 0, 0);
-    refresh();
-    wrefresh(mainWin);
-    keypad(mainWin, true);
-}
-
-
 void start()
 {
     int yMax, xMax;
