@@ -46,7 +46,7 @@ class Student
 		inline const std::string& get_name() const {return name;}
 		inline unsigned int get_semester() const {return semester;}
 		inline unsigned int get_psubj() const {return psubj;}
-		inline float *get_grades() const {return grades;}
+		float *get_grades() const;
 
 		inline void set_AM(const char *AM) {this->AM = convert_AM(AM);}
 		inline void set_name(const std::string& name) {this->name = name;}
@@ -60,6 +60,13 @@ class Student
 		void detailed_print() const;
 		float calc_average() const;
 };
+
+float *Student::get_grades() const
+{
+	float *ret = new float[psubj];
+	std::copy(grades, grades+psubj, ret);
+	return ret;
+}
 
 char *Student::convert_AM(const char *AM)
 {
@@ -107,7 +114,7 @@ float Student::calc_average() const
 	return average;
 }
 
-inline std::ostream& operator<< (std::ostream& stream, const Student& s)
+std::ostream& operator<< (std::ostream& stream, const Student& s)
 {
 	return stream << "AM: " << s.get_AM() << std::endl << "Name: " << s.get_name() << std::endl 
 		<< "Semester: " << s.get_semester() << std::endl;
@@ -121,6 +128,7 @@ void copy_constructor(const Student& copystud);
 void constructor3(const Student& s3);
 void detprint (const Student& s3);
 void setters(Student& s3);
+void addgrd(Student& s3);
 
 int main(int argc, char **argv)
 {
@@ -142,7 +150,8 @@ int main(int argc, char **argv)
 	Student *s3 = new Student("12345678", "Name Surname", 2, 4, grd);
 	constructor3(*s3); cont();
 	detprint(*s3); cont();
-	setters(*s3); cont();
+	setters(*s3);
+	addgrd(*s3); cont();
 	delete s3;
 
 	return 0;
@@ -246,7 +255,14 @@ void setters(Student& s3)
 		if (i != s3.get_psubj()-1)	std::cout << gr[i] << ", ";
 		else std::cout << gr[i] << std::endl;
 	}
+
+	delete[] gr;
+}
+
+void addgrd(Student& s3)
+{
 	s3.add_grade(7.5f);
+	float *gr = new float[s3.get_psubj()];
 	gr = s3.get_grades();
 	std::cout << "Input: s3.add_grade(7.5f)" << '\t';
 	std::cout << "Output: s3.get_grades(): ";
@@ -255,4 +271,6 @@ void setters(Student& s3)
 		if (i != s3.get_psubj()-1) std::cout << gr[i] << ", ";
 		else std::cout << gr[i] << std::endl;
 	}
+	
+	delete[] gr;
 }
