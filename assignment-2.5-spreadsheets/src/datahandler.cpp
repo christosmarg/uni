@@ -14,7 +14,7 @@ DataHandler::~DataHandler()
     if (!missing.empty()) missing.clear();
 }
 
-bool
+void
 DataHandler::load_grades()
 {
     std::ifstream f;
@@ -48,7 +48,7 @@ DataHandler::load_grades()
                     lab::getline(f, code, ';');
                     lab::getline(f, grade);
                     if (f.eof()) break;
-                    if (!analyze(currid, id, code, std::atof(grade.cstr()))) break;
+                    analyze(currid, id, code, std::atof(grade.cstr()));
                 }
             }
         }
@@ -57,13 +57,11 @@ DataHandler::load_grades()
     catch (const std::ifstream::failure& e)
     {
         errlog.write(ErrLog::ErrType::RUNTIME_ERR, err_read(datapath));
-        throw std::runtime_error(err_read(datapath) + " (" + e.what() + ")");
-        return false;
+        throw std::runtime_error(err_read(datapath).cstr());
     }
-    return true;
 }
 
-bool
+void
 DataHandler::analyze(
         const lab::xstring& currid,
         lab::xstring& id,
@@ -79,7 +77,7 @@ DataHandler::analyze(
             data.insert(std::make_pair(studs[currid], grds));
             grds.clear();
             grds.insert(std::make_pair(courses[code], grade));
-            return false;
+            return;
         }
         grds.insert(std::make_pair(courses[code], grade));
     }
@@ -103,13 +101,12 @@ DataHandler::analyze(
         miss(id, code, grade);  
         diffr(id, code, grade);
     }
-    return true;
 }
 
 void
 DataHandler::miss(lab::xstring id, lab::xstring code, float grade)
 {
-    if (code.front() == 'P')
+    if (courses[code]->four_year)
     {
         std::map<lab::xstring, lab::xstring>::const_iterator it = eqvs.find(code);
         if (it != eqvs.end())
