@@ -30,10 +30,9 @@ class Student
 		{
 			int sl = strlen(s.AM);
 			AM = new char[sl + 1];
-			std::copy(s.AM, s.AM+sl, AM);
-
-			grades = new float[psubj];
-			std::copy(s.grades, s.grades+psubj, grades);
+			memcpy(AM, s.AM, sizeof(s.AM) + (sl+1));
+			this->grades = new float[s.psubj];
+			memcpy(grades, s.grades, sizeof(s.grades) * s.psubj);
 		}
 		
 		~Student()
@@ -44,11 +43,11 @@ class Student
 
 		friend std::ostream& operator<< (std::ostream& stream, const Student& s); 
 
-		inline const char *get_AM() const {return AM;}
-		inline const std::string& get_name() const {return name;}
-		inline unsigned int get_semester() const {return semester;}
-		inline unsigned int get_psubj() const {return psubj;}
-		float *get_grades() const;
+		inline const char *get_AM() const {return this->AM;}
+		inline const std::string& get_name() const {return this->name;}
+		inline unsigned int get_semester() const {return this->semester;}
+		inline unsigned int get_psubj() const {return this->psubj;}
+		float *get_grades() const {return this->grades;}
 
 		inline void set_AM(const char *AM) {this->AM = convert_AM(AM);}
 		inline void set_name(const std::string& name) {this->name = name;}
@@ -63,38 +62,33 @@ class Student
 		float calc_average() const;
 };
 
-float *Student::get_grades() const
-{
-	float *ret = new float[psubj];
-	std::copy(grades, grades+psubj, ret);
-	return ret;
-}
-
 char *Student::convert_AM(const char *AM)
 {
 	int len = strlen(AM);
-	this->AM = new char[len+1];
-	std::copy(AM, AM+len, this->AM);
-	return this->AM;
+	char *tmp = new char[len+1];
+	memcpy(tmp, AM, len+1);
+	return tmp;
 }
 
 float *Student::convert_PSG(const float *grades)
 {
-	this->grades = new float[psubj];
-	std::copy(grades, grades+psubj, this->grades);
-	return this->grades;	
+	if (psubj > 0)
+	{
+		float *tmp = new float[psubj];
+		memcpy(tmp, grades, sizeof(grades) * psubj);
+		return tmp;
+	}
+	else return nullptr;
 }
 
 void Student::add_grade(float grade)
 {
 	float *tmp = new float[psubj+1];
-	std::copy(grades, grades+psubj, tmp);
+	memcpy(tmp, grades, sizeof(grades) * psubj);
 	tmp[psubj] = grade;
-	delete[] grades;
-	grades = new float[psubj+1];
-	std::copy(tmp, tmp+psubj+1, grades);
+	if (grades != nullptr) delete[] grades;
+	grades = tmp;
 	psubj++;
-	delete[] tmp;
 }
 
 void Student::detailed_print() const
@@ -122,7 +116,7 @@ std::ostream& operator<< (std::ostream& stream, const Student& s)
 		<< "Semester: " << s.get_semester() << std::endl;
 }
 
-static void cont();
+static void cont(void);
 static void constructor1(const Student& s1);
 static void ostream_overload(const Student& s1);
 static void constructor2(const Student& s2);
@@ -134,13 +128,17 @@ static void addgrd(Student& s3);
 
 int main(int argc, char **argv)
 {
-	Student *s1 = new Student("12345678", "Name Surname");
-	system("clear");
+	std::string n1 = "Name Surname";
+	std::string n2 = "Name Surnamington";
+	std::string n3 = "Name Surnaming";
+
+	Student *s1 = new Student("12345678", n1);
+	system("clear || cls");
 	constructor1(*s1); cont();
 	ostream_overload(*s1); cont();
 	delete s1;
-
-	Student *s2 = new Student("92345678", "Name Surnamington", 2);
+	
+	Student *s2 = new Student("92345678", n2, 2);
 	constructor2(*s2); cont();
 
 	Student *copystud = new Student(*s2);
@@ -148,8 +146,9 @@ int main(int argc, char **argv)
 	delete copystud;
 	delete s2;
 
-	float grd[4] = {9.4f, 8.4f, 5.5f, 6.3f};
-	Student *s3 = new Student("72345678", "Name Surnaming", 2, 4, grd);
+	float *grd = new float[4]{9.4f, 8.4f, 5.5f, 6.3f};
+	Student *s3 = new Student("72345678", n3, 2, 4, grd);
+	delete[] grd;
 	constructor3(*s3); cont();
 	detprint(*s3); cont();
 	setters(*s3);
@@ -159,7 +158,7 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-static void cont()
+static void cont(void)
 {
 	std::cout << std::endl;
 	std::cout << "Press <ENTER> to continue. . .";
@@ -205,22 +204,20 @@ static void copy_constructor(const Student& copystud)
 
 static void constructor3(const Student& s3)
 {
-	std::cout << "Constructor for s3 (AM, Name, Semester, Subjects Passed, Grades)" << std::endl;
+	std::cout << "constructor for s3 (am, name, semester, subjects passed, grades)" << std::endl;
 	std::cout << "----------------------------" << std::endl;
-	std::cout << "AM: " << s3.get_AM() << std::endl;
-	std::cout << "Name: " << s3.get_name() << std::endl;
-	std::cout << "Semester: " << s3.get_semester() << std::endl;
-	std::cout << "Subjects passed: " << s3.get_psubj() << std::endl;
+	std::cout << "am: " << s3.get_AM() << std::endl;
+	std::cout << "name: " << s3.get_name() << std::endl;
+	std::cout << "semester: " << s3.get_semester() << std::endl;
+	std::cout << "subjects passed: " << s3.get_psubj() << std::endl;
 
-	float *gr = new float[s3.get_psubj()];
-	gr = s3.get_grades();
-	std::cout << "Grades: ";
+	float *gr = s3.get_grades();
+	std::cout << "grades: ";
 	for (unsigned int i = 0; i < s3.get_psubj(); i++)
 	{
 		if (i != s3.get_psubj()-1) std::cout << gr[i] << ", ";
 		else std::cout << gr[i] << std::endl << std::endl;
 	}
-	delete[] gr;
 }
 
 static void detprint (const Student& s3)
@@ -236,8 +233,9 @@ static void setters(Student& s3)
 	s3.set_name("AAAAAAA");
 	s3.set_semester(100);
 	s3.set_psubj(2); // πρώτα η set_psubj() και μετα η set_grades() !!!!!
-	float gg[2] = {0.1f, 2.2f};
+	float *gg = new float[2]{0.1f, 2.2f};
 	s3.set_grades(gg);
+	delete[] gg;
 
 	std::cout << "Setters example using s3" << std::endl;
 	std::cout << "----------------------------" << std::endl;
@@ -250,8 +248,7 @@ static void setters(Student& s3)
 	std::cout << "Input: s3.set_psubj(2):" << '\t' << '\t';
 	std::cout << "New subjects passed: " << s3.get_psubj() << std::endl;
 
-	float *gr = new float[s3.get_psubj()];
-	gr = s3.get_grades();
+	float *gr = s3.get_grades();
 	std::cout << "Input: {0.1f, 2.2f}" << '\t' << '\t';
 	std::cout << "New grades: ";
 	for (unsigned int i = 0; i < s3.get_psubj(); i++)
@@ -259,14 +256,12 @@ static void setters(Student& s3)
 		if (i != s3.get_psubj()-1)	std::cout << gr[i] << ", ";
 		else std::cout << gr[i] << std::endl;
 	}
-	delete[] gr;
 }
 
 static void addgrd(Student& s3)
 {
 	s3.add_grade(7.5f);
-	float *gr = new float[s3.get_psubj()];
-	gr = s3.get_grades();
+	float *gr = s3.get_grades();
 	std::cout << "Input: s3.add_grade(7.5f)" << '\t';
 	std::cout << "Updated grades: ";
 	for (unsigned int i = 0; i < s3.get_psubj(); i++)
@@ -274,5 +269,4 @@ static void addgrd(Student& s3)
 		if (i != s3.get_psubj()-1) std::cout << gr[i] << ", ";
 		else std::cout << gr[i] << std::endl;
 	}
-	delete[] gr;
 }
