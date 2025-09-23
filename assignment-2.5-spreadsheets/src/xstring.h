@@ -74,7 +74,6 @@ xstring to_xstr(T val)
 	return xstring(buf);
 }
 
-// set a default T
 template<typename T>
 xstring to_xstr(const char *fs, T val)
 {

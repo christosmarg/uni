@@ -1,0 +1,5 @@
+Type,SN,Name,OS,Manf,Price,Genre,Online
+Game,123,LoL,Windows,Riot,0,MOBA,Yes
+Game,345,CS:GO,Cross,Valve,14,FPS,Yes
+Office,567,Libre,Linux,GNU,0,N/A,N/A
+Office,789,Vim,Linux,GNU,0,N/A,N/A

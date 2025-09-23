@@ -2,6 +2,7 @@
 #define REVIEW_H
 
 #include <string>
+#include <stdexcept>
 
 class Review
 {

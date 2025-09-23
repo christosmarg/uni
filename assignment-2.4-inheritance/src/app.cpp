@@ -6,7 +6,10 @@ App::App()
 App::App(const char *serialnum, const std::string& name,
 	const std::string& os, Manufacturer *manf, int price)
 	:serialnum(convsn(serialnum)), name(name), os(os), manf(manf), price(price)
-{}
+{
+	try {if (price < 0) throw price;}
+	catch (int price) {throw std::runtime_error("Price can't have negative value.");}
+}
 
 App::~App()
 {
