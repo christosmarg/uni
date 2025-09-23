@@ -1,4 +1,3 @@
-#include <err.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 
@@ -6,32 +5,34 @@
 #include <netdb.h>
 #include <netinet/in.h>
 
+#include <err.h>
+#include <errno.h>
 #include <locale.h>
-#include <ncurses.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
-#define ARRLEN(x)	(sizeof(x) / sizeof(x[0]))
+#include "extern.h"
 
 struct command {
-	char name[32];
-	void (*func)(char *);
+	char name[CMD_LEN];
+	int (*func)(char *);
 };
 
-static void cmd_challenge(char *);
-static void cmd_play(char *);
-static void cmd_msg(char *);
-static void cmd_list(char *);
-static void cmd_quit(char *);
-static void cmd_help(char *);
-static int init_curses(void);
+static int cmd_challenge(char *);
+static int cmd_play(char *);
+static int cmd_msg(char *);
+static int cmd_list(char *);
+static int cmd_quit(char *);
+static int cmd_help(char *);
 static struct command *parse_command(char **);
+static void sighandler(int);
 static void usage(void);
 
 static struct command commands[] = {
-	{ "challenge",	cmd_challenge },	/* /challenge <name|id> */
+	{ "challenge",	cmd_challenge },	/* /challenge <id> */
 	{ "play",	cmd_play },		/* /play <rock|paper|scissor> */
 	{ "msg",	cmd_msg },		/* /msg <message> */
 	{ "list",	cmd_list },		/* /list */
@@ -44,38 +45,120 @@ static int xmax;
 static int f_quit = 0;
 static int fd;
 
-static void
+static int
 cmd_challenge(char *args)
 {
+	char cmd[CMD_LEN];
+	int id;
+
+	if (args == NULL) {
+		warnx("usage: /challenge <id>");
+		return (-1);
+	}
+
+	strlcpy(cmd, "challenge", sizeof(cmd));
+	if (send(fd, cmd, sizeof(cmd), 0) < 0) {
+		warn("send(challenge, cmd)");
+		return (-1);
+	}
+
+	id = strtol(args, NULL, 10);
+	if (errno == EINVAL || errno == ERANGE) {
+		warn("strtol(%s)", args);
+		return (-1);
+	}
+	if (send(fd, &id, sizeof(id), 0) < 0) {
+		warn("send(challenge, id)");
+		return (-1);
+	}
+
+	return (0);
 }
 
-static void
+static int
 cmd_play(char *args)
 {
-	/* TODO add fuzzy parsing */
-	/* TODO ask for command and send it to server */
+	char cmd[CMD_LEN];
+	int move;
+
+	if (args == NULL) {
+		warnx("usage: /challenge <rock|paper|scissor>");
+		return (-1);
+	}
+
+	strlcpy(cmd, "play", sizeof(cmd));
+	if (send(fd, cmd, sizeof(cmd), 0) < 0) {
+		warn("send(play, cmd)");
+		return (-1);
+	}
+
+	if (strcmp(args, "rock") == 0)
+		move = MOVE_ROCK;
+	else if (strcmp(args, "paper") == 0)
+		move = MOVE_PAPER;
+	else if (strcmp(args, "scissor") == 0)
+		move = MOVE_SCISSOR;
+	else
+		warnx("invalid move: %s\n", args);
+
+	if (send(fd, &move, sizeof(move), 0) < 0) {
+		warn("send(play, move)");
+		return (-1);
+	}
+
+	return (0);
 }
 
-static void
+static int
 cmd_msg(char *args)
 {
+	char cmd[CMD_LEN];
+
+	if (args == NULL) {
+		warnx("usage: /msg <message>");
+		return (-1);
+	}
+
+	strlcpy(cmd, "msg", sizeof(cmd));
+	if (send(fd, cmd, sizeof(cmd), 0) < 0) {
+		warn("send(msg)");
+		return (-1);
+	}
+
+	return (0);
 }
 
-static void
+static int
 cmd_list(char *args)
 {
+	char cmd[CMD_LEN];
+
+	strlcpy(cmd, "list", sizeof(cmd));
+	if (send(fd, cmd, sizeof(cmd), 0) < 0) {
+		warn("send(list)");
+		return (-1);
+	}
+
+	return (0);
 }
 
-/* TODO return int... */
-static void
+static int
 cmd_quit(char *args)
 {
+	char cmd[CMD_LEN];
+
 	f_quit = 1;
-	if (send(fd, &f_quit, sizeof(f_quit), 0) < 0)
-		;	/* TODO */
+
+	strlcpy(cmd, "quit", sizeof(cmd));
+	if (send(fd, cmd, sizeof(cmd), 0) < 0) {
+		warn("send(quit)");
+		return (-1);
+	}
+
+	return (0);
 }
 
-static void
+static int
 cmd_help(char *args)
 {
 	printf("Available commands:\n");
@@ -84,35 +167,6 @@ cmd_help(char *args)
 	printf("/msg <message>\t\t\tSend a message to the global chat\n");
 	printf("/quit\t\t\t\tQuit the game\n");
 	printf("/help\t\t\t\tShow this help message\n");
-}
-
-static int
-init_curses(void)
-{
-	if (!initscr())
-		return (-1);
-
-	/* Don't echo keypresses. */
-	noecho();
-	/* Disable line buffering. */
-	cbreak();
-	/* Hide the cursor. */
-	curs_set(false);
-	/* Allow arrow-key usage. */
-	keypad(stdscr, true);
-	/* ESC has a small delay after it's pressed. Remove it. */
-	set_escdelay(0);
-	/* 
-	 * Don't wait for a keypress -- just continue if there's no keypress
-	 * within 1000 milliseconds. We could set the delay to 0 milliseconds,
-	 * but this will most likely burn the CPU.
-	 */
-	timeout(1000);
-	(void)getmaxyx(stdscr, ymax, xmax);
-	start_color();
-	/* Use the terminal's colorscheme. */
-	use_default_colors();
-	/* TODO init pairs */
 
 	return (0);
 }
@@ -156,6 +210,9 @@ parse_command(char **args)
 		while (**args == ' ')
 			(*args)++;
 	}
+	/* FIXME */
+	/*if (**args == '\0')*/
+		/**args = NULL;*/
 
 	cmd = strtok(line, " ");
 	if (cmd == NULL) {
@@ -178,6 +235,12 @@ parse_command(char **args)
 }
 
 static void
+sighandler(int sig)
+{
+	f_quit = 1;
+}
+
+static void
 usage(void)
 {
 	fprintf(stderr, "usage: %1$s [-p port] <hostname|ipv4_addr>\n",
@@ -190,8 +253,10 @@ main(int argc, char *argv[])
 {
 	struct sockaddr_in sin;
 	struct hostent *hp;
+	struct sigaction sa;
 	struct command *cmd;
-	char *args;
+	char *args, *s;
+	char nick[NAME_LEN];
 	int port = 9999;
 	int ch;
 
@@ -211,6 +276,40 @@ main(int argc, char *argv[])
 
 	if (argc < 1)
 		usage();
+	/*
+	 * Handle termination signals so we don't exit abnormally (i.e without
+	 * cleaning up resources).
+	 */
+	memset(&sa, 0, sizeof(sa));
+	sigfillset(&sa.sa_mask);
+	sa.sa_handler = sighandler;
+	if (sigaction(SIGINT, &sa, NULL) < 0)
+		err(1, "sigaction(SIGINT)");
+	if (sigaction(SIGTERM, &sa, NULL) < 0)
+		err(1, "sigaction(SIGTERM)");
+
+	if (!setlocale(LC_ALL, ""))
+		err(1, "setlocale");
+
+	/* Choose nickname. */
+	printf("\rEnter nickname (no whitespaces): ");
+	fgets(nick, sizeof(nick), stdin);
+	s = nick;
+
+	if (*s == '\n' || *s == '\0')
+		errx(1, "empty nickname");
+
+	/* Get rid of leading whitespaces. */
+	while (*s == ' ')
+		s++;
+
+	/* Get rid of trailing newlines and whitespaces. */
+	for (; *s != '\0'; s++) {
+		if (*s != '\n' && *s != ' ')
+			continue;
+		*s = '\0';
+		break;
+	}
 
 	if ((fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
 		err(1, "socket(AF_INET)");
@@ -225,13 +324,11 @@ main(int argc, char *argv[])
 	if (connect(fd, (struct sockaddr *)&sin, sizeof(sin)) < 0)
 		err(1, "connect");
 
-	/* TODO nickname selection (server keeps asking until unique) */
+	/* Send nickname to server */
+	if (send(fd, nick, sizeof(nick), 0) < 0)
+		err(1, "send(nick)");
 
-	if (!setlocale(LC_ALL, ""))
-		err(1, "setlocale");
-
-	/*if (init_curses() < 0)*/
-		/*errx(1, "could not initialize ncurses");*/
+	cmd_list(NULL);
 
 	for (;;) {
 		if (f_quit)
@@ -239,14 +336,12 @@ main(int argc, char *argv[])
 		/* TODO redraw */
 		if ((cmd = parse_command(&args)) == NULL)
 			continue;
-		/* TODO connect to server */
-		cmd->func(args);
+		if (cmd->func(args) < 0)
+			warnx("/%s(%s) failed\n", cmd->name, args);
 		if (args != NULL)
 			free(args);
 	}
 	close(fd);
 
-	/*(void)endwin();*/
-		
 	return (0);
 }
