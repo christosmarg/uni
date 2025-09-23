@@ -79,9 +79,103 @@ Student Student::operator= (const Student& s)
 	return *this;
 }
 
+bool Student::operator== (const Student& s) const
+{
+	return this->semester == s.semester;
+}
+
+bool Student::operator!= (const Student& s) const
+{
+	return this->semester != s.semester;
+}
+
+bool Student::operator<	(const Student& s) const
+{
+	return this->semester < s.semester;
+}
+
+bool Student::operator<= (const Student& s) const
+{
+	return this->semester <= s.semester;
+}
+
+bool Student::operator> (const Student& s) const
+{
+	return this->semester > s.semester;
+}
+
+bool Student::operator>= (const Student& s) const
+{
+	return this->semester >= s.semester;
+}
+
+const char *Student::get_AM() const
+{
+	return this->AM;
+}
+
+const std::string& Student::get_name() const
+{
+	return this->name;
+}
+
+unsigned int Student::get_semester() const
+{
+	return this->semester;
+}
+
+unsigned int Student::get_psubj() const
+{
+	return this->psubj;
+}
+
+float *Student::get_grades() const
+{
+	return (this->psubj > 0) ? this->grades : nullptr;
+}
+
+Subject **Student::get_submitted_subjects() const
+{
+	return this->ssubj;
+}
+
+unsigned int Student::get_num_submitted_subjects() const
+{
+	return this->nssubj;
+}
+
+void Student::set_AM(const char *AM)
+{
+	this->AM = convert_AM(AM);
+}
+
+void Student::set_name(const std::string& name)
+{
+	this->name = name;
+}
+
+void Student::set_semester(unsigned int semester)
+{
+	this->semester = semester;
+}
+
+void Student::set_psubj(unsigned int psubj)
+{
+	this->psubj = psubj;
+}
+
+void Student::set_grades(float *grades)
+{
+	this->grades = convert_PSG(grades);
+}
+
+void Student::set_num_submitted_subjects(unsigned nssubj)
+{
+	this->nssubj = nssubj;
+}
+
 void Student::set_submitted_subjects(Subject **ssubj)
 {
-	// handle 0 subj
 	this->ssubj = new Subject *[nssubj];
 	memcpy(this->ssubj, ssubj, sizeof(Subject *) * nssubj);
 }
