@@ -1,4 +1,3 @@
-#include <iostream>
 #include "appsystem.h"
 
 std::ostream& operator<< (std::ostream& stream, const AppSystem& sys)
