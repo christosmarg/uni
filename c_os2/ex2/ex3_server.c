@@ -2,6 +2,10 @@
 #include <sys/types.h>
 #include <sys/un.h>
 
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <netinet/in.h>
+
 #include <err.h>
 #include <signal.h>
 #include <stdio.h>
@@ -33,7 +37,7 @@ static void sighandler(int);
 static void *emalloc(size_t);
 
 static char *argv0;
-/* Only gets set if a termination signal is caught. */
+/* Gets set only if a termination signal is caught. */
 static volatile sig_atomic_t f_quit = 0;
 
 static int
@@ -46,6 +50,7 @@ srv(struct foo *foo)
 	int rc;
 	char cont;
 
+	f = (struct foo *)foo;
 	/*
 	 * The return code is -1 (error) by default so that we don't
 	 * need to set it everytime an error occurs in the main loop.
@@ -53,7 +58,6 @@ srv(struct foo *foo)
 	 * after the loop.
 	 */
 	rc = -1;
-	f = (struct foo *)foo;
 	for (;;) {
 		if (recv(f->cfd, &n, sizeof(int), 0) < 0)
 			goto fail;
@@ -61,6 +65,7 @@ srv(struct foo *foo)
 		if (recv(f->cfd, arr, n * sizeof(int), 0) < 0)
 			goto fail;
 		res = emalloc(sizeof(struct pack_res));
+
 		printf("cfd: %d\tn: %d\n", f->cfd, n);
 		for (i = 0, sum = 0; i < n; i++) {
 			printf("cfd: %d\tarr[%d]: %d\n", f->cfd, i, arr[i]);
@@ -68,7 +73,7 @@ srv(struct foo *foo)
 		}
 		free(arr);
 		/* 
-		 * If we go to `fail:`, `gcc` for some reason double frees if 
+		 * When we go to `fail:`, `gcc` for some reason double frees if 
 		 * we don't manually set it to NULL, even though we explicitly 
 		 * check for NULL first...
 		 */
@@ -118,13 +123,16 @@ emalloc(size_t nb)
 
 	if ((p = malloc(nb)) == NULL)
 		err(1, "malloc");
+
 	return p;
 }
 
 static void
 usage(void)
 {
-	fprintf(stderr, "usage: %s [-b backlog] [-s sockfile]\n", argv0);
+	fprintf(stderr, "usage: %1$s [-b backlog] [-s sockfile]\n"
+	    "       %1$s [-i [-p port]] [-b backlog] [-s sockfile] hostname\n"
+	    "       %1$s [-i [-p port]] [-b backlog] [-s sockfile] ipv4_addr\n", argv0);
 	exit(1);
 }
 
@@ -133,14 +141,22 @@ main(int argc, char *argv[])
 {
 	struct foo *f;
 	struct sockaddr_un sun;
+	struct sockaddr_in sin;
+	struct hostent *hp;
 	struct sigaction sa;
 	char *sockfile = "/tmp/cool.sock";
 	int sfd;
 	int backlog = 10;
+	int port = 9999;
+	int iflag, uflag, sockflags;
 	char ch;
 
 	argv0 = *argv;
-	if ((ch = getopt(argc, argv, "b:s:")) != -1) {
+	/* Run on the UNIX domain by default. */
+	uflag = 1;
+	iflag = 0;
+
+	while ((ch = getopt(argc, argv, "b:ip:s:")) != -1) {
 		switch (ch) {
 		case 'b':
 			/* 
@@ -154,6 +170,16 @@ main(int argc, char *argv[])
 			if ((backlog = atoi(optarg)) < 1)
 				usage();
 			break;
+		case 'i':
+			/* Run the server on the internet domain. */
+			iflag = 1;
+			uflag = 0;
+			break;
+		case 'p':
+			/* Choose custom port but don't use a well-known port. */
+			if ((port = atoi(optarg)) < 1024)
+				errx(1, "can't use port number < 1024");
+			break;
 		case 's':
 			sockfile = optarg;
 			break;
@@ -165,30 +191,65 @@ main(int argc, char *argv[])
 	argc -= optind;
 	argv += optind;
 
+	/* 
+	 * If we're on the internet domain, we also need a hostname 
+	 * or an IPv4 address. 
+	 */
+	if (iflag && argc < 1)
+		usage();
 	/*
 	 * Handle termination signals so we don't exit abnormally
 	 * (i.e without cleaning up resources).
 	 */
 	(void)memset(&sa, 0, sizeof(sa));
-	(void)sigemptyset(&sa.sa_mask);
+	(void)sigfillset(&sa.sa_mask);
 	sa.sa_handler = sighandler;
-	sa.sa_flags = SA_RESTART;
-	/* FIXME*/
-	/*if (sigaction(SIGHUP, &sa, NULL) < 0)*/
-		/*err(1, "sigaction: SIGHUP");*/
-	/*if (sigaction(SIGINT, &sa, NULL) < 0)*/
-		/*err(1, "sigaction: SIGINT");*/
-	/*if (sigaction(SIGTERM, &sa, NULL) < 0)*/
-		/*err(1, "sigaction: SIGTERM");*/
+	if (sigaction(SIGINT, &sa, NULL) < 0)
+		err(1, "sigaction(SIGINT)");
+	if (sigaction(SIGTERM, &sa, NULL) < 0)
+		err(1, "sigaction(SIGTERM)");
 
-	if ((sfd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0)
-		err(1, "socket");
-	(void)memset(&sun, 0, sizeof(sun));
-	sun.sun_family = AF_UNIX;
-	(void)strncpy(sun.sun_path, sockfile, sizeof(sun.sun_path) - 1);
+	/* Set up the socket for use in the Internet domain. */
+	if (iflag) {
+		if ((sfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+			err(1, "socket(AF_INET)");
+		(void)memset(&sin, 0, sizeof(sin));
+		sin.sin_family = AF_INET;
+		/* Convert the port number to network bytes. */
+		sin.sin_port = htons(port);
+		/* 
+		 * We'll try and see if the input is an IPv4 address. If
+		 * inet_aton(3) does not fail, the user passed an IPv4 address.
+		 * However if inet_addr(3) fail, we'll assume the user passed
+		 * an hostname. That lets us use both hostnames and IPv4
+		 * addresses as arguments.
+		 */
+		if (!inet_aton(*argv, &sin.sin_addr)) {
+			/* Get host info */
+			if ((hp = gethostbyname(*argv)) == NULL)
+				errx(1, "gethostbyname(%s) failed", *argv);
+			/* `hp->h_addr` has the host's IPv4 address. */
+			(void)memcpy(&sin.sin_addr, hp->h_addr, hp->h_length);
+		}
+		if (bind(sfd, (struct sockaddr *)&sin, sizeof(sin)) < 0)
+			err(1, "bind");
 
-	if (bind(sfd, (struct sockaddr *)&sun, sizeof(sun)) < 0)
-		err(1, "bind");
+		printf("Socket: %s\nDomain: AF_INET\nIPv4: %s\n"
+		    "Port: %d\nBacklog: %d\n", 
+		    sockfile, inet_ntoa(sin.sin_addr), port, backlog);
+	/* Set up the socket for use in the UNIX domain. */
+	} else if (uflag) {
+		if ((sfd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0)
+			err(1, "socket(AF_UNIX)");
+		(void)memset(&sun, 0, sizeof(sun));
+		sun.sun_family = AF_UNIX;
+		(void)strncpy(sun.sun_path, sockfile, sizeof(sun.sun_path) - 1);
+		if (bind(sfd, (struct sockaddr *)&sun, sizeof(sun)) < 0)
+			err(1, "bind");
+
+		printf("Socket: %s\nDomain: AF_UNIX\nBacklog: %d\n",
+		    sockfile, backlog);
+	}
 	if (listen(sfd, backlog) < 0)
 		err(1, "listen");
 
@@ -197,7 +258,7 @@ main(int argc, char *argv[])
 	f->ntotal = 0;
 
 	for (;;) {
-		/* FIXME: blocked by accept(2) */
+		/* We caught a termination signal. */
 		if (f_quit)
 			break;
 		/*
@@ -207,6 +268,10 @@ main(int argc, char *argv[])
 		if ((f->cfd = accept(sfd, NULL, NULL)) < 0)
 			continue;
 		printf("[%s] accepted client: %d\n", argv0, f->cfd);
+		/* 
+		 * Create a child process to serve the client so the parent can
+		 * continue waiting for another client to serve.
+		 */
 		switch (fork()) {
 		case -1:
 			err(1, "fork");
@@ -219,17 +284,11 @@ main(int argc, char *argv[])
 		}
 
 	}
-
 	/* Will get here only if a termination signal is caught. */
 	(void)close(f->cfd);
 	(void)close(sfd);
-	free(f);
-	/*
-	 * bind(2)'s man page states that the socket should be deleted when
-	 * it's no longer needed, otherwise it'll stay there even after
-	 * we exit.
-	 */
 	(void)unlink(sockfile);
+	free(f);
 
 	return 0;
 }
