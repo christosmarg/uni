@@ -11,11 +11,17 @@
 \usepackage[margin=0.5in]{geometry}
 \usepackage[backend=bibtex]{biblatex}
 
-\lstset{basicstyle=\footnotesize\ttfamily,breaklines=true}
+\lstset {
+        basicstyle=\ttfamily,
+        columns=fullflexible,
+        breaklines=true,
+        keepspaces=true,
+	showstringspaces=false
+}
 
 \title{Εργαστήριο Ασφάλειας στην Τεχνολογία της Πληροφορίας -- Εργασία 1}
 \author{Χρήστος Μαργιώλης -- 19390133}
-\date{Απρίλιος 2022}
+\date{Απρίλιος 2023}
 
 \begin{document}
 
@@ -36,252 +42,81 @@
 \tableofcontents
 \pagebreak
 
-\section{Δομή αρχείων}
+\section{Δραστηριότητα 1: Ανάπτυξη και δοκιμή του shellcode}
 
-\subsection{Αρχεία C}
+Αρχικά απενεργοποιούμε το ASLR: \\
 
-Ο κώδικας C, για δική μου διευκόλυνση στην δοκιμή διαφόρων εισόδων, περιέχει και
-ρουτίνες διαβάσματος αρχείων, πέρα από την επίλυση των προβλημάτων. Τα περισσότερα
-προγράμματα χρησιμοποιούνται σε συνδυασμό με κάποιο από τα scripts που αναλύονται
-παρακάτω. Αυτό προσθέτει μεν πολυπλοκότητα, αλλά κάνει τα προγράμματα πιο ευέλικτα.
-Σε κάθε δραστηριότητα εξηγώ πως πρέπει να τρέξουμε το πρόγραμμα.
+\includegraphics[width=\textwidth]{res/aslr.png} \\
 
-\subsection{Scripts}
+Γράφουμε το πρόγραμμα \lstinline{shellcode.c}:
 
-Υπάρχουν τα εξής 3 βοηθητικά scripts:
-\begin{itemize}
-	\item \lstinline{atoh}: Μετατρέπει ένα string από ASCII σε Hex.
-	\item \lstinline{htoa}: Μετατρέπει ένα string από Hex σε ASCII.
-	\item \lstinline{tests}: Αναδεικνύει/αυτοματοποιεί την λειτουργία
-		όλων των προγραμμάτων.
-\end{itemize}
+\lstinputlisting[language=c]{../src/shellcode.c}
 
-\subsection{Αρχεία δεδομένων}
+Κάνουμε compile και το τρέχουμε: \\
 
-Στο directory \lstinline{src/dat} βρίσκονται αρχεία δεδομένων που
-χρησιμοποιούνται από τα προγράμματα. 'Ολα τα αρχεία ακολουθούν την ονομασία
-\lstinline{<program>.in} όπου \lstinline{program} το όνομα του προγράμματος που
-το χρησιμοποιεί. Προκειμένου να αποφευχθεί τυχόν περιττή πολυπλοκότητα, τα
-προγράμματα δεν κάνουν ελέγχους εγκυρότητας των αρχείων εισόδου.
+\includegraphics[width=\textwidth]{res/shellcode.png} \\
 
-\subsection{Makefile}
+Μετατρέπουμε το πρόγραμμα σε setuid: \\
 
-Το \lstinline{Makefile} διαθέτει τις παρακάτω επιλογές:
-\begin{itemize}
-	\item \lstinline{make}: Κάνει compile όλα τα προγράμματα.
-	\item \lstinline{make clean}: Σβήνει τα εκτελέσιμα αρχεία που έχουν
-		παραχθεί.
-\end{itemize}
+\includegraphics[width=\textwidth]{res/chownshellcode.png} \\
 
-\section{Δραστηριότητα 1: Δημιουργία ιδιωτικού κλειδιού}
+Παράκαμψη αντιμέτρου \lstinline{/bin/sh} δημιουργώντας symbolic link με το
+\lstinline{/bin/zsh} και επανεκτέλεση του προγράμματος: \\
 
-Κώδικας: \lstinline{priv.c} \\
-Χρήση: \lstinline{priv [-v] input} \\
+\includegraphics[width=\textwidth]{res/zshshellcode.png} \\
 
-Για να δημιουργήσουμε ένα ιδιωτικό κλειδί RSA, πρέπει αρχικά να υπολογίσουμε
-την συνάρτηση:
-\[\phi(n) = (p-1)(q-1)\]
-Στην συνέχεια, θα υπολογίσουμε την εξίσωση:
-\[e \cdot d \mod \phi(n) = 1\]
-Λύνοντας ως προς $d$. Ο υπολογισμός του ιδιωτικού κλειδιού μέσα στο πρόγραμμα
-γίνεται με τις εξής εντολές: \\
+\section{Δραστηριότητα 2: Ανάπτυξη του ευπαθούς προγράμματος}
 
-\begin{lstlisting}[language=C]
-	...
-	BN_dec2bn(&one, "1");
-	BN_sub(foo, p, one);
-	BN_sub(bar, q, one);
-	BN_mul(phi, foo, bar, ctx);
-	BN_mod_inverse(d, e, phi, ctx);
-\end{lstlisting}
+\lstinputlisting[language=c]{../src/stack.c}
 
-Το πρόγραμμα, όταν το τρέξουμε απλώς με το αρχείο εισόδου, τυπώνει το
-ιδιωτικό κλειδί. Αν του δώσουμε και την επιλογή \lstinline{-v}, τυπώνει
-αναλυτικά τα $e$, $n$ και $d$. Η επιλογή αυτή είναι χρήσιμη για την
-παραγωγή του αρχείου εισόδου που χρησιμοποιείται για την κρυπτογράφηση
-μηνυμάτων.
+Κάνουμε compile και το τρέχουμε: \\
 
-Ενδεικτικά τρεξίματα: \\
+\includegraphics[width=\textwidth]{res/stack.png} \\
 
-\begin{lstlisting}
-	$ ./priv dat/priv.in
-	63F67E805D8DEB0B4182C57C3DC24F3C1350CF182E8ABF85FD24062A3BC7F2EB
+\section{Δραστηριότητα 3: Δημιουργία του αρχείου εισόδου (badfile)}
 
-	$ ./priv -v dat/priv.in
-	e: 0D88C3
-	n: 71D9BBC5C01F9B50DDFE5F2EC331FAB21081009D014E9615C277670C61591ECF
-	d: 63F67E805D8DEB0B4182C57C3DC24F3C1350CF182E8ABF85FD24062A3BC7F2EB
-\end{lstlisting}
+\lstinputlisting[language=c]{../src/exploit.c}
 
-\section{Δραστηριότητα 2: Κρυπτογράφηση μηνύματος}
+Κάνουμε compile και τρέχουμε το πρόγραμμα ώστε να παραχθεί το αρχείο εισόδου: \\
 
-Κώδικας: \lstinline{encrypt.c} \\
-Χρήση: \lstinline{./atoh 'msg' | encrypt input} \\
+\includegraphics[width=\textwidth]{res/exploit.png} \\
 
-Η κρυπτογράφηση ενός μηνύματος γίνεται με τον τύπο:
-\[C = P^e \mod n\]
-Και η αποκρυπτογράφηση του:
-\[P = C^d \mod n\]
+Αναλύουμε τα περιεχόμενα του badfile μέσω του προγράμματος hexdump: \\
 
-Η συνάρτηση OpenSSL για την πράξη αυτή είναι η \lstinline{BN_mod_exp()}. Οι
-παρακάτω εντολές στον κώδικα εκτελούν την (απο)κρυπτογράφηση: \\
+\includegraphics[width=\textwidth]{res/hexdump.png} \\
+
+\section{Δραστηριότητα 4: Εύρεση της διεύθυνσης του shellcode μέσα στο badfile}
+
+Κάνουμε compile το πρόγραμμα δίνοντας την επιλογή \lstinline{-g} ώστε να
+παραχθει debug δεδομένα τα οποία θα χρησιμοποιηθούν από τον GDB: \\
+
+\includegraphics[width=\textwidth]{res/stack_gdb.png} \\
+
+Βάζουμε breakpoint στην συνάρτηση \lstinline{bof()} και τρέχουμε το πρόγραμμα στον
+GDB: \\
+
+\includegraphics[width=\textwidth]{res/gdb1.png} \\
+
+Τυπώνουμε τις διευθύνσεις του buffer, καθώς και του καταχωρητή \lstinline{ebp}
+και τέλος υπολογίζουμε την απόστασή τους: \\
+
+\includegraphics[width=\textwidth]{res/gdb2.png} \\
+
+\section{Δραστηριότητα 5: Προετοιμασία του αρχείου εισόδου}
+
+Τροποποιούμε τον κώδικα του \lstinline{exploit.c} ώστε να δείχνει στην σωστή
+διεύθυνση μνήμης (το offset \lstinline{0x60} προέκυψε μετά από δοκιμές):
 
 \begin{lstlisting}[language=C]
-	...
-	/* Encrypt message */
-	BN_mod_exp(encrstr, str, e, n, ctx);
-	/* Decrypt message */
-	BN_mod_exp(decrstr, encrstr, d, n, ctx);
+	*((long *)(buf + 0x24)) = 0xbfffeb48 + 0x60;
 \end{lstlisting}
 
-Παρακάτω φαίνεται ένα ενδεικτικό τρέξιμο. Το μήνυμα μετατρέπεται σε Hex με την
-χρήση του \lstinline{atoh} script. Αξίζει να σημειωθεί ότι στην υλοποίησή μου,
-τα $e$, $n$ και $d$ υπολογίζονται από το \lstinline{priv.c} και
-χρησιμοποιούνται κατευθείαν από το \lstinline{encrypt.c} ώστε να αποφευχθεί η
-επανάληψη κώδικα, εξ'ου και η χρήση του \lstinline{priv} στην αρχή: \\
+Μεταγλωττίζουμε και ελέγχουμε το νέο badfile: \\
 
-\begin{lstlisting}
-	$ ./priv -v dat/priv.in | awk '{print $2}' > dat/encrypt.in
-	$ ./atoh 'Christos Margiolis' | ./encrypt dat/encrypt.in
-	received: 69726843736F747372614D206C6F69677369
-	encrypted: 192FDF7BCA2F402253E344F1A25476D4276523750DED4BE6FC058F179219BA6D
-	decrypted: 69726843736F747372614D206C6F69677369
-\end{lstlisting}
+\includegraphics[width=\textwidth]{res/offset.png} \\
 
-\section{Δραστηριότητα 3: Αποκρυπτογράφηση μηνύματος}
+\section{Δραστηριότητα 6: Εκτέλεση της επίθεσης}
 
-Κώδικας: \lstinline{decrypt.c} \\
-Χρήση: \lstinline{decrypt input | htoa} \\
-
-'Οπως και στην δραστηριότητα 3, χρησιμοποιείται ο ίδιος τύπος για την
-αποκρυπτογράφηση ενός μηνύματος. Η υλοποίηση είναι η ίδια, με την διαφορά ότι
-τα δεδομένα εισόδου είναι διαφορετικά. Το πρόγραμμα τυπώνει το
-αποκρυπτογραφημένο μήνυμα σε Hex, οπότε διοχετεύουμε την έξοδό του στο
-\lstinline{htoa} script ώστε να μετατραπεί σε ASCII: \\
-
-\begin{lstlisting}
-	$ ./decrypt dat/decrypt.in | ./htoa
-	INFOSEC Spring 2022
-\end{lstlisting}
-
-\section{Δραστηριότητα 4: Υπογραφή μηνύματος}
-
-Κώδικας: \lstinline{sign.c} \\
-Χρήση: \lstinline{atoh 'msg' | sign input} \\
-
-Η υπογραφή ενός μηνύματος γίνεται με τον τύπο:
-\[S = H(P)^d \mod n\]
-
-Στον κώδικα, υλοποίηση είναι γίνεται ως εξής: \\
-\begin{lstlisting}[language=C]
-	...
-	BN_mod_exp(sign, str, d, n, ctx);
-\end{lstlisting}
-
-Στο παρακάτω ενδεικτικό τρέξιμο, παρατηρούμε ότι μία πολύ μικρή αλλαγή στο
-μήνυμα θα παράξει τελείως διαφορετική υπογραφή, οπότε είμαστε και σίγουροι ότι
-τα μηνύματα δεν ήτανε ίδια: \\
-
-\begin{lstlisting}
-	$ ./atoh 'This is a message' | ./sign dat/decrypt.in
-	96798DC95A5ECBBEF35D6D68588157CA2DAD163B45453B4B6D80FCC3BE15E8ED
-
-	$ ./atoh 'This iz a message' | ./sign dat/decrypt.in
-	D7562984FFA684E2850A2763F4DD1DA045EFD2DB4CFBF6F40E6579F3E3AD9536
-\end{lstlisting}
-
-\section{Δραστηριότητα 5: Επαλήθευση υπογραφής}
-
-Η επαλήθευση της υπογραφής γίνεται με τον τύπο:
-\[Digest = S^e \mod n\]
-
-Στον κώδικα, υλοποίηση είναι γίνεται ως εξής: \\
-\begin{lstlisting}[language=C]
-	...
-	BN_mod_exp(str, sign, e, n, ctx);
-\end{lstlisting}
-
-\subsection{Περίπτωση Α}
-
-Αρχικά θα δώσουμε ως είσοδο την έγκυρη υπογραφή:
-
-\begin{lstlisting}
-	$ ./verify dat/verify1_cor.in
-	e: 010001
-	n: AE1CD4DC432798D933779FBD46C6E1247F0CF1233595113AA51B450F18116115
-	sign: 643D6F34902D9C7EC90CB0B2BCA36C47FA37165C0005CAB026C0542CBDB6802F
-	str: 4C61756E63682061206D697373696C652E
-
-	$ ./verify dat/verify1_cor.in | tail -1 | awk '{print $2}' | ./htoa
-	Launch a missile.
-\end{lstlisting}
-
-'Οταν αλλάξουμε το τελευταίο byte της υπογραφής, παρατηρούμε ότι η επαλήθευση
-δεν είναι έγκυρη:
-
-\begin{lstlisting}
-	$ ./verify dat/verify1_inc.in
-	e: 010001
-	n: AE1CD4DC432798D933779FBD46C6E1247F0CF1233595113AA51B450F18116115
-	sign: 643D6F34902D9C7EC90CB0B2BCA36C47FA37165C0005CAB026C0542CBDB6803F
-	str: 91471927C80DF1E42C154FB4638CE8BC726D3D66C83A4EB6B7BE0203B41AC294
-
-	$ ./verify dat/verify1_cor.in | tail -1 | awk '{print $2}' | ./htoa
-	??,O?c??rm=f?:N?????
-\end{lstlisting}
-
-\subsection{Περίπτωση Β}
-
-Από το παρακάτω τρέξιμο, βλέπουμε ότι η υπόγραφη είναι πράγματι της Alice:
-
-\begin{lstlisting}
-	$ ./verify dat/verify2.in
-	e: 010001
-	n: DCBFFE3E51F62E09CE7032E2677A78946A849DC4CDDE3A4D0CB81629242FB1A5
-	sign: DB3F7CDB93483FC1E70E4EACA650E3C6505A3E5F49EA6EDF3E95E9A7C6C7A320
-	str: 506C65617365207472616E73666572206D652024323030302E416C6963652E
-
-	$ ./verify dat/verify2.in | tail -1 | awk '{print $2}' | ./htoa
-	Please transfer me $2000.Alice.
-\end{lstlisting}
-
-\section{Δραστηριότητα 6: Μη-αυτόματη επαλήθευση πιστοποιητικού X.509}
-
-Κατεβάζουμε το πιστοποιητικό της ιστοσελίδας margiolis.net:
-\begin{lstlisting}
-	$ openssl s_client -connect margiolis.net:443 -showcerts \
-		</dev/null 2>/dev/null | openssl x509 -outform pem > dat/c0.pem
-\end{lstlisting}
-
-Εξάγουμε το $e$:
-\begin{lstlisting}
-	$ openssl x509 -in dat/c0.pem -text -noout | grep 'Exponent' |
-		awk '{print $3}' | sed 's/(//;s/)//;s/0x//' > dat/cert.in
-\end{lstlisting}
-
-Εξάγουμε το $n$:
-\begin{lstlisting}
-	$ openssl x509 -in dat/c0.pem -noout -modulus |
-		sed 's/Modulus=//' >> dat/cert.in
-\end{lstlisting}
-
-Εξάγουμε την υπογραφή:
-\begin{lstlisting}
-	$ openssl x509 -in dat/c0.pem -text -noout \
-		-certopt ca_default -certopt no_validity \
-		-certopt no_serial -certopt no_subject \
-		-certopt no_extensions -certopt no_signame |
-		sed 1d | tr -d '[:space:]:' | sha256 >> dat/cert.in
-\end{lstlisting}
-
-Τέλος, επαληθεύουμε το πιστοποιητικό (το output είναι πολύ μεγάλο για να
-συμπεριληφθεί ολόκληρο):
-\begin{lstlisting}
-	$ ./verify dat/cert.in
-	e: 010001
-	n: B8CF8F..........1AE7F0DE351B
-	sign: E8230B...........AC59DF719
-	str: 46F35C99.........5034620EF8149AE
-\end{lstlisting}
+\includegraphics[width=\textwidth]{res/attack.png} \\
 
 \end{document}
