@@ -12,27 +12,27 @@ int lineno = 1;
 %}
 
 DELIM		[ \t]+
+KEYWORD		deffacts|defrule|test|bind|read|printout
+OPERATOR	=|\+|-|\*|\/
 INT		0|[+-]?[1-9]+[0-9]*
 FLOAT		[+-]?[0-9]+((\.[0-9]+)([eE][+-]?[0-9]*)?|([eE][+-]?[0-9]*)?)
 STR		\"[^\"\\]*(?:\\.[^\"\\]*)*\"
 DEFIN		[A-Za-z]+[A-Za-z0-9_-]*
 VAR		\?[A-Za-z0-9]+
 COMMENT		;.*
-KEYWORD		deffacts|defrule|test|bind|read|printout
-OPERATOR	=|\+|-|\*|\/
 UNKNOWN		[^ {DELIM}\n]+
-%%
 
+%%
 {DELIM}		{ /* ignore whitespace */ }
+{KEYWORD}	{ return TOK_KEYWORD; }
+{OPERATOR}	{ return TOK_OPERATOR; }
 {INT}		{ return TOK_INT; }
 {FLOAT}		{ return TOK_FLOAT; }
 {STR}		{ return TOK_STR; }
 {DEFIN}		{ return TOK_DEFIN; }
 {VAR}		{ return TOK_VAR; }
-{COMMENT}	{ /* skip comments */ }
-{KEYWORD}	{ return TOK_KEYWORD; }
-{OPERATOR}	{ return TOK_OPERATOR; }
 {UNKNOWN}	{ return TOK_UNKNOWN; }
+{COMMENT}	{ /* skip comments */ }
 \n		{ lineno++; }
 <<EOF>>		{ printf("EOF\n"); exit(0); }
 %%
@@ -63,7 +63,7 @@ main(int argc, char *argv[])
 		err(1, "fopen(%s)", argv[2]);
 
 	while ((tok = yylex()) >= 0) {
-		fprintf(yyout, "line: %d\ttoken=%s\tval='%s'\n",
+		fprintf(yyout, "line: %5d\ttoken=%s\tval='%s'\n",
 		    lineno, tokens[tok-1], yytext);
 	}
 
