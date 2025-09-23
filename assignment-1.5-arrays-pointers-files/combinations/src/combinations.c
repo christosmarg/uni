@@ -28,7 +28,7 @@ int get_k(int N)
 
     do
     {
-        printf("N (6 < N <= 49): ");
+        printf("K: ");
         scanf("%d", &K);
     } while (K > N || K < 0);
 
@@ -58,25 +58,14 @@ int *fill_array(int N)
 
             if (num >= 1 && num <= 49)
             {
-                if (i == 0)
-                {
-                    *(arr + i) = num;
-                    i++;
-                }
+                if (i == 0) { *(arr + i) = num; i++; }
                 else
                 {
-                    if (!exists_in_array(arr, N, num))
-                    {
-                        *(arr + i) = num;
-                        i++;
-                    }
-                    else
-                        printf("Give a different number.\n");
+                    if (!exists_in_array(arr, N, num)) { *(arr + i) = num; i++; }
+                    else printf("Give a different number.\n");
                 }
             }
-            else
-                printf("Give a number in [1, 49].\n");
-                
+            else printf("Give a number in [1, 49].\n");
         } while (i < N);
     }
 
@@ -130,17 +119,18 @@ void y_pair(int *y1, int *y2)
 
 void combinations(int *arr, int x1, int x2, int y1, int y2)
 {
-    int i, j, temp;
+    int i, j, k, l, m, n;
 
-    for (i = 1; i <= COMBSN; i++)
-    {
-        for (j = 0; j < COMBSN-1; j++) 
-        {
-            temp = *(arr + j);
-            *(arr + j) = *(arr + j + 1);
-            *(arr + j + 1) = temp;
-	    }
-    }
+    for (i=0; i < COMBSN-5; i++)
+        for (j = i+1; j < COMBSN-4; j++)
+            for (k = j+1; k < COMBSN-3; k++)
+                for (l = k+1; l < COMBSN-2; l++)
+                    for (m= l+1; m < COMBSN-1; m++)
+                        for (n = m+1; n < COMBSN; n++)
+                        {
+                            printf("%d %d %d %d %d %d", *(arr + i), *(arr + j), *(arr + k), *(arr + l), *(arr + m), *(arr + n));
+                            printf("\n");
+                        }
 }
 
 
