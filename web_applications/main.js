@@ -15,18 +15,16 @@ const pics = [
 	"water2.png",
 	"water3.png",
 	"yinyang.png",
-];
+].filter(s => s.startsWith(element));
 
 var p_phrase = document.createElement("p");
 var p_element = document.createElement("p");
 var img = document.createElement("img");
 
-p_phrase.innerHTML = "<p><big>Phrase: " + phrase + "</big></p>";
-p_element.innerHTML = "<p><big>Element: " + element + "</big></p>";
-img.src = "res/" + pics[Math.floor(Math.random() *
-    (pics.filter(s => s.startsWith(element)).length))];
+p_phrase.innerHTML = "Phrase: " + phrase;
+p_element.innerHTML = "Element: " + element;
+img.src = "res/" + pics[Math.floor(Math.random() * pics.length)];
 img.style = "width: 50%; border: 8px solid black;";
-
 
 document.getElementById("topright").style.transform =
     "rotate(" + (phrase.length * 10) % 360 + "deg)";

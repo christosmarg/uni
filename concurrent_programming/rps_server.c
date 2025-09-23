@@ -12,10 +12,28 @@
 #include <string.h>
 #include <unistd.h>
 
-static void usage(void);
+static int srv(int);
 static void sighandler(int);
+static void usage(void);
 
 static volatile sig_atomic_t f_quit = 0;
+
+static int
+srv(int fd)
+{
+	int quit;
+
+	for (;;) {
+		if (recv(fd, &quit, sizeof(quit), 0) < 0)
+			break;
+		if (quit) {
+			printf("%s(): quit triggered\n", __func__);
+			break;
+		}
+	}
+
+	return (0);
+}
 
 static void
 sighandler(int sig)
@@ -40,6 +58,7 @@ main(int argc, char *argv[])
 	int backlog = 10;
 	int port = 9999;
 	int sfd;
+	int cfd;
 	int ch;
 
 	while ((ch = getopt(argc, argv, "b:p:")) != -1) {
@@ -121,10 +140,30 @@ main(int argc, char *argv[])
 		/* We caught a termination signal. */
 		if (f_quit)
 			break;
+		if ((cfd = accept(sfd, NULL, NULL)) < 0)
+			continue;
+		printf("[%s] client connected: %d\n", getprogname(), cfd);
+		/* 
+		 * Create a child process to serve the client so the parent can
+		 * continue waiting for another client to serve.
+		 */
+		switch (fork()) {
+		case -1:
+			err(1, "fork");
+		case 0:
+			if (srv(cfd) < 0)
+				warnx("srv failed");
+			printf("[%s] client disconnected: %d\n",
+			    getprogname(), cfd);
+			_exit(0);
+		default:
+			close(cfd);
+		}
 	}
 
 	/* Will get here only if a termination signal is caught. */
 	close(sfd);
+	close(cfd);
 
 	return (0);
 }

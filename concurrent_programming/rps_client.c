@@ -1,9 +1,17 @@
 #include <err.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <netinet/in.h>
+
 #include <locale.h>
 #include <ncurses.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #define ARRLEN(x)	(sizeof(x) / sizeof(x[0]))
 
@@ -17,8 +25,10 @@ static void cmd_play(char *);
 static void cmd_msg(char *);
 static void cmd_list(char *);
 static void cmd_quit(char *);
+static void cmd_help(char *);
 static int init_curses(void);
 static struct command *parse_command(char **);
+static void usage(void);
 
 static struct command commands[] = {
 	{ "challenge",	cmd_challenge },	/* /challenge <name|id> */
@@ -26,11 +36,13 @@ static struct command commands[] = {
 	{ "msg",	cmd_msg },		/* /msg <message> */
 	{ "list",	cmd_list },		/* /list */
 	{ "quit",	cmd_quit },		/* /quit */
+	{ "help",	cmd_help },		/* /help */
 };
 
 static int ymax;
 static int xmax;
-static volatile bool f_quit = false;
+static int f_quit = 0;
+static int fd;
 
 static void
 cmd_challenge(char *args)
@@ -54,10 +66,24 @@ cmd_list(char *args)
 {
 }
 
+/* TODO return int... */
 static void
 cmd_quit(char *args)
 {
-	f_quit = true;
+	f_quit = 1;
+	if (send(fd, &f_quit, sizeof(f_quit), 0) < 0)
+		;	/* TODO */
+}
+
+static void
+cmd_help(char *args)
+{
+	printf("Available commands:\n");
+	printf("/challenge <id|name>\t\tChallenge a player\n");
+	printf("/play <rock|paper|scisssor>\tMake a move\n");
+	printf("/msg <message>\t\t\tSend a message to the global chat\n");
+	printf("/quit\t\t\t\tQuit the game\n");
+	printf("/help\t\t\t\tShow this help message\n");
 }
 
 static int
@@ -141,7 +167,8 @@ parse_command(char **args)
 	for (i = 0; i < ARRLEN(commands); i++) {
 		if (strncmp(cmd, commands[i].name,
 		    strlen(commands[i].name)) == 0) {
-			*args = strdup(*args);
+			if (*args != NULL)
+				*args = strdup(*args);
 			return (&commands[i]);
 		}
 	}
@@ -150,14 +177,54 @@ parse_command(char **args)
 	return (NULL);
 }
 
+static void
+usage(void)
+{
+	fprintf(stderr, "usage: %1$s [-p port] <hostname|ipv4_addr>\n",
+	    getprogname());
+	exit(1);
+}
+
 int
 main(int argc, char *argv[])
 {
+	struct sockaddr_in sin;
+	struct hostent *hp;
 	struct command *cmd;
 	char *args;
+	int port = 9999;
+	int ch;
 
-	/* TODO command line network options */
-	/* TODO signals */
+	while ((ch = getopt(argc, argv, "p:")) != -1) {
+		switch (ch) {
+		case 'p':
+			if ((port = atoi(optarg)) < 1024)
+				errx(1, "cannot user port number < 1024");
+			break;
+		case '?':
+		default:
+			usage();
+		}
+	}
+	argc -= optind;
+	argv += optind;
+
+	if (argc < 1)
+		usage();
+
+	if ((fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+		err(1, "socket(AF_INET)");
+	memset(&sin, 0, sizeof(sin));
+	sin.sin_family = AF_INET;
+	sin.sin_port = htons(port);
+	if (!inet_aton(*argv, &sin.sin_addr)) {
+		if ((hp = gethostbyname(*argv)) == NULL)
+			errx(1, "gethostbyname(%s) failed", *argv);
+		memcpy(&sin.sin_addr, hp->h_addr, hp->h_length);
+	}
+	if (connect(fd, (struct sockaddr *)&sin, sizeof(sin)) < 0)
+		err(1, "connect");
+
 	/* TODO nickname selection (server keeps asking until unique) */
 
 	if (!setlocale(LC_ALL, ""))
@@ -174,8 +241,10 @@ main(int argc, char *argv[])
 			continue;
 		/* TODO connect to server */
 		cmd->func(args);
-		free(args);
+		if (args != NULL)
+			free(args);
 	}
+	close(fd);
 
 	/*(void)endwin();*/
 		
