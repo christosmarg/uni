@@ -1,29 +1,19 @@
 #include "student.h"
 
 Student::Student(const char *id, const std::string& name)
-	:id(convid(id)), name(name), semester(1), pcourses(0)
-{
-	nsc = 0;
-	sc = nullptr;
-}
+	:id(convid(id)), name(name), semester(1), pcourses(0),
+	sc(nullptr), nsc(0) {}
 
 Student::Student(const char *id, const std::string& name,
 		const unsigned int semester)
-	:id(convid(id)), name(name), semester(semester), pcourses(0)
-{
-	nsc = 0;
-	sc = nullptr;
-}
+	:id(convid(id)), name(name), semester(semester), pcourses(0),
+	sc(nullptr), nsc(0) {}
 
 Student::Student(const char *id, const std::string& name,
 		const unsigned int semester,
 		const unsigned int pcourses, const float *grades)
 	:id(convid(id)), name(name), semester(semester), pcourses(pcourses),
-	grades(convpsg(grades))
-{
-	nsc = 0;
-	sc = nullptr;
-}
+	grades(convpsg(grades)), sc(nullptr), nsc(0) {}
 
 Student::Student(const Student& s)
 	:name(s.name), semester(s.semester), pcourses(s.pcourses)
