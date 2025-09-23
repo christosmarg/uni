@@ -1,11 +1,5 @@
 #include "student.h"
 
-const int W_AM = 15;
-const int W_NAME = 20;
-const int W_SEM = 10;
-const int W_PC = 20;
-const int W_GRADES = 15;
-
 std::ostream& operator<< (std::ostream& stream, const Student& s);
 static void cont(void);
 static void constructor1(const Student& s1);
