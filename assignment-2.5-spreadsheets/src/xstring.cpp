@@ -182,6 +182,8 @@ xstring& xstring::append(const xstring& s, std::size_t i)
 		std::copy(tmp2, tmp2 + len - i + 1, str + s.len + i); 
 		len = length();
 		str[len] = '\0';
+		delete[] tmp1;
+		delete[] tmp2;
 	}
 	return *this;
 }
@@ -212,6 +214,8 @@ xstring& xstring::append(const char *s, std::size_t i)
 		std::copy(tmp2, tmp2 + len - i + 1, str + strlen(s) + i); 
 		len = length();
 		str[len] = '\0';
+		delete[] tmp1;
+		delete[] tmp2;
 	}
 	return *this;
 }
