@@ -102,11 +102,18 @@ DataHandler::import_data(const char *fpath)
 template<typename T> void
 DataHandler::dealloc(std::map<lab::xstring, T *>& vec)
 {
-	for (auto&& v : vec)
-		if (v.second != nullptr)
-			delete v.second;
 	if (!vec.empty())
+	{
+		for (auto&& v : vec)
+		{
+			if (v.second != nullptr)
+			{
+				delete v.second;
+				v.second = nullptr;	
+			}
+		}
 		vec.clear();
+	}
 }
 
 #endif /* DATA_HANDLER_H */

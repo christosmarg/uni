@@ -45,9 +45,21 @@ Student::Student(const Student& s)
 
 Student::~Student()
 {
-	if (this->AM != nullptr) delete[] this->AM;
-	if (this->grades != nullptr) delete[] this->grades;
-	if (this->sc != nullptr) delete[] this->sc;
+	if (this->AM != nullptr)
+	{
+		delete[] this->AM;
+		this->AM = nullptr;	
+	}
+	if (this->grades != nullptr)
+	{
+		delete[] this->grades;
+		this->grades = nullptr;	
+	}		
+	if (this->sc != nullptr)
+	{
+		delete[] this->sc;
+		this->sc = nullptr;
+	}
 }
 
 void

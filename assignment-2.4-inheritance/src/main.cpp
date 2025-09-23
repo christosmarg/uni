@@ -43,7 +43,7 @@ operator<< (std::ostream& stream, const AppSystem& sys)
 		std::left << std::setw(10) << "Online" <<
 		std::left << std::setw(25) << "Extensions" << std::endl << std::endl;
 	std::vector<App *> apps = sys.get_apps();
-	for (auto& app : apps)
+	for (const auto& app : apps)
 		app->print(stream);
 	return stream;	
 }
@@ -94,8 +94,8 @@ getapps(const AppSystem& sys)
 {
 	const std::vector<Office *>& fapps = sys.get_freeapps();
 	const std::vector<Game *>& ggames = sys.get_goodgames();
-	for (auto& fapp : fapps)
+	for (const auto& fapp : fapps)
 		std::cout << fapp->get_name() << std::endl;
-	for (auto& ggame : ggames)
+	for (const auto& ggame : ggames)
 		std::cout << ggame->get_name() << std::endl;
 }

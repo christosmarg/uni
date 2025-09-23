@@ -23,11 +23,22 @@ App::App(const App& a)
 
 App::~App()
 {
-	if (serialnum != nullptr) delete[] serialnum;
+	if (serialnum != nullptr)
+	{
+		delete[] serialnum;
+		serialnum = nullptr;	
+	}
 	if (!reviews.empty())
 	{
-		for (auto&& rev :reviews)
-			delete rev;
+		for (auto&& rev : reviews)
+		{
+			if (rev != nullptr)
+			{
+				// double free bug
+				delete rev;
+				rev = nullptr;
+			}
+		}
 		reviews.clear();
 	}
 }
