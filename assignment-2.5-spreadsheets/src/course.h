@@ -11,6 +11,9 @@ class Course
 
 	public:
 		Course(const lab::xstring& code, const lab::xstring& name);
+
+		const lab::xstring& get_code() const;
+		const lab::xstring& get_name() const;
 };
 
 #endif /* COURSE_H */

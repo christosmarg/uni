@@ -6,7 +6,6 @@
 #include <iostream>
 #include <string.h>
 
-// add more '\0' checks
 namespace lab {
 class xstring
 {
@@ -39,7 +38,7 @@ class xstring
 		bool operator>	(const char *s)		const;
 		bool operator>=	(const xstring& s)	const;
 		bool operator>=	(const char *s)		const;
-		char& operator[] (std::size_t i) const;
+		char& operator[] (std::size_t i)	const;
 		friend std::ostream& operator<< (std::ostream& stream, const xstring& s);
 		friend std::istream& operator>> (std::istream& stream, const xstring& s);
 
@@ -64,7 +63,6 @@ class xstring
 };
 
 std::istream& getline(std::istream& stream, xstring& s, char delim = '\n');
-
 template<typename T> xstring to_xstr(T val);
 template<typename T> xstring to_xstr(const char *fs, T val);
 template<typename T> const char *getformat();

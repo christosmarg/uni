@@ -183,7 +183,20 @@ xstring& xstring::append(const xstring& s)
 
 xstring& xstring::append(const xstring& s, std::size_t i)
 {
-
+	if (!s.empty() && i < len)
+	{
+		char *tmp1 = new char[i + 1];
+		char *tmp2 = new char[len - i + 1];
+		std::copy(str, str + i + 1, tmp1);
+		std::copy(str + i, str + len + 1, tmp2);
+		resize(s.len);
+		std::copy(tmp1, tmp1 + i + 1, str);
+		std::copy(s.str, s.str + s.len + 1, str + i);
+		std::copy(tmp2, tmp2 + len - i + 1, str + s.len + i); 
+		len = size();
+		str[len] = '\0';
+	}
+	return *this;
 }
 
 xstring& xstring::append(const char *s)
@@ -194,7 +207,20 @@ xstring& xstring::append(const char *s)
 
 xstring& xstring::append(const char *s, std::size_t i)
 {
-
+	if (!strempty(s) && i < len)
+	{
+		char *tmp1 = new char[i + 1];
+		char *tmp2 = new char[len - i + 1];
+		std::copy(str, str + i + 1, tmp1);
+		std::copy(str + i, str + len + 1, tmp2);
+		resize(strlen(s));
+		std::copy(tmp1, tmp1 + i + 1, str);
+		std::copy(s, s + strlen(s) + 1, str + i);
+		std::copy(tmp2, tmp2 + len - i + 1, str + strlen(s) + i); 
+		len = size();
+		str[len] = '\0';
+	}
+	return *this;
 }
 
 xstring& xstring::append(char c)
@@ -211,6 +237,7 @@ char *xstring::cstr() const
 char& xstring::last() const
 {
 	if (!this->empty()) return str[len-1];
+	else return str[0];
 }
 
 std::size_t xstring::size()
