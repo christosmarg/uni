@@ -32,9 +32,6 @@ class AppSystem
                 const std::string& appname,
                 T element,
                 void(U::*func)(T));
-        void chgenre    (const std::string& appname, const std::string& genre);
-        void chonline   (const std::string& appname, bool online);
-        void chexts     (const std::string& appname, const std::vector<std::string> exts);
         void removebad  (Manufacturer *man);
         void removebad  (const char *manfname);
         
