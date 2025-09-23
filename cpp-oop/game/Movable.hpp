@@ -18,6 +18,7 @@ public:
 	void set_newpos(int dir, int xmax, int ymax);
 	int get_x();
 	int get_y();
+	int get_dir();
 	char get_sym();
 };
 

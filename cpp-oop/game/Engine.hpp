@@ -1,11 +1,13 @@
 #ifndef _ENGINE_HPP_
 #define _ENGINE_HPP_
 
+#include <cmath>
 #include <csignal>
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
 #include <fstream>
+#include <map>
 #include <string>
 #include <vector>
 
@@ -29,7 +31,7 @@ private:
 	std::vector<std::vector<char>> map;
 	std::vector<int> colors;
 	Potter *player;
-	Score score;
+	Score *score;
 	WINDOW *gw;
 	int xmax;
 	int ymax;
@@ -45,6 +47,7 @@ public:
 	~Engine();
 
 	void kbd_input();
+	void enemies_move();
 	void collisions();
 	void upd_score();
 	void redraw();
@@ -53,10 +56,12 @@ public:
 private:
 	bool load_map(const char *mapfile);
 	bool init_curses();
+	void calc_pos(int *x, int *y);
 	bool init_entities();
 	bool init_score(const char *scorefile);
-	void calc_pos(int *x, int *y);
-	void menuopts();
+	bool collides_with_wall(int x, int y);
+	void ctrl_menu();
+	void calc_dist(std::map<int, int>& dists, int ex, int ey, int dir);
 };
 
 #endif /* _ENGINE_HPP_ */

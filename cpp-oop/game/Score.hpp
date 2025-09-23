@@ -1,6 +1,8 @@
 #ifndef _SCORE_HPP_
 #define _SCORE_HPP_
 
+#include <fstream>
+
 class Score {
 private:
 	struct HighScore {
@@ -9,7 +11,7 @@ private:
 	} hiscores[5];
 
 public:
-	Score();
+	Score(const char *scorefile);
 	~Score();
 };
 

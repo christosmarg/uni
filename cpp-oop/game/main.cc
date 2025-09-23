@@ -38,7 +38,8 @@ main(int argc, char *argv[])
 		die("input files cannot be the same");
 	/* 
 	 * We're linking with `lncursesw` so we need to have UTF-8 enabled,
-	 * otherwise colors and certain characters might not show up properly.
+	 * otherwise colors and certain characters might not show up properly
+	 * in some terminals.
 	 */
 	if (!setlocale(LC_ALL, ""))
 		die("setlocale");
@@ -49,10 +50,11 @@ main(int argc, char *argv[])
 		die(e);
 	}
 	while (eng->is_running()) {
+		eng->redraw();
 		eng->kbd_input();
+		eng->enemies_move();
 		eng->collisions();
 		eng->upd_score();
-		eng->redraw();
 	}
 	delete eng;
 

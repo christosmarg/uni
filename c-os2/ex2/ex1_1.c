@@ -37,12 +37,12 @@ tdprint(void *foo)
 	struct foo *f;
 	
 	f = (struct foo *)foo;
-	if (sem_wait(&f->mutex) == -1)
+	if (sem_wait(&f->mutex) < 0)
 		die("sem_wait");
 	printf("%s", f->str);
 	/* Prevent memory leak from strdup(2). */
 	free(f->str);
-	if (sem_post(&f->mutex) == -1)
+	if (sem_post(&f->mutex) < 0)
 		die("sem_post");
 
 	return NULL;
@@ -72,9 +72,7 @@ main(int argc, char *argv[])
 {
 	struct foo *f;
 	pthread_t *tds;
-	int len;
-	int n = 5;
-	int i;
+	int i, len, n = 5;
 
 	argv0 = *argv;
 	len = LEN(nums);
@@ -87,7 +85,7 @@ main(int argc, char *argv[])
 	 */
 	tds = emalloc(len * sizeof(pthread_t));
 
-	if (sem_init(&f->mutex, 0, 1) == -1)
+	if (sem_init(&f->mutex, 0, 1) < 0)
 		die("sem_init");
 	while (n--) {
 		for (i = 0; i < len; i++) {

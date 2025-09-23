@@ -1,12 +1,9 @@
-# See LICENSE file for copyright and license details.
-# game
-
 # compiler
 CC = c++
 
 # includes and libs
 INCS = -Iinclude 
-LIBS = -Llib -lncursesw
+LIBS = -Llib -lncursesw -lm
 
 # flags
 CFLAGS = -std=c++14 -pedantic -Wall -Os ${INCS}
