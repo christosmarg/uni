@@ -9,8 +9,6 @@
 
 ## Minesweeper
 
-![MinesweeperScr](https://user-images.githubusercontent.com/54286563/72887644-cad7c500-3d14-11ea-8b8b-7e91df4806ab.png)
-
 ### How to play
 
 * Enter number of columns
@@ -28,6 +26,10 @@
 
 * Fix screen bug with big dimensions
 * Add colors
+
+### Preview
+
+![MinesweeperScr](https://user-images.githubusercontent.com/54286563/72887644-cad7c500-3d14-11ea-8b8b-7e91df4806ab.png)
 
 ## Combinations / KCombinations / FCombinations
 
