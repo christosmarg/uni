@@ -52,13 +52,13 @@ xstring::operator= (const char *s)
 xstring
 xstring::operator+ (const xstring& s)
 {
-	return xstring(strcat(this->str, s.str));
+	return xstring(append(s));
 }
 
 xstring
 xstring::operator+ (const char *s)
 {
-	return xstring(strcat(this->str, s));
+	return xstring(append(s));
 }
 
 xstring&
@@ -337,6 +337,7 @@ xstring::resize(std::size_t n)
 		char *tmp = new char[l + 1];
 		std::copy(str, str + len + 1, tmp);
 		delete[] str;
+		tmp[l] = '\0';
 		str = tmp;
 		len = length();
 	}

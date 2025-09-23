@@ -19,14 +19,15 @@ ErrLog::write(ErrType type, const lab::xstring& s) const
 	switch(type)
 	{
 		case ErrType::STUDENT_MISSING:
-			f << "Student;" << s << ";Missing." << std::endl;
+			f << "Student;" << s << ";Missing" << std::endl;
 			break;
 		case ErrType::COURSE_MISSING:
-			f << "Course;" << s << ";Missing." << std::endl;
+			f << "Course;" << s << ";Missing" << std::endl;
 			break;
 		case ErrType::GRADE_DUPLICATE:
 			break;
-		case ErrType::MULTIPLE_GRADES:
+		case ErrType::DIFFERENT_GRADES:
+			f << "Grade;" << s << ";Different" << std::endl;
 			break;
 	}
 	f.close();

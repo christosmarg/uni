@@ -1,163 +1,1032 @@
 Type;Info;Err
-Course;P1-8020;Missing.
-Course;P1-8020;Missing.
-Course;P1-8020;Missing.
-Course;P1-8020;Missing.
-Course;P1-8020;Missing.
-Course;P1-8020;Missing.
-Course;P1-8020;Missing.
-Course;P1-8010;Missing.
-Course;P1-8020;Missing.
-Course;P1-8020;Missing.
-Course;P1-8010;Missing.
-Course;P1-8010;Missing.
-Course;P1-8020;Missing.
-Course;P1-8020;Missing.
-Course;P1-8020;Missing.
-Course;P1-8020;Missing.
-Course;P1-8020;Missing.
-Course;P1-8010;Missing.
-Course;P1-8010;Missing.
-Course;P1-8010;Missing.
-Course;P1-8020;Missing.
-Course;P1-8020;Missing.
-Course;P1-8010;Missing.
-Course;P1-8020;Missing.
-Course;P1-8020;Missing.
-Course;P1-8010;Missing.
-Student;SR001950;Missing.
-Student;SR001951;Missing.
-Student;SR001951;Missing.
-Student;SR001951;Missing.
-Student;SR001952;Missing.
-Student;SR001952;Missing.
-Student;SR001952;Missing.
-Student;SR001952;Missing.
-Student;SR001952;Missing.
-Student;SR001953;Missing.
-Student;SR001954;Missing.
-Student;SR001954;Missing.
-Student;SR001954;Missing.
-Student;SR001954;Missing.
-Student;SR001954;Missing.
-Student;SR001954;Missing.
-Student;SR001954;Missing.
-Student;SR001954;Missing.
-Student;SR001954;Missing.
-Student;SR001954;Missing.
-Student;SR001954;Missing.
-Student;SR001954;Missing.
-Student;SR001954;Missing.
-Student;SR001954;Missing.
-Student;SR001954;Missing.
-Student;SR001955;Missing.
-Student;SR001955;Missing.
-Student;SR001955;Missing.
-Student;SR001955;Missing.
-Student;SR001955;Missing.
-Student;SR001955;Missing.
-Student;SR001955;Missing.
-Student;SR001955;Missing.
-Student;SR001955;Missing.
-Student;SR001955;Missing.
-Student;SR001955;Missing.
-Student;SR001955;Missing.
-Student;SR001955;Missing.
-Student;SR001956;Missing.
-Student;SR001956;Missing.
-Student;SR001956;Missing.
-Student;SR001956;Missing.
-Student;SR001956;Missing.
-Student;SR001956;Missing.
-Student;SR001956;Missing.
-Student;SR001956;Missing.
-Student;SR001956;Missing.
-Student;SR001956;Missing.
-Student;SR001956;Missing.
-Student;SR001956;Missing.
-Student;SR001956;Missing.
-Student;SR001956;Missing.
-Student;SR001956;Missing.
-Student;SR001956;Missing.
-Student;SR001957;Missing.
-Student;SR001957;Missing.
-Student;SR001957;Missing.
-Student;SR001957;Missing.
-Student;SR001957;Missing.
-Student;SR001957;Missing.
-Student;SR001957;Missing.
-Student;SR001957;Missing.
-Student;SR001957;Missing.
-Student;SR001957;Missing.
-Student;SR001957;Missing.
-Student;SR001957;Missing.
-Student;SR001958;Missing.
-Student;SR001958;Missing.
-Student;SR001958;Missing.
-Student;SR001958;Missing.
-Student;SR001958;Missing.
-Student;SR001958;Missing.
-Student;SR001958;Missing.
-Student;SR001958;Missing.
-Student;SR001958;Missing.
-Student;SR001958;Missing.
-Student;SR001958;Missing.
-Student;SR001958;Missing.
-Student;SR001958;Missing.
-Student;SR001958;Missing.
-Student;SR001958;Missing.
-Student;SR001958;Missing.
-Student;SR001958;Missing.
-Student;SR001958;Missing.
-Student;SR001958;Missing.
-Student;SR001958;Missing.
-Student;SR001958;Missing.
-Student;SR001958;Missing.
-Student;SR001959;Missing.
-Student;SR001959;Missing.
-Student;SR001959;Missing.
-Student;SR001959;Missing.
-Student;SR001959;Missing.
-Student;SR001959;Missing.
-Student;SR001959;Missing.
-Student;SR001959;Missing.
-Student;SR001960;Missing.
-Student;SR001960;Missing.
-Student;SR001960;Missing.
-Student;SR001960;Missing.
-Student;SR001960;Missing.
-Student;SR001961;Missing.
-Student;SR001961;Missing.
-Student;SR001961;Missing.
-Student;SR001961;Missing.
-Student;SR001961;Missing.
-Student;SR001962;Missing.
-Student;SR001962;Missing.
-Student;SR001962;Missing.
-Student;SR001962;Missing.
-Student;SR001963;Missing.
-Student;SR001963;Missing.
-Student;SR001963;Missing.
-Student;SR001964;Missing.
-Student;SR001964;Missing.
-Student;SR001964;Missing.
-Student;SR001964;Missing.
-Student;SR001964;Missing.
-Student;SR001964;Missing.
-Student;SR001964;Missing.
-Student;SR001964;Missing.
-Student;SR001965;Missing.
-Student;SR001965;Missing.
-Student;SR001965;Missing.
-Student;SR001965;Missing.
-Student;SR001965;Missing.
-Student;SR001965;Missing.
-Student;SR001965;Missing.
-Student;SR001966;Missing.
-Student;SR001966;Missing.
-Student;SR001966;Missing.
-Student;SR001966;Missing.
-Student;SR001966;Missing.
-Student;SR001966;Missing.
-Student;SR001966;Missing.
-Student;SR001966;Missing.
+Grade;SR000018; in P1-1050: 0.3 | 8.6;Different
+Grade;SR000021; in P1-2030: 8.6 | 0.5;Different
+Grade;SR000021; in P1-3040: 4.3 | 8.6;Different
+Grade;SR000021; in P1-5040: 8.6 | 7.6;Different
+Grade;SR000028 in P1-1020: 8.6 | 4.7;Different
+Grade;SR000028; in P1-1030: 3.5 | 2.0;Different
+Grade;SR000028; in P1-2020: 8.6 | 7.6;Different
+Grade;SR000028; in P1-4030: 6.8 | 4.7;Different
+Grade;SR000030; in P1-1030: 2.0 | 7.5;Different
+Grade;SR000034; in P1-6020: 3.7 | 4.7;Different
+Grade;SR000036; in P1-4050: 3.4 | 4.7;Different
+Grade;SR000037; in P1-5120: 1.1 | 8.6;Different
+Grade;SR000039 in P1-3010: 7.5 | 4.7;Different
+Grade;SR000039; in P1-3040: 6.8 | 4.7;Different
+Grade;SR000039; in P1-4020: 8.6 | 4.7;Different
+Grade;SR000039; in P1-6010: 7.5 | 1.8;Different
+Grade;SR000043; in P1-4030: 8.6 | 3.6;Different
+Grade;SR000044; in P1-1030: 0.4 | 2.7;Different
+Grade;SR000044; in P1-1050: 0.3 | 8.6;Different
+Grade;SR000045 in P1-2020: 0.3 | 4.7;Different
+Grade;SR000049 in P1-1030: 0.4 | 6.6;Different
+Grade;SR000058 in P1-1060: 9.0 | 4.7;Different
+Grade;SR000058 in P1-6220: 10.0 | 4.7;Different
+Course;P1-8020;Missing
+Course;P1-8020;Missing
+Course;P1-8020;Missing
+Grade;SR000060; in P1-2060: 8.6 | 6.8;Different
+Grade;SR000060; in P1-3010: 0.3 | 1.1;Different
+Grade;SR000060; in P1-5040: 6.8 | 4.7;Different
+Grade;SR000060; in P1-5320: 10.0 | 1.8;Different
+Grade;SR000060; in P1-9220: 3.5 | 0.3;Different
+Grade;SR000061 in P1-3020: 1.8 | 7.6;Different
+Grade;SR000062 in P1-1050: 8.6 | 7.6;Different
+Grade;SR000065; in P1-1060: 1.1 | 0.2;Different
+Grade;SR000067; in P1-5030: 10.0 | 7.5;Different
+Grade;SR000067; in P1-6110: 2.9 | 2.0;Different
+Grade;SR000070 in P1-3020: 8.6 | 4.7;Different
+Grade;SR000071; in P1-6010: 9.6 | 1.6;Different
+Grade;SR000073; in P1-4040: 1.1 | 3.4;Different
+Course;P1-8020;Missing
+Course;P1-8020;Missing
+Grade;SR000076; in P1-9225: 2.8 | 0.2;Different
+Grade;SR000080; in P1-1050: 8.6 | 3.4;Different
+Grade;SR000081 in P1-1010: 8.6 | 7.6;Different
+Grade;SR000081; in P1-2010: 0.3 | 3.4;Different
+Grade;SR000082; in P1-1030: 1.4 | 1.1;Different
+Grade;SR000083; in P1-1030: 1.1 | 4.7;Different
+Course;P1-8020;Missing
+Course;P1-8020;Missing
+Grade;SR000088; in P1-5030: 0.3 | 5.4;Different
+Grade;SR000088; in P1-6010: 7.5 | 0.3;Different
+Grade;SR000088; in P1-9310: 3.4 | 4.7;Different
+Grade;SR000088; in P1-9340: 3.6 | 8.4;Different
+Grade;SR000096 in P1-1050: 7.5 | 0.5;Different
+Grade;SR000097; in P1-2010: 7.5 | 3.4;Different
+Grade;SR000097; in P1-2060: 8.6 | 0.2;Different
+Grade;SR000101; in P1-1030: 2.2 | 3.2;Different
+Grade;SR000101; in P1-4030: 6.8 | 7.6;Different
+Grade;SR000102; in P1-4020: 4.7 | 3.2;Different
+Grade;SR000102; in P1-9325: 8.6 | 3.4;Different
+Grade;SR000103; in P1-6020: 6.8 | 9.5;Different
+Grade;SR000108 in P1-6310: 3.4 | 2.5;Different
+Grade;SR000110 in P1-2020: 8.6 | 0.0;Different
+Grade;SR000112; in P1-5030: 8.6 | 4.7;Different
+Grade;SR000113 in P1-1010: 8.6 | 0.5;Different
+Grade;SR000113; in P1-3010: 1.1 | 8.6;Different
+Grade;SR000113; in P1-5010: 9.3 | 0.5;Different
+Grade;SR000113; in P1-5020: 6.8 | 8.8;Different
+Grade;SR000122; in P1-3050: 6.8 | 4.7;Different
+Grade;SR000122; in P1-9255: 6.1 | 4.7;Different
+Grade;SR000138; in P1-1030: 3.5 | 7.5;Different
+Course;P1-8010;Missing
+Grade;SR000145 in P1-1020: 10.0 | 2.8;Different
+Grade;SR000145; in P1-1030: 9.0 | 8.6;Different
+Grade;SR000151; in P1-3020: 8.6 | 0.7;Different
+Grade;SR000158; in P1-5030: 1.1 | 6.8;Different
+Grade;SR000158; in P1-5040: 6.8 | 0.5;Different
+Grade;SR000158 in P1-9115: 0.3 | 8.6;Different
+Grade;SR000164; in P1-1030: 3.5 | 6.2;Different
+Grade;SR000167 in P1-1010: 6.8 | 7.6;Different
+Grade;SR000168; in P1-1030: 0.3 | 3.9;Different
+Grade;SR000169; in P1-5210: 6.8 | 7.6;Different
+Grade;SR000170; in P1-1050: 0.3 | 8.6;Different
+Grade;SR000171 in P1-1010: 0.3 | 7.6;Different
+Grade;SR000171; in P1-1020: 8.6 | 7.6;Different
+Grade;SR000171; in P1-1030: 4.1 | 4.3;Different
+Grade;SR000173; in P1-1050: 8.6 | 4.7;Different
+Grade;SR000177 in P1-2060: 3.4 | 4.7;Different
+Grade;SR000177; in P1-3020: 1.4 | 0.7;Different
+Grade;SR000177; in P1-5040: 0.3 | 4.7;Different
+Grade;SR000177; in P1-5110: 10.0 | 1.9;Different
+Grade;SR000192 in P1-4020: 1.1 | 4.7;Different
+Grade;SR000197 in P1-1010: 0.3 | 7.6;Different
+Grade;SR000197; in P1-2020: 8.6 | 4.7;Different
+Grade;SR000197; in P1-9210: 4.7 | 0.0;Different
+Grade;SR000198 in P1-1030: 9.6 | 4.7;Different
+Grade;SR000198; in P1-1050: 7.5 | 3.4;Different
+Grade;SR000199; in P1-1060: 9.5 | 4.7;Different
+Grade;SR000209 in P1-1020: 3.4 | 3.2;Different
+Grade;SR000209; in P1-1030: 1.0 | 3.7;Different
+Grade;SR000209; in P1-2010: 7.5 | 3.4;Different
+Grade;SR000214; in P1-3050: 6.8 | 7.6;Different
+Grade;SR000217; in P1-3040: 1.8 | 0.4;Different
+Grade;SR000223; in P1-5020: 3.9 | 4.7;Different
+Grade;SR000225; in P1-1020: 2.8 | 6.8;Different
+Grade;SR000225; in P1-1030: 5.4 | 6.9;Different
+Grade;SR000225; in P1-1050: 1.8 | 8.6;Different
+Grade;SR000225; in P1-2060: 6.8 | 4.7;Different
+Grade;SR000230; in P1-4050: 6.8 | 3.6;Different
+Grade;SR000230; in P1-5030: 9.4 | 4.7;Different
+Grade;SR000232; in P1-6010: 5.4 | 4.7;Different
+Grade;SR000232; in P1-6020: 4.0 | 0.7;Different
+Grade;SR000233 in P1-9115: 0.3 | 4.7;Different
+Grade;SR000236; in P1-1020: 8.6 | 5.0;Different
+Grade;SR000236; in P1-1030: 1.1 | 8.6;Different
+Grade;SR000236; in P1-1060: 3.5 | 1.1;Different
+Grade;SR000238; in P1-6010: 7.4 | 4.1;Different
+Grade;SR000238 in P1-6310: 6.8 | 3.2;Different
+Grade;SR000239; in P1-3010: 3.7 | 7.1;Different
+Course;P1-8020;Missing
+Course;P1-8020;Missing
+Grade;SR000250; in P1-4030: 6.8 | 3.2;Different
+Grade;SR000252 in P1-1010: 7.5 | 0.5;Different
+Grade;SR000252; in P1-1020: 7.5 | 8.6;Different
+Grade;SR000252; in P1-1030: 2.4 | 1.1;Different
+Grade;SR000252; in P1-1060: 10.0 | 3.5;Different
+Grade;SR000263; in P1-1020: 7.5 | 0.3;Different
+Grade;SR000265 in P1-1060: 9.5 | 4.7;Different
+Grade;SR000265; in P1-2060: 0.3 | 6.8;Different
+Grade;SR000266; in P1-6010: 1.8 | 3.9;Different
+Grade;SR000268; in P1-2060: 6.8 | 4.7;Different
+Grade;SR000268; in P1-3020: 4.1 | 4.7;Different
+Grade;SR000268; in P1-3050: 6.8 | 0.2;Different
+Grade;SR000268; in P1-4050: 8.6 | 3.4;Different
+Grade;SR000274; in P1-3010: 3.5 | 0.3;Different
+Grade;SR000275 in P1-1020: 0.3 | 4.7;Different
+Grade;SR000282 in P1-2020: 10.0 | 4.7;Different
+Grade;SR000283; in P1-1060: 1.8 | 4.7;Different
+Grade;SR000283; in P1-2020: 10.0 | 7.5;Different
+Grade;SR000287; in P1-5010: 4.0 | 0.5;Different
+Grade;SR000289 in P1-1020: 10.0 | 0.0;Different
+Grade;SR000289; in P1-4010: 8.6 | 4.7;Different
+Grade;SR000291; in P1-6010: 9.4 | 6.4;Different
+Grade;SR000295; in P1-1030: 6.1 | 6.8;Different
+Grade;SR000296; in P1-3050: 10.0 | 3.5;Different
+Grade;SR000297; in P1-1060: 10.0 | 4.7;Different
+Grade;SR000297; in P1-5030: 8.6 | 1.6;Different
+Grade;SR000300 in P1-1060: 8.6 | 0.5;Different
+Grade;SR000310; in P1-5020: 5.1 | 0.1;Different
+Grade;SR000314 in P1-2060: 8.6 | 4.7;Different
+Grade;SR000314; in P1-3040: 9.7 | 4.7;Different
+Grade;SR000319; in P1-1030: 3.5 | 7.5;Different
+Grade;SR000326; in P1-3050: 6.8 | 7.6;Different
+Grade;SR000326; in P1-3060: 4.7 | 5.7;Different
+Grade;SR000326; in P1-4040: 7.5 | 8.6;Different
+Grade;SR000327; in P1-3040: 0.3 | 1.1;Different
+Grade;SR000327; in P1-4030: 3.5 | 1.8;Different
+Grade;SR000329 in P1-1020: 7.5 | 3.2;Different
+Grade;SR000329; in P1-3040: 9.7 | 0.7;Different
+Grade;SR000332 in P1-1020: 8.6 | 7.6;Different
+Grade;SR000332; in P1-2060: 8.6 | 3.4;Different
+Grade;SR000333 in P1-1030: 3.4 | 0.7;Different
+Grade;SR000342 in P1-2010: 7.6 | 3.2;Different
+Grade;SR000348 in P1-1060: 1.1 | 3.4;Different
+Grade;SR000348; in P1-2060: 3.4 | 3.2;Different
+Grade;SR000358; in P1-3030: 8.6 | 3.7;Different
+Grade;SR000365 in P1-2020: 10.0 | 7.6;Different
+Grade;SR000365; in P1-4050: 3.4 | 1.2;Different
+Grade;SR000371; in P1-4020: 7.5 | 1.1;Different
+Course;P1-8010;Missing
+Course;P1-8010;Missing
+Grade;SR000379 in P1-3010: 3.4 | 0.5;Different
+Grade;SR000380; in P1-2060: 6.8 | 4.7;Different
+Grade;SR000384 in P1-3010: 1.8 | 4.7;Different
+Grade;SR000398 in P1-1050: 0.3 | 4.7;Different
+Grade;SR000398; in P1-2020: 7.5 | 3.2;Different
+Grade;SR000398; in P1-3010: 10.0 | 4.7;Different
+Grade;SR000398; in P1-4020: 8.6 | 0.2;Different
+Grade;SR000400; in P1-5010: 6.8 | 4.7;Different
+Grade;SR000400; in P1-5040: 1.1 | 3.4;Different
+Grade;SR000402; in P1-5040: 3.4 | 0.5;Different
+Grade;SR000406; in P1-1060: 8.6 | 4.7;Different
+Grade;SR000406; in P1-3040: 3.4 | 6.8;Different
+Grade;SR000406; in P1-3050: 6.8 | 0.5;Different
+Grade;SR000409 in P1-1030: 8.6 | 4.7;Different
+Grade;SR000409; in P1-1060: 7.5 | 3.7;Different
+Grade;SR000409; in P1-2060: 3.4 | 0.0;Different
+Grade;SR000412 in P1-1010: 10.0 | 2.8;Different
+Grade;SR000412; in P1-4020: 0.3 | 1.1;Different
+Grade;SR000412; in P1-4030: 3.5 | 1.1;Different
+Grade;SR000412; in P1-5010: 3.7 | 0.7;Different
+Grade;SR000412; in P1-5040: 1.8 | 6.8;Different
+Grade;SR000412; in P1-9350: 2.8 | 8.6;Different
+Grade;SR000421; in P1-1030: 2.1 | 7.0;Different
+Grade;SR000421; in P1-4020: 8.6 | 0.7;Different
+Grade;SR000426; in P1-4040: 5.5 | 1.1;Different
+Grade;SR000429 in P1-4020: 3.4 | 4.7;Different
+Grade;SR000433; in P1-1030: 6.2 | 3.9;Different
+Grade;SR000435; in P1-2020: 0.3 | 4.7;Different
+Grade;SR000437; in P1-1060: 0.3 | 4.7;Different
+Grade;SR000437; in P1-2050: 0.3 | 3.4;Different
+Grade;SR000437; in P1-2060: 0.3 | 7.6;Different
+Grade;SR000439 in P1-2010: 6.6 | 0.0;Different
+Course;P1-8020;Missing
+Course;P1-8020;Missing
+Grade;SR000447; in P1-4020: 3.4 | 4.7;Different
+Grade;SR000450; in P1-5010: 1.8 | 4.7;Different
+Grade;SR000451; in P1-2020: 8.6 | 4.7;Different
+Grade;SR000455; in P1-2020: 0.3 | 4.7;Different
+Grade;SR000456; in P1-4030: 3.5 | 8.6;Different
+Grade;SR000458 in P1-1020: 8.6 | 0.5;Different
+Grade;SR000458; in P1-1030: 10.0 | 9.7;Different
+Grade;SR000460 in P1-1030: 1.1 | 4.7;Different
+Grade;SR000466 in P1-1060: 4.1 | 4.0;Different
+Grade;SR000466; in P1-5110: 3.7 | 5.4;Different
+Grade;SR000467 in P1-1030: 8.1 | 1.2;Different
+Grade;SR000469 in P1-1030: 9.3 | 0.2;Different
+Grade;SR000469; in P1-1050: 7.5 | 8.6;Different
+Grade;SR000470; in P1-4030: 1.8 | 3.4;Different
+Grade;SR000474; in P1-6010: 6.2 | 0.4;Different
+Grade;SR000475; in P1-3040: 9.6 | 8.6;Different
+Grade;SR000476; in P1-1020: 7.5 | 0.3;Different
+Grade;SR000476; in P1-2060: 3.4 | 4.7;Different
+Grade;SR000478 in P1-3020: 0.3 | 4.7;Different
+Course;P1-8020;Missing
+Course;P1-8020;Missing
+Grade;SR000480; in P1-1030: 1.0 | 4.7;Different
+Grade;SR000483 in P1-1060: 0.3 | 9.5;Different
+Grade;SR000483; in P1-1060: 9.5 | 4.7;Different
+Grade;SR000483; in P1-2050: 10.0 | 7.5;Different
+Grade;SR000483; in P1-3010: 1.1 | 4.7;Different
+Grade;SR000483; in P1-3020: 7.6 | 0.5;Different
+Grade;SR000483 in P1-9115: 8.6 | 3.2;Different
+Grade;SR000488 in P1-1020: 2.8 | 8.6;Different
+Grade;SR000489; in P1-6010: 2.0 | 2.4;Different
+Grade;SR000491; in P1-6010: 6.8 | 0.8;Different
+Grade;SR000495; in P1-1060: 3.5 | 7.4;Different
+Grade;SR000495 in P1-9115: 8.6 | 4.7;Different
+Grade;SR000507 in P1-1020: 4.7 | 1.3;Different
+Grade;SR000515 in P1-1020: 7.5 | 4.7;Different
+Grade;SR000522; in P1-2060: 1.1 | 3.4;Different
+Grade;SR000527 in P1-3060: 7.6 | 2.2;Different
+Grade;SR000527; in P1-4020: 6.8 | 0.2;Different
+Grade;SR000529 in P1-4020: 6.8 | 0.5;Different
+Grade;SR000530; in P1-2020: 8.6 | 0.5;Different
+Grade;SR000531 in P1-3060: 3.8 | 0.2;Different
+Grade;SR000534 in P1-5030: 8.6 | 7.6;Different
+Grade;SR000534; in P1-5320: 4.1 | 3.6;Different
+Grade;SR000534; in P1-9315: 7.5 | 3.6;Different
+Grade;SR000538 in P1-2060: 8.6 | 0.0;Different
+Grade;SR000538; in P1-5030: 0.3 | 3.6;Different
+Grade;SR000539; in P1-5020: 6.8 | 7.6;Different
+Grade;SR000539; in P1-9170: 3.4 | 0.2;Different
+Grade;SR000540; in P1-1030: 8.5 | 1.1;Different
+Grade;SR000540; in P1-1050: 7.5 | 0.3;Different
+Grade;SR000542; in P1-1050: 0.3 | 3.4;Different
+Grade;SR000550; in P1-1030: 2.5 | 8.1;Different
+Grade;SR000553; in P1-1030: 8.1 | 4.7;Different
+Grade;SR000555; in P1-5120: 4.3 | 8.6;Different
+Grade;SR000563; in P1-2060: 0.3 | 0.7;Different
+Grade;SR000566; in P1-2010: 0.3 | 6.8;Different
+Grade;SR000566; in P1-2020: 10.0 | 7.5;Different
+Grade;SR000566; in P1-3030: 9.3 | 3.6;Different
+Grade;SR000566; in P1-3040: 7.8 | 0.3;Different
+Grade;SR000566; in P1-3050: 1.8 | 4.7;Different
+Grade;SR000566; in P1-4020: 7.5 | 4.7;Different
+Grade;SR000568; in P1-2020: 7.5 | 0.3;Different
+Grade;SR000570 in P1-1060: 4.6 | 4.7;Different
+Grade;SR000570; in P1-6020: 4.6 | 0.5;Different
+Grade;SR000576; in P1-2010: 1.8 | 1.1;Different
+Grade;SR000578; in P1-2060: 3.5 | 0.3;Different
+Grade;SR000589; in P1-4040: 1.1 | 0.8;Different
+Grade;SR000593 in P1-1050: 8.6 | 4.7;Different
+Grade;SR000593; in P1-2050: 6.8 | 0.7;Different
+Grade;SR000598; in P1-2060: 8.6 | 4.7;Different
+Grade;SR000599; in P1-3060: 0.2 | 5.9;Different
+Grade;SR000601 in P1-1050: 8.6 | 4.7;Different
+Grade;SR000602; in P1-6120: 8.6 | 4.7;Different
+Grade;SR000605; in P1-1050: 8.6 | 6.8;Different
+Grade;SR000605; in P1-2060: 8.6 | 0.5;Different
+Grade;SR000612; in P1-3040: 7.5 | 0.3;Different
+Grade;SR000612; in P1-3050: 0.3 | 8.6;Different
+Grade;SR000612; in P1-4050: 1.1 | 6.8;Different
+Grade;SR000614; in P1-1050: 0.3 | 8.6;Different
+Grade;SR000614; in P1-3040: 8.6 | 0.4;Different
+Grade;SR000614; in P1-4020: 8.6 | 6.8;Different
+Grade;SR000614; in P1-4050: 8.6 | 0.5;Different
+Grade;SR000615; in P1-3050: 3.5 | 0.3;Different
+Grade;SR000623 in P1-1030: 3.7 | 4.7;Different
+Grade;SR000623; in P1-3040: 1.8 | 0.3;Different
+Grade;SR000641; in P1-2050: 7.5 | 0.3;Different
+Grade;SR000652 in P1-1020: 7.5 | 3.2;Different
+Grade;SR000657 in P1-1030: 8.0 | 7.3;Different
+Grade;SR000665; in P1-5010: 8.6 | 3.2;Different
+Grade;SR000668; in P1-4030: 3.5 | 1.8;Different
+Grade;SR000675 in P1-3020: 4.7 | 7.6;Different
+Grade;SR000677; in P1-2060: 6.8 | 0.7;Different
+Grade;SR000684 in P1-3010: 0.3 | 4.7;Different
+Grade;SR000691; in P1-3060: 4.7 | 6.6;Different
+Grade;SR000699 in P1-2060: 7.5 | 4.7;Different
+Grade;SR000699; in P1-4010: 8.6 | 4.7;Different
+Grade;SR000702 in P1-1030: 3.4 | 1.2;Different
+Grade;SR000704; in P1-1020: 6.8 | 3.2;Different
+Grade;SR000704; in P1-1030: 9.4 | 0.2;Different
+Grade;SR000708 in P1-1060: 4.2 | 0.5;Different
+Grade;SR000712; in P1-5010: 3.9 | 4.7;Different
+Grade;SR000717 in P1-1030: 8.6 | 4.7;Different
+Grade;SR000719 in P1-1060: 9.3 | 5.4;Different
+Grade;SR000719; in P1-5110: 5.4 | 6.8;Different
+Grade;SR000725; in P1-1030: 1.1 | 8.6;Different
+Grade;SR000727; in P1-1050: 0.3 | 8.6;Different
+Grade;SR000734 in P1-3040: 1.3 | 1.2;Different
+Grade;SR000739; in P1-1030: 10.0 | 2.0;Different
+Grade;SR000742; in P1-5010: 4.6 | 4.7;Different
+Grade;SR000742; in P1-5030: 6.8 | 4.7;Different
+Grade;SR000742; in P1-5040: 1.1 | 6.8;Different
+Grade;SR000754; in P1-4030: 7.5 | 1.8;Different
+Grade;SR000759 in P1-1030: 8.8 | 0.2;Different
+Grade;SR000759; in P1-2020: 10.0 | 8.6;Different
+Grade;SR000759; in P1-3010: 3.5 | 4.7;Different
+Grade;SR000760; in P1-5040: 6.8 | 3.6;Different
+Grade;SR000760; in P1-5110: 4.6 | 2.1;Different
+Grade;SR000765; in P1-3040: 1.8 | 0.5;Different
+Grade;SR000771; in P1-1030: 9.7 | 4.7;Different
+Grade;SR000771; in P1-2050: 4.2 | 7.5;Different
+Grade;SR000773; in P1-5010: 3.3 | 7.6;Different
+Grade;SR000774 in P1-3020: 9.2 | 0.2;Different
+Grade;SR000779; in P1-9350: 5.6 | 4.7;Different
+Grade;SR000780; in P1-1050: 0.3 | 8.6;Different
+Grade;SR000782; in P1-3040: 1.1 | 3.4;Different
+Grade;SR000784; in P1-1050: 1.8 | 8.6;Different
+Grade;SR000784; in P1-2060: 8.6 | 4.7;Different
+Grade;SR000787 in P1-1010: 8.6 | 7.6;Different
+Grade;SR000787; in P1-4050: 3.4 | 7.6;Different
+Grade;SR000787; in P1-5020: 0.8 | 3.8;Different
+Grade;SR000791; in P1-2010: 3.5 | 1.1;Different
+Grade;SR000795; in P1-1030: 0.4 | 4.7;Different
+Grade;SR000800; in P1-3040: 9.4 | 6.8;Different
+Grade;SR000804; in P1-5030: 4.0 | 7.6;Different
+Grade;SR000804; in P1-5040: 6.8 | 0.2;Different
+Grade;SR000811; in P1-5030: 8.6 | 1.6;Different
+Grade;SR000813 in P1-1010: 10.0 | 7.6;Different
+Grade;SR000815 in P1-1030: 1.0 | 4.7;Different
+Grade;SR000815; in P1-1050: 6.8 | 4.7;Different
+Grade;SR000826 in P1-1030: 9.4 | 7.0;Different
+Grade;SR000826; in P1-1050: 8.6 | 6.8;Different
+Grade;SR000829; in P1-2060: 1.1 | 8.6;Different
+Grade;SR000830 in P1-3020: 1.8 | 4.7;Different
+Grade;SR000836; in P1-1010: 0.3 | 8.6;Different
+Grade;SR000836; in P1-1020: 1.1 | 6.8;Different
+Grade;SR000836; in P1-1030: 1.8 | 3.4;Different
+Grade;SR000836; in P1-2020: 10.0 | 7.5;Different
+Grade;SR000839 in P1-9140: 8.2 | 7.6;Different
+Grade;SR000843 in P1-3020: 0.7 | 3.2;Different
+Grade;SR000844; in P1-3030: 3.4 | 4.7;Different
+Grade;SR000846 in P1-2060: 8.6 | 4.7;Different
+Grade;SR000849; in P1-2050: 7.5 | 0.3;Different
+Grade;SR000861; in P1-5030: 10.0 | 0.3;Different
+Grade;SR000861; in P1-6010: 9.6 | 4.7;Different
+Grade;SR000861; in P1-6020: 8.3 | 7.6;Different
+Grade;SR000862; in P1-2060: 0.3 | 8.6;Different
+Grade;SR000863; in P1-1030: 7.4 | 0.3;Different
+Grade;SR000864; in P1-6010: 0.4 | 0.1;Different
+Grade;SR000864; in P1-6020: 3.3 | 1.9;Different
+Grade;SR000864; in P1-9155: 0.2 | 3.2;Different
+Grade;SR000866 in P1-1060: 6.5 | 5.4;Different
+Grade;SR000866; in P1-3010: 10.0 | 4.7;Different
+Grade;SR000866; in P1-5020: 6.1 | 1.3;Different
+Grade;SR000866; in P1-6020: 9.3 | 2.5;Different
+Grade;SR000867; in P1-3050: 10.0 | 6.8;Different
+Grade;SR000867; in P1-4030: 3.5 | 1.1;Different
+Grade;SR000868 in P1-1040: 4.7 | 0.5;Different
+Grade;SR000869; in P1-2010: 3.5 | 1.1;Different
+Grade;SR000893; in P1-5030: 1.1 | 6.8;Different
+Grade;SR000898 in P1-1010: 8.6 | 4.7;Different
+Grade;SR000898; in P1-1020: 8.6 | 0.5;Different
+Grade;SR000898; in P1-1030: 6.1 | 5.7;Different
+Grade;SR000899 in P1-1060: 0.3 | 0.2;Different
+Grade;SR000908; in P1-3050: 8.6 | 4.7;Different
+Grade;SR000911 in P1-2010: 8.0 | 0.5;Different
+Grade;SR000912 in P1-1030: 0.4 | 6.4;Different
+Grade;SR000912; in P1-1050: 8.6 | 4.7;Different
+Grade;SR000914; in P1-3020: 3.2 | 1.2;Different
+Grade;SR000917; in P1-5110: 7.4 | 4.6;Different
+Grade;SR000917; in P1-5320: 8.1 | 1.3;Different
+Grade;SR000917; in P1-6020: 6.8 | 1.2;Different
+Grade;SR000917 in P1-9115: 0.3 | 4.7;Different
+Grade;SR000917; in P1-9315: 1.1 | 7.6;Different
+Grade;SR000919; in P1-6020: 2.3 | 3.6;Different
+Grade;SR000919; in P1-9120: 3.4 | 4.7;Different
+Grade;SR000919; in P1-9220: 6.8 | 0.2;Different
+Grade;SR000919; in P1-9310: 6.8 | 3.2;Different
+Grade;SR000919; in P1-9325: 6.8 | 6.9;Different
+Grade;SR000925; in P1-3050: 1.1 | 4.7;Different
+Grade;SR000926; in P1-2020: 10.0 | 7.5;Different
+Grade;SR000929 in P1-5110: 2.3 | 0.0;Different
+Grade;SR000932 in P1-1030: 6.8 | 7.0;Different
+Grade;SR000932; in P1-1060: 8.6 | 9.5;Different
+Grade;SR000932; in P1-4030: 3.4 | 4.7;Different
+Grade;SR000934; in P1-1030: 3.5 | 5.6;Different
+Grade;SR000938; in P1-1020: 0.3 | 4.7;Different
+Grade;SR000938; in P1-1030: 1.1 | 0.5;Different
+Grade;SR000938; in P1-1050: 0.3 | 1.1;Different
+Grade;SR000938; in P1-2020: 7.5 | 4.7;Different
+Grade;SR000941; in P1-6010: 10.0 | 3.5;Different
+Grade;SR000946 in P1-1030: 7.1 | 0.5;Different
+Grade;SR000946; in P1-3040: 7.8 | 7.6;Different
+Grade;SR000946; in P1-6010: 1.0 | 4.7;Different
+Grade;SR000946; in P1-9350: 8.6 | 6.4;Different
+Grade;SR000950 in P1-1030: 1.1 | 0.7;Different
+Grade;SR000950; in P1-2050: 10.0 | 1.8;Different
+Grade;SR000952; in P1-4010: 8.6 | 4.7;Different
+Grade;SR000955; in P1-2060: 8.6 | 4.7;Different
+Grade;SR000958 in P1-1030: 9.3 | 0.7;Different
+Grade;SR000958; in P1-1050: 0.3 | 4.7;Different
+Grade;SR000959; in P1-3020: 7.5 | 0.3;Different
+Grade;SR000966 in P1-2060: 1.1 | 4.7;Different
+Grade;SR000966; in P1-3040: 5.6 | 1.1;Different
+Grade;SR000967; in P1-3040: 9.4 | 3.4;Different
+Grade;SR000968; in P1-2010: 7.5 | 1.1;Different
+Grade;SR000968; in P1-2050: 7.5 | 1.8;Different
+Grade;SR000968; in P1-2060: 0.3 | 6.8;Different
+Grade;SR000971; in P1-3020: 8.6 | 0.7;Different
+Grade;SR000971 in P1-6310: 6.1 | 0.5;Different
+Grade;SR000971; in P1-9335: 6.8 | 7.6;Different
+Grade;SR000971; in P1-9340: 8.6 | 0.7;Different
+Grade;SR000975 in P1-1060: 2.9 | 6.8;Different
+Grade;SR000975; in P1-5020: 8.1 | 7.0;Different
+Grade;SR000975; in P1-5040: 8.6 | 6.8;Different
+Grade;SR000984; in P1-3020: 0.3 | 4.7;Different
+Grade;SR000984; in P1-5220: 7.5 | 1.8;Different
+Grade;SR000985; in P1-1010: 7.5 | 0.3;Different
+Grade;SR000985; in P1-1050: 7.5 | 1.8;Different
+Grade;SR000986; in P1-1020: 10.0 | 7.5;Different
+Grade;SR000990 in P1-1010: 8.6 | 4.7;Different
+Grade;SR000990; in P1-3040: 3.9 | 4.7;Different
+Grade;SR000990; in P1-4050: 8.6 | 3.4;Different
+Grade;SR000991 in P1-5020: 2.5 | 2.7;Different
+Grade;SR001002; in P1-3040: 5.4 | 0.5;Different
+Grade;SR001002; in P1-6020: 9.7 | 9.3;Different
+Grade;SR001005; in P1-3060: 7.3 | 0.2;Different
+Grade;SR001005; in P1-6110: 4.9 | 8.2;Different
+Grade;SR001006; in P1-3050: 3.4 | 4.7;Different
+Grade;SR001007; in P1-3040: 7.5 | 8.6;Different
+Grade;SR001007; in P1-3050: 8.6 | 0.5;Different
+Grade;SR001009 in P1-3010: 3.5 | 4.7;Different
+Grade;SR001009; in P1-3040: 9.4 | 3.2;Different
+Grade;SR001011; in P1-2010: 3.5 | 0.3;Different
+Grade;SR001016 in P1-1010: 6.8 | 4.7;Different
+Grade;SR001016; in P1-1050: 1.8 | 8.6;Different
+Grade;SR001022; in P1-4050: 1.1 | 8.6;Different
+Grade;SR001025; in P1-3020: 1.1 | 4.7;Different
+Grade;SR001026 in P1-3010: 10.0 | 4.7;Different
+Grade;SR001030 in P1-4050: 1.1 | 4.7;Different
+Grade;SR001032; in P1-5020: 3.9 | 0.8;Different
+Grade;SR001038 in P1-1060: 3.4 | 4.7;Different
+Grade;SR001039; in P1-5030: 8.6 | 4.7;Different
+Grade;SR001045; in P1-3050: 3.4 | 7.6;Different
+Grade;SR001045; in P1-4020: 0.3 | 4.7;Different
+Grade;SR001045; in P1-5040: 8.6 | 0.7;Different
+Grade;SR001045; in P1-6010: 8.6 | 4.7;Different
+Grade;SR001046; in P1-3050: 1.1 | 4.7;Different
+Grade;SR001046; in P1-4050: 8.6 | 6.8;Different
+Grade;SR001046; in P1-5020: 1.0 | 0.8;Different
+Grade;SR001046; in P1-9160: 0.3 | 1.1;Different
+Grade;SR001047 in P1-5110: 9.5 | 8.9;Different
+Grade;SR001047; in P1-5320: 3.9 | 8.4;Different
+Grade;SR001052; in P1-1030: 8.5 | 0.3;Different
+Grade;SR001059; in P1-4010: 7.5 | 8.6;Different
+Grade;SR001059; in P1-4040: 10.0 | 4.3;Different
+Grade;SR001060 in P1-1010: 7.5 | 3.2;Different
+Grade;SR001060; in P1-1020: 8.6 | 4.7;Different
+Grade;SR001060; in P1-1030: 3.4 | 5.4;Different
+Grade;SR001062 in P1-1020: 7.5 | 0.5;Different
+Grade;SR001062; in P1-6010: 5.6 | 6.6;Different
+Grade;SR001063; in P1-4050: 1.1 | 6.8;Different
+Course;P1-8020;Missing
+Grade;SR001068; in P1-1050: 1.8 | 0.3;Different
+Grade;SR001070 in P1-1020: 7.5 | 7.6;Different
+Grade;SR001070; in P1-1030: 4.9 | 6.1;Different
+Grade;SR001070; in P1-2010: 0.3 | 8.6;Different
+Grade;SR001073; in P1-1020: 7.5 | 8.6;Different
+Grade;SR001073; in P1-2010: 3.5 | 0.3;Different
+Grade;SR001075 in P1-1060: 2.9 | 7.5;Different
+Grade;SR001075; in P1-3020: 8.6 | 3.2;Different
+Grade;SR001075; in P1-5030: 9.4 | 4.7;Different
+Grade;SR001088 in P1-1030: 4.7 | 0.1;Different
+Grade;SR001088; in P1-1060: 7.5 | 8.3;Different
+Grade;SR001092; in P1-3010: 10.0 | 3.5;Different
+Grade;SR001097; in P1-1060: 6.8 | 4.7;Different
+Grade;SR001098; in P1-4050: 3.4 | 6.8;Different
+Grade;SR001098; in P1-5010: 5.1 | 7.6;Different
+Grade;SR001098; in P1-6010: 9.6 | 8.6;Different
+Grade;SR001098; in P1-9350: 8.6 | 9.8;Different
+Grade;SR001102 in P1-2040: 4.7 | 0.7;Different
+Grade;SR001102; in P1-3040: 0.3 | 2.5;Different
+Grade;SR001106; in P1-2060: 7.5 | 0.3;Different
+Grade;SR001108; in P1-6120: 6.8 | 4.7;Different
+Grade;SR001111; in P1-2010: 3.5 | 6.8;Different
+Grade;SR001111; in P1-2020: 10.0 | 0.3;Different
+Grade;SR001111; in P1-3050: 6.8 | 0.7;Different
+Grade;SR001120; in P1-2060: 0.3 | 3.4;Different
+Grade;SR001120; in P1-3020: 1.1 | 8.6;Different
+Grade;SR001128 in P1-3040: 3.4 | 1.2;Different
+Grade;SR001130 in P1-1010: 6.8 | 4.7;Different
+Grade;SR001130; in P1-1050: 7.5 | 0.3;Different
+Grade;SR001130; in P1-2060: 0.3 | 4.7;Different
+Grade;SR001134 in P1-1010: 0.3 | 7.6;Different
+Grade;SR001134; in P1-4040: 0.3 | 0.4;Different
+Grade;SR001134; in P1-5010: 7.5 | 4.7;Different
+Grade;SR001134; in P1-9255: 0.4 | 0.7;Different
+Grade;SR001135; in P1-2020: 7.5 | 6.8;Different
+Grade;SR001135; in P1-5010: 4.9 | 3.6;Different
+Grade;SR001136; in P1-3040: 0.3 | 2.5;Different
+Grade;SR001136; in P1-3050: 3.4 | 6.8;Different
+Grade;SR001138; in P1-1030: 8.5 | 8.6;Different
+Grade;SR001138; in P1-3040: 7.5 | 9.7;Different
+Grade;SR001138; in P1-4020: 8.6 | 3.4;Different
+Grade;SR001138; in P1-4050: 3.4 | 4.7;Different
+Grade;SR001141; in P1-4020: 7.5 | 0.3;Different
+Grade;SR001141; in P1-4030: 1.8 | 0.3;Different
+Grade;SR001146 in P1-1010: 10.0 | 7.5;Different
+Grade;SR001147 in P1-1010: 7.5 | 0.0;Different
+Grade;SR001164 in P1-5110: 6.8 | 6.0;Different
+Grade;SR001166; in P1-6010: 9.3 | 0.4;Different
+Course;P1-8010;Missing
+Grade;SR001171 in P1-3040: 6.8 | 7.6;Different
+Grade;SR001172; in P1-1030: 1.4 | 9.0;Different
+Grade;SR001178; in P1-4030: 1.8 | 3.4;Different
+Grade;SR001178; in P1-4040: 10.0 | 6.2;Different
+Grade;SR001178; in P1-9315: 3.4 | 4.7;Different
+Grade;SR001187; in P1-5040: 3.4 | 6.8;Different
+Grade;SR001196; in P1-3040: 2.5 | 0.7;Different
+Grade;SR001198; in P1-3050: 8.6 | 6.8;Different
+Grade;SR001200; in P1-5030: 9.4 | 3.4;Different
+Grade;SR001200; in P1-5040: 8.6 | 0.7;Different
+Grade;SR001208 in P1-1060: 1.1 | 4.7;Different
+Grade;SR001208; in P1-9030: 3.4 | 7.6;Different
+Grade;SR001208; in P1-9170: 6.8 | 0.5;Different
+Grade;SR001209 in P1-3010: 3.5 | 4.7;Different
+Grade;SR001209; in P1-3040: 0.4 | 3.2;Different
+Grade;SR001210 in P1-3050: 3.4 | 7.6;Different
+Grade;SR001216; in P1-3040: 2.4 | 1.1;Different
+Grade;SR001220; in P1-2020: 8.6 | 4.7;Different
+Grade;SR001227; in P1-1020: 7.5 | 4.7;Different
+Grade;SR001232 in P1-3020: 0.3 | 0.2;Different
+Grade;SR001233 in P1-1060: 6.8 | 0.2;Different
+Grade;SR001240 in P1-2060: 8.6 | 4.7;Different
+Grade;SR001240; in P1-5110: 0.3 | 8.8;Different
+Grade;SR001245; in P1-1030: 1.6 | 8.1;Different
+Grade;SR001245; in P1-3040: 7.4 | 0.3;Different
+Grade;SR001248 in P1-1010: 8.6 | 4.7;Different
+Grade;SR001248; in P1-3060: 9.8 | 0.5;Different
+Grade;SR001248; in P1-5030: 9.3 | 3.4;Different
+Grade;SR001248 in P1-9115: 0.3 | 8.6;Different
+Grade;SR001248; in P1-9130: 1.0 | 4.7;Different
+Grade;SR001253; in P1-2060: 7.5 | 0.3;Different
+Grade;SR001254; in P1-4020: 6.8 | 7.6;Different
+Grade;SR001268; in P1-2020: 10.0 | 7.5;Different
+Grade;SR001270; in P1-3030: 1.1 | 4.7;Different
+Grade;SR001278 in P1-1050: 8.6 | 0.0;Different
+Grade;SR001282; in P1-2060: 0.3 | 7.6;Different
+Grade;SR001282; in P1-3020: 10.0 | 0.3;Different
+Grade;SR001282; in P1-4020: 3.4 | 3.6;Different
+Grade;SR001282; in P1-9340: 7.5 | 8.6;Different
+Grade;SR001283; in P1-3050: 3.4 | 0.7;Different
+Grade;SR001287; in P1-2060: 7.5 | 0.3;Different
+Grade;SR001287; in P1-3040: 10.0 | 7.5;Different
+Grade;SR001287; in P1-3050: 1.1 | 4.7;Different
+Grade;SR001290; in P1-5220: 0.3 | 4.3;Different
+Course;P1-8010;Missing
+Grade;SR001292; in P1-1010: 7.5 | 0.3;Different
+Grade;SR001303; in P1-2050: 10.0 | 7.5;Different
+Grade;SR001304; in P1-2010: 7.5 | 0.3;Different
+Grade;SR001311 in P1-5040: 1.1 | 4.7;Different
+Course;P1-8010;Missing
+Grade;SR001319; in P1-2050: 10.0 | 7.5;Different
+Grade;SR001320 in P1-1020: 3.4 | 0.0;Different
+Grade;SR001320; in P1-2030: 7.5 | 0.7;Different
+Grade;SR001323; in P1-3060: 9.8 | 0.5;Different
+Grade;SR001327; in P1-1030: 9.0 | 1.8;Different
+Grade;SR001327; in P1-2010: 3.5 | 0.3;Different
+Grade;SR001327; in P1-3040: 7.5 | 0.3;Different
+Grade;SR001332 in P1-1010: 6.8 | 4.7;Different
+Grade;SR001335 in P1-1010: 10.0 | 7.6;Different
+Grade;SR001335; in P1-1020: 10.0 | 0.5;Different
+Grade;SR001335; in P1-1030: 7.8 | 5.4;Different
+Grade;SR001338; in P1-1050: 0.3 | 8.6;Different
+Grade;SR001338; in P1-3010: 1.1 | 5.9;Different
+Grade;SR001338; in P1-5020: 3.1 | 3.2;Different
+Grade;SR001338; in P1-5040: 8.6 | 3.4;Different
+Grade;SR001339; in P1-1030: 7.5 | 4.1;Different
+Grade;SR001339; in P1-1050: 0.3 | 1.1;Different
+Grade;SR001340 in P1-1020: 6.8 | 0.5;Different
+Grade;SR001340; in P1-1030: 5.4 | 5.7;Different
+Grade;SR001341; in P1-2010: 1.8 | 0.3;Different
+Grade;SR001341; in P1-2020: 8.6 | 4.7;Different
+Grade;SR001341; in P1-2060: 3.5 | 8.6;Different
+Grade;SR001343; in P1-2020: 7.5 | 4.7;Different
+Grade;SR001345 in P1-3040: 1.6 | 0.7;Different
+Grade;SR001345; in P1-5320: 5.6 | 4.7;Different
+Grade;SR001345; in P1-9315: 3.4 | 7.6;Different
+Grade;SR001350 in P1-1030: 9.9 | 1.2;Different
+Grade;SR001350; in P1-2050: 10.0 | 1.8;Different
+Grade;SR001350; in P1-3060: 0.2 | 1.2;Different
+Grade;SR001350; in P1-4020: 0.3 | 8.6;Different
+Grade;SR001354; in P1-1060: 9.4 | 3.4;Different
+Grade;SR001354; in P1-2050: 10.0 | 7.5;Different
+Grade;SR001354; in P1-2060: 1.8 | 3.6;Different
+Grade;SR001360 in P1-1030: 0.4 | 0.1;Different
+Grade;SR001360; in P1-1050: 8.6 | 7.6;Different
+Grade;SR001360; in P1-1060: 1.8 | 6.8;Different
+Grade;SR001364; in P1-1030: 0.3 | 7.0;Different
+Grade;SR001364; in P1-2010: 10.0 | 3.4;Different
+Grade;SR001365 in P1-1020: 8.6 | 0.0;Different
+Grade;SR001367; in P1-6020: 2.5 | 2.2;Different
+Grade;SR001368 in P1-1030: 3.7 | 7.6;Different
+Grade;SR001368; in P1-1050: 7.5 | 7.6;Different
+Grade;SR001378; in P1-1050: 6.8 | 4.7;Different
+Grade;SR001378; in P1-2010: 8.6 | 3.4;Different
+Grade;SR001383; in P1-4030: 8.6 | 3.4;Different
+Grade;SR001386 in P1-1030: 4.7 | 6.7;Different
+Grade;SR001386; in P1-3060: 0.0 | 2.6;Different
+Grade;SR001390 in P1-3010: 10.0 | 0.5;Different
+Grade;SR001390; in P1-6010: 6.1 | 4.7;Different
+Grade;SR001390; in P1-9350: 0.3 | 3.1;Different
+Grade;SR001394 in P1-1030: 9.3 | 4.7;Different
+Grade;SR001395 in P1-4040: 7.5 | 7.6;Different
+Grade;SR001399; in P1-1010: 10.0 | 8.6;Different
+Grade;SR001399; in P1-1020: 7.5 | 0.3;Different
+Grade;SR001399; in P1-2060: 7.5 | 1.1;Different
+Grade;SR001402; in P1-6010: 5.4 | 9.8;Different
+Grade;SR001404 in P1-6310: 7.5 | 8.6;Different
+Grade;SR001408 in P1-1020: 6.8 | 0.0;Different
+Grade;SR001408; in P1-3050: 8.6 | 4.7;Different
+Grade;SR001412; in P1-2020: 10.0 | 0.3;Different
+Grade;SR001412; in P1-2060: 7.5 | 6.8;Different
+Grade;SR001420 in P1-5040: 1.1 | 0.7;Different
+Grade;SR001426 in P1-1060: 5.6 | 4.7;Different
+Grade;SR001426; in P1-5030: 9.3 | 6.8;Different
+Grade;SR001427 in P1-1010: 0.3 | 7.6;Different
+Grade;SR001427; in P1-6010: 0.3 | 4.9;Different
+Grade;SR001435; in P1-3060: 0.9 | 3.6;Different
+Grade;SR001435; in P1-4030: 3.4 | 4.7;Different
+Grade;SR001445; in P1-1060: 10.0 | 4.2;Different
+Grade;SR001445; in P1-3040: 9.4 | 4.7;Different
+Grade;SR001445; in P1-4030: 3.4 | 4.7;Different
+Grade;SR001445; in P1-5120: 0.3 | 8.6;Different
+Grade;SR001456 in P1-1020: 6.8 | 7.6;Different
+Grade;SR001463; in P1-1050: 0.3 | 8.6;Different
+Grade;SR001463; in P1-1060: 4.2 | 3.4;Different
+Grade;SR001463; in P1-2050: 0.3 | 8.6;Different
+Grade;SR001463; in P1-2060: 0.3 | 4.7;Different
+Grade;SR001470; in P1-1050: 0.3 | 6.8;Different
+Grade;SR001470; in P1-1060: 1.1 | 9.3;Different
+Grade;SR001471; in P1-3040: 7.8 | 1.1;Different
+Grade;SR001471; in P1-3050: 8.6 | 0.7;Different
+Grade;SR001471; in P1-4020: 1.1 | 6.8;Different
+Grade;SR001471; in P1-4030: 3.4 | 7.6;Different
+Grade;SR001472 in P1-3010: 0.3 | 5.6;Different
+Grade;SR001476 in P1-1010: 7.5 | 7.6;Different
+Grade;SR001476; in P1-2020: 8.6 | 4.7;Different
+Grade;SR001483 in P1-4050: 8.6 | 0.7;Different
+Grade;SR001483; in P1-5020: 0.4 | 7.0;Different
+Grade;SR001493; in P1-2060: 7.5 | 0.3;Different
+Grade;SR001493; in P1-4030: 3.4 | 4.7;Different
+Grade;SR001494; in P1-2060: 8.6 | 6.8;Different
+Grade;SR001494; in P1-3040: 6.8 | 4.7;Different
+Grade;SR001494; in P1-3050: 1.1 | 3.6;Different
+Grade;SR001494; in P1-4020: 0.3 | 4.7;Different
+Grade;SR001495 in P1-1010: 8.6 | 7.6;Different
+Grade;SR001495; in P1-1020: 8.6 | 6.8;Different
+Grade;SR001495; in P1-1050: 0.3 | 8.6;Different
+Grade;SR001495; in P1-1060: 6.8 | 4.7;Different
+Grade;SR001498 in P1-3010: 3.5 | 3.6;Different
+Grade;SR001502; in P1-2060: 0.3 | 4.7;Different
+Grade;SR001503 in P1-1010: 0.3 | 4.7;Different
+Grade;SR001503; in P1-1020: 8.6 | 6.8;Different
+Grade;SR001505; in P1-3020: 10.0 | 7.5;Different
+Course;P1-8020;Missing
+Grade;SR001513; in P1-1060: 4.2 | 3.5;Different
+Grade;SR001513; in P1-5010: 1.1 | 4.7;Different
+Grade;SR001513; in P1-5030: 8.6 | 8.1;Different
+Grade;SR001513; in P1-5120: 7.5 | 0.3;Different
+Grade;SR001513; in P1-6020: 4.6 | 2.3;Different
+Grade;SR001513; in P1-9030: 7.5 | 4.7;Different
+Grade;SR001513; in P1-9135: 7.5 | 1.8;Different
+Grade;SR001521; in P1-1030: 0.3 | 6.8;Different
+Grade;SR001523 in P1-1020: 3.4 | 7.6;Different
+Grade;SR001528; in P1-5120: 8.6 | 9.3;Different
+Grade;SR001528; in P1-9135: 0.3 | 4.7;Different
+Grade;SR001529; in P1-6020: 4.6 | 0.5;Different
+Grade;SR001529; in P1-9325: 6.8 | 7.0;Different
+Grade;SR001531; in P1-6020: 0.4 | 7.6;Different
+Grade;SR001535 in P1-2020: 2.8 | 6.8;Different
+Grade;SR001536 in P1-1060: 4.1 | 4.7;Different
+Grade;SR001536; in P1-3010: 7.5 | 0.3;Different
+Grade;SR001536; in P1-3020: 3.4 | 6.8;Different
+Grade;SR001536; in P1-4040: 10.0 | 7.5;Different
+Grade;SR001536; in P1-5030: 10.0 | 2.0;Different
+Grade;SR001536; in P1-9350: 8.6 | 6.6;Different
+Grade;SR001540 in P1-3040: 8.6 | 5.1;Different
+Grade;SR001540; in P1-5030: 8.6 | 4.7;Different
+Grade;SR001541; in P1-2060: 6.8 | 0.5;Different
+Grade;SR001549 in P1-1020: 0.3 | 7.6;Different
+Grade;SR001549; in P1-1060: 3.0 | 6.8;Different
+Grade;SR001552; in P1-4020: 6.8 | 0.5;Different
+Grade;SR001553; in P1-3040: 5.1 | 7.6;Different
+Grade;SR001556 in P1-3010: 8.6 | 4.7;Different
+Grade;SR001557; in P1-3020: 6.2 | 4.7;Different
+Grade;SR001558 in P1-1030: 7.1 | 7.6;Different
+Grade;SR001558; in P1-1060: 9.7 | 4.7;Different
+Grade;SR001558; in P1-2060: 6.8 | 4.7;Different
+Grade;SR001559; in P1-1060: 6.8 | 0.7;Different
+Grade;SR001560; in P1-1060: 10.0 | 3.5;Different
+Grade;SR001560; in P1-3050: 3.4 | 0.5;Different
+Grade;SR001560; in P1-4020: 8.6 | 3.4;Different
+Grade;SR001571 in P1-1010: 10.0 | 7.5;Different
+Grade;SR001576; in P1-3020: 7.5 | 1.8;Different
+Grade;SR001576; in P1-4050: 6.8 | 4.7;Different
+Grade;SR001581; in P1-3010: 3.5 | 8.6;Different
+Grade;SR001581; in P1-4020: 8.6 | 0.7;Different
+Grade;SR001587; in P1-4050: 3.4 | 6.8;Different
+Grade;SR001594 in P1-2060: 1.1 | 3.2;Different
+Grade;SR001595 in P1-1030: 6.8 | 4.7;Different
+Grade;SR001596; in P1-2060: 1.1 | 4.7;Different
+Grade;SR001603; in P1-5010: 0.8 | 2.1;Different
+Grade;SR001603; in P1-5040: 10.0 | 1.8;Different
+Grade;SR001603; in P1-6010: 8.5 | 0.3;Different
+Grade;SR001606; in P1-3050: 3.4 | 0.7;Different
+Grade;SR001610 in P1-1030: 9.8 | 0.5;Different
+Grade;SR001610; in P1-3040: 0.3 | 9.6;Different
+Grade;SR001610; in P1-4040: 0.3 | 6.8;Different
+Grade;SR001617; in P1-3050: 0.3 | 8.6;Different
+Grade;SR001617; in P1-5010: 0.8 | 7.6;Different
+Grade;SR001617; in P1-5020: 7.5 | 6.2;Different
+Grade;SR001617; in P1-9160: 1.8 | 8.6;Different
+Grade;SR001621; in P1-4050: 3.4 | 6.8;Different
+Grade;SR001622 in P1-3010: 0.3 | 0.5;Different
+Grade;SR001622; in P1-3040: 3.4 | 8.4;Different
+Grade;SR001622; in P1-5030: 8.6 | 4.7;Different
+Grade;SR001622; in P1-5040: 8.6 | 7.6;Different
+Grade;SR001623 in P1-6010: 3.7 | 0.7;Different
+Grade;SR001624; in P1-1060: 10.0 | 5.4;Different
+Grade;SR001628; in P1-5120: 7.5 | 1.1;Different
+Grade;SR001629; in P1-9255: 9.6 | 4.7;Different
+Grade;SR001638 in P1-1060: 9.3 | 5.1;Different
+Grade;SR001638; in P1-3020: 8.6 | 7.6;Different
+Grade;SR001639; in P1-1010: 10.0 | 6.8;Different
+Grade;SR001642; in P1-4050: 3.4 | 3.6;Different
+Grade;SR001642; in P1-9250: 8.6 | 4.7;Different
+Grade;SR001642; in P1-9350: 6.8 | 0.9;Different
+Grade;SR001643; in P1-1060: 6.1 | 3.6;Different
+Grade;SR001645; in P1-2060: 7.5 | 0.3;Different
+Grade;SR001645; in P1-3040: 1.8 | 0.3;Different
+Grade;SR001646; in P1-5110: 0.3 | 3.3;Different
+Grade;SR001647; in P1-4020: 8.6 | 0.7;Different
+Grade;SR001647; in P1-4030: 3.4 | 7.6;Different
+Course;P1-8020;Missing
+Grade;SR001652; in P1-3040: 9.3 | 7.6;Different
+Grade;SR001663; in P1-4050: 8.6 | 0.7;Different
+Grade;SR001667; in P1-3010: 7.5 | 1.8;Different
+Grade;SR001667; in P1-9310: 6.8 | 7.6;Different
+Grade;SR001683; in P1-5030: 0.3 | 4.3;Different
+Grade;SR001683; in P1-6020: 9.3 | 7.6;Different
+Grade;SR001687 in P1-1010: 7.5 | 4.7;Different
+Grade;SR001688; in P1-2060: 7.5 | 0.3;Different
+Grade;SR001689 in P1-1030: 2.4 | 3.6;Different
+Grade;SR001690; in P1-3010: 1.8 | 0.2;Different
+Grade;SR001693 in P1-9010: 3.4 | 7.6;Different
+Grade;SR001695 in P1-1030: 3.4 | 4.7;Different
+Grade;SR001695; in P1-1050: 0.3 | 4.7;Different
+Grade;SR001695; in P1-2010: 0.3 | 3.4;Different
+Grade;SR001695; in P1-2020: 10.0 | 0.5;Different
+Grade;SR001695; in P1-2060: 7.5 | 6.8;Different
+Grade;SR001712; in P1-1030: 0.3 | 8.6;Different
+Grade;SR001714; in P1-1030: 2.5 | 0.9;Different
+Grade;SR001714; in P1-1050: 7.5 | 0.3;Different
+Grade;SR001714; in P1-2010: 3.5 | 8.6;Different
+Grade;SR001716; in P1-5030: 8.1 | 4.7;Different
+Grade;SR001726 in P1-2030: 10.0 | 7.6;Different
+Grade;SR001728 in P1-1020: 0.3 | 4.7;Different
+Grade;SR001729 in P1-6310: 6.8 | 3.6;Different
+Grade;SR001729 in P1-9115: 7.5 | 0.3;Different
+Grade;SR001732; in P1-1060: 7.5 | 0.7;Different
+Grade;SR001733; in P1-2010: 7.1 | 0.2;Different
+Grade;SR001739 in P1-1010: 8.6 | 7.6;Different
+Grade;SR001739; in P1-2020: 8.6 | 4.7;Different
+Grade;SR001739; in P1-3060: 4.7 | 6.7;Different
+Grade;SR001739; in P1-4020: 6.8 | 0.7;Different
+Grade;SR001739; in P1-4030: 6.8 | 4.7;Different
+Grade;SR001739; in P1-5040: 0.3 | 8.6;Different
+Grade;SR001743 in P1-2010: 6.9 | 5.9;Different
+Grade;SR001745 in P1-1030: 7.0 | 0.5;Different
+Grade;SR001745; in P1-3040: 8.6 | 0.4;Different
+Grade;SR001750; in P1-5010: 4.7 | 6.6;Different
+Grade;SR001750; in P1-5020: 3.3 | 4.7;Different
+Grade;SR001750 in P1-9115: 0.3 | 8.6;Different
+Grade;SR001753 in P1-3010: 3.5 | 4.7;Different
+Grade;SR001756; in P1-5030: 4.0 | 0.2;Different
+Grade;SR001756; in P1-6020: 4.7 | 0.5;Different
+Grade;SR001756; in P1-6120: 1.1 | 0.5;Different
+Grade;SR001757; in P1-2010: 7.5 | 8.6;Different
+Grade;SR001758 in P1-3020: 7.6 | 0.2;Different
+Grade;SR001765; in P1-5110: 8.6 | 0.0;Different
+Grade;SR001768; in P1-3060: 0.2 | 1.7;Different
+Grade;SR001768; in P1-4040: 3.4 | 6.8;Different
+Grade;SR001771; in P1-1030: 6.2 | 0.1;Different
+Grade;SR001774 in P1-1030: 4.7 | 5.7;Different
+Grade;SR001774; in P1-9170: 8.6 | 4.7;Different
+Grade;SR001775; in P1-6020: 8.3 | 3.6;Different
+Course;P1-8010;Missing
+Course;P1-8020;Missing
+Course;P1-8020;Missing
+Grade;SR001778; in P1-1030: 7.4 | 1.8;Different
+Grade;SR001778; in P1-2010: 3.5 | 7.5;Different
+Grade;SR001778; in P1-3040: 10.0 | 7.5;Different
+Grade;SR001779 in P1-3040: 1.6 | 4.7;Different
+Grade;SR001779; in P1-5120: 7.5 | 4.7;Different
+Grade;SR001781; in P1-1020: 7.5 | 8.6;Different
+Grade;SR001781; in P1-3060: 4.7 | 7.0;Different
+Grade;SR001781; in P1-4050: 1.1 | 8.6;Different
+Grade;SR001784; in P1-3040: 1.1 | 5.1;Different
+Grade;SR001796; in P1-3010: 3.5 | 8.5;Different
+Grade;SR001802; in P1-3040: 0.3 | 4.9;Different
+Grade;SR001803; in P1-5030: 6.8 | 4.7;Different
+Grade;SR001805; in P1-1060: 0.3 | 4.7;Different
+Grade;SR001805; in P1-4030: 3.5 | 7.5;Different
+Grade;SR001807; in P1-4010: 8.6 | 4.7;Different
+Grade;SR001818; in P1-3010: 10.0 | 7.5;Different
+Grade;SR001818; in P1-3020: 7.4 | 7.5;Different
+Grade;SR001819; in P1-3040: 3.3 | 4.7;Different
+Grade;SR001819; in P1-3050: 6.8 | 3.2;Different
+Grade;SR001819; in P1-5030: 0.3 | 1.1;Different
+Grade;SR001819; in P1-5040: 7.5 | 0.7;Different
+Grade;SR001820; in P1-2010: 0.3 | 1.1;Different
+Grade;SR001820; in P1-2020: 8.6 | 6.8;Different
+Grade;SR001825 in P1-1060: 0.4 | 4.7;Different
+Grade;SR001825; in P1-6020: 3.3 | 0.7;Different
+Grade;SR001825; in P1-9340: 7.5 | 0.3;Different
+Grade;SR001826; in P1-1060: 5.5 | 3.4;Different
+Grade;SR001830; in P1-4040: 1.1 | 6.8;Different
+Grade;SR001830; in P1-5020: 6.5 | 0.1;Different
+Grade;SR001830 in P1-6310: 4.3 | 7.6;Different
+Grade;SR001834; in P1-4020: 1.1 | 4.7;Different
+Grade;SR001837 in P1-1010: 6.8 | 4.7;Different
+Grade;SR001837; in P1-4020: 3.4 | 0.7;Different
+Grade;SR001840; in P1-2060: 0.3 | 4.7;Different
+Grade;SR001840; in P1-3020: 8.6 | 0.7;Different
+Grade;SR001840; in P1-5010: 3.4 | 5.1;Different
+Grade;SR001843 in P1-1030: 1.0 | 4.7;Different
+Grade;SR001844; in P1-1050: 0.3 | 8.6;Different
+Grade;SR001846; in P1-1050: 0.3 | 3.4;Different
+Grade;SR001846; in P1-2020: 8.6 | 4.7;Different
+Grade;SR001854 in P1-1010: 7.5 | 7.6;Different
+Grade;SR001854; in P1-1020: 7.5 | 6.8;Different
+Grade;SR001854; in P1-1030: 1.1 | 8.6;Different
+Grade;SR001854; in P1-1060: 10.0 | 2.9;Different
+Grade;SR001854; in P1-2050: 10.0 | 8.6;Different
+Grade;SR001854; in P1-2060: 7.5 | 0.3;Different
+Grade;SR001857 in P1-1060: 6.8 | 7.6;Different
+Grade;SR001860 in P1-3020: 3.6 | 0.2;Different
+Grade;SR001861 in P1-9150: 6.8 | 4.7;Different
+Grade;SR001867; in P1-2060: 7.5 | 8.6;Different
+Grade;SR001867; in P1-5030: 4.1 | 0.3;Different
+Grade;SR001868; in P1-1050: 8.6 | 3.4;Different
+Grade;SR001869 in P1-3020: 4.7 | 0.7;Different
+Grade;SR001870; in P1-6020: 9.7 | 0.7;Different
+Grade;SR001871; in P1-1050: 0.3 | 6.8;Different
+Grade;SR001874 in P1-1010: 6.8 | 4.7;Different
+Grade;SR001874; in P1-4050: 8.6 | 6.8;Different
+Grade;SR001874; in P1-5020: 9.7 | 5.1;Different
+Grade;SR001878; in P1-5110: 10.0 | 7.5;Different
+Grade;SR001881; in P1-1020: 7.5 | 6.8;Different
+Grade;SR001887 in P1-4010: 4.7 | 0.5;Different
+Grade;SR001892 in P1-1010: 0.3 | 3.2;Different
+Grade;SR001892; in P1-1020: 1.1 | 8.6;Different
+Grade;SR001892; in P1-1030: 1.1 | 6.8;Different
+Grade;SR001892; in P1-1050: 0.3 | 8.6;Different
+Grade;SR001899; in P1-5040: 3.4 | 3.6;Different
+Grade;SR001901; in P1-5030: 6.8 | 4.7;Different
+Grade;SR001901; in P1-5040: 0.3 | 4.7;Different
+Course;P1-8010;Missing
+Grade;SR001909; in P1-6020: 0.4 | 4.7;Different
+Grade;SR001920 in P1-2010: 1.1 | 4.7;Different
+Grade;SR001920; in P1-2020: 8.6 | 7.6;Different
+Grade;SR001920; in P1-4010: 8.6 | 0.5;Different
+Grade;SR001920; in P1-4020: 0.3 | 1.1;Different
+Grade;SR001925; in P1-1050: 10.0 | 0.3;Different
+Grade;SR001938; in P1-6010: 7.5 | 1.0;Different
+Grade;SR001946; in P1-1010: 10.0 | 8.6;Different
+Grade;SR001946; in P1-1020: 10.0 | 8.6;Different
+Grade;SR001946; in P1-1060: 10.0 | 2.9;Different
+Grade;SR001947; in P1-2020: 8.6 | 4.7;Different
+Grade;SR001947; in P1-6010: 1.0 | 7.6;Different
+Student;SR001950;Missing
+Student;SR001951;Missing
+Student;SR001951;Missing
+Student;SR001951;Missing
+Student;SR001952;Missing
+Student;SR001952;Missing
+Student;SR001952;Missing
+Student;SR001952;Missing
+Student;SR001952;Missing
+Student;SR001953;Missing
+Student;SR001954;Missing
+Student;SR001954;Missing
+Student;SR001954;Missing
+Student;SR001954;Missing
+Student;SR001954;Missing
+Student;SR001954;Missing
+Student;SR001954;Missing
+Student;SR001954;Missing
+Student;SR001954;Missing
+Student;SR001954;Missing
+Student;SR001954;Missing
+Student;SR001954;Missing
+Student;SR001954;Missing
+Student;SR001954;Missing
+Student;SR001954;Missing
+Student;SR001955;Missing
+Student;SR001955;Missing
+Student;SR001955;Missing
+Student;SR001955;Missing
+Student;SR001955;Missing
+Student;SR001955;Missing
+Student;SR001955;Missing
+Student;SR001955;Missing
+Student;SR001955;Missing
+Student;SR001955;Missing
+Student;SR001955;Missing
+Student;SR001955;Missing
+Student;SR001955;Missing
+Student;SR001956;Missing
+Student;SR001956;Missing
+Student;SR001956;Missing
+Student;SR001956;Missing
+Student;SR001956;Missing
+Student;SR001956;Missing
+Student;SR001956;Missing
+Student;SR001956;Missing
+Student;SR001956;Missing
+Student;SR001956;Missing
+Student;SR001956;Missing
+Student;SR001956;Missing
+Student;SR001956;Missing
+Student;SR001956;Missing
+Student;SR001956;Missing
+Student;SR001956;Missing
+Student;SR001957;Missing
+Student;SR001957;Missing
+Student;SR001957;Missing
+Student;SR001957;Missing
+Student;SR001957;Missing
+Student;SR001957;Missing
+Student;SR001957;Missing
+Student;SR001957;Missing
+Student;SR001957;Missing
+Student;SR001957;Missing
+Student;SR001957;Missing
+Student;SR001957;Missing
+Student;SR001958;Missing
+Student;SR001958;Missing
+Student;SR001958;Missing
+Student;SR001958;Missing
+Student;SR001958;Missing
+Student;SR001958;Missing
+Student;SR001958;Missing
+Student;SR001958;Missing
+Student;SR001958;Missing
+Student;SR001958;Missing
+Student;SR001958;Missing
+Student;SR001958;Missing
+Student;SR001958;Missing
+Student;SR001958;Missing
+Student;SR001958;Missing
+Student;SR001958;Missing
+Student;SR001958;Missing
+Student;SR001958;Missing
+Student;SR001958;Missing
+Student;SR001958;Missing
+Student;SR001958;Missing
+Student;SR001958;Missing
+Student;SR001959;Missing
+Student;SR001959;Missing
+Student;SR001959;Missing
+Student;SR001959;Missing
+Student;SR001959;Missing
+Student;SR001959;Missing
+Student;SR001959;Missing
+Student;SR001959;Missing
+Student;SR001960;Missing
+Student;SR001960;Missing
+Student;SR001960;Missing
+Student;SR001960;Missing
+Student;SR001960;Missing
+Student;SR001961;Missing
+Student;SR001961;Missing
+Student;SR001961;Missing
+Student;SR001961;Missing
+Student;SR001961;Missing
+Student;SR001962;Missing
+Student;SR001962;Missing
+Student;SR001962;Missing
+Student;SR001962;Missing
+Student;SR001963;Missing
+Student;SR001963;Missing
+Student;SR001963;Missing
+Student;SR001964;Missing
+Student;SR001964;Missing
+Student;SR001964;Missing
+Student;SR001964;Missing
+Student;SR001964;Missing
+Student;SR001964;Missing
+Student;SR001964;Missing
+Student;SR001964;Missing
+Student;SR001965;Missing
+Student;SR001965;Missing
+Student;SR001965;Missing
+Student;SR001965;Missing
+Student;SR001965;Missing
+Student;SR001965;Missing
+Student;SR001965;Missing
+Student;SR001966;Missing
+Student;SR001966;Missing
+Student;SR001966;Missing
+Student;SR001966;Missing
+Student;SR001966;Missing
+Student;SR001966;Missing
+Student;SR001966;Missing
+Student;SR001966;Missing
