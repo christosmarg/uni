@@ -19,10 +19,10 @@ int set_minesnum(struct _win_st*, int);
 void game_win(int, int, int);
 void init_dispboard(struct _win_st*, int, int);
 void fill_dispboard(char **, int, int);
-void init_mineboard(struct _win_st*, int, int, int);
-void fill_mineboard(char **, int, int, int);
 
-void adj_mines(char **, int, int;
+void init_mineboard(struct _win_st*, int, int, int);
+void place_mines(char **, int, int, int);
+void adj_mines(char **, int, int);
 
 void fill_spaces(char **, int, int, int);
 
