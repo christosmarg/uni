@@ -13,17 +13,17 @@ int main(int argc, char **argv)
 	int NMINES = set_nmines(menuw, COLS*ROWS);
 
 	WINDOW *gamew = game_win(COLS, ROWS, NMINES);
-	char **dispboard = init_dispboard(gamew, COLS, ROWS);
-	char **mineboard = init_mineboard(gamew, COLS, ROWS, NMINES);
+	char **dboard = init_dboard(gamew, COLS, ROWS);
+	char **mboard = init_mboard(gamew, COLS, ROWS, NMINES);
 	
-	pthread_t audioThread;
-	long threadID = 1;
-	pthread_create(&audioThread, NULL, play_audio, (void *)threadID);
-	play_minesweeper(gamew, dispboard, mineboard, COLS, ROWS, NMINES);
+	pthread_t audiothread;
+	long threadid = 1;
+	pthread_create(&audiothread, NULL, play_audio, (void *)threadid);
+	play_minesweeper(gamew, dboard, mboard, COLS, ROWS, NMINES);
 	
-	pthread_cancel(audioThread);
-	free(dispboard);
-	free(mineboard);
+	pthread_cancel(audiothread);
+	free(dboard);
+	free(mboard);
 	endwin();
 
 	return 0;

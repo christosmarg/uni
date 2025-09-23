@@ -1,6 +1,6 @@
 #include "outputs.h"
 
-void print_board(WINDOW *gamew, char **board, int COLS, int ROWS)
+void print_board(WINDOW *gamew, char **dboard, int COLS, int ROWS)
 {    
     int i, j, x, y = 1;
 
@@ -12,7 +12,7 @@ void print_board(WINDOW *gamew, char **board, int COLS, int ROWS)
         for (j = 0; j < COLS; j++)
         {
             wattron(gamew, A_BOLD);
-            mvwaddch(gamew, y, x, board[i][j]);
+            mvwaddch(gamew, y, x, dboard[i][j]);
             x += 3;
         }
         y++;
@@ -36,12 +36,12 @@ void print_grid(WINDOW *gamew, int ROWS, int COLS)
     wrefresh(gamew);
 }
 
-void session_write(char **mineboard, int COLS, int ROWS, int hitRow, int hitCol, const char *status)
+void session_write(char **mboard, int COLS, int ROWS, int hitrow, int hitcol, const char *status)
 {
     int i, j;
-    FILE *mnsOut = fopen(SESSION_PATH, "w");
+    FILE *mnsout = fopen(SESSION_PATH, "w");
 
-    if (mnsOut == NULL)
+    if (mnsout == NULL)
     {
         mvprintw(1, 1, "Error opening file, exiting...");
         refresh();
@@ -50,15 +50,15 @@ void session_write(char **mineboard, int COLS, int ROWS, int hitRow, int hitCol,
     else
     {
         strcmp(status, "won")
-            ? fprintf(mnsOut, "Mine hit at position (%d, %d)\n\n", hitRow+1, hitCol+1)
-            : fprintf(mnsOut, "Last mine defused at position (%d, %d)\n\n", hitRow+1, hitCol+1);
-        fprintf(mnsOut, "Board overview\n\n");
+            ? fprintf(mnsout, "Mine hit at position (%d, %d)\n\n", hitrow+1, hitcol+1)
+            : fprintf(mnsout, "Last mine defused at position (%d, %d)\n\n", hitrow+1, hitcol+1);
+        fprintf(mnsout, "Board overview\n\n");
 
         for (i = 0; i < ROWS; i++)
         {
             for (j = 0; j < COLS; j++)
-                fprintf(mnsOut, "%c ", mineboard[i][j]);
-            fprintf(mnsOut, "\n");
+                fprintf(mnsout, "%c ", mboard[i][j]);
+            fprintf(mnsout, "\n");
         }           
 
         mvprintw(1, 1, "Session written to file       ");
@@ -66,17 +66,17 @@ void session_write(char **mineboard, int COLS, int ROWS, int hitRow, int hitCol,
         getchar();
     }
 
-    fclose(mnsOut);
+    fclose(mnsout);
 }
 
-void score_write(int numDefused, int COLS, int ROWS)
+void score_write(int ndefused, int COLS, int ROWS)
 {
-    FILE *scoreLog = fopen(SCORE_LOG_PATH, "a");
-    char *playerName = get_pname();
+    FILE *scorelog = fopen(SCORE_LOG_PATH, "a");
+    char *playername = get_pname();
 
     // add titles etc
 
-    if (scoreLog == NULL)
+    if (scorelog == NULL)
     {
         mvprintw(1, 1, "Error opening file, exiting...");
         refresh();
@@ -84,21 +84,21 @@ void score_write(int numDefused, int COLS, int ROWS)
     }
     else
     {
-        fprintf(scoreLog, "\n%s\t\t\t\t%d\t\t\t\t\t%dx%d", playerName, numDefused, COLS, ROWS);
-        sort_scorelog(scoreLog); // pending
+        fprintf(scorelog, "\n%s\t\t\t\t%d\t\t\t\t\t%dx%d", playername, ndefused, COLS, ROWS);
+        sort_scorelog(scorelog); // pending
         mvprintw(1, 1, "New score written to score log");
         refresh();
         getchar();
     }
     
-    fclose(scoreLog);
-    free(playerName);
+    fclose(scorelog);
+    free(playername);
 }
 
-char *get_pname()
+char *get_pname(void)
 {   
     char buffer[20];
-    char *playerName;
+    char *playername;
 
     move(1, 1);
     echo();
@@ -109,11 +109,11 @@ char *get_pname()
     noecho();
     refresh();
 
-    playerName = (char *)malloc(strlen(buffer) + 1);
-    return (strcpy(playerName, buffer));
+    playername = (char *)malloc(strlen(buffer) + 1);
+    return (strcpy(playername, buffer));
 }
 
-void sort_scorelog(FILE *scoreLog)
+void sort_scorelog(FILE *scorelog)
 {
 
 }
@@ -130,7 +130,7 @@ void game_won(WINDOW *gamew, int ymid, int xmid)
     wattroff(stdscr, A_BOLD);
 }
 
-void game_over(WINDOW *gamew, char **mineboard, int ymid, int xmid)
+void game_over(WINDOW *gamew, char **mboard, int ymid, int xmid)
 {
     wclear(gamew);
     wrefresh(gamew);

@@ -3,12 +3,12 @@
 
 #include "minesweeper.h"
 
-void navigate(struct _win_st*, char **, char *, int *, int *);
-void getmv(struct _win_st*, char *, int *, int *, int, int);
-void mvup(int *);
-void mvdown(int *, int);
-void mvleft(int *);
-void mvright(int *, int);
-void update_curs(struct _win_st*, int, int);
+void navigate	(struct _win_st* gamew, char **mboard, char *move, int *mbx, int *mby);
+void getmv		(struct _win_st* gamew, char *move, int *y, int *x, int ymax, int xmax);
+void mvup		(int *y);
+void mvdown		(int *y, int ymax);
+void mvleft		(int *x);
+void mvright	(int *x, int xmax);
+void update_curs(struct _win_st* gamew, int y, int x);
 
-#endif
+#endif /* NAVIGATION_H */

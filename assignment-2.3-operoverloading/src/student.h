@@ -35,13 +35,13 @@ class Student
 		inline bool operator> (const Student& s)  const	{return (this->semester > s.semester)	? true : false;}
 		inline bool operator>= (const Student& s) const	{return (this->semester >= s.semester)	? true : false;}
 
-		inline const char *get_AM() const {return this->AM;}
-		inline const std::string& get_name() const {return this->name;}
-		inline unsigned int get_semester() const {return this->semester;}
-		inline unsigned int get_psubj() const {return this->psubj;}
-		float *get_grades() const;
-		inline unsigned int get_num_submitted_subjects() const {return this->numSubmittedSubjects;}
-		std::string *get_submitted_subjects() const;
+		inline const char *get_AM(void) const {return this->AM;}
+		inline const std::string& get_name(void) const {return this->name;}
+		inline unsigned int get_semester(void) const {return this->semester;}
+		inline unsigned int get_psubj(void) const {return this->psubj;}
+		float *get_grades(void) const;
+		inline unsigned int get_num_submitted_subjects(void) const {return this->numSubmittedSubjects;}
+		std::string *get_submitted_subjects(void) const;
 
 		inline void set_AM(const char *AM) {this->AM = convert_AM(AM);}
 		inline void set_name(const std::string& name) {this->name = name;}
@@ -54,6 +54,6 @@ class Student
 		char *convert_AM(const char *AM);
 		float *convert_PSG(const float *grades);
 		void add_grade(float grade);
-		void detailed_print() const;
-		float calc_average() const;
+		void detailed_print(void) const;
+		float calc_average(void) const;
 };
