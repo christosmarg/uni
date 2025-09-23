@@ -6,9 +6,9 @@ import java.util.Scanner;
 public class HRClient {
 	public static void usage() {
 		System.err.println("usage: java HRClient list <hostname>");
-		System.err.println("            java HRClient book <type> <number> <name> <hostname>");
-		System.err.println("            java HRClient guests <hostname>");
-		System.err.println("            java HRClient cancel <type> <number> <name> <hostname>");
+		System.err.println("       java HRClient book <type> <number> <name> <hostname>");
+		System.err.println("       java HRClient guests <hostname>");
+		System.err.println("       java HRClient cancel <type> <number> <name> <hostname>");
 		System.exit(1);
 	}
 

@@ -1,0 +1,83 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[greek,english]{babel}
+\usepackage{alphabeta}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{mathtools}
+\usepackage{xcolor}
+\usepackage{biblatex}
+\usepackage[left=1cm,right=1cm]{geometry}
+
+\lstset {
+        basicstyle=\ttfamily,
+        columns=fullflexible,
+        breaklines=true,
+        keepspaces=true,
+	showstringspaces=false
+}
+
+\title{Εργαστήριο Κατανεμημένων Συστημάτων - Εργασία 2}
+\author{Χρήστος Μαργιώλης -- 19390133}
+\date{Μάιος 2022}
+
+\begin{document}
+
+\begin{titlepage}
+        \maketitle
+        \begin{figure}[t!]
+        \begin{center}
+        \includegraphics[scale=0.3]{./res/uniwalogo.png} \\
+        \Large
+        \textbf{Πανεπιστήμιο Δυτικής Αττικής} \\
+        \large
+        Τμήμα Μηχανικών Πληροφορικής και Ηλεκτρονικών Υπολογιστών
+        \end{center}
+        \end{figure}
+\end{titlepage}
+
+\renewcommand{\contentsname}{Περιεχόμενα}
+\tableofcontents
+
+\section{<++>}
+
+\section{Εκτέλεση κώδικα}
+
+<++>
+
+\section{Ενδεικτικά τρεξίματα}
+
+<++>
+
+\section{Κώδικας}
+
+Ο κώδικας είναι σχολιασμένος στα σημεία που θεωρώ ότι μπορεί να υπάρξει
+σύχγηση, και όχι ακόμα και σε σημεία που είναι λίγο-πολύ ξεκάθαρο το τι
+συμβαίνει.
+
+\subsection{\lstinline{HRInterface.java}}
+
+\lstinputlisting[language=java]{../src/HRInterface.java}
+\pagebreak
+
+\subsection{\lstinline{HRImpl.java}}
+
+\lstinputlisting[language=java]{../src/HRImpl.java}
+\pagebreak
+
+\subsection{\lstinline{Room.java}}
+
+\lstinputlisting[language=java]{../src/Room.java}
+\pagebreak
+
+\subsection{\lstinline{HRServer.java}}
+
+\lstinputlisting[language=java]{../src/HRServer.java}
+\pagebreak
+
+\subsection{\lstinline{HRClient.java}}
+
+\lstinputlisting[language=java]{../src/HRClient.java}
+\pagebreak
+
+\end{document}
