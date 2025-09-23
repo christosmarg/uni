@@ -11,7 +11,7 @@ MKDIR_P = mkdir -p
 CPPFLAGS += -Iinclude
 CFLAGS += -Wall
 LDFLAGS += -Llib
-LDLIBS += -lm
+LDLIBS += -lm -lncurses
 
 .PHONY: all clean
 
