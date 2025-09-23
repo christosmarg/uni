@@ -139,15 +139,15 @@ static void equals_overload(const Student& s1, Student& s2)
 
 static void constructor3(const Student& s3)
 {
-	std::cout << "constructor for s3 (am, name, semester, subjects passed, grades)" << std::endl;
+	std::cout << "Constructor for s3 (AM, Name, Semester, Subjects passed, Grades)" << std::endl;
 	std::cout << "----------------------------" << std::endl;
-	std::cout << "am: " << s3.get_AM() << std::endl;
-	std::cout << "name: " << s3.get_name() << std::endl;
-	std::cout << "semester: " << s3.get_semester() << std::endl;
-	std::cout << "subjects passed: " << s3.get_psubj() << std::endl;
+	std::cout << "AM: " << s3.get_AM() << std::endl;
+	std::cout << "Name: " << s3.get_name() << std::endl;
+	std::cout << "Semester: " << s3.get_semester() << std::endl;
+	std::cout << "Subjects passed: " << s3.get_psubj() << std::endl;
 
 	float *gr = s3.get_grades();
-	std::cout << "grades: ";
+	std::cout << "Grades: ";
 	for (unsigned int i = 0; i < s3.get_psubj(); i++)
 	{
 		if (i != s3.get_psubj()-1) std::cout << gr[i] << ", ";
