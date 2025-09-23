@@ -36,6 +36,18 @@ Manufacturer::convstr(const char *str)
 	return tmp;
 }
 
+const char *
+Manufacturer::get_serialnum() const
+{
+	return serialnum;
+}
+
+const char *
+Manufacturer::get_name() const
+{
+	return name;
+}
+
 const std::string&
 Manufacturer::get_email() const
 {

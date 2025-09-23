@@ -37,10 +37,10 @@ class AppSystem
 		void removebad	(Manufacturer *man);
 		void removebad	(const char *manfname);
 		
-		constexpr const std::vector<App *>& get_apps() const {return apps;}
-		constexpr const std::vector<Manufacturer *>& get_manfs() const {return manfs;} 
 		const std::vector<Office *> get_freeapps() const;
 		const std::vector<Game *> get_goodgames() const;
+		const std::vector<App *>& get_apps() const;
+		const std::vector<Manufacturer *>& get_manfs() const;
 
 	private:
 		template<typename T> bool parse(std::ifstream& f);
@@ -49,9 +49,9 @@ class AppSystem
 			parse_reviews(const std::string& appname, const char *rpath);
 		void write_office_exts(Office *of, std::ofstream& f);
 		bool valid_path(const std::string& strpath);
-		const std::string err_csv(const std::string& strpath);
-		const std::string err_read(const std::string& strpath);
-		const std::string err_write(const std::string& strpath);
+		const std::string err_csv(const std::string& fpath);
+		const std::string err_read(const char *fpath);
+		const std::string err_write(const char *fpath);
 		template<typename T> void dealloc(std::vector<T *>& vec);
 };
 
@@ -182,7 +182,7 @@ AppSystem::import_data(const char *fpath)
 	}
 	catch (const std::ifstream::failure& e)
 	{
-		std::cerr << err_read(std::string(fpath)) << std::endl << e.what() << std::endl;
+		std::cerr << err_read(fpath) << std::endl << e.what() << std::endl;
 		return false;
 	}
 	return true;
@@ -252,7 +252,7 @@ AppSystem::export_data(const char *fpath)
 	}
 	catch (const std::ofstream::failure& e)
 	{
-		std::cerr << err_write(std::string(fpath)) << std::endl << e.what() << std::endl;
+		std::cerr << err_read(fpath) << std::endl << e.what() << std::endl;
 		return false;
 	}
 	return true;

@@ -27,31 +27,19 @@ class xstring
 		xstring& operator+=	(const xstring& s);
 		xstring& operator+=	(const char *s);
 		xstring& operator+=	(char c);
-		constexpr bool operator== (const xstring& s) const
-			{return strcmp(this->str, s.str) == 0;}
-		constexpr bool operator== (const char *s)	 const
-			{return strcmp(this->str, s) == 0;}
-		constexpr bool operator!= (const xstring& s) const
-			{return strcmp(this->str, s.str) != 0;}
-		constexpr bool operator!= (const char *s)	 const
-			{return strcmp(this->str, s) != 0;}
-		constexpr bool operator<  (const xstring& s) const
-			{return strcmp(this->str, s.str) < 0;}
-		constexpr bool operator<  (const char *s)	 const
-			{return strcmp(this->str, s) < 0;}
-		constexpr bool operator<= (const xstring& s) const
-			{return strcmp(this->str, s.str) <= 0;}
-		constexpr bool operator<= (const char *s)	 const
-			{return strcmp(this->str, s) <= 0;}
-		constexpr bool operator>  (const xstring& s) const
-			{return strcmp(this->str, s.str) > 0;}
-		constexpr bool operator>  (const char *s)	 const
-			{return strcmp(this->str, s) > 0;}
-		constexpr bool operator>= (const xstring& s) const
-			{return strcmp(this->str, s.str) >= 0;}
-		constexpr bool operator>= (const char *s)	 const
-			{return strcmp(this->str, s) >= 0;}
-		char& operator[] (std::size_t i) const;
+		bool operator==	(const xstring& s)	const;
+		bool operator== (const char *s)		const;
+		bool operator!=	(const xstring& s)	const;
+		bool operator!= (const char *s)		const;
+		bool operator<	(const xstring& s)	const;
+		bool operator<	(const char *s)		const;
+		bool operator<=	(const xstring& s)	const;
+		bool operator<=	(const char *s)		const;
+		bool operator>	(const xstring& s)	const;
+		bool operator>	(const char *s)		const;
+		bool operator>=	(const xstring& s)	const;
+		bool operator>=	(const char *s)		const;
+		char& operator[] (std::size_t i)	const;
 		friend std::ostream& operator<< (std::ostream& stream, const xstring& s);
 		friend std::istream& operator>> (std::istream& stream, const xstring& s);
 
@@ -66,23 +54,23 @@ class xstring
 		void replace(std::size_t i, char c);
 		bool find(const xstring& s) const;
 		bool find(const char *s) const;
-		constexpr char *cstr() const {return str;}
-		constexpr char& front() const {return str[0];}
+		char *cstr() const;
+		char& front() const;
 		char& back() const;
-		constexpr std::size_t length() const {return strlen(str);}
-		constexpr bool empty() const {return len == 0;}
+		std::size_t length() const;
+		bool empty() const;
 		void clear();
 	
 	private:
 		void resize(std::size_t n);
 		char *conv(const char *s) const;
-		constexpr bool strempty(const char *s) const {return strlen(s) == 0;}
+		bool strempty(const char *s) const;
 };
 
 std::istream& getline(std::istream& stream, xstring& s, char delim = '\n');
 template<typename T> xstring to_xstr(T val);
 template<typename T> xstring to_xstr(const char *fs, T val);
-template<typename T> constexpr const char *getformat();
+template<typename T> const char *getformat();
 
 template<typename T> xstring
 to_xstr(T val)
@@ -100,7 +88,7 @@ to_xstr(const char *fs, T val)
 	return xstring(buf);
 }
 
-template<typename T> constexpr const char *
+template<typename T> const char *
 getformat()
 {
 	if (std::is_same<T, short>::value) return "%hi";
