@@ -16,7 +16,7 @@ void constructor3(const Student& s3);
 void detprint (const Student& s3);
 void setters(Student& s3);
 void getters(const Subject& s3);
-void setters(Subject& s3);
+void setters(Subject& sb);
 
 
 int main(int argc, char **argv)
@@ -25,6 +25,7 @@ int main(int argc, char **argv)
 	system("clear");
 	constructor1(*s1); cont();
 	ostream_overload(*s1); cont();
+
 	Student *s2 = new Student("12345678", "Name Surname", 2);
 	constructor2(*s2); cont();
 
@@ -212,5 +213,4 @@ void setters(Subject& sb)
 	std::cout << "Output: sb.get_sname(): " << sb.get_sname() << std::endl;
 	std::cout << "Input: sb.set_subjsemester(1):" << '\t' << '\t';
 	std::cout << "Output: sb.get_subjsemester(): " << sb.get_subjsemester() << std::endl;
-	
 }
