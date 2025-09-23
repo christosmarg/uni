@@ -46,7 +46,7 @@ main:
         # 00110010 & 0x0f = 00000010 = 2
         andi    $t1, $t0, 0x0f
         
-        # Grint second portion (4 bits)
+        # Print second portion (4 bits)
         lb      $a0, hex($t1)
         syscall
         
