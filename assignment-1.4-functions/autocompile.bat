@@ -19,7 +19,7 @@ cd ../obj
 
 :: Link and move executable to the right directory
 gcc main.o %program%-libs.o -lm
-move a.out ../exec
+move a.exe ../exec
 cd ../exec
 
 :: Execute program

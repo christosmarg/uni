@@ -38,10 +38,8 @@ __Requirements:__ MinGW gcc compiler
 
 ### Method 2
 
-1. Open Command Prompt, or the integrated terminal of your editor.
-2. Move to the assignment's directory: ```$ cd full_path/assignment-1.4-functions```
-3. Run the ```autocompile.bat``` script: ```$ autocompile```
-4. Enter the name of the program when the script prints ```"Program name: "``` __exactly__ as it's written in the folder.
+1. Run the ```autocompile.bat``` script.
+2. Enter the name of the program when the script prints ```"Program name: "``` __exactly__ as it's written in the folder.
 
 
 
