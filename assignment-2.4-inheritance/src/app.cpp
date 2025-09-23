@@ -32,7 +32,6 @@ App::App(const char *serialnum, const std::string& name,
 	}
 }
 
-#include <iostream>
 App::~App()
 {
 	if (serialnum != nullptr) delete[] serialnum;
@@ -94,7 +93,7 @@ int App::get_price() const
 
 void App::set_serialnum(const char *serialnum)
 {
-	if (this->serialnum != nullptr) delete[] serialnum;
+	if (this->serialnum != nullptr) delete[] this->serialnum;
 	this->serialnum = convsn(serialnum);
 }
 
