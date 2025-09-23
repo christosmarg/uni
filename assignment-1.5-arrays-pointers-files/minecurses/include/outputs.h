@@ -8,6 +8,7 @@
 
 void print_board	(struct _win_st* gamew, char **dboard, int COLS, int ROWS);
 void print_grid		(struct _win_st* gamew, int ROWS, int COLS);
+void session_info	(int mbx, int mby, int xmax, int xmid, int ndefused, int NMINES);
 void session_write	(char **mboard, int COLS, int ROWS, int hitrow, int hitcol, const char *status);
 void score_write	(int ndefused, int COLS, int ROWS);
 char *get_pname		(void);

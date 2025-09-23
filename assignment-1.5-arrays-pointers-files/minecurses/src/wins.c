@@ -1,47 +1,58 @@
 #include "wins.h"
 
-void main_win(void)
+void init_curses(void)
 {
     initscr();
     noecho();
     cbreak();
-    
-    WINDOW *mainw = newwin(0, 0, 0, 0);
-    wattron(mainw, A_BOLD);
-    box(mainw, 0, 0);
-    refresh();
-    wrefresh(mainw);
-    wattroff(mainw, A_BOLD);
-}
-
-WINDOW *menu_win(int *ymax, int *xmax)
-{
-    int nsettings = 3;
-	getmaxyx(stdscr, *ymax, *xmax);
-    WINDOW *menuw = newwin(nsettings+2, *xmax-8, *ymax-8, 4);
-    wattron(menuw, A_BOLD);
-    box(menuw, 0, 0);
-    wrefresh(menuw);
-    wattroff(menuw, A_BOLD);
-    return menuw;
 }
 
 WINDOW *game_win(int COLS, int ROWS, int NMINES)
 {
+	int ymax, xmax;
+	getmaxyx(stdscr, ymax, xmax);
     int wrows = ROWS+2;
     int wcols = COLS*3+2;
-    WINDOW *gameWin = newwin(wrows, wcols, 2, 4);
-    wattron(gameWin, A_BOLD);
-    box(gameWin, 0, 0);
-    wrefresh(gameWin);
-    wattroff(gameWin, A_BOLD);
-    return gameWin;
+	int wy = ymax/2 - wrows/2;
+	int wx = xmax/2 - wcols/2;
+    WINDOW *gamew = newwin(wrows, wcols, wy, wx);
+	wattron(gamew, A_BOLD);
+    box(gamew, 0, 0);
+    wrefresh(gamew);
+    wattroff(gamew, A_BOLD);
+    return gamew;
 }
 
 void options_menu(void)
 {
-    int ymax = getmaxy(stdscr);
-    mvprintw(ymax-3, 5, "q Quit          w/k Move up     s/j Move down       a/h Move Left       d/l Move Right      [ENTER]/o Open cell");
-    mvprintw(ymax-2, 5, "f Flag cell     g Defuse (if flagged only)          p Pause music       + Volume up         - Volume down");
-    refresh();
+	int ymax, xmax;
+	getmaxyx(stdscr, ymax, xmax);
+	int w = 33, h = 15;
+	int wy = ymax/2 - h/2;
+	int wx = xmax/2 - w/2;
+	WINDOW *opts = newwin(h, w, wy, wx);
+	werase(opts);
+	box(opts, 0, 0);
+	fill_menu(opts);
+	wrefresh(opts);
+	wgetch(opts);
+	werase(opts);
+	wrefresh(opts);
+	delwin(opts);
+}
+
+void fill_menu(WINDOW *opts)
+{
+	mvwprintw(opts, 1, 1, "q	Quit");
+	mvwprintw(opts, 2, 1, "w/k	Move up");
+	mvwprintw(opts, 3, 1, "s/j	Move down");
+	mvwprintw(opts, 4, 1, "a/h	Move left");
+	mvwprintw(opts, 5, 1, "d/l	Move right");
+	mvwprintw(opts, 6, 1, "f	Flag cell");
+	mvwprintw(opts, 7, 1, "g	Defuse (if flagged only)");
+	mvwprintw(opts, 8, 1, "p	Pause music");
+	mvwprintw(opts, 9, 1, "+	Volume up");
+	mvwprintw(opts, 10, 1, "-	Volume down");
+	mvwprintw(opts, 11, 1, "[ENTER]/o Open cell");
+	mvwprintw(opts, 13, 1, "Press any key to quit the menu");
 }
