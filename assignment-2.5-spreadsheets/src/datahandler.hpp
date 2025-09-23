@@ -1,5 +1,5 @@
-#ifndef DATA_HANDLER_H
-#define DATA_HANDLER_H
+#ifndef DATA_HANDLER_HPP
+#define DATA_HANDLER_HPP
 
 #include <algorithm>
 #include <iostream>
@@ -7,10 +7,10 @@
 #include <map>
 #include <vector>
 
-#include "course.h"
-#include "errlog.h"
-#include "student.h"
-#include "xstring.h"
+#include "course.hpp"
+#include "errlog.hpp"
+#include "student.hpp"
+#include "xstring.hpp"
 
 using equivalencies = std::map<lab::xstring, lab::xstring>;
 
@@ -33,9 +33,9 @@ class DataHandler
         DataHandler();
         ~DataHandler();
 
-        template<typename T> bool import_data(const char *fpath);
-        bool store_data();
-        bool make_report() const;
+        template<typename T> void import_data(const char *fpath);
+        bool load_grades();
+        void make_report() const;
         void summary() const;
         
     private:
@@ -46,22 +46,18 @@ class DataHandler
                 float grade);
         void miss(lab::xstring id, lab::xstring code, float grade);
         void diffr(lab::xstring id, lab::xstring code, float grade);
-        bool valid_path(const char *fpath) const;
-        const lab::xstring err_csv  (const char *fpath) const;
         const lab::xstring err_read (const char *fpath) const;
         const lab::xstring err_write(const char *fpath) const;
         template<typename T> void dealloc(std::map<lab::xstring, T *>& vec);
 };
 
-template<typename T> bool
+template<typename T> void
 DataHandler::import_data(const char *fpath)
 {
     std::ifstream f;
     f.exceptions(std::ifstream::badbit);
     try
     {
-        if (!valid_path(fpath))
-            throw std::runtime_error(err_csv(fpath).cstr());
         f.open(fpath);
         if (f.is_open())
         {
@@ -101,10 +97,8 @@ DataHandler::import_data(const char *fpath)
     }
     catch (const std::ifstream::failure& e)
     {
-        std::cerr << err_read(fpath) << std::endl << e.what() << std::endl;
-        return false;
+        errlog.write(ErrLog::ErrType::RUNTIME_ERR, err_read(fpath));
     }
-    return true;
 }
 
 template<typename T> void
@@ -113,15 +107,10 @@ DataHandler::dealloc(std::map<lab::xstring, T *>& vec)
     if (!vec.empty())
     {
         for (auto&& v : vec)
-        {
             if (v.second != nullptr)
-            {
                 delete v.second;
-                v.second = nullptr; 
-            }
-        }
         vec.clear();
     }
 }
 
-#endif /* DATA_HANDLER_H */
+#endif /* DATA_HANDLER_HPP */

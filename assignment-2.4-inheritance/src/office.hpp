@@ -1,7 +1,7 @@
-#ifndef OFFICE_H
-#define OFFICE_H
+#ifndef OFFICE_HPP
+#define OFFICE_HPP
 
-#include "app.h"
+#include "app.hpp"
 
 class Office final: public App
 {
@@ -21,4 +21,4 @@ class Office final: public App
         void print(std::ostream& stream) const override;
 };
 
-#endif /* OFFICE_H */
+#endif /* OFFICE_HPP */

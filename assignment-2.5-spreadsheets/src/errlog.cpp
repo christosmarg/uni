@@ -1,4 +1,4 @@
-#include "errlog.h"
+#include "errlog.hpp"
 
 ErrLog::ErrLog() {fclear();}
 
@@ -26,6 +26,9 @@ ErrLog::write(ErrType type, const lab::xstring& s) const
             break;
         case ErrType::DIFFERENT_GRADES:
             f << "Grade;" << s << ";Different" << std::endl;
+            break;
+        case ErrType::RUNTIME_ERR:
+            f << "Runtime;" << s << ";Error" << std::endl;
             break;
     }
     f.close();

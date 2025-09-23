@@ -1,4 +1,4 @@
-#include "review.h"
+#include "review.hpp"
 
 Review::Review()
     :stars(0), username(""), comment("") {}
@@ -7,7 +7,7 @@ Review::Review(int stars, const std::string& username, const std::string& commen
     :stars(stars), username(username), comment(comment)
 {
     if (stars < 0 || stars > 5)
-        throw std::runtime_error("Wrong star value. Must be in [0, 5]");
+        errlog.write("Review from: " + username + ": Star value out of bounds");
 }
 
 Review::Review(const Review& rev)

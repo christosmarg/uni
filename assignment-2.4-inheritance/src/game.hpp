@@ -1,7 +1,7 @@
-#ifndef GAME_H
-#define GAME_H
+#ifndef GAME_HPP
+#define GAME_HPP
 
-#include "app.h"
+#include "app.hpp"
 
 class Game final: public App
 {
@@ -23,4 +23,4 @@ class Game final: public App
         void print(std::ostream& stream) const override;
 };
 
-#endif /* GAME_H */
+#endif /* GAME_HPP */

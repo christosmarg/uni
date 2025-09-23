@@ -1,4 +1,4 @@
-#include "xstring.h"
+#include "xstring.hpp"
 
 namespace lab {
 xstring::xstring()
@@ -17,18 +17,6 @@ xstring::xstring(const xstring& s)
     {
         str = conv(s.str);
         len = s.len;
-    }
-    else clear();
-}
-
-xstring::xstring(xstring&& s) noexcept
-{
-    if (!s.empty())
-    {
-        str = s.str;
-        len = s.len;
-        s.str = nullptr;
-        s.len = 0;
     }
     else clear();
 }

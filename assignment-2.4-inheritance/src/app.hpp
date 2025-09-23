@@ -1,5 +1,5 @@
-#ifndef APP_H
-#define APP_H
+#ifndef APP_HPP
+#define APP_HPP
 
 #include <cstring>
 #include <iomanip>
@@ -8,8 +8,9 @@
 #include <string>
 #include <vector>
 
-#include "manufacturer.h"
-#include "review.h"
+#include "errlog.hpp"
+#include "manufacturer.hpp"
+#include "review.hpp"
 
 class App
 {
@@ -20,6 +21,7 @@ class App
         Manufacturer *manf;
         std::vector<Review *> reviews;
         int price;
+        ErrLog errlog;
 
     public:
         App();
@@ -51,4 +53,4 @@ class App
         char *convsn(const char *serialnum);
 };
 
-#endif /* APP_H */
+#endif /* APP_HPP */

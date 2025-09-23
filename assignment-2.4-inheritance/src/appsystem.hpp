@@ -1,37 +1,39 @@
-#ifndef APPSYSTEM_H
-#define APPSYSTEM_H
+#ifndef APPSYSTEM_HPP
+#define APPSYSTEM_HPP
 
 #include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 
-#include "game.h"
-#include "office.h"
+#include "errlog.hpp"
+#include "game.hpp"
+#include "office.hpp"
 
 class AppSystem
 {
     private:
         std::vector<App *> apps;
         std::vector<Manufacturer *> manfs;
+        ErrLog errlog;
 
     public:
-        AppSystem() = default;
+        AppSystem();
         ~AppSystem();
 
         AppSystem& operator+= (App *app);
         AppSystem& operator+= (Manufacturer *manf);
 
-        template<typename T> bool import_data(const char *fpath);
-        template<typename T> bool export_data(const char *fpath);
+        template<typename T> void import_data(const char *fpath);
+        template<typename T> void export_data(const char *fpath);
         template<typename T> void call(
                 const std::string& appname,
                 const T element,
-                void (App::*func)(T));
+                void (App::*setter)(T));
         template<typename T, class U> void cast_call(
                 const std::string& appname,
                 const T element,
-                void (U::*func)(T));
+                void (U::*setter)(T));
         void removebad(const Manufacturer *manf);
         void removebad(const char *manfname);
         
@@ -47,10 +49,8 @@ class AppSystem
         const std::vector<Review *>
             parse_reviews(const std::string& appname, const char *rpath);
         void write_office_exts(const Office *of, std::ofstream& f);
-        bool valid_path(const std::string& strpath);
-        const std::string err_csv(const std::string& strpath);
-        const std::string err_read(const std::string& strpath);
-        const std::string err_write(const std::string& strpath);
+        const std::string err_read(const char *fpath);
+        const std::string err_write(const char *fpath);
         template<typename T> void dealloc(std::vector<T *>& vec);
 };
 
@@ -125,14 +125,13 @@ AppSystem::parse(std::ifstream& f)
     }
     catch (const std::ifstream::failure& e)
     {
-        std::cerr << "Error parsing data." << std::endl <<
-            e.what() << std::endl;
+        errlog.write("Error parsing data");
         return false;
     }
     return true;
 }
 
-template<typename T> bool
+template<typename T> void
 AppSystem::import_data(const char *fpath)
 {
     std::ifstream f;
@@ -140,8 +139,6 @@ AppSystem::import_data(const char *fpath)
     try
     {
         std::string strpath(fpath);
-        if (!valid_path(strpath))
-            throw std::runtime_error(err_csv(strpath));
         f.open(fpath);
         if (f.is_open())
         {
@@ -170,7 +167,7 @@ AppSystem::import_data(const char *fpath)
                     std::getline(f, stars, ',');
                     std::getline(f, username, ',');
                     std::getline(f, comment);
-                    if (f.eof()) return true;
+                    if (f.eof()) break;
                     for (auto&& app : apps)
                         if (appname == app->get_name())
                             app->addrev(new Review(std::stoi(stars), username, comment)); 
@@ -181,13 +178,11 @@ AppSystem::import_data(const char *fpath)
     }
     catch (const std::ifstream::failure& e)
     {
-        std::cerr << err_read(std::string(fpath)) << std::endl << e.what() << std::endl;
-        return false;
+        errlog.write(err_read(fpath) + " (" + e.what() + ")");
     }
-    return true;
 }
 
-template<typename T> bool
+template<typename T> void
 AppSystem::export_data(const char *fpath)
 {
     std::ofstream f;
@@ -195,8 +190,6 @@ AppSystem::export_data(const char *fpath)
     try
     {
         std::string strpath(fpath);
-        if (!valid_path(strpath))
-            throw std::runtime_error(err_csv(strpath));
         f.open(fpath);
         std::printf("Exporting data to \'%s\'\n", fpath);
         
@@ -251,10 +244,8 @@ AppSystem::export_data(const char *fpath)
     }
     catch (const std::ofstream::failure& e)
     {
-        std::cerr << err_write(std::string(fpath)) << std::endl << e.what() << std::endl;
-        return false;
+        errlog.write(err_write(fpath) + " (" + e.what() + ")");
     }
-    return true;
 }
 
 template<typename T> bool
@@ -264,20 +255,20 @@ AppSystem::exists(const std::vector<T *>& vec, const T *element)
 }
 
 template<typename T> void
-AppSystem::call(const std::string& appname, const T element, void (App::*func)(T))
+AppSystem::call(const std::string& appname, const T element, void (App::*setter)(T))
 {
     for (auto&& app : apps)
         if (app->get_name() == appname)
-            (app->*func)(element);
+            (app->*setter)(element);
 }
 
 template<typename T, class U> void
-AppSystem::cast_call(const std::string& appname, const T element, void (U::*func)(T))
+AppSystem::cast_call(const std::string& appname, const T element, void (U::*setter)(T))
 {
     for (auto&& app : apps)
         if (U *o = dynamic_cast<U *>(app))
             if (o->get_name() == appname)
-                (o->*func)(element);
+                (o->*setter)(element);
 }
 
 template<typename T> void
@@ -286,15 +277,10 @@ AppSystem::dealloc(std::vector<T *>& vec)
     if (!vec.empty())
     {
         for (auto&& v : vec)
-        {
             if (v != nullptr)
-            {
                 delete v;
-                v = nullptr;    
-            }
-        }
         vec.clear();
     }
 }
 
-#endif /* APPSYSTEM_H */
+#endif /* APPSYSTEM_HPP */

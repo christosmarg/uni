@@ -1,8 +1,10 @@
-#ifndef REVIEW_H
-#define REVIEW_H
+#ifndef REVIEW_HPP
+#define REVIEW_HPP
 
 #include <stdexcept>
 #include <string>
+
+#include "errlog.hpp"
 
 class Review
 {
@@ -10,6 +12,7 @@ class Review
         int stars;
         std::string username;
         std::string comment;
+        ErrLog errlog;
 
     public:
         Review();
@@ -28,4 +31,4 @@ class Review
             {this->comment = comment;}
 };
 
-#endif /* REVIEW_H */
+#endif /* REVIEW_HPP */

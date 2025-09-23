@@ -1,4 +1,6 @@
-#include "appsystem.h"
+#include "appsystem.hpp"
+
+AppSystem::AppSystem() {errlog.fclear();}
 
 AppSystem::~AppSystem()
 {
@@ -10,7 +12,8 @@ AppSystem&
 AppSystem::operator+= (App *app)
 {
     if (!exists<App>(apps, app)) apps.push_back(app);
-    else throw std::logic_error("App exists already.");
+    else errlog.write("App: " + std::string(app->get_serialnum()) +
+            ": exists already");
     return *this;
 }
 
@@ -18,7 +21,8 @@ AppSystem&
 AppSystem::operator+= (Manufacturer *manf)
 {
     if (!exists<Manufacturer>(manfs, manf)) manfs.push_back(manf);
-    else throw std::logic_error("Manufacturer exists already.");
+    else errlog.write("Manufacturer: " + std::string(manf->get_serialnum()) +
+            ": exists already");
     return *this;
 }
 
@@ -102,26 +106,14 @@ AppSystem::get_goodgames() const
     return ggames;
 }
 
-bool
-AppSystem::valid_path(const std::string& strpath)
+const std::string
+AppSystem::err_read(const char *fpath)
 {
-    return (strpath.find(".csv") != std::string::npos); 
+    return "Error reading file \'" + std::string(fpath) + "\'.";
 }
 
 const std::string
-AppSystem::err_csv(const std::string& strpath)
+AppSystem::err_write(const char *fpath)
 {
-    return "Error. File must be of format \'.csv\'. (" + strpath + ").";
-}
-
-const std::string
-AppSystem::err_read(const std::string& strpath)
-{
-    return "Error reading file \'" + strpath + "\'.";
-}
-
-const std::string
-AppSystem::err_write(const std::string& strpath)
-{
-    return "Error writing to file \'" + strpath + "\'.";
+    return "Error writing to file \'" + std::string(fpath) + "\'.";
 }

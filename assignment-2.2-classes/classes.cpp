@@ -71,16 +71,8 @@ Student::Student(const Student& s)
 
 Student::~Student()
 {
-    if (this->id != nullptr)
-    {
-        delete[] this->id;
-        this->id = nullptr;
-    }
-    if (this->id != nullptr)
-    {
-        delete[] this->grades;
-        this->grades = nullptr; 
-    }
+    if (this->id != nullptr) delete[] this->id;
+    if (this->id != nullptr) delete[] this->grades;
 }
 
 const std::string&

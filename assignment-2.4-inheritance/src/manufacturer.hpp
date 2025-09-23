@@ -1,9 +1,11 @@
-#ifndef MANUFACTURER_H
-#define MANUFACTURER_H
+#ifndef MANUFACTURER_HPP
+#define MANUFACTURER_HPP
 
 #include <cstring>
 #include <stdexcept>
 #include <string>
+
+#include "errlog.hpp"
 
 class Manufacturer
 {
@@ -11,6 +13,7 @@ class Manufacturer
         const char *serialnum;
         const char *name;
         std::string email;
+        ErrLog errlog;
 
     public:
         Manufacturer();
@@ -31,4 +34,4 @@ class Manufacturer
         char *convstr(const char *str);
 };
 
-#endif /* MANUFACTURER_H */
+#endif /* MANUFACTURER_HPP */

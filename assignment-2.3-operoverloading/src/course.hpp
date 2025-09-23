@@ -1,5 +1,5 @@
-#ifndef COURSE_H
-#define COURSE_H
+#ifndef COURSE_HPP
+#define COURSE_HPP
 
 #include <iostream>
 #include <string>
@@ -26,4 +26,4 @@ class Course
         void set_csemester(const unsigned int csemester);
 };
 
-#endif /* COURSE_H */
+#endif /* COURSE_HPP */

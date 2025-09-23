@@ -1,4 +1,4 @@
-#include "manufacturer.h"
+#include "manufacturer.hpp"
 
 Manufacturer::Manufacturer()
     :serialnum(nullptr), name(nullptr), email("") {}
@@ -8,14 +8,13 @@ Manufacturer::Manufacturer(const char *serialnum, const char *name,
     :serialnum(convstr(serialnum)), name(convstr(name)), email(email)
 {
     if (!std::strcmp(serialnum, ""))
-        throw std::runtime_error("Empty manufacturer serial number.");
+        errlog.write("Empty manufacturer serial number");
     if (!std::strcmp(name, ""))
-        throw std::runtime_error("Empty manufacturer name.");
+        errlog.write("Manufacturer: " + std::string(serialnum) +
+                ": Missing name");
     if (email.empty() || email.find("@") == std::string::npos)
-    {
-        std::string err = "Invalid email. Empty email/Missing \'@\'";
-        throw std::runtime_error(err);
-    }
+        errlog.write("Manufacturer: " + std::string(serialnum) + 
+                ": Invalid email");
 }
 
 Manufacturer::Manufacturer(const Manufacturer& m)

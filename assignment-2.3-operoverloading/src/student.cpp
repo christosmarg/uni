@@ -1,4 +1,4 @@
-#include "student.h"
+#include "student.hpp"
 
 Student::Student(const char *id, const std::string& name)
     :id(conv<char>(id, len(id))), name(name), semester(1),
@@ -35,21 +35,9 @@ Student::Student(const Student& s)
 
 Student::~Student()
 {
-    if (this->id != nullptr)
-    {
-        delete[] this->id;
-        this->id = nullptr; 
-    }
-    if (this->grades != nullptr)
-    {
-        delete[] this->grades;
-        this->grades = nullptr; 
-    }       
-    if (this->sc != nullptr)
-    {
-        delete[] this->sc;
-        this->sc = nullptr;
-    }
+    if (this->id != nullptr) delete[] this->id;
+    if (this->grades != nullptr) delete[] this->grades;
+    if (this->sc != nullptr) delete[] this->sc;
 }
 
 void

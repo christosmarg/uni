@@ -1,12 +1,12 @@
-#ifndef STUDENT_H
-#define STUDENT_H
+#ifndef STUDENT_HPP
+#define STUDENT_HPP
 
 #include <cstring>
 #include <iostream>
 #include <iomanip>
 #include <string>
 
-#include "course.h"
+#include "course.hpp"
 
 class Student
 {
@@ -89,4 +89,4 @@ Student::resize(const T *arr, std::size_t len)
     return tmp;
 }
 
-#endif /* STUDENT_H */
+#endif /* STUDENT_HPP */
