@@ -1,13 +1,35 @@
 \babel@toc {english}{}\relax 
-\contentsline {section}{\numberline {1}Συντομογραφίες}{6}{}%
-\contentsline {section}{\numberline {2}Εισαγωγή}{6}{}%
-\contentsline {subsection}{\numberline {2.1}Εισαγωγή στην παρακολούθηση (tracing)}{6}{}%
-\contentsline {subsection}{\numberline {2.2}Εισαγωγή στο DTrace}{6}{}%
-\contentsline {section}{\numberline {3}Inline tracing}{6}{}%
-\contentsline {subsection}{\numberline {3.1}Τι είναι inline συναρτήσεις}{6}{}%
-\contentsline {subsection}{\numberline {3.2}Γιατί είναι δύσκολη η παρακολούθηση inline συναρτήσεων}{6}{}%
-\contentsline {section}{\numberline {4}kinst}{6}{}%
-\contentsline {section}{\numberline {5}Πειράματα}{6}{}%
-\contentsline {section}{\numberline {6}Συμπεράσματα}{6}{}%
-\contentsline {section}{\numberline {7}Βιβλιογραφία}{7}{}%
-\contentsline {section}{\numberline {8}Παράρτημα}{8}{}%
+\contentsline {section}{\numberline {1}Συντομογραφίες}{6}{section.1}%
+\contentsline {section}{\numberline {2}Εισαγωγή στην παρακολούθηση (tracing)}{6}{section.2}%
+\contentsline {section}{\numberline {3}Εισαγωγή στο DTrace}{6}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Providers}{6}{subsection.3.1}%
+\contentsline {subsubsection}{\numberline {3.1.1}FBT}{6}{subsubsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.2}Probes}{6}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Γλώσσα D}{6}{subsection.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.1}Δομή εντολών DTrace}{6}{subsubsection.3.3.1}%
+\contentsline {subsubsection}{\numberline {3.3.2}Global μεταβλητές}{6}{subsubsection.3.3.2}%
+\contentsline {subsubsection}{\numberline {3.3.3}CTF}{6}{subsubsection.3.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.4}DIF}{7}{subsubsection.3.3.4}%
+\contentsline {subsection}{\numberline {3.4}Επικοινωνία δεδομένων μεταξύ kernel και userspace}{7}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}Scripts υψηλότερου επιπέδου}{7}{subsection.3.5}%
+\contentsline {subsection}{\numberline {3.6}Παραδείγματα}{7}{subsection.3.6}%
+\contentsline {section}{\numberline {4}Inline tracing}{7}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Τι είναι inline συναρτήσεις}{7}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Γιατί είναι δύσκολη η παρακολούθηση inline συναρτήσεων}{7}{subsection.4.2}%
+\contentsline {section}{\numberline {5}kinst}{7}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Χρήση}{8}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Ενορχήστρωση εντολών assembly}{8}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}«Τραμπολίνο»}{8}{subsection.5.3}%
+\contentsline {subsubsection}{\numberline {5.3.1}Διάταξη}{9}{subsubsection.5.3.1}%
+\contentsline {subsubsection}{\numberline {5.3.2}Σημειώσεις υλοποίησης για x86-64}{9}{subsubsection.5.3.2}%
+\contentsline {subsubsection}{\numberline {5.3.3}Σημειώσεις υλοποίησης για ARM64 και RISC-V}{9}{subsubsection.5.3.3}%
+\contentsline {subsection}{\numberline {5.4}Παρακολούθηση inline συναρτήσεων}{9}{subsection.5.4}%
+\contentsline {subsubsection}{\numberline {5.4.1}Πρότυπο DWARF}{9}{subsubsection.5.4.1}%
+\contentsline {subsubsection}{\numberline {5.4.2}Πρότυπο ELF}{9}{subsubsection.5.4.2}%
+\contentsline {subsubsection}{\numberline {5.4.3}Υπολογισμός ορίων κλήσεων}{9}{subsubsection.5.4.3}%
+\contentsline {subsubsection}{\numberline {5.4.4}Εύρεση καλούσας συνάρτησης}{9}{subsubsection.5.4.4}%
+\contentsline {subsubsection}{\numberline {5.4.5}Υπολογισμός των offsets \lstinline {entry} και \lstinline {return}}{9}{subsubsection.5.4.5}%
+\contentsline {section}{\numberline {6}Πειράματα}{9}{section.6}%
+\contentsline {section}{\numberline {7}Συμπεράσματα}{10}{section.7}%
+\contentsline {section}{\numberline {8}Βιβλιογραφία}{11}{section.8}%
+\contentsline {section}{\numberline {9}Παράρτημα}{12}{section.9}%

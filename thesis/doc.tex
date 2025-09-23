@@ -1,16 +1,19 @@
 \documentclass[12pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[greek,english]{babel}
+\usepackage{cite}
 \usepackage{alphabeta}
 \usepackage{fancyhdr}
 \usepackage{listings}
-\usepackage{mathtools}
-\usepackage{xcolor}
 \usepackage{float}
-\usepackage{siunitx}
-\usepackage[nottoc,numbib]{tocbibind}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, shapes.multipart, arrows}
 \usepackage[margin=0.5in]{geometry}
-\usepackage[backend=bibtex]{biblatex}
+\usepackage[nottoc,numbib]{tocbibind}
+%\usepackage[backend=bibtex]{biblatex}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
 % XXX https://polynoe.lib.uniwa.gr/xmlui/handle/11400/55
 % XXX https://polynoe.lib.uniwa.gr/xmlui/bitstream/handle/11400/8820/Vangelis_18390008.pdf?sequence=1&isAllowed=y
@@ -22,6 +25,20 @@
         keepspaces=true,
 	showstringspaces=false
 }
+
+\tikzstyle{header} = [rectangle, minimum width=3cm, minimum
+	height=1cm, text centered, text width=3cm]
+\tikzstyle{box} = [rectangle, minimum width=3cm, minimum
+	height=1cm, text centered, text width=3cm, draw=black]
+\tikzstyle{instr} = [trapezium, trapezium left angle=70, trapezium right
+	angle=110, minimum width=3cm, minimum height=1cm, text centered,
+	draw=black]
+\tikzstyle{func} = [rectangle, rounded corners, minimum width=3cm, minimum
+	height=1cm, text centered, text width=3cm, draw=black]
+\tikzstyle{decision} = [diamond, minimum width=3cm, minimum height=1cm, text
+	centered, draw=black]
+\tikzstyle{arrow} = [thick,->,>=stealth, rounded corners]
+\tikzstyle{chain} = [thick,-,>=stealth]
 
 \title{Διπλωματική Εργασία
 \linebreak
@@ -106,6 +123,9 @@
 \textbf{Ευχαριστίες}
 \end{center}
 
+% TODO
+% Mark, Mitchell, καθηγητής, οικογένεια, FBSDF, ...
+
 <++>
 
 \pagebreak
@@ -141,28 +161,235 @@
 
 <++>
 
-\section{Εισαγωγή}
+\section{Εισαγωγή στην παρακολούθηση (tracing)}
 
-<++>
-
-\subsection{Εισαγωγή στην παρακολούθηση (tracing)}
-
-<++>
-
-\subsection{Εισαγωγή στο DTrace}
+Με τον όρο tracing εννοούμε την παρακολούθηση της ροής εκτέλεσης ενός
+προγράμματος σε πραγματικό χρόνο (real-time), με σκοπό την εξαγωγή δεδομένων,
+που είναι χρήσιμα κυρίως στην αποσφαλμάτωση (debugging) του προγράμματος, στην
+καλύτερη κατανόση της ροής εκτέλεσης, καθώς και στην εύρεση τυχόν σημείων που
+προκαλούν καθυστερήσεις (bottleneck). Κατά μία έννοια το tracing μπορεί να
+θεωρηθεί ως μία καλύτερη και πιο δυναμική μορφή καταγραφής πληροφοριών
+(logging), διότι δίνεται η δυνατότητα στον χρήστη να εξάγει αφηρημένες
+πληροφορίες από ένα πρόγραμμα, χωρίς να χρειάζεται αναγκαστικά η συγγραφή
+περαιτέρω πηγαίου κώδικα μέσα στο πρόγραμμα και η επαναμεταγλώττισή του, κάτι
+το οποίο, στην περίπτωση μεγάλων προγραμμάτων όπως ο πυρήνας ενός λετουργικού
+συστήματος, τείνει να είναι μία χρονοβόρα διαδικασία.
 
 % TODO
+% «παρακολούθηση ροής εκτέλεσης»?
+% what can we do with tracing? (func timing, args, stack trace, ...)
+% tracing vs debugging
+% arbitrary questions that diagnostic programs with pre-defined (canned) questions cannot always answer
+%	top(1), nestat(1), procstat(1), vmstat(8), systat(1)
+%	all these static tools are fundamentally limited
+%	they ask pre-defined questions and answer them in pre-defined formats
+%	they are also not realtime
+% realtime
+% used in productions systems, mostly by sysadmins and systems/os developers
+% history: tamches paper
+% REFERENCES
+
+\section{Εισαγωγή στο DTrace}
+
+% TODO
+% https://www.illumos.org/books/dtrace/
+% https://www.youtube.com/watch?v=E06GVdH-LX0
+% https://www.youtube.com/watch?v=ctTyYlDbAIM
+% gsoc emails with mark
 % See paper, slides, articles
-% Πως δουλεύει το DTrace
-% Breakpoint instructions
-% Mark presentation
+% https://www.bsdcan.org/2017/schedule/attachments/432_dtrace_internals.pdf
+%
+% origins: illumos -> freebsd
+% performance overhead from dtrace
+% kernel module
+%	what is a kmod
+%	how do you load kmods?
+% Userspace dtrace
+% REFERENCES
+
+<++>
+
+\subsection{Providers}
+
+% TODO
+% Providers
+%	mark 00:29:00
+%	fbt
+%		entry and return points of a func (with args) only
+%		Breakpoint instructions
+%		caveats: tail calls, inline funcs
+%		pid -> fbt for userspace
+%			00:57:00
+
+<++>
+
+\subsubsection{FBT} \label{fbt}
+
+<++>
+
+\subsection{Probes}
+
+% TODO
+%		name: the probe itself: point of instrumentation (entry, return, instruction)
+%			"piece of kernel code that gets executed" -> piece of code we care about
+%			when the probe is enabled, dtrace is called when the code hits
+%			that point, does whatever actions we asked it to do, and then
+%			hands execution back to the program.
+
+<++>
+
+\subsection{Γλώσσα D}
+
+% TODO
+% D language
+%	link to docs
+%	dtrace handbook
+%	Kind of like C + awk
+%	safe to execute (i.e., cannot crash). gives you a limited but powerful
+%	set of tools so that crashing the kernel or a program is not possible
+%	post-processing: data aggregation, graphs, histograms
+%	aggregations
+%		collect data and summarize them later
+%		printed when dtrace(1) exits (or SIGINFO -> ctrl+t)
+%		mark 00:39:00-00:54:00
+
+<++>
+
+\subsubsection{Δομή εντολών DTrace}
+
+% TODO
+%	provider:module:function:name /predicate/ {actions}
+%		GIVE EXAMPLES
+%
+%		provider: set of logically related probes
+%			kind of like a namespace for probes: syscall, sched, ip, fbt, ...
+%		module: explain
+%		function: roughly corresponds to a C function inside the program we're tracing
+%			mark 00:17:00
+%		name: the probe itself: point of instrumentation (entry, return, instruction)
+%			"piece of kernel code that gets executed" -> piece of code we care about
+%			when the probe is enabled, dtrace is called when the code hits
+%			that point, does whatever actions we asked it to do, and then
+%			hands execution back to the program.
+%
+%			probes fire when an event happens (e.g., io, signal, ...)
+%		predicate (optional): quick filters, like awk
+%		action (optional): the probe body: data collection, aggregation, printing, processing
+%			mark 00:35:00
+%
+%		module, function, name can take wildcarding
+
+Οι εντολές DTrace ορίζονται ως εξής:
+
+\begin{lstlisting}
+	<provider>:<module>:<function>:<name> /<predicate>/ {<actions>}
+\end{lstlisting}
+
+<++>
+
+\subsubsection{Global μεταβλητές}
+
+% TODO
+%	global variables
+%		pid, execname, timestamp (nanosecs)
+%		they are context-dependent, i.e., different for every thread
+
+<++>
+
+\subsubsection{CTF}
+
+% TODO
+%	CTF
+%	link to docs
+%	diagrams
+%		dwarf
+%			gdb (and inline tracing) uses it to unwind stack, find
+%			function names, arguments, types, variable locations,
+%			
+%			dwarf metadata is generated at compile time
+%
+%			dwarfdump
+%		ctf is a simplified representation of C types so that we can
+%		fetch them in D
+%			ctfdump -t /boot/kernel/kernel | less
+%			probe arguments are defined using ctf, roughly like C types
+%				dtrace_ip.4
+
+<++>
+
+\subsubsection{DIF}
+
+% TODO
+%	Compilation: DIF (D intermediary format)
+%		link to docs
+%		https://www.usenix.org/legacy/event/usenix04/tech/general/full_papers/cantrill/cantrill_html/
+%		diagram
+%		dtrace -S -> dump bytecode for a given d script
+
+Για να εισαχθεί ένα D script στον πυρήνα του λειτουργικού συστήματος,
+χρησιμοποιείται η κωδικοποίηση DIF (D Intermediary Format). Η κωδικοποίηση αυτή
+έχει ως στόχο την μεταγλώττιση του D script σε μία ενδιάμεση byte κωδικοποίηση
+(byte code), η οποία μπορεί να εκτελεστεί από το DTrace εντός του kernel. Αφού
+το script έχει μεταγλωττιστεί, φορτώνεται στο kernel από το DTrace, και
+εκτελείται για τα probes που έχουν οριστεί όταν αυτά ενεργοποιηθούν.
+
+Αντίστοιχα στο Linux, χρησιμοποείται η κωδικοποίηση \lstinline{eBPF}.
+
+<++>
+
+\subsection{Επικοινωνία δεδομένων μεταξύ kernel και userspace}
+
+% TODO
+% Buffers
+%	https://www.illumos.org/books/dtrace/chp-buf.html#chp-buf
+%	what parameters can be modified? do they introduce overhead (switchrate
+%	yes)?
+%	diagrams
+% ioctls?
+
+Η επικονωνία δεδομένων μεταξύ kernel και userspace επιτυχάνεται μέσω ενός
+ζευγαριού buffers, διαφορετικό για κάθε πυρήνα (per-CPU). Aνά πάσα στιγμή ο
+ένας buffer είναι ανενεργός και ο άλλος ενεργός, και κάθε ένα δευτερόλεπτο, οι
+buffers ανταλλάσονται, οπότε αυτός που ήταν ενεργός τώρα είναι ανενεργός και
+αυτός που ήταν ανενεργός τώρα είναι ενεργός. Στον ενεργό buffer γράφονται τα
+δεδομένα από το kernel τα οποία οποία με την ανταλλαγή των buffers στέλνονται
+και γίνονται διαθέσιμα προς διάβασμα από το userspace μέσω του πλέον ανενεργού
+buffer. Με άλλα λόγια, το kernel γράφει στον ενεργό buffer, και το userspace
+διαβάζει από τον ανενεργό. Αυτό έχει ως αποτέλεσμα την συνεχή ροή δεδομένων από
+το kernel προς το userspace, διότι ταυτόχρονα γίνονται διάβασμα και καταγραφή
+δεδομένων.
+
+<++>
+
+\subsection{Scripts υψηλότερου επιπέδου}
+
+% TODO
+% higher-level scripts
+%	lockstat
+%	flamegraphs
+%	dwatch
+
+<++>
+
+\subsection{Παραδείγματα}
+
+% TODO
+% examples
+%	mark 00:30:00
+%	mark 00:36:00
+%	mark 00:39:00-00:54:00
+%	/usr/share/examples/dtrace
+%	flamegraphs
+%		mark 01:11:00
+%	writing a provider
 
 <++>
 
 \section{Inline tracing}
 
 % TODO
-% See paper, slides, articles
+% See paper, slides, articles, diagrams
+% Μήπως να το ενσωματώσω σε κάποια άλλη ενότητα;
 
 <++>
 
@@ -173,21 +400,176 @@
 \subsection{Γιατί είναι δύσκολη η παρακολούθηση inline συναρτήσεων}
 
 % TODO
-% See paper, slides, articles
+% See paper, slides, articles, links to docs
 
 <++>
 
 \section{kinst}
 
 % TODO
-% See paper, slides, articles
+% See paper, slides, articles, commits, manpage
+%	https://reviews.freebsd.org/D40874
 % Overview
 % Architecture dependent parts
+%	emulation
 % Inline tracing
 %	Τι είναι inline functions
 %	Γιατί είναι δύσκολο να τις κάνουμε trace
 %	Πως το λύνει αυτό ο kinst
-% inlinecall, omitrbp
+%	dwarf
+%	elf
+%	inlinecall, omitrbp
+% diagrams
+% tail-calls?
+%
+%kinst creates probes on-demand, meaning it searches for and parses the
+%function's instructions each time dtrace(1) is run, and not at module
+%load time.  This is in contrast to FBT's load-time parsing, since kinst
+%can potentially create thousands of probes for just a single function,
+%instead of up to two (entry and return) in the case of FBT.  A result of
+%this is that dtrace -l -P kinst will not match any probes.
+
+
+Ο \lstinline{kinst} είναι ένας νέος DTrace provider, ο οποίος αρχικά
+δημιουργήθηκε με στόχο να αντιμετωπίσει τους περιορισμούς του FBT (βλέπε
+ενότητα \ref{fbt}), δηλαδή την έλλειψη δυνατότητας παρακολούθησης inline
+συναρτήσεων, καθώς και γενικότερα της πιο εξειδικευμένής παρακολουθήσης πέραν
+της αρχής ή/και του τέλους μίας συνάρτησης.
+
+Στον πηγαίο κώδικα του FreeBSD, ο κώδικας του \lstinline{kinst} βρίσκεται στο
+\lstinline{sys/cddl/dev/kinst} \cite{kinstsrc} και υποστηρίζεται στις
+αρχιτεκτονικές x86-64 (AMD64), ARM64 και RISC-V.
+
+Το όνομα "kinst" είναι εμπνευσμένο από την δημοσίευση των Tamches \& Miller
+\cite{tamches}, στην οποία κάνουν αναφορά στο πειραματικό εργαλείο
+παρακολούθησης που ανέπτυξαν, ως "KernInst".
+
+<++>
+
+\subsection{Χρήση}
+
+Ο \lstinline{kinst} δέχεται τις παρακάτω τρεις συντάξεις:
+
+\begin{itemize}
+	\item \lstinline{kinst::<function>:}
+	\item \lstinline{kinst::<function>:<instruction>}
+	\item \lstinline{kinst::<inline_function>:<entry|return>}
+\end{itemize}
+
+Με την πρώτη σύνταξη παρακολουθούνται \textit{όλες} οι εντολές assembly της
+συνάρτησης \lstinline{function}. Για παράδειγμα:
+
+<++>
+
+Με την δεύτερη σύνταξη παρακολουθείται εντός της συνάρτησης
+\lstinline{function} μόνο η εντολή που βρίσκεται στο offset που ορίστηκε στο
+πεδίο \lstinline{instruction}. Για παράδειγμα:
+
+<++>
+
+Με την τρίτη σύνταξη παρακολουθείται η αρχή (\lstinline{entry}) ή/και το τέλος
+(\lstinline{return}) μίας inline συνάρτησης \lstinline{inline_function}. Για
+παράδειγμα:
+
+\begin{lstlisting}[caption={Inline tracing}, captionpos=b]
+	# dtrace -n 'kinst::critical_enter:return'
+	dtrace: description 'kinst::critical_enter:return' matched 130 probes
+	CPU     ID                    FUNCTION:NAME
+	  1  71024                spinlock_enter:53
+	  0  71024                spinlock_enter:53
+	  1  70992                uma_zalloc_arg:49
+	  1  70925    malloc_type_zone_allocated:21
+	  1  70994                uma_zfree_arg:365
+	  1  70924             malloc_type_freed:21
+	  1  71024                spinlock_enter:53
+	  0  71024                spinlock_enter:53
+	  0  70947         _epoch_enter_preempt:122
+	  0  70949           _epoch_exit_preempt:28
+	  ^C
+\end{lstlisting}
+
+<++>
+
+\subsection{Ενορχήστρωση εντολών assembly}
+
+% TODO
+%Ο \lstinline{kinst} διαθέτει ένα αρχείο συσκευής στο
+%\lstinline{/dev/dtrace/kinst}, το οποίο χρησιμοποιείται για <++>
+
+<++>
+
+\subsection{«Τραμπολίνο»}
+
+% TODO improve wording
+
+Τραμπολίνο (trampoline) ονομάζεται ένα \textit{εκτελέσιμο} κομμάτι μνήμης, το
+οποίο χρησιμοποιείται ως περιοχή αναπήδησης (jump) για την εκτέλεση κάποιας
+εντολής και επιστροφής στην κανονική ροή του προγράμματος.
+
+Ο \lstinline{kinst} κάνει χρήση τραμπολίνων για την εκτέλεση των εντολών των
+οποίων παρακολουθεί, σε αντίθεση με τον FBT (\ref{fbt}), ο οποίος τις
+«μιμείται»/υλοποιεί (emulation). Ωστόσο, μία βασική διαφορά του FBT είναι ότι
+εφόσον έχει την δυνατότητα να παρακολουθήσει μόνο την αρχή και το τέλος μίας
+συνάρτησης, τα οποία σημεία ορίζονται με συγκεκριμένες εντολές assembly για
+κάθε αρχιτεκτονική
+\footnote{
+	Για παράδειγμα, στην αρχιτεκτονική x86-64, η εντολή \lstinline{push
+	\%rbp} δηλώνει το ξεκίνημα του \textit{προλόγου} μίας συνάρτησης, και η
+	εντολή \lstinline{ret} το τέλος του \textit{επιλόγου}. % TODO cite
+},
+το σύνολο των εντολών που πρέπει να υλοποίησει ο FBT είναι μικρό, καθώς και οι
+εντολές απλές, με αποτέλεσμα να μην χρειάζεται η επιπλέον πολυπλοκότητα που
+προσθέτει το τραμπολίνο. Ο \lstinline{kinst} όμως μπορεί να παρακολουθήσει εν
+δυνάμει (σχεδόν) όλες τις εντολές assembly για κάθε αρχιτεκτονική που
+υποστηρίζει, οπότε είναι προφανές πως η προσέγγιση της υλοποίησης εντολών, δεν
+μπορεί να λειτουργήσει σε αυτήν την περίπτωση. Παρ' όλα αυτά, υπάρχουν μερικές
+εξαιρέσεις που θα συζητηθούν παρακάτω. % TODO ref to emulation
+
+Η χρήση του τραμπολίνου γίνεται ως εξής. <++>
+
+\subsubsection{Διάταξη}
+
+<++>
+
+\subsubsection{Σημειώσεις υλοποίησης για x86-64}
+
+<++>
+
+\subsubsection{Σημειώσεις υλοποίησης για ARM64 και RISC-V}
+
+<++>
+
+\subsection{Παρακολούθηση inline συναρτήσεων}
+
+% TODO
+% https://margiolis.net/w/kinst_inline/
+
+<++>
+
+\subsubsection{Πρότυπο DWARF}
+
+% TODO
+% https://margiolis.net/w/dwarf_inline/
+
+<++>
+
+\subsubsection{Πρότυπο ELF}
+
+% TODO
+% Bib
+%	https://wiki.osdev.org/ELF
+
+<++>
+
+\subsubsection{Υπολογισμός ορίων κλήσεων}
+
+<++>
+
+\subsubsection{Εύρεση καλούσας συνάρτησης}
+
+<++>
+
+\subsubsection{Υπολογισμός των offsets \lstinline{entry} και \lstinline{return}}
 
 <++>
 
@@ -203,9 +585,33 @@
 
 <++>
 
+% TODO
+% Sort and cleanup
+
 \pagebreak
 \renewcommand{\refname}{Βιβλιογραφία}
 \begin{thebibliography}{00}
+\bibitem{dtracebook} Illumos Operating System ``Dynamic Tracing Guide''.
+	\href{https://illumos.org/books/dtrace}{https://illumos.org/books/dtrace} 
+\bibitem{kinstsrc} FreeBSD src ``kinst''
+	\href{https://cgit.freebsd.org/src/tree/sys/cddl/dev/kinst}
+	{https://cgit.freebsd.org/src/tree/sys/cddl/dev/kinst}
+\bibitem{tamches} Tamches, Ariel \& Miller, Barton P. ``Fine-Grained Dynamic
+	Instrumentation of Commodity Operating System Kernels''.
+	\href{https://www.usenix.org/legacy/publications/library/proceedings/osdi99/full\_papers/tamches/tamches.pdf}
+	{https://www.usenix.org/legacy/publications/library/proceedings/osdi99/full\_papers/tamches/tamches.pdf}
+\bibitem{dwarfstd} The DWARF Standard.
+	\href{https://dwarfstd.org/}{https://dwarfstd.org/}
+\bibitem{margdwarf} Christos Margiolis ``Using DWARF to find call sites of
+	inline functions``.
+	\href{https://margiolis.net/w/dwarf\_inline/}{https://margiolis.net/w/dwarf\_inline/}
+\bibitem{kinstinline} Christos Margiolis ``Inline function tracing with the
+	kinst DTrace provider''.
+	\href{https://margiolis.net/w/kinst\_inline/}{https://margiolis.net/w/kinst\_inline/}
+\bibitem{inlinecall} Sourcehut, inlinecall(1).
+	\href{https://github.com/christosmarg/inlinecall}{https://github.com/christosmarg/inlinecall}
+\bibitem{markpres} Mark Johnston ``Introduction to DTrace on FreeBSD''.
+	\href{https://www.youtube.com/watch?v=E06GVdH-LX0}{https://www.youtube.com/watch?v=E06GVdH-LX0}
 \end{thebibliography}
 
 \pagebreak
