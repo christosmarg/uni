@@ -3,7 +3,7 @@
 namespace lab {
 xstring::xstring()
 {
-	str = new char[0];
+	str = new char[1];
 	str[0] = '\0';
 	len = 0;
 }
@@ -263,14 +263,9 @@ xstring::pop_back()
 		char *tmp = new char[len];
 		std::copy(str, str + len, tmp);
 		delete[] str;
-		tmp[len - 1] = '\0';
+		tmp[len-1] = '\0';
 		str = tmp;
 		len--;
-	}
-	else if (len - 1 == 0)
-	{
-		delete[] str;
-		clear();
 	}
 	else return;
 }
@@ -353,6 +348,7 @@ xstring::conv(const char *s) const
 	std::size_t l = strlen(s);
 	char *tmp = new char[l + 1];
 	std::copy(s, s + l+1, tmp);
+	tmp[l] = '\0';
 	return tmp;
 }
 
