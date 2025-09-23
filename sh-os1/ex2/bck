@@ -18,7 +18,8 @@ main() {
         test ${dst##*.} = "tar" && tar -rf ${dst} ${src}
 }
 
-usage() { echo "usage: ${0##*/} username src dst" 1>&2
+usage() { 
+        echo "usage: ${0##*/} username src dst" 1>&2
         exit 1
 }
 
