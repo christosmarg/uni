@@ -61,15 +61,16 @@ INSERT INTO ASSIGN VALUES
 
 /* .schema -> DESCRIBE */
 .schema
+
 /* Make output pretty */
 .header on
 .mode column
+
 /* Show contents of every table */
 SELECT * FROM DEPT;
 SELECT * FROM EMP;
 SELECT * FROM PROJ;
 SELECT * FROM ASSIGN;
-
 
 /*
  * Output after execution (`sqlite3 -init new_personnel.sql`):
