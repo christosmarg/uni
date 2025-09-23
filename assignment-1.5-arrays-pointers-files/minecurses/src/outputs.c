@@ -37,7 +37,7 @@ void session_info(int mbx, int mby, int xmid, int ndefused, int nmines)
 	mvprintw(0, XMAX-strlen("m Controls"), "m Controls");
 }
 
-void session_write(Board *brd, int hitrow, int hitcol, const char *status)
+void session_write(Board *brd, int hitrow, int hitcol, State state)
 {
 	int i, j;
 	FILE *fsession = fopen(SESSION_PATH, "w");
@@ -49,7 +49,7 @@ void session_write(Board *brd, int hitrow, int hitcol, const char *status)
 	}
 	else
 	{
-		strcmp(status, "won")
+		state == GAME_WON
 			? fprintf(fsession, "Mine hit at position (%d, %d)\n\n", hitrow+1, hitcol+1)
 			: fprintf(fsession, "Last mine defused at position (%d, %d)\n\n", hitrow+1, hitcol+1);
 		fprintf(fsession, "Board overview\n\n");
@@ -76,7 +76,7 @@ void score_write(int ndefused, int cols, int rows)
 	else
 	{
 		fprintf(scorelog, "%s,%d,%dx%d\n", playername, ndefused, cols, rows);
-		sort_scorelog(scorelog); // pending
+		sort_scorelog(scorelog);
 		clrtoeol();
 		show_scorelog(scorelog);
 		mvprintw(0, 0, "New score written to score log");

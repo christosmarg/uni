@@ -17,4 +17,8 @@ typedef struct
 	int rows, cols, nmines;
 } Board;
 
+void reset(Board *brd);
+void init_game(WINDOW *gamew, Board *brd);
+void clear_board(Board *brd);
+
 #endif /* MAIN_H */

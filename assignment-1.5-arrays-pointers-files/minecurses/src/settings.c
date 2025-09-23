@@ -31,7 +31,7 @@ int set_nmines(int dimensions)
     int nmines;
     do
     {
-        mvprintw(YMAX-2, 1, "Mines (Max = %d): ", dimensions-15); // -10 so the player has a chance to win
+        mvprintw(YMAX-2, 1, "Mines (Max = %d): ", dimensions-15);
         refresh();
         scanw("%d", &nmines);
         refresh();

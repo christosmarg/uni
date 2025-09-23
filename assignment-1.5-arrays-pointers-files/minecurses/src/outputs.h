@@ -7,10 +7,12 @@
 #define SESSION_PATH "log/session.txt"
 #define SCORE_LOG_PATH "log/scorelog.csv"
 
+typedef enum {GAME_WON, GAME_LOST} State;
+
 void print_board	(struct _win_st* gamew, Board *brd);
 void print_grid		(struct _win_st* gamew, int rows, int cols);
 void session_info	(int mbx, int mby, int xmid, int ndefused, int nmines);
-void session_write	(Board *brd, int hitrow, int hitcol, const char *status);
+void session_write	(Board *brd, int hitrow, int hitcol, State state);
 void score_write	(int ndefused, int cols, int rows);
 char *get_pname		(void);
 void sort_scorelog	(FILE *scorelog);

@@ -299,7 +299,8 @@ void xstring::clear()
 {
 	if (!this->empty()) delete[] str;
 	str = new char[1];
-	*this = "";
+	str[0] = '\0';
+	//*this = "";
 	len = 0;
 }
 
