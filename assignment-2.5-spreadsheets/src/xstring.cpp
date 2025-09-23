@@ -1,9 +1,6 @@
 #include "xstring.h"
 
-template<> const char *getformat<int>() {return "%d";}
-template<> const char *getformat<float>() {return "%f";}
-template<> const char *getformat<double>() {return "%f";}
-
+namespace lab {
 xstring::xstring()
 	:str(new char[1]), len(0) {}
 
@@ -15,22 +12,18 @@ xstring::xstring(const xstring& s)
 	if (!this->empty())
 	{
 		str = conv(s.str);
-		len = strlen(str);
+		len = size();
 	}
 	else
 	{
-		str = nullptr;
+		str = new char[1];
 		len = 0;
 	}
 }
 
 xstring::~xstring()
 {
-	if (!this->empty())
-	{
-		len = 0;
-		delete[] str;
-	}
+	delete[] str;
 }
 
 xstring xstring::operator= (const xstring& s)
@@ -40,11 +33,11 @@ xstring xstring::operator= (const xstring& s)
 	{
 		if (!this->empty()) delete[] str;
 		str = conv(s.str);
-		len = strlen(str);
+		len = size();
 	}
 	else
 	{
-		str = nullptr;
+		str = new char[1];
 		len = 0;
 	}
 	return *this;
@@ -54,7 +47,7 @@ xstring	xstring::operator= (const char *s)
 {
 	if (!this->empty()) delete[] str;
 	str = conv(s);
-	len = strlen(str);
+	len = size();
 	return *this;
 }
 
@@ -76,7 +69,7 @@ xstring& xstring::operator+= (const xstring& s)
 		strcat(str, s.str);
 	}
 	else str = conv(s.str);
-	len = strlen(str);
+	len = size();
 	return *this;	
 }
 
@@ -88,7 +81,20 @@ xstring& xstring::operator+= (const char *s)
 		strcat(str, s);
 	}
 	else str = conv(s);
-	len = strlen(str);
+	len = size();
+	return *this;
+}
+
+xstring& xstring::operator+= (char c)
+{
+	if (!this->empty())
+	{
+		resize(1);
+		str[len] = c;
+	}
+	else str = conv(c);
+	// wtf
+	len += size() + 1;
 	return *this;
 }
 
@@ -152,7 +158,7 @@ bool xstring::operator>= (const char *s) const
 	return strlen(this->str) >= strlen(s);
 }
 
-char& xstring::operator[] (int i) const
+char& xstring::operator[] (std::size_t i) const
 {
 	if (i >= len)
 	{
@@ -178,7 +184,7 @@ xstring& xstring::append(const xstring& s)
 	return *this;
 }
 
-xstring& xstring::append(const xstring& s, int i)
+xstring& xstring::append(const xstring& s, std::size_t i)
 {
 
 }
@@ -189,9 +195,15 @@ xstring& xstring::append(const char *s)
 	return *this;
 }
 
-xstring& xstring::append(const char *s, int i)
+xstring& xstring::append(const char *s, std::size_t i)
 {
 
+}
+
+xstring& xstring::append(char c)
+{
+	*this += c;
+	return *this;
 }
 
 char *xstring::cstr() const
@@ -212,26 +224,34 @@ std::size_t xstring::size()
 
 bool xstring::empty() const
 {
-	return str == nullptr;
+	return len == 0;
 }
 
 bool xstring::strempty(const char *s) const
 {
-	return s == nullptr;
+	return strlen(s) == 0;
 }
 
 void xstring::clear()
 {
 	if (!this->empty()) delete[] str;
-	str = nullptr;
+	str = new char[1];
 	len = 0;
 }
 
 char *xstring::conv(const char *s)
 {
-	int sl = strlen(s);
-	char *tmp = new char[sl+1];
-	std::copy(s, s + sl+1, tmp);
+	std::size_t l = strlen(s);
+	char *tmp = new char[l + 1];
+	std::copy(s, s + l+1, tmp);
+	return tmp;
+}
+
+char *xstring::conv(char c)
+{
+	// 2 for '\0'
+	char *tmp = new char[1];
+	tmp[0] = c;
 	return tmp;
 }
 
@@ -239,11 +259,59 @@ void xstring::resize(const char *s)
 {
 	if (!this->empty())
 	{
-		int l = len + strlen(s);
+		std::size_t l = len + strlen(s);
 		char *tmp = new char[l + 1];
 		std::copy(str, str + len+1, tmp);
 		delete[] str;
 		str = tmp;
-		len = strlen(str);
+		len = size();
 	}
+}
+
+void xstring::resize(std::size_t n)
+{
+	if (!this->empty())
+	{
+		std::size_t l = len + n;
+		char *tmp = new char[l + 1];
+		std::copy(str, str + len+1, tmp);
+		delete[] str;
+		str = tmp;
+		// wtf
+		len = size();
+	}
+}
+
+std::istream& getline(std::istream& stream, xstring& s)
+{
+	char c;
+	s.clear();
+	while (stream.get(c) && c != '\n')
+		s.append(c);
+	return stream;
+}
+
+std::istream& getline(std::istream& stream, xstring& s, char delim)
+{
+	char c;
+	s.clear();
+	while (stream.get(c) && c != '\n')
+	{
+		if (c == delim) break;
+		else s.append(c);
+	}
+	return stream;
+}
+
+template<> const char *getformat<short>()	{return "%hi";}
+template<> const char *getformat<int>()		{return "%d";}
+template<> const char *getformat<long>()	{return "%ld";}
+template<> const char *getformat<long long>() {return "%lld";}
+template<> const char *getformat<unsigned short>()	{return "%hu";}
+template<> const char *getformat<unsigned int>()	{return "%u";}
+template<> const char *getformat<unsigned long>()	{return "%lu";}
+template<> const char *getformat<unsigned long long>() {return "%llu";}
+template<> const char *getformat<float>()	{return "%f";}
+template<> const char *getformat<double>()	{return "%f";}
+template<> const char *getformat<long double>()	{return "%Lf";}
 }
