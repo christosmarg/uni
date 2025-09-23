@@ -12,13 +12,6 @@ App::~App()
 void
 App::store_data()
 {
-	for (auto& stud : studs)
-		std::cout << stud.first << std::endl;
-}
-
-void
-App::analyze()
-{
 	std::ifstream f;
 	const char *fpath = "res/grades.csv";
 	f.exceptions(std::ifstream::badbit);
@@ -37,6 +30,7 @@ App::analyze()
 				lab::getline(f, AM, ';');
 				lab::getline(f, code, ';');
 				lab::getline(f, grade);
+				if (f.eof()) break;
 			}
 		}
 		f.close();	
@@ -45,6 +39,12 @@ App::analyze()
 	{
 		std::cerr << err_read(fpath) << std::endl << e.what() << std::endl;
 	}
+}
+
+void
+App::analyze()
+{
+
 }
 
 bool

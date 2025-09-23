@@ -109,49 +109,49 @@ xstring::operator!= (const char *s) const
 bool
 xstring::operator< (const xstring& s) const
 {
-	return strlen(this->str) < strlen(s.str);
+	return strcmp(str, s.str) < 0;
 }
 
 bool
 xstring::operator< (const char *s) const
 {
-	return strlen(this->str) < strlen(s);
+	return strcmp(str, s) < 0;
 }
 
 bool
 xstring::operator<= (const xstring& s) const
 {
-	return strlen(this->str) <= strlen(s.str);
+	return strcmp(str, s.str) <= 0;
 }
 
 bool
 xstring::operator<= (const char *s) const
 {
-	return strlen(this->str) <= strlen(s);
+	return strcmp(str, s) <= 0;
 }
 
 bool
 xstring::operator> (const xstring& s) const
 {
-	return strlen(this->str) > strlen(s.str);
+	return strcmp(str, s.str) > 0;
 }
 
 bool
 xstring::operator> (const char *s) const
 {
-	return strlen(this->str) > strlen(s);
+	return strcmp(str, s) > 0;
 }
 
 bool
 xstring::operator>= (const xstring& s) const
 {
-	return strlen(this->str) >= strlen(s.str);
+	return strcmp(str, s.str) >= 0;
 }
 
 bool
 xstring::operator>= (const char *s) const
 {
-	return strlen(this->str) >= strlen(s);
+	return strcmp(str, s) >= 0;
 }
 
 char&
