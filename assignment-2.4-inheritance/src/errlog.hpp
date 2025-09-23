@@ -13,7 +13,7 @@ class ErrLog
         ErrLog() = default;
 
         void fclear() const;
-        void write(const std::string& str) const;
+        void write(std::string&& str) const;
 };
 
 #endif /* ERRLOG_HPP */
