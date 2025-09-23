@@ -1,0 +1,7 @@
+START=CMT
+
+CMT:		;	-> CMT_R
+		*	-> BAD
+CMT_R:		\n	-> GOOD
+		*	-> CMT_R
+GOOD(OK) :

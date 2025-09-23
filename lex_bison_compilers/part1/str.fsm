@@ -1,0 +1,11 @@
+START=STR
+
+STR:		"	-> STR_R
+		*	-> BAD
+STR_R:		\\	-> STR_BSLASH
+		"	-> GOOD
+		*	-> STR_R
+STR_BSLASH:	" n \\  -> STR_R
+		*       -> BAD
+
+GOOD(OK):	\n	-> GOOD

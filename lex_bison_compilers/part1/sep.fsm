@@ -1,0 +1,7 @@
+START=SEP
+
+SEP:		\s	-> SEP_R
+		*	-> BAD
+SEP_R:		\s	-> SEP_R
+		*	-> GOOD
+GOOD(OK) :

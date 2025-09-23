@@ -1,0 +1,21 @@
+START=FLOAT
+
+FLOAT:		+ \-		-> FLOAT_BEG
+		0-9		-> FLOAT_NORM
+		*		-> BAD
+FLOAT_BEG:	0-9		-> FLOAT_NORM
+		*		-> BAD
+FLOAT_NORM:	0-9		-> FLOAT_NORM
+		e E		-> FLOAT_EXP
+		.		-> FLOAT_DEC
+		*		-> BAD
+FLOAT_DEC:	0-9		-> FLOAT_DEC
+		e E		-> FLOAT_EXP
+		\n		-> GOOD
+		*		-> BAD
+FLOAT_EXP:	0-9 + \-	-> FLOAT_EXP_N
+		*		-> BAD
+FLOAT_EXP_N:	0-9		-> FLOAT_EXP_N
+		\n		-> GOOD
+		*		-> BAD
+GOOD(OK):	\n		-> GOOD

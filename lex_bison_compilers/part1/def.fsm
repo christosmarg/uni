@@ -1,0 +1,7 @@
+START=DEF
+
+DEF:		A-Z a-z		-> DEF_R
+		*		-> BAD
+DEF_R:		A-Z a-z 0-9 _ \-	-> DEF_R
+		*		-> GOOD
+GOOD(OK):	\n -> GOOD
