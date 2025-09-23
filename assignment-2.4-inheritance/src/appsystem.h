@@ -7,15 +7,15 @@
 class AppSystem
 {
 	private:
-		std::vector<std::string> applist;
+		std::vector<std::string> apps;
 		std::vector<const char *> manufacturers;
 
 	public:
 		AppSystem();
 		virtual ~AppSystem();
 
-		inline void operator+= (const std::string& app) {this->applist.push_back(app);}
-		inline void operator+= (const char *man) {this->manufacturers.push_back(man);}
+		void operator+= (const std::string& app);
+		void operator+= (const char *man);
 };
 
 #endif /* APPSYSTEM_H */
