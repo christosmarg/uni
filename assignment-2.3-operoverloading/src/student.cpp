@@ -21,7 +21,7 @@ Student::Student(const Student& s)
 	std::copy(s.grades, s.grades+psubj, grades);
 }
 
-Student::~Student(void)
+Student::~Student()
 {
 	delete[] this->AM;
 	delete[] this->grades;
@@ -56,14 +56,14 @@ Student& Student::operator= (const Student& s)
 	return *this;
 }
 
-float *Student::get_grades(void) const
+float *Student::get_grades() const
 {
 	float *ret = new float[psubj];
 	std::copy(grades, grades+psubj, ret);
 	return ret;
 }
 
-std::string *Student::get_submitted_subjects(void) const
+std::string *Student::get_submitted_subjects() const
 {
 	std::string *ret = new std::string[numSubmittedSubjects];
 	std::copy(submittedSubjects, submittedSubjects+numSubmittedSubjects, ret);
@@ -103,7 +103,7 @@ void Student::add_grade(float grade)
 	delete[] tmp;
 }
 
-void Student::detailed_print(void) const
+void Student::detailed_print() const
 {
 	for (unsigned int i = 0; i < psubj; i++)
 	{
@@ -113,7 +113,7 @@ void Student::detailed_print(void) const
 	std::cout << "Average grade: " << std::setprecision(2) << calc_average() << std::endl;
 }
 
-float Student::calc_average(void) const
+float Student::calc_average() const
 {
 	float sum = 0;
 	for (unsigned int i = 0; i < psubj; i++)
