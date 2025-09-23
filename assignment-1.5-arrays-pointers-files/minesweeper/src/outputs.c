@@ -89,7 +89,7 @@ void game_over(WINDOW *gameWin, char **mineboard, int yMiddle, int xMiddle)
     wclear(gameWin);
     wrefresh(gameWin);
     wattron(stdscr, A_BOLD);
-    mvwprintw(stdscr, yMiddle-2, xMiddle-6, "You hit a mine!");
+    mvwprintw(stdscr, yMiddle-2, xMiddle-22, "You hit a mine! (or tried defused the wrong cell)");
     mvwprintw(stdscr, yMiddle-1, xMiddle-4, "Game over :(");
     mvwprintw(stdscr, yMiddle, xMiddle-11, "Press any key to continue");
     refresh();
