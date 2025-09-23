@@ -45,21 +45,21 @@ std::ostream& operator<< (std::ostream& stream, const AppSystem& sys)
 int main(int argc, char **argv)
 {
 	AppSystem sys;
-	Manufacturer *gnu = new Manufacturer("124", "GNU", "gnu@gnu.com");
-	Manufacturer *cm = new Manufacturer("568", "Chris", "chris@cm.com");
-	sys += gnu;
-	sys += cm;
+	Manufacturer *comp = new Manufacturer("124", "Company", "comp@comp.com");
+	Manufacturer *chris = new Manufacturer("568", "Chris", "chris@cm.com");
+	sys += comp;
+	sys += chris;
 	if (!sys.read_data<Manufacturer>("res/manfdata.csv")) return -1;
 	if (!sys.read_data<App>("res/appdata.csv")) return -1;
 	std::vector<std::string> ext = {".doc", ".xls", ".ppt"};
-	sys += new Office("459", "LibreOffice", "Linux 2.2", gnu, 0, ext);
-	sys += new Game("731", "minecurses", "Linux 4.5", cm, 0, "Puzzle", false);
+	sys += new Office("459", "OpenOffice", "Linux 2.2", comp, 0, ext);
+	sys += new Game("731", "minecurses", "Linux 4.5", chris, 0, "Puzzle", false);
 
 	Review rev(4, "Name Surnaming", "Good");
 	sys.newrev("minecurses", &rev);
 	std::cout << sys << std::endl;
 
-	sys.removebad(cm);
+	sys.removebad(chris);
 	std::cout << sys << std::endl;
 
 	std::vector<Office *> fapps = sys.get_freeapps();
@@ -69,8 +69,8 @@ int main(int argc, char **argv)
 	for (auto& ggame : ggames)
 		std::cout << ggame->get_name() << std::endl;
 
-	if (!sys.export_data<Manufacturer>("res/manfout.csv")) return -1;
-	if (!sys.export_data<App>("res/appout.csv")) return -1;
+	if (!sys.export_data<Manufacturer>("res/manfdata_out.csv")) return -1;
+	if (!sys.export_data<App>("res/appdata_out.csv")) return -1;
 
 	return 0;
 }

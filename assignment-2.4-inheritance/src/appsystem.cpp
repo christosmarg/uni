@@ -36,6 +36,9 @@ bool AppSystem::read_data<Manufacturer>(const char *fpath)
 	f.exceptions(std::ifstream::badbit);
 	try
 	{
+		std::string strpath(fpath);
+		if (strpath.find(".csv") == std::string::npos) throw strpath;
+
 		f.open(fpath);
 		if (f.is_open())
 		{
@@ -45,6 +48,10 @@ bool AppSystem::read_data<Manufacturer>(const char *fpath)
 				if (!read_manf(f)) break;
 		}
 		f.close();
+	}
+	catch (const std::string& strpath)
+	{
+		throw std::runtime_error("Error. File must be of format \'.csv\'.");
 	}
 	catch (const std::ifstream::failure& e)
 	{
@@ -62,6 +69,9 @@ bool AppSystem::read_data<App>(const char *fpath)
 	f.exceptions(std::ifstream::badbit);
 	try
 	{
+		std::string strpath(fpath);
+		if (strpath.find(".csv") == std::string::npos) throw strpath;
+
 		f.open(fpath);
 		if (f.is_open())
 		{
@@ -78,6 +88,10 @@ bool AppSystem::read_data<App>(const char *fpath)
 			}
 		}
 		f.close();
+	}
+	catch (const std::string& strpath)
+	{
+		throw std::runtime_error("Error. File must be of format \'.csv\'.");
 	}
 	catch (const std::ifstream::failure& e)
 	{
@@ -155,7 +169,8 @@ bool AppSystem::read_office(std::ifstream& f)
 		std::getline(f, manf, ',');
 		std::getline(f, price, ',');
 		std::getline(f, skip1, ',');
-		std::getline(f, skip2);
+		std::getline(f, skip2, ',');
+		std::vector<std::string> exts =	read_office_exts(f);
 		
 		if (!manfs.empty())
 		{
@@ -164,7 +179,7 @@ bool AppSystem::read_office(std::ifstream& f)
 				if (man->get_name() == manf)
 				{
 					apps.push_back(new Office(sn.c_str(), name, os,
-								man, std::stoi(price), {}));
+								man, std::stoi(price), exts));
 					break;
 				}
 			}
@@ -177,6 +192,16 @@ bool AppSystem::read_office(std::ifstream& f)
 		return false;
 	}
 	return true;
+}
+
+const std::vector<std::string> AppSystem::read_office_exts(std::ifstream& f)
+{
+	std::vector<std::string> exts;
+	std::string ext;
+	std::getline(f, ext);
+	std::istringstream iss(ext);	
+	while (std::getline(iss, ext, '|'))	exts.push_back(ext);
+	return exts;
 }
 
 template<>
@@ -196,7 +221,7 @@ bool AppSystem::export_data<Manufacturer>(const char *fpath)
 	}
 	catch (const std::ofstream::failure& e)
 	{
-		std::cerr << "Error writing to file \'" << fpath << "\'." << std::endl <<
+		std::cerr << "Error writing to file (" << fpath << ")." << std::endl <<
 			e.what() << std::endl;
 		return false;
 	}
@@ -211,7 +236,7 @@ bool AppSystem::export_data<App>(const char *fpath)
 	try
 	{
 		f.open(fpath);
-		f << "Type,SN,Name,OS,Manf,Price,Genre,Online\n";
+		f << "Type,SN,Name,OS,Manf,Price,Genre,Online,Extensions\n";
 		for (auto& app : apps)
 		{
 			Manufacturer manf = app->get_manf();
@@ -223,17 +248,31 @@ bool AppSystem::export_data<App>(const char *fpath)
 				manf.get_name() << ',' <<
 				app->get_price() << ',' <<
 				(o ? o->get_genre() :"N/A") << ',' <<
-				(o ? (o->get_online() ? "Yes" : "No") : "N/A") << std::endl;
+				(o ? (o->get_online() ? "Yes" : "No") : "N/A") << ',';
+			if (o) f << "N/A" << std::endl;
+			else
+			{
+				Office *of = dynamic_cast<Office *>(app);
+				write_office_exts(of, f);
+				f << std::endl;
+			}	
 		}
 		f.close();
 	}
 	catch (const std::ofstream::failure& e)
 	{
-		std::cerr << "Error writing to file \'" << fpath << "\'." << std::endl <<
+		std::cerr << "Error writing to file (" << fpath << ")." << std::endl <<
 			e.what() << std::endl;
 		return false;
 	}
 	return true;
+}
+
+void AppSystem::write_office_exts(Office *o, std::ofstream& f)
+{
+	std::vector<std::string> exts = o->get_exts();
+	for (auto& ext : exts)
+		f << ext << '|';	
 }
 
 void AppSystem::newrev(const std::string& appname, Review *rev)

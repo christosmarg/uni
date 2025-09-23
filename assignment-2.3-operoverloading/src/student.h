@@ -54,10 +54,12 @@ class Student
 		void set_num_submitted_subjects(unsigned int nssubj);
 		void set_submitted_subjects(Subject **ssubj);
 
-		char *convert_AM(const char *AM);
-		float *convert_PSG(const float *grades);
 		void add_grade(float grade);
 		void detailed_print() const;
+
+	private:
+		char *convert_AM(const char *AM);
+		float *convert_PSG(const float *grades);
 		float calc_average() const;
 };
 

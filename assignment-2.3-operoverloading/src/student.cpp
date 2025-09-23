@@ -45,9 +45,9 @@ Student::Student(const Student& s)
 
 Student::~Student()
 {
-	delete[] this->AM;
-	delete[] this->grades;
-	delete[] this->ssubj;
+	if (this->AM != nullptr) delete[] this->AM;
+	if (this->grades != nullptr) delete[] this->grades;
+	if (this->ssubj != nullptr) delete[] this->ssubj;
 }
 
 void Student::operator+= (Subject *s)
@@ -176,8 +176,11 @@ void Student::set_num_submitted_subjects(unsigned nssubj)
 
 void Student::set_submitted_subjects(Subject **ssubj)
 {
-	this->ssubj = new Subject *[nssubj];
-	memcpy(this->ssubj, ssubj, sizeof(Subject *) * nssubj);
+	if (ssubj != nullptr)
+	{
+		this->ssubj = new Subject *[nssubj];
+		memcpy(this->ssubj, ssubj, sizeof(Subject *) * nssubj);
+	}
 }
 
 char *Student::convert_AM(const char *AM)
@@ -214,19 +217,26 @@ void Student::add_grade(float grade)
 
 void Student::detailed_print() const
 {
-	for (unsigned int i = 0; i < psubj; i++)
+	if (grades != nullptr)
 	{
-		std::cout << "Subject " << i+1 << ": ";
-		std::cout << grades[i] << std::endl;		
+		for (unsigned int i = 0; i < psubj; i++)
+		{
+			std::cout << "Subject " << i+1 << ": ";
+			std::cout << grades[i] << std::endl;		
+		}
+		std::cout << "Average grade: " << std::setprecision(2) << calc_average() << std::endl;
 	}
-	std::cout << "Average grade: " << std::setprecision(2) << calc_average() << std::endl;
 }
 
 float Student::calc_average() const
 {
-	float sum = 0;
-	for (unsigned int i = 0; i < psubj; i++)
-		sum += grades[i];
-	float average = sum / psubj;
-	return average;
+	if (grades != nullptr)
+	{
+		float sum = 0;
+		for (unsigned int i = 0; i < psubj; i++)
+			sum += grades[i];
+		float average = sum / psubj;
+		return average;
+	}
+	else return 0.0f;
 }
