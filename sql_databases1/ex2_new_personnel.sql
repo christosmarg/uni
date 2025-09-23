@@ -9,7 +9,7 @@ CREATE TABLE EMP (
 	EMPNO INT(2) NOT NULL,
 	ENAME VARCHAR,
 	JOB VARCHAR,
-	HIERDATE DATE,
+	HIREDATE DATE,
 	MGR INT(2),
 	SAL FLOAT(7,2),
 	COMM FLOAT(7,2),
@@ -62,36 +62,41 @@ INSERT INTO ASSIGN VALUES
 .mode column
 
 -- Question 1
-SELECT ENAME,
-	SAL AS ΜΙΣΘΟΣ, 
-	COMM AS ΠΡΟΜΗΘΕΙΑ,
-	IFNULL(ROUND(COMM * 100 / SAL, 1) || "%", "0.00%") AS ΠΟΣΟΣΤΟ
+SELECT 
+	ENAME,
+	SAL AS "ΜΙΣΘΟΣ", 
+	COMM AS "ΠΡΟΜΗΘΕΙΑ",
+	IFNULL(ROUND(COMM * 100 / SAL, 1) || "%", "0.00%") AS "ΠΟΣΟΣΤΟ"
 	FROM EMP;
 
 -- Question 2
-SELECT ENAME AS ΕΠΩΝΥΜΟ, 
+SELECT 
+	ENAME AS "ΕΠΩΝΥΜΟ", 
 	SAL AS "ΜΗΝΙΑΙΕΣ ΑΠΟΔΟΧΕΣ",
-	strftime("%Y", "now") - strftime("%Y", HIERDATE) AS ПРОΥΠΗΡΕΣΙΑ
+	strftime("%Y", "now") - strftime("%Y", HIREDATE) AS "ПРОΥΠΗΡΕΣΙΑ"
 	FROM EMP;
 
 -- Question 3
-SELECT ENAME AS ΕΠΩΝΥΜΟ,
-	JOB AS ΘΕΣΗ,
-	HIERDATE AS ΠΡΟΣΛΗΨΗ
+SELECT 
+	ENAME AS "ΕΠΩΝΥΜΟ",
+	JOB AS "ΘΕΣΗ",
+	HIREDATE AS "ΠΡΟΣΛΗΨΗ"
 	FROM EMP
-	WHERE strftime("%d", HIERDATE)  <= "05";
+	WHERE strftime("%d", HIREDATE)  <= "05";
 
 -- Question 4
-SELECT ENAME AS ΕΠΩΝΥΜΟ
+SELECT 
+	ENAME AS "ΕΠΩΝΥΜΟ"
 	FROM EMP
 	INNER JOIN DEPT ON
 		DEPT.DEPTNO = EMP.DEPTNO AND
 		DEPT.DNAME = "ACCOUNTING";
 
 -- Question 5
-SELECT ENAME AS ΕΠΩΝΥΜΟ,
+SELECT 
+	ENAME AS "ΕΠΩΝΥΜΟ",
 	MAX(
-		(strftime("%Y", "now") - strftime("%Y", HIERDATE)) *
+		(strftime("%Y", "now") - strftime("%Y", HIREDATE)) *
 		 12 * SAL
 	) AS "ΣΥΝΟΛΙΚΟΣ ΜΙΣΘΟΣ"
 	FROM EMP;

@@ -9,7 +9,7 @@ CREATE TABLE EMP (
 	EMPNO INT(2) NOT NULL,
 	ENAME VARCHAR,
 	JOB VARCHAR,
-	HIERDATE DATE,
+	HIREDATE DATE,
 	MGR INT(2),
 	SAL FLOAT(7,2),
 	COMM FLOAT(7,2),
@@ -85,7 +85,7 @@ SELECT * FROM ASSIGN;
  *         EMPNO INT(2) NOT NULL,
  *         ENAME VARCHAR,
  *         JOB VARCHAR,
- *         HIERDATE DATE,
+ *         HIREDATE DATE,
  *         MGR INT(2),
  *         SAL FLOAT(7,2),
  *         COMM FLOAT(7,2),
@@ -112,7 +112,7 @@ SELECT * FROM ASSIGN;
  * 20      SALES       LONDON
  * 30      RESEARCH    ATHENS
  * 40      PAYROLL     LONDON
- * EMPNO  ENAME    JOB         HIERDATE  MGR  SAL     COMM   DEPTNO
+ * EMPNO  ENAME    JOB         HIREDATE  MGR  SAL     COMM   DEPTNO
  * -----  -------  ----------  --------  ---  ------  -----  ------
  * 10     CODD     ANALYST     1/1/89    15   3000.0         10
  * 15     ELMASRI  ANALYST     2/5/95    15   1200.0  150.0  10

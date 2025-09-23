@@ -13,9 +13,7 @@ public class ExcelParser {
 	private final String EST_SHEET = "ESTIMATES";
 	private final String TARGET_TYPE = "Country/Area";
 	private final int TARGET_TYPE_CELL = 5;
-	private final int HEADER_ROW = 16;
-	private final int COUNTRIES_ROW = 44;
-	private final int STARTING_YEAR = 1950;
+	private final int COUNTRIES_ROW = 43;
 	private List<Country> countries;
 	private XSSFRow row;
 	
@@ -37,9 +35,7 @@ public class ExcelParser {
 			row = (XSSFRow)rit.next();
 			rownum = row.getRowNum();
 			cv = row.getCell(TARGET_TYPE_CELL).getStringCellValue();
-			/* TODO: Separate header */
-			if (rownum == HEADER_ROW
-			|| (rownum>= COUNTRIES_ROW && cv.equals(TARGET_TYPE)))
+			if (rownum>= COUNTRIES_ROW && cv.equals(TARGET_TYPE))
 				countries.add(read_country(row));
 		}
 		wbook.close();
@@ -51,10 +47,9 @@ public class ExcelParser {
 		Country ctry;
 		Iterator<Cell> cit;
 		Cell cell;
-		Integer year = STARTING_YEAR;
+		Integer year = Main.STARTING_YEAR;
 		String[] fields = new String[MIN_CELLNUM];
 		HashMap<Integer, Integer> population = new HashMap<Integer, Integer>();
-		Double d;
 		Integer n;
 		int i = 0;
 
@@ -95,22 +90,25 @@ public class ExcelParser {
 					break;
 				}
 			} else if (cell.getCellType() == CellType.NUMERIC)
+				/* 
+				 * Population numbers need to be multiplied by
+				 * 1000 in order to convert them properly to
+				 * Integer.
+				 */
 				population.put(year++,
-				    dtoi(cell.getNumericCellValue()));
+				    dtoi(cell.getNumericCellValue() * 1000));
 		}
 		ctry = new Country(fields[0], fields[1], fields[2], fields[3],
-		    fields[4], fields[5], fields[5], population);
+		    fields[4], fields[5], fields[6], population);
 
 		return ctry;
 	}
 	
 	private Integer dtoi(double n) {
-		Integer i;
 		Double d;
 		
 		d = Double.valueOf(n);
-		i = Integer.valueOf(d.intValue());
-		return i;
+		return Integer.valueOf(d.intValue());
 	}
 	
 	public List<Country> get_countries() {

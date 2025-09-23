@@ -1,6 +1,7 @@
 #ifndef _ENGINE_HPP_
 #define _ENGINE_HPP_
 
+#include <algorithm>
 #include <cmath>
 #include <csignal>
 #include <cstdlib>
@@ -32,7 +33,7 @@
 #define SYM_POTTER 'P'
 #define SYM_GNOME 'G'
 #define SYM_TRAAL 'T'
-#define SYM_STONE 'S'
+#define SYM_STONE '+'
 #define SYM_PARCHMENT 'O'
 
 class Engine {
@@ -54,8 +55,8 @@ private:
 	int wymax;
 	int w;
 	int h;
-	int nenemies = 3;
-	int ngems = 2;
+	int nenemies = 2;
+	int ngems = 10;
 	volatile sig_atomic_t f_running;
 
 public:
