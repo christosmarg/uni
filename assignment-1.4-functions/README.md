@@ -21,6 +21,9 @@
 3. _In case step 4 fails, do this first_: ```$ chmod +x autocompile.sh```
 4. Run the ```autocompile.sh``` script: ```$ ./autocompile.sh program_name```
 
+
+In case you want to compile and run ```hanoi-tower```, just do: ```$ gcc -c hanoi-tower.c && gcc hanoi-tower.o && ./a.out```
+
 ## Windows
 
 __Requirements:__ MinGW gcc compiler
@@ -42,4 +45,4 @@ __Requirements:__ MinGW gcc compiler
 
 
 
-In case you want to compile and run ```hanoi-tower```, just do: ```$ gcc -c hanoi-tower.c && gcc hanoi-tower.o && ./a.out```
+In case you want to compile and run ```hanoi-tower```, just do: ```$ gcc -c hanoi-tower.c && gcc hanoi-tower.o && a.exe```
