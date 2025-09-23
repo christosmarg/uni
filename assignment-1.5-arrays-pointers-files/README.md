@@ -15,16 +15,23 @@
 * Enter number of rows
 * Enter number of mines
 * Move with `w`/`s`/`a`/`d` or Vim keys (`k`/`j`/`h`/`l`)
-* Open cell with `[ENTER]` or `o`
+* Open cell with `[ENTER]`, `[SPACE]`, or `o`
 * Flag cell with `f`
 * Defuse mine (only if flagged) with `g`
 * You win if you defuse all the mines
 * You lose in case you open a mine or you try to defuse a flagged cell not containing a mine
-* Quit with `q`
+
+Additional controls
+
+* `p`: Pause audio
+* `+`: Volume up
+* `-`: Volume down
+* `q`: Quit
 
 ### To Do
 
 * Fix screen bug with big dimensions
+* Handle resizing
 * Add colors
 
 ### Preview
@@ -42,8 +49,10 @@ Combination printing programs
 
 ### Linux
 
-**Dependencies**
+**Dependencies** (for minesweeper only)
 * `ncurses`
+* `SDL2`
+* `SDL2_mixer`
 
 ```shell
 $ cd full_path/assignment-1.5-arrays-pointers-files/program_name
@@ -57,7 +66,10 @@ $ make clean # optional
 **Dependencies:**   
 * MinGW gcc compiler
 * `make`
-* `PDCurses` library (for minesweeper)
+  * *For minesweeper*
+  * `PDCurses`
+  * `SDL2`
+  * `SDL2_mixer`
 
 In CMD, do the following:
 
