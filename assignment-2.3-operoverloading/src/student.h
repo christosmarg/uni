@@ -31,12 +31,12 @@ class Student
 		void operator+= (Course *c);
 		Student operator= (const Student& s);
 
-		bool operator== (const Student& s) const {return this->semester == s.semester;}
-		bool operator!= (const Student& s) const {return this->semester != s.semester;}
-		bool operator<  (const Student& s) const {return this->semester <  s.semester;}
-		bool operator<= (const Student& s) const {return this->semester <= s.semester;}
-		bool operator>  (const Student& s) const {return this->semester >  s.semester;}
-		bool operator>= (const Student& s) const {return this->semester >= s.semester;}
+		constexpr bool operator== (const Student& s) const {return this->semester == s.semester;}
+		constexpr bool operator!= (const Student& s) const {return this->semester != s.semester;}
+		constexpr bool operator<  (const Student& s) const {return this->semester <  s.semester;}
+		constexpr bool operator<= (const Student& s) const {return this->semester <= s.semester;}
+		constexpr bool operator>  (const Student& s) const {return this->semester >  s.semester;}
+		constexpr bool operator>= (const Student& s) const {return this->semester >= s.semester;}
 
 		const std::string& get_name() const;
 		constexpr const char *get_AM() const {return this->AM;}
