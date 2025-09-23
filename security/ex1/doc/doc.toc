@@ -1,5 +1,4 @@
-\boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
-\babel@toc {english}{}
+\babel@toc {english}{}\relax 
 \contentsline {section}{\numberline {1}Δραστηριότητα 1: Ανάπτυξη και δοκιμή του shellcode}{2}{}%
 \contentsline {section}{\numberline {2}Δραστηριότητα 2: Ανάπτυξη του ευπαθούς προγράμματος}{3}{}%
 \contentsline {section}{\numberline {3}Δραστηριότητα 3: Δημιουργία του αρχείου εισόδου (badfile)}{4}{}%
