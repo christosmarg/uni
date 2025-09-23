@@ -122,15 +122,15 @@ std::ostream& operator<< (std::ostream& stream, const Student& s)
 		<< "Semester: " << s.get_semester() << std::endl;
 }
 
-void cont();
-void constructor1(const Student& s1);
-void ostream_overload(const Student& s1);
-void constructor2(const Student& s2);
-void copy_constructor(const Student& copystud);
-void constructor3(const Student& s3);
-void detprint (const Student& s3);
-void setters(Student& s3);
-void addgrd(Student& s3);
+static void cont();
+static void constructor1(const Student& s1);
+static void ostream_overload(const Student& s1);
+static void constructor2(const Student& s2);
+static void copy_constructor(const Student& copystud);
+static void constructor3(const Student& s3);
+static void detprint (const Student& s3);
+static void setters(Student& s3);
+static void addgrd(Student& s3);
 
 int main(int argc, char **argv)
 {
@@ -140,7 +140,7 @@ int main(int argc, char **argv)
 	ostream_overload(*s1); cont();
 	delete s1;
 
-	Student *s2 = new Student("92345678", "Name Surname", 2);
+	Student *s2 = new Student("92345678", "Name Surnamington", 2);
 	constructor2(*s2); cont();
 
 	Student *copystud = new Student(*s2);
@@ -149,7 +149,7 @@ int main(int argc, char **argv)
 	delete s2;
 
 	float grd[4] = {9.4f, 8.4f, 5.5f, 6.3f};
-	Student *s3 = new Student("72345678", "Name Surname", 2, 4, grd);
+	Student *s3 = new Student("72345678", "Name Surnaming", 2, 4, grd);
 	constructor3(*s3); cont();
 	detprint(*s3); cont();
 	setters(*s3);
@@ -159,14 +159,14 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-void cont()
+static void cont()
 {
 	std::cout << std::endl;
 	std::cout << "Press <ENTER> to continue. . .";
-	if (std::cin.get()) system("clear");
+	if (std::cin.get()) system("clear || cls");
 }
 
-void constructor1(const Student& s1)
+static void constructor1(const Student& s1)
 {
 	std::cout << "Constructor for s1 (AM, Name)" << std::endl;
 	std::cout << "----------------------------" << std::endl;
@@ -176,14 +176,14 @@ void constructor1(const Student& s1)
 	std::cout << "Subjects passed (default value): " << s1.get_psubj() << std::endl << std::endl;
 }
 
-void ostream_overload(const Student& s1)
+static void ostream_overload(const Student& s1)
 {
 	std::cout << "std::ostream overload" << std::endl;
 	std::cout << "----------------------------" << std::endl;
 	std::cout << s1 << std::endl;
 }
 
-void constructor2(const Student& s2)
+static void constructor2(const Student& s2)
 {
 	std::cout << "Constructor for s2 (AM, Name, Semester)" << std::endl;
 	std::cout << "----------------------------" << std::endl;
@@ -193,7 +193,7 @@ void constructor2(const Student& s2)
 	std::cout << "Subjects passed (default value): " << s2.get_psubj() << std::endl << std::endl;
 }
 
-void copy_constructor(const Student& copystud)
+static void copy_constructor(const Student& copystud)
 {
 	std::cout << "Copy Constructor using copystud object as a copy of s2" << std::endl;
 	std::cout << "----------------------------" << std::endl;
@@ -203,7 +203,7 @@ void copy_constructor(const Student& copystud)
 	std::cout << "Subjects passed (default value): " << copystud.get_psubj() << std::endl << std::endl;
 }
 
-void constructor3(const Student& s3)
+static void constructor3(const Student& s3)
 {
 	std::cout << "Constructor for s3 (AM, Name, Semester, Subjects Passed, Grades)" << std::endl;
 	std::cout << "----------------------------" << std::endl;
@@ -223,14 +223,14 @@ void constructor3(const Student& s3)
 	delete[] gr;
 }
 
-void detprint (const Student& s3)
+static void detprint (const Student& s3)
 {
 	std::cout << "Detailed print of s3's grades" << std::endl;
 	std::cout << "----------------------------" << std::endl;
 	s3.detailed_print();
 }
 
-void setters(Student& s3)
+static void setters(Student& s3)
 {
 	s3.set_AM("01010101");
 	s3.set_name("AAAAAAA");
@@ -262,7 +262,7 @@ void setters(Student& s3)
 	delete[] gr;
 }
 
-void addgrd(Student& s3)
+static void addgrd(Student& s3)
 {
 	s3.add_grade(7.5f);
 	float *gr = new float[s3.get_psubj()];

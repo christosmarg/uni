@@ -7,21 +7,21 @@ std::ostream& operator<< (std::ostream& stream, const Student& s)
 		<< "Semester: " << s.get_semester() << std::endl;
 }
 
-void cont();
-void constructor1(const Student& s1);
-void ostream_overload(const Student& s1);
-void constructor2(const Student& s2);
-void copy_constructor(const Student& copystud);
-void conditional_overload(const Student& s1, const Student& s2, const Student& copystud);
-void constructor3(const Student& s3);
-void detprint (const Student& s3);
-void setters(Student& s3);
-void addgrd(Student& s3);
-void submsubj(Student& s3);
-void plusequals_overload(Student& s3);
-void equals_overload(Student& s3);
-void getters(const Subject& s3);
-void setters(Subject& sb);
+static void cont();
+static void constructor1(const Student& s1);
+static void ostream_overload(const Student& s1);
+static void constructor2(const Student& s2);
+static void copy_constructor(const Student& copystud);
+static void conditional_overload(const Student& s1, const Student& s2, const Student& copystud);
+static void equals_overload(const Student& s1, Student& s2);
+static void constructor3(const Student& s3);
+static void detprint (const Student& s3);
+static void setters(Student& s3);
+static void addgrd(Student& s3);
+static void submsubj(Student& s3);
+static void plusequals_overload(Student& s3);
+static void getters(const Subject& s3);
+static void setters(Subject& sb);
 
 int main(int argc, char **argv)
 {
@@ -30,25 +30,25 @@ int main(int argc, char **argv)
 	constructor1(*s1); cont();
 	ostream_overload(*s1); cont();
 
-	Student *s2 = new Student("92345678", "Name Surname", 2);
+	Student *s2 = new Student("92345678", "Name Surnamington", 2);
 	constructor2(*s2); cont();
 
 	Student *copystud = new Student(*s2);
 	copy_constructor(*copystud); cont();
 	conditional_overload(*s1, *s2, *copystud); cont();
+	equals_overload(*s1, *s2); cont();
 	delete s1;
 	delete copystud;
 	delete s2;
 
 	float grd[4] = {9.4f, 8.4f, 5.5f, 6.3f};
-	Student *s3 = new Student("72345678", "Name Surname", 2, 4, grd);
+	Student *s3 = new Student("72345678", "Name Surnaming", 2, 4, grd);
 	constructor3(*s3); cont();
 	detprint(*s3); cont();
 	setters(*s3);
 	addgrd(*s3); cont();
 	submsubj(*s3); cont();
 	plusequals_overload(*s3); cont();
-	//equals_overload(*s3); cont();
 	delete s3;
 
 	Subject *sb = new Subject("35643", "OOP", 2);
@@ -59,14 +59,14 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-void cont()
+static void cont()
 {
 	std::cout << std::endl;
 	std::cout << "Press <ENTER> to continue. . .";
-	if (std::cin.get()) system("clear");
+	if (std::cin.get()) system("clear || cls");
 }
 
-void constructor1(const Student& s1)
+static void constructor1(const Student& s1)
 {
 	std::cout << "Constructor for s1 (AM, Name)" << std::endl;
 	std::cout << "----------------------------" << std::endl;
@@ -76,14 +76,14 @@ void constructor1(const Student& s1)
 	std::cout << "Subjects passed (default value): " << s1.get_psubj() << std::endl << std::endl;
 }
 
-void ostream_overload(const Student& s1)
+static void ostream_overload(const Student& s1)
 {
 	std::cout << "std::ostream overload" << std::endl;
 	std::cout << "----------------------------" << std::endl;
 	std::cout << s1 << std::endl;
 }
 
-void constructor2(const Student& s2)
+static void constructor2(const Student& s2)
 {
 	std::cout << "Constructor for s2 (AM, Name, Semester)" << std::endl;
 	std::cout << "----------------------------" << std::endl;
@@ -93,7 +93,7 @@ void constructor2(const Student& s2)
 	std::cout << "Subjects passed (default value): " << s2.get_psubj() << std::endl << std::endl;
 }
 
-void copy_constructor(const Student& copystud)
+static void copy_constructor(const Student& copystud)
 {
 	std::cout << "Copy Constructor using copystud object as a copy of s2" << std::endl;
 	std::cout << "----------------------------" << std::endl;
@@ -103,7 +103,7 @@ void copy_constructor(const Student& copystud)
 	std::cout << "Subjects passed (default value): " << copystud.get_psubj() << std::endl << std::endl;
 }
 
-void conditional_overload(const Student& s1, const Student& s2, const Student& copystud)
+static void conditional_overload(const Student& s1, const Student& s2, const Student& copystud)
 {
 	std::cout << "Conditional operator overloading" << std::endl;
 	std::cout << "----------------------------" << std::endl;
@@ -116,7 +116,18 @@ void conditional_overload(const Student& s1, const Student& s2, const Student& c
 	std::cout << std::endl;
 }
 
-void constructor3(const Student& s3)
+static void equals_overload(const Student& s1, Student& s2)
+{
+	s2 = s1;
+	std::cout << "= operator overload using s2 = s1" << std::endl;
+	std::cout << "----------------------------" << std::endl;
+	std::cout << "AM: " << s2.get_AM() << std::endl;
+	std::cout << "Name: " << s2.get_name() << std::endl;
+	std::cout << "Semester: " << s2.get_semester() << std::endl;
+	std::cout << "Subjects passed (default value): " << s2.get_psubj() << std::endl << std::endl;
+}
+
+static void constructor3(const Student& s3)
 {
 	std::cout << "Constructor for s3 (AM, Name, Semester, Subjects Passed, Grades)" << std::endl;
 	std::cout << "----------------------------" << std::endl;
@@ -136,14 +147,14 @@ void constructor3(const Student& s3)
 	delete[] gr;
 }
 
-void detprint (const Student& s3)
+static void detprint (const Student& s3)
 {
 	std::cout << "Detailed print of s3's grades" << std::endl;
 	std::cout << "----------------------------" << std::endl;
 	s3.detailed_print();
 }
 
-void setters(Student& s3)
+static void setters(Student& s3)
 {
 	s3.set_AM("01010101");
 	s3.set_name("AAAAAAA");
@@ -175,7 +186,7 @@ void setters(Student& s3)
 	delete[] gr;
 }
 
-void addgrd(Student& s3)
+static void addgrd(Student& s3)
 {
 	s3.add_grade(7.5f);
 	float *gr = new float[s3.get_psubj()];
@@ -190,7 +201,7 @@ void addgrd(Student& s3)
 	delete[] gr;
 }
 
-void submsubj(Student& s3)
+static void submsubj(Student& s3)
 {
 	std::string ss[3] = {"Math", "Physics", "Programming"};
 	s3.set_num_submitted_subjects(3);
@@ -213,7 +224,7 @@ void submsubj(Student& s3)
 	delete[] ssj;
 }
 
-void plusequals_overload(Student& s3)
+static void plusequals_overload(Student& s3)
 {
 	s3 += "Discrete Maths";
 	std::string *ssj = new std::string[s3.get_num_submitted_subjects()];
@@ -230,12 +241,7 @@ void plusequals_overload(Student& s3)
 	delete[] ssj;
 }
 
-void equals_overload(Student& s3)
-{
-
-}
-
-void getters(const Subject& sb)
+static void getters(const Subject& sb)
 {
 	std::cout << "Getters example using Subject object" << std::endl;
 	std::cout << "----------------------------" << std::endl;
@@ -245,7 +251,7 @@ void getters(const Subject& sb)
 	std::cout << "Subject semester: " << sb.get_subjsemester() << std::endl;
 }
 
-void setters(Subject& sb)
+static void setters(Subject& sb)
 {
 	sb.set_code("14556");
 	sb.set_sname("Calculus I");

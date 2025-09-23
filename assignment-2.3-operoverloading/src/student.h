@@ -26,6 +26,7 @@ class Student
 
 		friend std::ostream& operator<< (std::ostream& stream, const Student& s);
 		void operator+= (const std::string& s);
+		Student& operator= (const Student& s);
 
 		inline bool operator== (const Student& s) const	{return (this->semester == s.semester)	? true : false;}
 		inline bool operator!= (const Student& s) const	{return (this->semester != s.semester)	? true : false;}
