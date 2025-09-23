@@ -23,6 +23,10 @@ class Manufacturer
 		const char *get_serialnum() const;
 		const char *get_name() const;
 		const std::string& get_email() const;
+
+		void set_serialnum(const char *serialnum);
+		void set_name(const char *name);
+		void set_email(const std::string& email);
 };
 
 #endif /* MANUFACTURER_H */

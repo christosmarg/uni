@@ -11,6 +11,7 @@ App::App(const char *serialnum, const std::string& name,
 App::~App()
 {
 	if (serialnum != nullptr) delete[] serialnum;
+	if (!reviews.empty()) reviews.clear();
 }
 
 char *App::convsn(const char *serialnum)
@@ -54,6 +55,12 @@ const std::vector<Review *>& App::get_revs() const
 int App::get_price() const
 {
 	return price;
+}
+
+void App::set_serialnum(const char *serialnum)
+{
+	if (this->serialnum != nullptr) delete[] serialnum;
+	this->serialnum = convsn(serialnum);
 }
 
 void App::set_name(const std::string& name)
