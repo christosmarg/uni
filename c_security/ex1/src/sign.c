@@ -8,7 +8,7 @@
 static const char *
 read_line(FILE *fp)
 {
-	char buf[BUFSIZ];
+	char buf[2048];
 
 	if (fgets(buf, sizeof(buf), fp) == NULL)
 		err(1, "fgets");
@@ -32,7 +32,7 @@ main(int argc, char *argv[])
 	BIGNUM *e, *n, *d, *c, *str, *sign;
 	FILE *fp;
 	int len = 0;
-	char buf[BUFSIZ];
+	char buf[2048];
 
 	if (argc < 2) {
 		fprintf(stderr, "usage: %s input\n", *argv);

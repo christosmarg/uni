@@ -26,3 +26,25 @@ echo
 echo "exercise 5b:"
 ./verify dat/verify2.in | tail -1 | awk '{print $2}' | ./htoa
 echo
+
+echo "exercise 6:"
+# fetch cert key
+openssl s_client -connect margiolis.net:443 -showcerts </dev/null 2>/dev/null |
+openssl x509 -outform pem > dat/c0.pem
+
+# extract e
+openssl x509 -in dat/c0.pem -text -noout | grep 'Exponent' |
+awk '{print $3}' | sed 's/(//;s/)//;s/0x//' > dat/cert.in
+
+# extract n
+openssl x509 -in dat/c0.pem -noout -modulus | sed 's/Modulus=//' >> dat/cert.in
+
+# extract signature
+openssl x509 -in dat/c0.pem -text -noout \
+	-certopt ca_default -certopt no_validity \
+	-certopt no_serial -certopt no_subject \
+	-certopt no_extensions -certopt no_signame |
+sed 1d | tr -d '[:space:]:' | sha256 >> dat/cert.in
+
+# finally..
+./verify dat/cert.in
