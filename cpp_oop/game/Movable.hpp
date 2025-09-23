@@ -16,10 +16,10 @@ public:
 	virtual ~Movable();
 
 	void set_newpos(int dir, int xmax, int ymax);
-	int get_x();
-	int get_y();
-	int get_dir();
-	char get_sym();
+	int get_x() const;
+	int get_y() const;
+	int get_dir() const;
+	char get_sym() const;
 };
 
 #endif /* _MOVABLE_HPP_ */

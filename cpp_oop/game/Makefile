@@ -18,6 +18,7 @@ SRC = main.cc \
       Potter.cc \
       Score.cc \
       Traal.cc \
+      Gem.cc
 
 OBJ = ${SRC:.cc=.o}
 

@@ -34,25 +34,25 @@ Movable::set_newpos(int dir, int xmax, int ymax)
 }
 
 int
-Movable::get_x()
+Movable::get_x() const
 {
 	return x;
 }
 
 int
-Movable::get_y()
+Movable::get_y() const
 {
 	return y;
 }
 
 int
-Movable::get_dir()
+Movable::get_dir() const
 {
 	return dir;
 }
 
 char
-Movable::get_sym()
+Movable::get_sym() const
 {
 	return sym;
 }
