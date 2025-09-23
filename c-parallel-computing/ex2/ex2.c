@@ -8,6 +8,11 @@
 #define COUNT_BELOW_AVG 1 << 0
 #define COUNT_ABOVE_AVG 1 << 1
 
+struct Max {
+        float val;      /* max value in array */
+        int i;          /* index of max */
+};
+
 /* function declarations */
 static float     input(const char *, int);
 static void      readvec(float *, int);
@@ -16,12 +21,15 @@ static float     findavg(float *, int);
 static float     calcavg(void);
 static int       count(float, int);
 static float     calcvar(float);
+static float    *calcd(float, float);
+struct Max       findmax(float *);
+static void      printv(const char *, const float *);
 static void     *emalloc(size_t);
 
 /* global variables */
 static int rank, nproc, root = 0;
-static int n, localn;
 static float *vec, *localvec;
+static int n, localn;
 
 /* function implementations */
 static float
@@ -54,12 +62,11 @@ find(int flag)
         float *res;
         int i;
 
+        res = emalloc(nproc * sizeof(float));
         for (i = 0; i < localn; i++)
                 if ((flag & FIND_XMIN && localvec[i] < localres)
                 ||  (flag & FIND_XMAX && localvec[i] > localres))
                         localres = localvec[i];
-
-        res = emalloc(nproc * sizeof(float));
         MPI_Gather(&localres, 1, MPI_FLOAT, res, 1, MPI_FLOAT, root, MPI_COMM_WORLD);
 
         if (rank == root)
@@ -107,12 +114,11 @@ count(float avg, int flag)
 {
         int *res, localres = 0, finalres = 0, i;
 
+        res = emalloc(nproc * sizeof(int));
         for (i = 0; i < localn; i++)
                 if ((flag & COUNT_BELOW_AVG && localvec[i] < avg)
                 ||  (flag & COUNT_ABOVE_AVG && localvec[i] > avg))
                         localres++;
-
-        res = emalloc(nproc * sizeof(int));
         MPI_Gather(&localres, 1, MPI_INT, res, 1, MPI_INT, root, MPI_COMM_WORLD);
 
         if (rank == root)
@@ -150,16 +156,66 @@ calcvar(float avg)
 static float *
 calcd(float xmin, float xmax)
 {
-        float *locald, *finald = NULL;
+        float *locald, *finald;
+        int *displs, *rcounts;
         int i;
 
         locald = emalloc(localn * sizeof(float));
-        for (i = 0; i < localn; i++)
+        finald = emalloc(n * sizeof(float));
+        displs = emalloc(n * sizeof(int));
+        rcounts = emalloc(n * sizeof(int));
+
+        for (i = 0; i < localn; i++) {
                 locald[i] = ((localvec[i] - xmin) / (xmax - xmin)) * 100;
+                displs[i] = i * localn;
+                rcounts[i] = localn;
+        }
+        MPI_Gatherv(locald, localn, MPI_FLOAT, finald, rcounts, displs,
+                MPI_FLOAT, root, MPI_COMM_WORLD);
 
         free(locald);
+        free(displs);
+        free(rcounts);
 
         return finald;
+}
+
+struct Max
+findmax(float *d)
+{
+        struct Max in, out;
+        float *locald;
+        int i = 0;
+
+        locald = emalloc(localn * sizeof(float));
+        /* TODO: change to Scatterv */
+        MPI_Scatter(d, localn, MPI_FLOAT, locald, localn, MPI_FLOAT, root,
+                MPI_COMM_WORLD);
+
+        in.val = *locald;
+        in.i = 0;
+        for (; i < localn; i++) {
+                if (in.val < locald[i]) {
+                        in.val = locald[i];
+                        in.i = i;
+                }
+        }
+        in.i += rank * localn;
+        MPI_Reduce(&in, &out, 1, MPI_FLOAT_INT, MPI_MAXLOC, root, MPI_COMM_WORLD);
+        free(locald);
+
+        return out;
+}
+
+static void
+printv(const char *str, const float *v)
+{
+        int i = 0;
+        
+        printf("%s [", str);
+        for (; i < n; i++)
+                printf("%.4f%s", v[i], i != n-1 ? ", " : "");
+        printf("]\n");
 }
 
 static void *
@@ -177,7 +233,9 @@ emalloc(size_t nb)
 int
 main(int argc, char *argv[])
 {
-        float *d, avg, var, xmin, xmax;
+        struct Max dmax;
+        float avg, var, xmin, xmax;
+        float *d;
         int belowavg, aboveavg;
 
         MPI_Init(&argc, &argv);
@@ -194,6 +252,7 @@ main(int argc, char *argv[])
         MPI_Bcast(&n, 1, MPI_INT, root, MPI_COMM_WORLD);
         localn = n / nproc;
         localvec = emalloc(localn * sizeof(float));
+        /* TODO: change to Scatterv */
         MPI_Scatter(vec, localn, MPI_FLOAT, localvec, localn, MPI_FLOAT, root, MPI_COMM_WORLD);
 
         /* part 0.1 - calculate min and max */
@@ -216,25 +275,29 @@ main(int argc, char *argv[])
          */
         d = calcd(xmin, xmax);
 
+        /* part 4 - find dmax and dmaxloc */
+        dmax = findmax(d);
+
+        /* part 5 - prefixs sum of vec */
+
         /* print all results */
         if (rank == root) {
                 printf("\n");
+                printv("X:              ", vec);
                 printf("Average:         %.4f\n", avg);
                 printf("Xmin:            %.4f\n", xmin);
                 printf("Xmax:            %.4f\n", xmax);
                 printf("Below Average:   %d\n", belowavg);
                 printf("Above Average:   %d\n", aboveavg);
                 printf("Variance:        %.4f\n", var);
-
-                /* TODO: cleanup, very ugly */
-                printf("Vector D:        [");
-                for (int i = 0; i < n; i++)
-                        printf("%.4f%s", var, i != n-1 ? ", " : ""); 
-                printf("]\n");
+                printv("D:              ", d);
+                printf("Dmax:            %.4f\n", dmax.val);
+                printf("Dmaxloc:         %d\n", dmax.i % n);
         }
 
         free(vec);
         free(localvec);
+        free(d);
 
         MPI_Finalize();
 

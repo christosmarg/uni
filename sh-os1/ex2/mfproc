@@ -1,43 +1,64 @@
 #!/bin/sh
 
+# Exit codes:
+# 0     Success
+# 1     No user
+# 2     No process
+# 3     Usage
+
 main() {
+        # TODO: explain getopts(1)
         while getopts u:s: arg; do
         case "${arg}" in
                 u) test ! -z "$(grep -w "^${OPTARG}" /etc/passwd)" ||
-                   err "'${OPTARG}' is not in /etc/passwd"
+                   err "'${OPTARG}' is not in /etc/passwd" 1
                    uid=$(id -u ${OPTARG}) ;;
-                   # TODO: error check
-                s) state="${OPTARG}" ;;
+                s) state="${OPTARG}"
+                   validstate ${state} || usage ;;
                 *) usage
         esac
         done
 
+        count=0
         printf "Name\tPID\tPPID\tUID\tGID\tState\n" | expand -t 16
         for proc in /proc/*/status; do
-                # call getfield once
-                # handle flags
+                procuid=$(getfield "Uid:\s*${uid}" ${proc})
+                procgid=$(getfield "Gid" ${proc})
+                test -z ${uid} || [ "${procuid}" == "${uid}" ] || continue
+
+                procstate=$(getfield "State:\s*${state}" ${proc})
+                # Ignore any state other than S|R|Z
+                validstate ${procstate} || continue
+                test -z ${state} || [ "${procstate}" == "${state}" ] || continue
+
                 procname=$(getfield "Name" ${proc})
                 procpid=$(getfield "Pid" ${proc})
                 procppid=$(getfield "PPid" ${proc})
-                procuid=$(getfield "Uid:\s*${uid}" ${proc})
-                procgid=$(getfield "Gid" ${proc})
-                procstate=$(getfield "State:\s*${state}" ${proc})
 
                 printf "%s\t%s\t%s\t%s\t%s\t%s\n" \
                 ${procname} ${procpid} ${procppid} ${procuid} ${procgid} ${procstate} |
                 expand -t 16
-
+                count=$(expr ${count} + 1)
         done
+
+        # We didn't print any process
+        test ${count} -eq 0 && exit 2
+        # Success!
+        exit 0
 }
 
 usage() {
         echo "usage: ${0##*/} [-u username] [-s S|R|Z]" 1>&2
-        exit 1
+        exit 3
 }
 
 err() {
         echo "${0##*/}: $@" 1>&2
-        exit 1
+        exit ${2}
+}
+
+validstate() {
+        [ "${1}" = "S" ] || [ "${1}" = "R" ] || [ "${1}" = "Z" ]
 }
 
 getfield() {
