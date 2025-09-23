@@ -93,82 +93,10 @@ Student::operator= (const Student& s)
 	return *this;
 }
 
-bool
-Student::operator== (const Student& s) const
-{
-	return this->semester == s.semester;
-}
-
-bool
-Student::operator!= (const Student& s) const
-{
-	return this->semester != s.semester;
-}
-
-bool
-Student::operator< (const Student& s) const
-{
-	return this->semester < s.semester;
-}
-
-bool
-Student::operator<= (const Student& s) const
-{
-	return this->semester <= s.semester;
-}
-
-bool
-Student::operator> (const Student& s) const
-{
-	return this->semester > s.semester;
-}
-
-bool
-Student::operator>= (const Student& s) const
-{
-	return this->semester >= s.semester;
-}
-
-const char *
-Student::get_AM() const
-{
-	return this->AM;
-}
-
 const std::string&
 Student::get_name() const
 {
 	return this->name;
-}
-
-unsigned int
-Student::get_semester() const
-{
-	return this->semester;
-}
-
-unsigned int
-Student::get_pcourses() const
-{
-	return this->pcourses;
-}
-
-float *
-Student::get_grades() const
-{
-	return (this->pcourses > 0) ? this->grades : nullptr;
-}
-
-Course **
-Student::get_submitted_courses() const
-{
-	return this->sc;
-}
-
-unsigned int
-Student::get_num_submitted_courses() const
-{
-	return this->nsc;
 }
 
 void

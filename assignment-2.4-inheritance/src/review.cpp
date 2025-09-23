@@ -13,12 +13,6 @@ Review::Review(int stars, const std::string& username, const std::string& commen
 Review::Review(const Review& r)
 	:stars(r.stars), username(r.username), comment(r.comment) {}
 
-int
-Review::get_stars() const
-{
-	return stars;
-}
-
 const std::string&
 Review::get_username() const
 {

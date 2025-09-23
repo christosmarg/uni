@@ -18,7 +18,7 @@ class Course
 
 		const std::string& get_code() const;
 		const std::string& get_cname() const;
-		unsigned int get_csemester() const;
+		constexpr unsigned int get_csemester() const {return csemester;}
 
 		void set_code(const std::string& code);
 		void set_cname(const std::string& cname);

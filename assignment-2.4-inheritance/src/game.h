@@ -17,7 +17,7 @@ class Game: public App
 		Game(const Game& g);
 
 		const std::string get_genre() const;
-		bool get_online() const;
+		constexpr bool get_online() const {return online;}
 
 		void set_genre(const std::string& genre);
 		void set_online(bool online);

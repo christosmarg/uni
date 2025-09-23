@@ -183,18 +183,6 @@ AppSystem::get_goodgames() const
 	return ggames;
 }
 
-const std::vector<App *>&
-AppSystem::get_apps() const
-{
-	return apps;
-}
-
-const std::vector<Manufacturer *>&
-AppSystem::get_manfs() const
-{
-	return manfs;
-}
-
 bool
 AppSystem::valid_path(const std::string& strpath)
 {
@@ -204,18 +192,17 @@ AppSystem::valid_path(const std::string& strpath)
 const std::string
 AppSystem::err_csv(const std::string& strpath)
 {
-	return "Error. File must be of format \'.csv\'. (" +
-		strpath + ").";
+	return "Error. File must be of format \'.csv\'. (" + strpath + ").";
 }
 
 const std::string
-AppSystem::err_read(const char *fpath)
+AppSystem::err_read(const std::string& strpath)
 {
-	return "Error reading file \'" + std::string(fpath) + "\'.";
+	return "Error reading file \'" + strpath + "\'.";
 }
 
 const std::string
-AppSystem::err_write(const char *fpath)
+AppSystem::err_write(const std::string& strpath)
 {
-	return "Error writing to file \'" + std::string(fpath) + "\'.";
+	return "Error writing to file \'" + strpath + "\'.";
 }

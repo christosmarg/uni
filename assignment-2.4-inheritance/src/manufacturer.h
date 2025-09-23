@@ -19,9 +19,9 @@ class Manufacturer
 		Manufacturer(const Manufacturer& m);
 		~Manufacturer();
 
-		const char *get_serialnum() const;
-		const char *get_name() const;
 		const std::string& get_email() const;
+		constexpr const char *get_serialnum() const {return serialnum;}
+		constexpr const char *get_name() const {return name;}
 
 		void set_serialnum(const char *serialnum);
 		void set_name(const char *name);
