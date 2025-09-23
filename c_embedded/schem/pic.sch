@@ -1,0 +1,367 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Device:LED LED1
+U 1 1 61E8F822
+P 9350 5200
+F 0 "LED1" H 9343 5325 50  0000 C CNN
+F 1 "LED" H 9343 5326 50  0001 C CNN
+F 2 "" H 9350 5200 50  0001 C CNN
+F 3 "~" H 9350 5200 50  0001 C CNN
+	1    9350 5200
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R_US R1
+U 1 1 61EA1FDB
+P 5300 3000
+F 0 "R1" H 5368 3046 50  0000 L CNN
+F 1 "10kΩ" H 5368 2955 50  0000 L CNN
+F 2 "" V 5340 2990 50  0001 C CNN
+F 3 "~" H 5300 3000 50  0001 C CNN
+	1    5300 3000
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GNDREF GND
+U 1 1 61EB279A
+P 5450 2150
+F 0 "GND" H 5538 2113 50  0000 L CNN
+F 1 "GNDREF" H 5455 1977 50  0001 C CNN
+F 2 "" H 5450 2150 50  0001 C CNN
+F 3 "" H 5450 2150 50  0001 C CNN
+	1    5450 2150
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:R_US R2
+U 1 1 61ECA8DC
+P 4100 5950
+F 0 "R2" H 4168 5996 50  0000 L CNN
+F 1 "330Ω" H 4168 5905 50  0000 L CNN
+F 2 "" V 4140 5940 50  0001 C CNN
+F 3 "~" H 4100 5950 50  0001 C CNN
+	1    4100 5950
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C_Small C1
+U 1 1 61E97CC0
+P 4100 3750
+F 0 "C1" H 4192 3796 50  0000 L CNN
+F 1 "22pF" H 4192 3705 50  0000 L CNN
+F 2 "" H 4100 3750 50  0001 C CNN
+F 3 "~" H 4100 3750 50  0001 C CNN
+	1    4100 3750
+	-1   0    0    -1  
+$EndComp
+$Comp
+L power:GNDREF GND
+U 1 1 61EE8AF0
+P 4300 3900
+F 0 "GND" H 4388 3863 50  0000 L CNN
+F 1 "GNDREF" H 4305 3727 50  0001 C CNN
+F 2 "" H 4300 3900 50  0001 C CNN
+F 3 "" H 4300 3900 50  0001 C CNN
+	1    4300 3900
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C_Small C2
+U 1 1 61ECA409
+P 4500 3750
+F 0 "C2" H 4592 3796 50  0000 L CNN
+F 1 "22pF" H 4592 3705 50  0000 L CNN
+F 2 "" H 4500 3750 50  0001 C CNN
+F 3 "~" H 4500 3750 50  0001 C CNN
+	1    4500 3750
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:Crystal OSC1
+U 1 1 61EB43E4
+P 4300 3550
+F 0 "OSC1" H 4300 3818 50  0000 C CNN
+F 1 "8MHz" H 4300 3727 50  0000 C CNN
+F 2 "" H 4300 3550 50  0001 C CNN
+F 3 "~" H 4300 3550 50  0001 C CNN
+	1    4300 3550
+	1    0    0    -1  
+$EndComp
+$Comp
+L MCU_Microchip_PIC16:PIC16F877A-IP PIC16F877A-IP1
+U 1 1 61E8B28E
+P 6550 4100
+F 0 "PIC16F877A-IP1" H 6550 5589 50  0000 C CNN
+F 1 "PIC16F877A-IP" H 6550 5590 50  0001 C CNN
+F 2 "" H 6550 4100 50  0001 C CIN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/39582b.pdf" H 6550 4100 50  0001 C CNN
+	1    6550 4100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4100 3300 4100 3550
+Wire Wire Line
+	4150 3550 4100 3550
+Connection ~ 4100 3550
+Wire Wire Line
+	4100 3550 4100 3650
+Wire Wire Line
+	4500 3500 4500 3550
+Wire Wire Line
+	4450 3550 4500 3550
+Connection ~ 4500 3550
+Wire Wire Line
+	4500 3550 4500 3650
+Wire Wire Line
+	4300 3900 4100 3900
+Wire Wire Line
+	4100 3900 4100 3850
+Wire Wire Line
+	4300 3900 4500 3900
+Wire Wire Line
+	4500 3900 4500 3850
+Connection ~ 4300 3900
+$Comp
+L Simulation_SPICE:VDC V1
+U 1 1 61F2BB51
+P 6000 1550
+F 0 "V1" H 6130 1596 50  0001 L CNN
+F 1 "5V" H 5870 1550 50  0000 R CNN
+F 2 "" H 6000 1550 50  0001 C CNN
+F 3 "~" H 6000 1550 50  0001 C CNN
+F 4 "Y" H 6000 1550 50  0001 L CNN "Spice_Netlist_Enabled"
+F 5 "V" H 6000 1550 50  0001 L CNN "Spice_Primitive"
+F 6 "dc(1)" H 6130 1459 50  0001 L CNN "Spice_Model"
+	1    6000 1550
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GNDREF GND
+U 1 1 61F5552B
+P 6550 6300
+F 0 "GND" H 6638 6263 50  0000 L CNN
+F 1 "GNDREF" H 6555 6127 50  0001 C CNN
+F 2 "" H 6550 6300 50  0001 C CNN
+F 3 "" H 6550 6300 50  0001 C CNN
+	1    6550 6300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5450 3000 5650 3000
+Wire Wire Line
+	6000 2450 6550 2450
+Wire Wire Line
+	6550 2450 6550 2700
+Wire Wire Line
+	5150 3000 4900 3000
+$Comp
+L Switch:SW_Push RSTB1
+U 1 1 61FC0519
+P 5150 2500
+F 0 "RSTB1" H 5150 2693 50  0000 C CNN
+F 1 "SW_Push" H 5150 2694 50  0001 C CNN
+F 2 "" H 5150 2700 50  0001 C CNN
+F 3 "~" H 5150 2700 50  0001 C CNN
+	1    5150 2500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4900 2500 4950 2500
+Wire Wire Line
+	4900 2500 4900 2650
+Wire Wire Line
+	5450 2150 5450 2500
+Wire Wire Line
+	5450 2500 5350 2500
+Wire Wire Line
+	4900 2650 5850 2650
+Wire Wire Line
+	5850 2650 5850 2450
+Wire Wire Line
+	5850 2450 6000 2450
+Connection ~ 4900 2650
+Wire Wire Line
+	4900 2650 4900 3000
+Connection ~ 6000 2450
+Wire Wire Line
+	6650 2450 6550 2450
+Connection ~ 6550 2450
+$Comp
+L Sensor:BME280 BME280
+U 1 1 61E953D6
+P 8600 3250
+F 0 "BME280" H 8171 3296 50  0000 R CNN
+F 1 "BME280" H 8171 3205 50  0001 R CNN
+F 2 "Package_LGA:Bosch_LGA-8_2.5x2.5mm_P0.65mm_ClockwisePinNumbering" H 10100 2800 50  0001 C CNN
+F 3 "https://ae-bst.resource.bosch.com/media/_tech/media/datasheets/BST-BME280-DS002.pdf" H 8600 3050 50  0001 C CNN
+	1    8600 3250
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	8000 3150 7800 3150
+Wire Wire Line
+	7800 3150 7800 4900
+Wire Wire Line
+	6650 2700 6650 2450
+$Comp
+L Display_Character:NHD-0420H1Z LCD
+U 1 1 61E937A6
+P 4400 5200
+F 0 "LCD" V 4400 4356 50  0000 R CNN
+F 1 "NHD-0420H1Z" H 4400 4220 50  0001 C CNN
+F 2 "Display:NHD-0420H1Z" H 4400 4300 50  0001 C CNN
+F 3 "http://www.newhavendisplay.com/specs/NHD-0420H1Z-FSW-GBW-33V3.pdf" H 4500 5100 50  0001 C CNN
+	1    4400 5200
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	4100 3300 5650 3300
+Wire Wire Line
+	4500 3500 5650 3500
+Wire Wire Line
+	5000 4800 5000 3700
+Wire Wire Line
+	5000 3700 5650 3700
+Wire Wire Line
+	4900 4800 4900 3800
+Wire Wire Line
+	4900 3800 5650 3800
+Wire Wire Line
+	4800 4800 4800 3900
+Wire Wire Line
+	4800 3900 5650 3900
+Wire Wire Line
+	5650 4000 4100 4000
+Wire Wire Line
+	4100 4000 4100 4800
+Wire Wire Line
+	5650 4100 4000 4100
+Wire Wire Line
+	4000 4100 4000 4800
+Wire Wire Line
+	5650 4200 3900 4200
+Wire Wire Line
+	3900 4200 3900 4800
+Wire Wire Line
+	5650 4300 3800 4300
+Wire Wire Line
+	3800 4300 3800 4800
+Wire Wire Line
+	3600 5200 3350 5200
+Wire Wire Line
+	4100 5600 4100 5800
+Wire Wire Line
+	6000 1950 3200 1950
+Wire Wire Line
+	3200 1950 3200 6250
+Wire Wire Line
+	3200 6250 4100 6250
+Wire Wire Line
+	4100 6250 4100 6100
+Connection ~ 6000 1950
+Wire Wire Line
+	6000 1950 6000 2450
+Wire Wire Line
+	6550 5600 6550 5700
+Connection ~ 6550 5700
+Wire Wire Line
+	5200 5200 5400 5200
+Wire Wire Line
+	5400 5200 5400 6250
+Connection ~ 4100 6250
+Wire Wire Line
+	4200 5600 4200 5700
+Wire Wire Line
+	4200 5700 5050 5700
+Wire Wire Line
+	4100 6250 5050 6250
+$Comp
+L Device:R_POT_US POT1
+U 1 1 6208C3F4
+P 5050 5950
+F 0 "POT1" H 4983 5996 50  0000 R CNN
+F 1 "10kΩ" H 4983 5905 50  0000 R CNN
+F 2 "" H 5050 5950 50  0001 C CNN
+F 3 "~" H 5050 5950 50  0001 C CNN
+	1    5050 5950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5200 5950 5300 5950
+Wire Wire Line
+	5300 5950 5300 5300
+Wire Wire Line
+	5300 5300 5200 5300
+Wire Wire Line
+	5050 5800 5050 5700
+Connection ~ 5050 5700
+Wire Wire Line
+	5050 5700 6550 5700
+Wire Wire Line
+	5050 6100 5050 6250
+Connection ~ 5050 6250
+Wire Wire Line
+	5050 6250 5400 6250
+Wire Wire Line
+	3350 6150 6550 6150
+Wire Wire Line
+	3350 5200 3350 6150
+Connection ~ 6550 6150
+Wire Wire Line
+	6550 6150 6550 6300
+Wire Wire Line
+	7800 4900 7450 4900
+Wire Wire Line
+	7450 5000 7900 5000
+Wire Wire Line
+	7900 5000 7900 3350
+Wire Wire Line
+	7900 3350 8000 3350
+Wire Wire Line
+	8000 2950 7700 2950
+Wire Wire Line
+	7700 2950 7700 5100
+Wire Wire Line
+	7700 5100 7450 5100
+Wire Wire Line
+	6000 1750 6000 1950
+Wire Wire Line
+	6550 5700 6550 6150
+Wire Wire Line
+	6650 5600 6650 5700
+Wire Wire Line
+	6650 5700 6550 5700
+$Comp
+L Switch:SW_Push BTN1
+U 1 1 620E2C06
+P 9800 5200
+F 0 "BTN1" H 9800 5393 50  0000 C CNN
+F 1 "SW_Push" H 9800 5394 50  0001 C CNN
+F 2 "" H 9800 5400 50  0001 C CNN
+F 3 "~" H 9800 5400 50  0001 C CNN
+	1    9800 5200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8500 3850 8500 6150
+Wire Wire Line
+	8500 6150 6550 6150
+Wire Wire Line
+	8500 2650 8500 1950
+Wire Wire Line
+	8500 1950 6000 1950
+$EndSCHEMATC
