@@ -101,7 +101,7 @@ class Student
 
 int main(int argc, char **argv)
 {
-	Student *s1 = new Student("19390133", "Christos Margiolis");
+	Student *s1 = new Student("12345678", "Name Surname");
 	std::cout << "Constructor for s1 (AM, Name)" << std::endl;
 	std::cout << "----------------------------" << std::endl;
 	std::cout << "s1->get_AM(): " << s1->get_AM() << std::endl;
@@ -110,7 +110,7 @@ int main(int argc, char **argv)
 	std::cout << "s1->get_psubj(): " << s1->get_psubj() << std::endl << std::endl;
 	delete s1;
 
-	Student *s2 = new Student("19390133", "Christos Margiolis", 2);
+	Student *s2 = new Student("12345678", "Name Surname", 2);
 	std::cout << "Constructor for s2 (AM, Name, Semester)" << std::endl;
 	std::cout << "----------------------------" << std::endl;
 	std::cout << "s2->get_AM(): " << s2->get_AM() << std::endl;
@@ -129,7 +129,7 @@ int main(int argc, char **argv)
 	delete s2;
 
 	float grd[4] = {9.4f, 8.4f, 5.5f, 6.3f};
-	Student *s3 = new Student("19390133", "Christos Margiolis", 2, 4, grd);
+	Student *s3 = new Student("12345678", "Name Surname", 2, 4, grd);
 	std::cout << "Constructor for s3 (AM, Name, Semester, Subjects Passed, Grades)" << std::endl;
 	std::cout << "----------------------------" << std::endl;
 	std::cout << "s3->get_AM(): " << s3->get_AM() << std::endl;
