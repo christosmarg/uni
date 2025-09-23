@@ -21,9 +21,10 @@ class AppSystem
 		AppSystem& operator+= (App *app);
 		AppSystem& operator+= (Manufacturer *manf);
 
-		template<typename T> bool read_data(const char *fpath);
+		template<typename T> bool import_data(const char *fpath);
 		template<typename T> bool export_data(const char *fpath);
 		void newrev		(const std::string& appname, Review *rev);
+		void newrevs	(const std::string& appname, const std::vector<Review *> revs);
 		void chserialnum(const std::string& appname, const char *serialnum);
 		void chname		(const std::string& appname, const std::string& name);
 		void chos		(const std::string& appname, const std::string& os);
@@ -45,7 +46,13 @@ class AppSystem
 		bool read_game(std::ifstream& f);
 		bool read_office(std::ifstream& f);
 		const std::vector<std::string> read_office_exts(std::ifstream& f);
-		void write_office_exts(Office *o, std::ofstream& f);
+		const std::vector<Review *>
+			read_reviews(const std::string& appname, const char *rpath);
+		void write_office_exts(Office *of, std::ofstream& f);
+		bool valid_path(const std::string& strpath);
+		const std::string err_csv(const std::string& fpath);
+		const std::string err_read(const char *fpath);
+		const std::string err_write(const char *fpath);
 };
 
 #endif /* APPSYSTEM_H */

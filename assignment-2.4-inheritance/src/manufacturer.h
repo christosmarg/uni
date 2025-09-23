@@ -19,8 +19,6 @@ class Manufacturer
 		Manufacturer(const Manufacturer& m);
 		~Manufacturer();
 
-		char *convstr(const char *str);
-
 		const char *get_serialnum() const;
 		const char *get_name() const;
 		const std::string& get_email() const;
@@ -28,6 +26,9 @@ class Manufacturer
 		void set_serialnum(const char *serialnum);
 		void set_name(const char *name);
 		void set_email(const std::string& email);
+
+	private:
+		char *convstr(const char *str);
 };
 
 #endif /* MANUFACTURER_H */

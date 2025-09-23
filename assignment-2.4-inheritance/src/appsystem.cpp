@@ -30,14 +30,14 @@ AppSystem& AppSystem::operator+= (Manufacturer *man)
 }
 
 template<>
-bool AppSystem::read_data<Manufacturer>(const char *fpath)
+bool AppSystem::import_data<Manufacturer>(const char *fpath)
 {
 	std::ifstream f;
 	f.exceptions(std::ifstream::badbit);
 	try
 	{
 		std::string strpath(fpath);
-		if (strpath.find(".csv") == std::string::npos) throw strpath;
+		if (!valid_path(strpath)) throw strpath;
 
 		f.open(fpath);
 		if (f.is_open())
@@ -51,52 +51,11 @@ bool AppSystem::read_data<Manufacturer>(const char *fpath)
 	}
 	catch (const std::string& strpath)
 	{
-		throw std::runtime_error("Error. File must be of format \'.csv\'.");
+		throw std::runtime_error(err_csv(strpath));
 	}
 	catch (const std::ifstream::failure& e)
 	{
-		std::cerr << "Error reading file \'" << fpath << "\'." << std::endl <<
-			e.what() << std::endl;
-		return false;
-	}
-	return true;
-}
-
-template<>
-bool AppSystem::read_data<App>(const char *fpath)
-{
-	std::ifstream f;
-	f.exceptions(std::ifstream::badbit);
-	try
-	{
-		std::string strpath(fpath);
-		if (strpath.find(".csv") == std::string::npos) throw strpath;
-
-		f.open(fpath);
-		if (f.is_open())
-		{
-			std::string skip;
-			std::getline(f, skip);
-			while (f.good())
-			{
-				std::string type;
-				std::getline(f, type, ',');
-				if (type == "Game")
-					if (!read_game(f)) break;
-				if (type == "Office")
-					if (!read_office(f)) break;
-			}
-		}
-		f.close();
-	}
-	catch (const std::string& strpath)
-	{
-		throw std::runtime_error("Error. File must be of format \'.csv\'.");
-	}
-	catch (const std::ifstream::failure& e)
-	{
-		std::cerr << "Error reading file \'" << fpath << "\'." << std::endl <<
-			e.what() << std::endl;
+		std::cerr << err_read(fpath) << std::endl << e.what() << std::endl;
 		return false;
 	}
 	return true;
@@ -122,18 +81,59 @@ bool AppSystem::read_manf(std::ifstream& f)
 	return true;
 }
 
+template<>
+bool AppSystem::import_data<App>(const char *fpath)
+{
+	std::ifstream f;
+	f.exceptions(std::ifstream::badbit);
+	try
+	{
+		std::string strpath(fpath);
+		if (!valid_path(strpath)) throw strpath;
+
+		f.open(fpath);
+		if (f.is_open())
+		{
+			std::string skip;
+			std::getline(f, skip);
+			while (f.good())
+			{
+				std::string type;
+				std::getline(f, type, ',');
+				if (type == "Game")
+					if (!read_game(f)) break;
+				if (type == "Office")
+					if (!read_office(f)) break;
+			}
+		}
+		f.close();
+	}
+	catch (const std::string& strpath)
+	{
+		throw std::runtime_error(err_csv(strpath));
+	}
+	catch (const std::ifstream::failure& e)
+	{
+		std::cerr << err_read(fpath) << std::endl << e.what() << std::endl;
+		return false;
+	}
+	return true;
+}
+
 bool AppSystem::read_game(std::ifstream& f)
 {
 	try
 	{
 		std::string sn, name, os, manf, price, genre, online;
+		std::string skip;
 		std::getline(f, sn, ',');
 		std::getline(f, name, ',');
 		std::getline(f, os, ',');
 		std::getline(f, manf, ',');
 		std::getline(f, price, ',');
 		std::getline(f, genre, ',');
-		std::getline(f, online);
+		std::getline(f, online, ',');
+		std::getline(f, skip);
 		bool onl = online == "Yes";
 		
 		if (!manfs.empty())
@@ -205,6 +205,41 @@ const std::vector<std::string> AppSystem::read_office_exts(std::ifstream& f)
 }
 
 template<>
+bool AppSystem::import_data<Review>(const char *fpath)
+{
+	std::ifstream f;
+	try
+	{	
+		std::string strpath(fpath);
+		if (!valid_path(strpath)) throw strpath;
+		f.open(fpath);
+		std::string skip;
+		std::getline(f, skip);
+		while (f.good())
+		{
+			std::string appname, stars, username, comment;
+			std::getline(f, appname, ',');
+			std::getline(f, stars, ',');
+			std::getline(f, username, ',');
+			std::getline(f, comment);
+			for (auto& app : apps)
+				if (appname == app->get_name())
+					app->addrev(new Review(std::stoi(stars), username, comment)); 
+		}
+	}
+	catch (const std::string& strpath)
+	{
+		throw std::runtime_error(err_csv(strpath));
+	}
+	catch (const std::ifstream::failure& e)
+	{
+		std::cerr << "Error reading reviews." << std::endl << e.what() << std::endl;
+		return false;
+	}
+	return true;
+}
+
+template<>
 bool AppSystem::export_data<Manufacturer>(const char *fpath)
 {
 	std::ofstream f;
@@ -221,8 +256,7 @@ bool AppSystem::export_data<Manufacturer>(const char *fpath)
 	}
 	catch (const std::ofstream::failure& e)
 	{
-		std::cerr << "Error writing to file (" << fpath << ")." << std::endl <<
-			e.what() << std::endl;
+		std::cerr << err_read(fpath) << std::endl << e.what() << std::endl;
 		return false;
 	}
 	return true;
@@ -235,6 +269,8 @@ bool AppSystem::export_data<App>(const char *fpath)
 	f.exceptions(std::ofstream::failbit | std::ofstream::badbit);
 	try
 	{
+		std::string strpath(fpath);
+		if (!valid_path(strpath)) throw strpath;
 		f.open(fpath);
 		f << "Type,SN,Name,OS,Manf,Price,Genre,Online,Extensions\n";
 		for (auto& app : apps)
@@ -255,22 +291,61 @@ bool AppSystem::export_data<App>(const char *fpath)
 				Office *of = dynamic_cast<Office *>(app);
 				write_office_exts(of, f);
 				f << std::endl;
-			}	
+			}
 		}
 		f.close();
 	}
+	catch (const std::string& strpath)
+	{
+		throw std::runtime_error(err_csv(strpath));
+	}
 	catch (const std::ofstream::failure& e)
 	{
-		std::cerr << "Error writing to file (" << fpath << ")." << std::endl <<
-			e.what() << std::endl;
+		std::cerr << err_write(fpath) << e.what() << std::endl;
 		return false;
 	}
 	return true;
 }
 
-void AppSystem::write_office_exts(Office *o, std::ofstream& f)
+template<>
+bool AppSystem::export_data<Review>(const char *fpath)
 {
-	std::vector<std::string> exts = o->get_exts();
+	std::ofstream f;
+	f.exceptions(std::ofstream::failbit | std::ofstream::badbit);
+	try
+	{
+		std::string strpath(fpath);
+		if (!valid_path(strpath)) throw strpath;
+		f.open(fpath);
+		f << "AppName,Stars,Username,Comment\n";
+		for (auto& app : apps)
+		{
+			const std::vector<Review *> revs = app->get_revs();
+			if (!revs.empty())
+				for (auto& rev : revs)
+					f <<
+						app->get_name() << ',' <<
+						rev->get_stars() << ',' <<
+						rev->get_username() << ',' <<
+						rev->get_comment() << std::endl;	
+		}
+		f.close();
+	}
+	catch (const std::string& strpath)
+	{
+		throw std::runtime_error(err_csv(strpath));
+	}
+	catch (const std::ofstream::failure& e)
+	{
+		std::cerr << err_write(fpath) << e.what() << std::endl;
+		return false;
+	}
+	return true;
+}
+
+void AppSystem::write_office_exts(Office *of, std::ofstream& f)
+{
+	std::vector<std::string> exts = of->get_exts();
 	for (auto& ext : exts)
 		f << ext << '|';	
 }
@@ -280,6 +355,13 @@ void AppSystem::newrev(const std::string& appname, Review *rev)
 	for (auto& app : apps)
 		if (app->get_name() == appname)
 			app->addrev(rev);
+}
+
+void AppSystem::newrevs(const std::string& appname, const std::vector<Review *> revs)
+{
+	for (auto& app : apps)
+		if (app->get_name() == appname)
+			app->addrevs(revs);
 }
 
 void AppSystem::chserialnum(const std::string& appname, const char *serialnum)
@@ -390,7 +472,6 @@ const std::vector<Game *> AppSystem::get_goodgames() const
 					count++;
 				}
 				if (sum / count > 4) ggames.push_back(o);
-		
 			}
 		}
 	}
@@ -405,4 +486,25 @@ const std::vector<App *>& AppSystem::get_apps() const
 const std::vector<Manufacturer *>& AppSystem::get_manfs() const
 {
 	return manfs;
+}
+
+bool AppSystem::valid_path(const std::string& strpath)
+{
+	return (strpath.find(".csv") != std::string::npos);	
+}
+
+const std::string AppSystem::err_csv(const std::string& strpath)
+{
+	return "Error. File must be of format \'.csv\'. (" +
+		strpath + ").";
+}
+
+const std::string AppSystem::err_read(const char *fpath)
+{
+	return "Error reading file \'" + std::string(fpath) + "\'.";
+}
+
+const std::string AppSystem::err_write(const char *fpath)
+{
+	return "Error writing to file (" + std::string(fpath) + ").";
 }

@@ -32,10 +32,16 @@ App::App(const char *serialnum, const std::string& name,
 	}
 }
 
+#include <iostream>
 App::~App()
 {
 	if (serialnum != nullptr) delete[] serialnum;
-	if (!reviews.empty()) reviews.clear();
+	if (!reviews.empty())
+	{
+		for (auto& rev :reviews)
+			delete rev;
+		reviews.clear();
+	}
 }
 
 char *App::convsn(const char *serialnum)
@@ -49,6 +55,11 @@ char *App::convsn(const char *serialnum)
 void App::addrev(Review *rev)
 {
 	reviews.push_back(rev);
+}
+
+void App::addrevs(const std::vector<Review *> revs)
+{
+	reviews.insert(reviews.end(), revs.begin(), revs.end());
 }
 
 const char *App::get_serialnum() const
