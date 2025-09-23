@@ -1,45 +1,45 @@
 #include "student.h"
 
 Student::Student(const char *AM, const std::string& name)
-	:AM(convert_AM(AM)), name(name), semester(1), psubj(0)
+	:AM(convert_AM(AM)), name(name), semester(1), pcourses(0)
 {
-	nssubj = 0;
-	ssubj = nullptr;
+	nsc = 0;
+	sc = nullptr;
 }
 
 Student::Student(const char *AM, const std::string& name, unsigned int semester)
-	:AM(convert_AM(AM)), name(name), semester(semester), psubj(0)
+	:AM(convert_AM(AM)), name(name), semester(semester), pcourses(0)
 {
-	nssubj = 0;
-	ssubj = nullptr;
+	nsc = 0;
+	sc = nullptr;
 }
 
 Student::Student(const char *AM, const std::string& name, unsigned int semester,
-			    unsigned int psubj, const float *grades)
-	:AM(convert_AM(AM)), name(name), semester(semester), psubj(psubj), grades(convert_PSG(grades))
+			    unsigned int pcourses, const float *grades)
+	:AM(convert_AM(AM)), name(name), semester(semester), pcourses(pcourses), grades(convert_PSG(grades))
 {
-	nssubj = 0;
-	ssubj = nullptr;
+	nsc = 0;
+	sc = nullptr;
 }
 
 Student::Student(const Student& s)
-	:name(s.name), semester(s.semester), psubj(s.psubj)
+	:name(s.name), semester(s.semester), pcourses(s.pcourses)
 {
 	int sl = strlen(s.AM);
 	this->AM = new char[sl + 1];
 	memcpy(AM, s.AM, sizeof(s.AM) + (sl+1));
-	this->grades = new float[s.psubj];
-	memcpy(grades, s.grades, sizeof(float) * s.psubj);
+	this->grades = new float[s.pcourses];
+	memcpy(grades, s.grades, sizeof(float) * s.pcourses);
 
-	if (s.nssubj <= 0)
+	if (s.nsc <= 0)
 	{
-		nssubj = 0;
-		ssubj = nullptr;
+		nsc = 0;
+		sc = nullptr;
 	}
 	else
 	{
-		this->ssubj = new Subject *[s.nssubj];
-		memcpy(ssubj, s.ssubj, sizeof(s.ssubj) * s.nssubj);
+		this->sc = new Course *[s.nsc];
+		memcpy(sc, s.sc, sizeof(s.sc) * s.nsc);
 	}
 }
 
@@ -47,20 +47,20 @@ Student::~Student()
 {
 	if (this->AM != nullptr) delete[] this->AM;
 	if (this->grades != nullptr) delete[] this->grades;
-	if (this->ssubj != nullptr) delete[] this->ssubj;
+	if (this->sc != nullptr) delete[] this->sc;
 }
 
-void Student::operator+= (Subject *s)
+void Student::operator+= (Course *c)
 {
-	Subject **tmp = new Subject *[nssubj+1];
-	if (ssubj != nullptr)
+	Course **tmp = new Course *[nsc+1];
+	if (sc != nullptr)
 	{
-		memcpy(tmp, ssubj, sizeof(Subject *) * nssubj);
-		delete[] ssubj;
+		memcpy(tmp, sc, sizeof(Course *) * nsc);
+		delete[] sc;
 	}
-	tmp[nssubj] = s;
-	ssubj = tmp;
-	nssubj++;
+	tmp[nsc] = c;
+	sc = tmp;
+	nsc++;
 }
 
 Student Student::operator= (const Student& s)
@@ -69,12 +69,12 @@ Student Student::operator= (const Student& s)
 	this->AM = convert_AM(s.AM);
 	this->name = s.name;
 	this->semester = s.semester;
-	this->psubj = s.psubj;
+	this->pcourses = s.pcourses;
 	if (s.grades != nullptr) this->grades = convert_PSG(s.grades);
-	if (s.ssubj != nullptr)
+	if (s.sc != nullptr)
 	{
-		this->nssubj = s.nssubj;
-		this->ssubj = s.ssubj;
+		this->nsc = s.nsc;
+		this->sc = s.sc;
 	}
 	return *this;
 }
@@ -124,24 +124,24 @@ unsigned int Student::get_semester() const
 	return this->semester;
 }
 
-unsigned int Student::get_psubj() const
+unsigned int Student::get_pcourses() const
 {
-	return this->psubj;
+	return this->pcourses;
 }
 
 float *Student::get_grades() const
 {
-	return (this->psubj > 0) ? this->grades : nullptr;
+	return (this->pcourses > 0) ? this->grades : nullptr;
 }
 
-Subject **Student::get_submitted_subjects() const
+Course **Student::get_submitted_courses() const
 {
-	return this->ssubj;
+	return this->sc;
 }
 
-unsigned int Student::get_num_submitted_subjects() const
+unsigned int Student::get_num_submitted_courses() const
 {
-	return this->nssubj;
+	return this->nsc;
 }
 
 void Student::set_AM(const char *AM)
@@ -160,9 +160,9 @@ void Student::set_semester(unsigned int semester)
 	this->semester = semester;
 }
 
-void Student::set_psubj(unsigned int psubj)
+void Student::set_pcourses(unsigned int pcourses)
 {
-	this->psubj = psubj;
+	this->pcourses = pcourses;
 }
 
 void Student::set_grades(float *grades)
@@ -170,17 +170,17 @@ void Student::set_grades(float *grades)
 	this->grades = convert_PSG(grades);
 }
 
-void Student::set_num_submitted_subjects(unsigned nssubj)
+void Student::set_num_submitted_courses(unsigned nsc)
 {
-	this->nssubj = nssubj;
+	this->nsc = nsc;
 }
 
-void Student::set_submitted_subjects(Subject **ssubj)
+void Student::set_submitted_courses(Course **sc)
 {
-	if (ssubj != nullptr)
+	if (sc != nullptr)
 	{
-		this->ssubj = new Subject *[nssubj];
-		memcpy(this->ssubj, ssubj, sizeof(Subject *) * nssubj);
+		this->sc = new Course *[nsc];
+		memcpy(this->sc, sc, sizeof(Course *) * nsc);
 	}
 }
 
@@ -194,10 +194,10 @@ char *Student::convert_AM(const char *AM)
 
 float *Student::convert_PSG(const float *grades)
 {
-	if (psubj > 0 && grades != nullptr)
+	if (pcourses > 0 && grades != nullptr)
 	{
-		float *tmp = new float[psubj];
-		memcpy(tmp, grades, sizeof(float) * psubj);
+		float *tmp = new float[pcourses];
+		memcpy(tmp, grades, sizeof(float) * pcourses);
 		if (this->grades != nullptr) delete[] this->grades;
 		return tmp;
 	}
@@ -206,24 +206,24 @@ float *Student::convert_PSG(const float *grades)
 
 void Student::add_grade(float grade)
 {
-	float *tmp = new float[psubj+1];
+	float *tmp = new float[pcourses+1];
 	if (grades != nullptr)
 	{
-		memcpy(tmp, grades, sizeof(float) * psubj);
+		memcpy(tmp, grades, sizeof(float) * pcourses);
 		delete[] grades;
 	}
-	tmp[psubj] = grade;
+	tmp[pcourses] = grade;
 	grades = tmp;
-	psubj++;
+	pcourses++;
 }
 
 void Student::detailed_print() const
 {
 	if (grades != nullptr)
 	{
-		for (unsigned int i = 0; i < psubj; i++)
+		for (unsigned int i = 0; i < pcourses; i++)
 		{
-			std::cout << "Subject " << i+1 << ": ";
+			std::cout << "Course " << i+1 << ": ";
 			std::cout << grades[i] << std::endl;		
 		}
 		std::cout << "Average grade: " << std::setprecision(2) << calc_average() << std::endl;
@@ -235,9 +235,9 @@ float Student::calc_average() const
 	if (grades != nullptr)
 	{
 		float sum = 0;
-		for (unsigned int i = 0; i < psubj; i++)
+		for (unsigned int i = 0; i < pcourses; i++)
 			sum += grades[i];
-		float average = sum / psubj;
+		float average = sum / pcourses;
 		return average;
 	}
 	else return 0.0f;
