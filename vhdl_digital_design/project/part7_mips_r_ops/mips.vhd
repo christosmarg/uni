@@ -3,14 +3,7 @@ use ieee.std_logic_1164.all;
 
 entity mips is port (
 	m_clk:		in std_logic;
-	m_rst:		in std_logic;
-	m_instr:	out std_logic_vector(31 downto 0);
-	m_raddr1:	out std_logic_vector(4 downto 0);
-	m_raddr2:	out std_logic_vector(4 downto 0);
-	m_waddr:	out std_logic_vector(4 downto 0);
-	m_reg1:		out std_logic_vector(31 downto 0);
-	m_reg2:		out std_logic_vector(31 downto 0);
-	m_out:		out std_logic_vector(31 downto 0)
+	m_rst:		in std_logic
 );
 end mips;
 
@@ -48,7 +41,7 @@ port (
 end component;
 
 component instrmem is port (
-	addr:		in std_logic_vector(3 downto 0);
+	addr:		in std_logic_vector(31 downto 0);
 	c:		out std_logic_vector(31 downto 0)
 );
 end component;
@@ -73,40 +66,38 @@ component alu_ctrl is port (
 );
 end component;
 
+component adder32 is port (
+	x:		in std_logic_vector(31 downto 0);
+	y:		in std_logic_vector(31 downto 0);
+	z:		out std_logic_vector(31 downto 0)
+);
+end component;
+
 component pc is port (
 	clk:		in std_logic;
 	rst:		in std_logic;
-	ipc:		in std_logic_vector(3 downto 0);
-	opc:		out std_logic_vector(3 downto 0)
+	ipc:		in std_logic_vector(31 downto 0);
+	opc:		out std_logic_vector(31 downto 0)
 );
 end component;
 
-component adder32 is port (
-	a:		in std_logic_vector(31 downto 0);
-	b:		in std_logic_vector(31 downto 0);
-	cin:		in std_logic;
-	s:		out std_logic_vector(31 downto 0);
-	cout:		out std_logic
-);
-end component;
-
-signal s_instr:		std_logic_vector(31 downto 0);
-signal s_op:		std_logic_vector(3 downto 0);
+constant c_pc_add_val:	std_logic_vector(31 downto 0) := x"00000004";
+signal s_adder_out:	std_logic_vector(31 downto 0);
+signal s_pc_out:	std_logic_vector(31 downto 0);
 signal s_alu_out:	std_logic_vector(31 downto 0);
-signal s_alu_zero:	std_logic;
-signal s_reg_out1:	std_logic_vector(31 downto 0);
-signal s_reg_out2:	std_logic_vector(31 downto 0);
-signal s_reg_wr:	std_logic;
 signal s_reg_dst:	std_logic;
+signal s_reg_wr:	std_logic;
 signal s_alu_src:	std_logic;
 signal s_branch:	std_logic;
 signal s_mem_rd:	std_logic;
 signal s_mem_wr:	std_logic;
 signal s_mem_toreg:	std_logic;
 signal s_alu_op:	std_logic_vector(1 downto 0);
-signal s_opc:		std_logic_vector(3 downto 0);
-signal s_adder_to_pc:	std_logic_vector(3 downto 0);
-constant c_pc_add_val:	std_logic_vector(3 downto 0) := "0100";
+signal s_op:		std_logic_vector(3 downto 0);
+signal s_reg_out1:	std_logic_vector(31 downto 0);
+signal s_reg_out2:	std_logic_vector(31 downto 0);
+signal s_alu_zero:	std_logic;
+signal s_instr:		std_logic_vector(31 downto 0);
 
 begin
 	alu_map: alu port map (
@@ -130,10 +121,10 @@ begin
 	);
 
 	instrmem_map: instrmem port map (
-		addr => s_opc,
+		addr => s_pc_out,
 		c => s_instr
 	);
-
+	
 	ctrl_map: ctrl port map (
 		funct => s_instr(31 downto 26),
 		reg_dst => s_reg_dst,
@@ -152,25 +143,16 @@ begin
 		op => s_op
 	);
 
+	adder32_map: adder32 port map (
+		x => s_pc_out,
+		y => c_pc_add_val,
+		z => s_adder_out
+	);
 
 	pc_map: pc port map (
 		clk => m_clk,
 		rst => m_rst,
-		ipc => s_adder_to_pc,
-		opc => s_opc
+		ipc => s_adder_out,
+		opc => s_pc_out
 	);
-
-	adder32_map: adder32 port map (
-		a => s_opc,
-		b => c_pc_add_val
-		oval => s_adder_to_pc
-	);
-
-	m_instr <= s_instr;
-	m_raddr1 <= s_instr(25 downto 21);
-	m_raddr2 <= s_instr(20 downto 16);
-	m_waddr <= s_instr(15 downto 11);
-	m_reg1 <= s_reg_out1;
-	m_reg2 <= s_reg_out2;
-	m_out <= s_alu_out;
 end struct;
