@@ -19,12 +19,12 @@ main() {
 }
 
 usage() {
-        echo "usage: ${0##*/} username src dst"
+        echo "usage: ${0##*/} username src dst" 1>&2
         exit 1
 }
 
 err() {
-        echo "${0##*/}: ${1}"
+        echo "${0##*/}: $@" 1>&2
         exit 1
 }
 

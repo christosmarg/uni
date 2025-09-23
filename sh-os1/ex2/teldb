@@ -15,17 +15,17 @@ main() {
 }
 
 usage() {
-        echo "usage: ${0##*/} [-a | -l | -n | -c keyword | -d keyword [-b | -r] | -s col]"
-        echo ""
-        echo "options:"
-        echo "-a        add a new entry"
-        echo "-l        list contents of file"
-        echo "-n        count empty lines and ask if they should be deleted"
-        echo "-c        filter keyword"
-        echo "-d        delete lines containing a keyword followed by one of the options below"
-        echo "          -b replaces line with an empty line"
-        echo "          -r removes line completely"
-        echo "-s        sort based on specified column (e.g ${0##*/} -s 3)"
+        echo "usage: ${0##*/} {-a | -l | -n | -c keyword | -d keyword {-b | -r} | -s col}" 1>&2
+        echo "" 1>&2
+        echo "options:" 1>&2
+        echo "-a        add a new entry" 1>&2
+        echo "-l        list contents of file" 1>&2
+        echo "-n        count empty lines and ask if they should be deleted" 1>&2
+        echo "-c        filter keyword" 1>&2
+        echo "-d        delete lines containing a keyword followed by one of the options below" 1>&2
+        echo "          -b replaces line with an empty line" 1>&2
+        echo "          -r removes line completely" 1>&2
+        echo "-s        sort based on specified column (e.g ${0##*/} -s 3)" 1>&2
 
         exit 1
 }
