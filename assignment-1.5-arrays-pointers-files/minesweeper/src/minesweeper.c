@@ -23,12 +23,41 @@ void start()
     wrefresh(menuWin);
     keypad(menuWin, true);
 
+    //set_mode(menuWin);
+
     int WIDTH = set_width(menuWin, xMax);
     int HEIGHT = set_height(menuWin, yMax);
-    int MINES = set_minesnum(menuWin, WIDTH * HEIGHT);
+    int NMINES = set_nmines(menuWin, WIDTH * HEIGHT);
 
-    game_win(WIDTH, HEIGHT, MINES);
+    game_win(WIDTH, HEIGHT, NMINES);
     getchar();
+}
+
+
+void set_mode(WINDOW *menuWin)
+{
+    char mode;
+    mvwprintw(menuWin, 1, 1, "Keyboard or text mode (k/t): ");
+    wrefresh(menuWin);
+    scanw("%c", &mode);
+    mvwprintw(menuWin, 1, strlen("Keyboard or text mode (k/t): ") + 1, "%c", mode);
+    wrefresh(menuWin);
+
+    switch (mode) // clear contents first
+    {
+        case 'k':
+        case 'K':
+            mvwprintw(menuWin, 2, 1, "Keyboard mode");
+            wrefresh(menuWin);
+            break;
+        case 't':
+        case 'T':
+            mvwprintw(menuWin, 2, 1, "Text mode");
+            wrefresh(menuWin);
+            break;
+        default:
+            break;
+    }
 }
 
 
@@ -66,24 +95,24 @@ int set_height(WINDOW *menuWin, int yMax)
 }
 
 
-int set_minesnum(WINDOW *menuWin, int DIMENSIONS)
+int set_nmines(WINDOW *menuWin, int DIMENSIONS)
 {
-    int MINES;
+    int NMINES;
 
     do
     {
         mvwprintw(menuWin, 3, 1, "Mines: ");
         wrefresh(menuWin);
-        scanw("%d", &MINES);
-        mvwprintw(menuWin, 3, strlen("Mines: ") + 1, "%d", MINES);
+        scanw("%d", &NMINES);
+        mvwprintw(menuWin, 3, strlen("Mines: ") + 1, "%d", NMINES);
         wrefresh(menuWin);
-    } while (MINES < 1 || MINES > DIMENSIONS);
+    } while (NMINES < 1 || NMINES > DIMENSIONS);
     
-    return MINES;
+    return NMINES;
 }
 
 
-void game_win(int WIDTH, int HEIGHT, int MINES)
+void game_win(int WIDTH, int HEIGHT, int NMINES)
 {
     int yMax, xMax;
     getmaxyx(stdscr, yMax, xMax);
@@ -95,7 +124,7 @@ void game_win(int WIDTH, int HEIGHT, int MINES)
     keypad(gameWin, true);
 
     init_dispboard(gameWin, WIDTH, HEIGHT);
-    init_mineboard(gameWin, WIDTH, HEIGHT, MINES);
+    init_mineboard(gameWin, WIDTH, HEIGHT, NMINES);
 }
 
 
@@ -123,16 +152,15 @@ void fill_dispboard(char **dispboard, int WIDTH, int HEIGHT)
 }
 
 
-void init_mineboard(WINDOW *gameWin, int WIDTH, int HEIGHT, int MINES)
+void init_mineboard(WINDOW *gameWin, int WIDTH, int HEIGHT, int NMINES)
 {
     int i;
     char **mineboard = (char **)malloc(WIDTH * sizeof(char *));
     for (i = 0; i < WIDTH; i++)
         *(mineboard + i) = (char *)malloc(HEIGHT);
 
-    fill_spaces(mineboard, WIDTH, HEIGHT, MINES);
-    place_mines(mineboard, WIDTH, HEIGHT, MINES);
-    adj_mines(mineboard, WIDTH, HEIGHT);
+    fill_spaces(mineboard, WIDTH, HEIGHT, NMINES);
+    place_mines(mineboard, WIDTH, HEIGHT, NMINES);
 
     print(gameWin, mineboard, WIDTH, HEIGHT);
     
@@ -140,17 +168,17 @@ void init_mineboard(WINDOW *gameWin, int WIDTH, int HEIGHT, int MINES)
 }
 
 
-void place_mines(char **mineboard, int WIDTH, int HEIGHT, int MINES)
+void place_mines(char **mineboard, int WIDTH, int HEIGHT, int NMINES)
 {
     int i, wRand, hRand;
 
     srand(time(NULL));
 
-    for (i = 0; i < MINES; i++)
+    for (i = 0; i < NMINES; i++)
     {
         wRand = rand() % WIDTH;
         hRand = rand() % HEIGHT;
-        *(*(mineboard + wRand) + hRand) = '*';
+        *(*(mineboard + wRand) + hRand) = MINE;
     }
 }
 
@@ -172,7 +200,7 @@ void place_mines(char **mineboard, int WIDTH, int HEIGHT, int MINES)
     [x-1, y+1][x, y+1][x+1, y+1]
     */
 
-void adj_mines(char **mineboard, int WIDTH, int HEIGHT)
+int adj_mines(char **mineboard, int WIDTH, int HEIGHT)
 {
     int row, col, numAdj = 0;
 
@@ -180,15 +208,26 @@ void adj_mines(char **mineboard, int WIDTH, int HEIGHT)
     {
         for (col = 1; col <= HEIGHT; col++)
         {
-            if (*(*(mineboard + (row - 1)) + col) != '*')
+            if 
+            (
+                (*(*(mineboard + (row - 1)) + col) != MINE) || // North
+                (*(*(mineboard + (row + 1)) + col) != MINE) || // South
+                (*(*(mineboard + (row)) + col + 1) != MINE) || // East
+                (*(*(mineboard + (row)) + col - 1) != MINE) || // West
+                (*(*(mineboard + (row - 1)) + col + 1) != MINE) || // North-East
+                (*(*(mineboard + (row - 1)) + col - 1) != MINE) || // North-West
+                (*(*(mineboard + (row + 1)) + col + 1) != MINE) || // South-East
+                (*(*(mineboard + (row - 1)) + col - 1) != MINE) // South-West
+            )
                 numAdj++;
         }
     }
 
+    return numAdj;
 }
 
 
-void fill_spaces(char **mineboard, int WIDTH, int HEIGHT, int MINES)
+void fill_spaces(char **mineboard, int WIDTH, int HEIGHT, int NMINES)
 {
     int i, j;
 
@@ -196,7 +235,7 @@ void fill_spaces(char **mineboard, int WIDTH, int HEIGHT, int MINES)
     {
         for (j = 0; j < HEIGHT; j++)
         {
-            if ((*(*mineboard + i) + j) != '*')
+            if ((*(*mineboard + i) + j) != MINE)
                 *(*(mineboard + i) + j) = '-';
         }
     }

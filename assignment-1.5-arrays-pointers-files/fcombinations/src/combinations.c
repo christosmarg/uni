@@ -8,17 +8,24 @@
 #define COMBSN 6
 
 
-int get_n()
+void read_file(char **argv)
 {
-    int N;
+    FILE *dataFile = fopen(argv[1], "r");
 
-    do
+    if (dataFile == NULL)
     {
-        printf("N (6 < N <= 49): ");
-        scanf("%d", &N);
-    } while (N <= 6 || N > 49);
+        set_color(BOLD_RED);
+        printf("Error opening the file, exiting...\n");
+        set_color(STANDARD);
+        exit(EXIT_FAILURE);
+    }
+    else
+    {
+        printf("Cool\n");
+        // fscanf();
+    }
 
-    return N;
+    fclose(dataFile);
 }
 
 
