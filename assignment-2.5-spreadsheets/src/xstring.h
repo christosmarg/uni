@@ -27,29 +27,29 @@ class xstring
         xstring& operator+= (const xstring& s);
         xstring& operator+= (const char *s);
         xstring& operator+= (char c);
-        inline constexpr bool operator== (const xstring& s) const
+        constexpr bool operator== (const xstring& s) const
             {return std::strcmp(this->str, s.str) == 0;}
-        inline constexpr bool operator== (const char *s)    const
+        constexpr bool operator== (const char *s)    const
             {return std::strcmp(this->str, s) == 0;}
-        inline constexpr bool operator!= (const xstring& s) const
+        constexpr bool operator!= (const xstring& s) const
             {return std::strcmp(this->str, s.str) != 0;}
-        inline constexpr bool operator!= (const char *s)    const
+        constexpr bool operator!= (const char *s)    const
             {return std::strcmp(this->str, s) != 0;}
-        inline constexpr bool operator<  (const xstring& s) const
+        constexpr bool operator<  (const xstring& s) const
             {return std::strcmp(this->str, s.str) < 0;}
-        inline constexpr bool operator<  (const char *s)    const
+        constexpr bool operator<  (const char *s)    const
             {return std::strcmp(this->str, s) < 0;}
-        inline constexpr bool operator<= (const xstring& s) const
+        constexpr bool operator<= (const xstring& s) const
             {return std::strcmp(this->str, s.str) <= 0;}
-        inline constexpr bool operator<= (const char *s)    const
+        constexpr bool operator<= (const char *s)    const
             {return std::strcmp(this->str, s) <= 0;}
-        inline constexpr bool operator>  (const xstring& s) const
+        constexpr bool operator>  (const xstring& s) const
             {return std::strcmp(this->str, s.str) > 0;}
-        inline constexpr bool operator>  (const char *s)    const
+        constexpr bool operator>  (const char *s)    const
             {return std::strcmp(this->str, s) > 0;}
-        inline constexpr bool operator>= (const xstring& s) const
+        constexpr bool operator>= (const xstring& s) const
             {return std::strcmp(this->str, s.str) >= 0;}
-        inline constexpr bool operator>= (const char *s)    const
+        constexpr bool operator>= (const char *s)    const
             {return std::strcmp(this->str, s) >= 0;}
         char& operator[] (std::size_t i) const;
         friend std::ostream& operator<< (std::ostream& stream, const xstring& s);
@@ -66,17 +66,17 @@ class xstring
         void clear();
         bool find(const xstring& s) const;
         bool find(const char *s)    const;
-        inline constexpr char *cstr()  const {return str;}
-        inline constexpr char& front() const {return str[0];}
-        inline constexpr char& back()  const
+        constexpr char *cstr()  const {return str;}
+        constexpr char& front() const {return str[0];}
+        constexpr char& back()  const
             {return (!this->empty()) ? str[len-1] : str[0];};
-        inline constexpr bool empty()  const {return len == 0;}
-        inline constexpr std::size_t length() const {return std::strlen(str);}
+        constexpr bool empty()  const {return len == 0;}
+        constexpr std::size_t length() const {return std::strlen(str);}
     
     private:
         void resize(std::size_t n);
         char *conv(const char *s) const;
-        inline constexpr bool strempty(const char *s) const
+        constexpr bool strempty(const char *s) const
             {return std::strlen(s) == 0;}
 };
 

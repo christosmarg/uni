@@ -19,8 +19,6 @@ class ErrLog
 
         ErrLog();
         void write(ErrType type, const lab::xstring& s) const;
-
-    private:
 };
 
 #endif /* ERRLOG_H */

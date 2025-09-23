@@ -19,13 +19,13 @@ class Manufacturer
         Manufacturer(const Manufacturer& m);
         ~Manufacturer();
 
-        inline const std::string& get_email()        const {return email;}
-        inline constexpr const char *get_serialnum() const {return serialnum;}
-        inline constexpr const char *get_name()      const {return name;}
+        const std::string& get_email()        const {return email;}
+        constexpr const char *get_serialnum() const {return serialnum;}
+        constexpr const char *get_name()      const {return name;}
 
         void set_serialnum(const char *serialnum);
         void set_name(const char *name); 
-        inline void set_email(const std::string& email) {this->email = email;}
+        void set_email(const std::string& email) {this->email = email;}
 
     private:
         char *convstr(const char *str);
