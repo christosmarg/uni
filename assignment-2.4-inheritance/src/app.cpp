@@ -7,7 +7,7 @@ App::App(const char *serialnum, const std::string& name,
 	const std::string& os, Manufacturer *manf, int price)
 	:serialnum(convsn(serialnum)), name(name), os(os), manf(manf), price(price)
 {
-	if (strcmp(serialnum, "") == 0)
+	if (!std::strcmp(serialnum, ""))
 		throw std::runtime_error("Empty app serial number.");	
 	if (name.empty())
 		throw std::runtime_error("Empty app name.");	
@@ -34,7 +34,6 @@ App::~App()
 		{
 			if (rev != nullptr)
 			{
-				// double free bug
 				delete rev;
 				rev = nullptr;
 			}
@@ -46,7 +45,7 @@ App::~App()
 char *
 App::convsn(const char *serialnum)
 {
-	int len = strlen(serialnum);
+	int len = std::strlen(serialnum);
 	char *tmp = new char[len + 1];
 	std::copy(serialnum, serialnum + len + 1, tmp);
 	return tmp;	

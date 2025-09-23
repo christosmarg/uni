@@ -7,9 +7,9 @@ Manufacturer::Manufacturer(const char *serialnum, const char *name,
 		const std::string& email)
 	:serialnum(convstr(serialnum)), name(convstr(name)), email(email)
 {
-	if (strcmp(serialnum, "") == 0)
+	if (!std::strcmp(serialnum, ""))
 		throw std::runtime_error("Empty manufacturer serial number.");
-	if (strcmp(name, "") == 0)
+	if (!std::strcmp(name, ""))
 		throw std::runtime_error("Empty manufacturer name.");
 	if (email.empty() || email.find("@") == std::string::npos)
 	{
@@ -30,7 +30,7 @@ Manufacturer::~Manufacturer()
 char *
 Manufacturer::convstr(const char *str)
 {
-	int len = strlen(str);
+	int len = std::strlen(str);
 	char *tmp = new char[len + 1];
 	std::copy(str, str + len + 1, tmp);
 	return tmp;

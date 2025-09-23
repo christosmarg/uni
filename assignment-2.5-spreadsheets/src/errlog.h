@@ -8,6 +8,7 @@ class ErrLog
 {
 	private:
 		const char *fpath = "res/errlog.csv";
+		void fclear() const;
 
 	public:
 		enum class ErrType {
@@ -16,13 +17,10 @@ class ErrLog
 			DIFFERENT_GRADES
 		};
 
-	public:
 		ErrLog();
-
 		void write(ErrType type, const lab::xstring& s) const;
 
 	private:
-		void fclear() const;
 };
 
 #endif /* ERRLOG_H */

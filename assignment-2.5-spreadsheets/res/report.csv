@@ -1,4 +1,4 @@
-AM;Last name;First name;New course code;New course name;Old course code;Old course name;Grade
+ID;Last name;First name;New course code;New course name;Old course code;Old course name;Grade
 SR000001;ΕΠΩΝΥΜΟ 0001;ΟΝΟΜΑ 0001;ICE1-1003;ΕΙΣΑΓΩΓΗ ΣΤΗΝ ΕΠΙΣΤΗΜΗ ΤΩΝ ΥΠΟΛΟΓΙΣΤΩΝ;ICE1-1003;ΕΙΣΑΓΩΓΗ ΣΤΗΝ ΕΠΙΣΤΗΜΗ ΤΩΝ ΥΠΟΛΟΓΙΣΤΩΝ;0.4
 SR000001;ΕΠΩΝΥΜΟ 0001;ΟΝΟΜΑ 0001;ICE1-2006;ΘΕΩΡΙΑ ΚΥΚΛΩΜΑΤΩΝ;ICE1-2006;ΘΕΩΡΙΑ ΚΥΚΛΩΜΑΤΩΝ;0.3
 SR000001;ΕΠΩΝΥΜΟ 0001;ΟΝΟΜΑ 0001;ICE1-4003;ΛΕΙΤΟΥΡΓΙΚΑ ΣΥΣΤΗΜΑΤΑ ΙΙ;ICE1-4003;ΛΕΙΤΟΥΡΓΙΚΑ ΣΥΣΤΗΜΑΤΑ ΙΙ;0.3

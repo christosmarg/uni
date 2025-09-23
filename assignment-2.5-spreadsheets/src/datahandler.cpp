@@ -30,26 +30,26 @@ DataHandler::store_data()
 			lab::xstring skip;
 			lab::getline(f, skip);
 
-			lab::xstring AM, code, grade;
-			lab::getline(f, AM, ';');
+			lab::xstring id, code, grade;
+			lab::getline(f, id, ';');
 			lab::getline(f, code, ';');
 			lab::getline(f, grade);
 
-			std::map<lab::xstring, Student *>::const_iterator its = studs.find(AM);
+			std::map<lab::xstring, Student *>::const_iterator its = studs.find(id);
 			std::map<lab::xstring, Course *>::const_iterator itc = courses.find(code);
 			if (its != studs.end() && itc != courses.end())
 				grds.insert(std::make_pair(courses[code], std::atof(grade.cstr())));
 
 			while (f.good())
 			{
-				lab::xstring currAM = AM;
-				while (currAM == AM)
+				lab::xstring currid = id;
+				while (currid == id)
 				{
-					lab::getline(f, AM, ';');
+					lab::getline(f, id, ';');
 					lab::getline(f, code, ';');
 					lab::getline(f, grade);
 					if (f.eof()) break;
-					if (!analyze(currAM, AM, code, std::atof(grade.cstr()))) break;
+					if (!analyze(currid, id, code, std::atof(grade.cstr()))) break;
 				}
 			}
 		}
@@ -65,18 +65,18 @@ DataHandler::store_data()
 
 bool
 DataHandler::analyze(
-		const lab::xstring& currAM,
-		lab::xstring& AM,
+		const lab::xstring& currid,
+		lab::xstring& id,
 		lab::xstring& code,
 		float grade)
 {
-	std::map<lab::xstring, Student *>::const_iterator its = studs.find(AM);
+	std::map<lab::xstring, Student *>::const_iterator its = studs.find(id);
 	std::map<lab::xstring, Course *>::const_iterator itc = courses.find(code);
 	if (its != studs.end() && itc != courses.end())
 	{
-		if (currAM != AM)
+		if (currid != id)
 		{
-			data.insert(std::make_pair(studs[currAM], grds));
+			data.insert(std::make_pair(studs[currid], grds));
 			grds.clear();
 			grds.insert(std::make_pair(courses[code], grade));
 			return false;
@@ -85,10 +85,10 @@ DataHandler::analyze(
 	}
 	else if (its == studs.end())
 	{
-		if (std::find(errs.begin(), errs.end(), AM) == errs.end())
+		if (std::find(errs.begin(), errs.end(), id) == errs.end())
 		{
-			errs.push_back(AM);
-			errlog.write(ErrLog::ErrType::STUDENT_MISSING, AM);
+			errs.push_back(id);
+			errlog.write(ErrLog::ErrType::STUDENT_MISSING, id);
 			errcount++;
 		}
 	}
@@ -104,15 +104,15 @@ DataHandler::analyze(
 
 	if (its != studs.end() && itc != courses.end())
 	{
-		miss(AM, code, grade);	
-		diffr(AM, code, grade);
+		miss(id, code, grade);	
+		diffr(id, code, grade);
 	}
 
 	return true;
 }
 
 void
-DataHandler::miss(lab::xstring AM, lab::xstring code, float grade)
+DataHandler::miss(lab::xstring id, lab::xstring code, float grade)
 {
 	if (code.front() == 'P')
 	{
@@ -125,9 +125,9 @@ DataHandler::miss(lab::xstring AM, lab::xstring code, float grade)
 					found = true;
 			if (!found)
 			{
-				missing.push_back(AM + ";" +
-						studs[AM]->get_lname() + ";" +
-						studs[AM]->get_fname() + ";" +
+				missing.push_back(id + ";" +
+						studs[id]->get_lname() + ";" +
+						studs[id]->get_fname() + ";" +
 						courses[eqvs[code]]->get_code() + ";" +
 						courses[eqvs[code]]->get_name() + ";" +
 						eqvs[code] + ";" +
@@ -140,13 +140,13 @@ DataHandler::miss(lab::xstring AM, lab::xstring code, float grade)
 }
 
 void
-DataHandler::diffr(lab::xstring AM, lab::xstring code, float grade)
+DataHandler::diffr(lab::xstring id, lab::xstring code, float grade)
 {
 	std::map<Course *, float>::const_iterator it = grds.find(courses[code]);
 	if (it != grds.end() && it->second != grade)
 	{
 		errlog.write(ErrLog::ErrType::DIFFERENT_GRADES,
-				lab::xstring(AM + " in " + code + ": " +
+				lab::xstring(id + " in " + code + ": " +
 					lab::to_xstr<float>("%.1f", it->second) + " | " +
 					lab::to_xstr<float>("%.1f", grade)));
 		errcount++;
@@ -166,7 +166,7 @@ DataHandler::make_report() const
 		if (f.is_open())
 		{
 			std::cout << "Making report." << std::endl;
-			f << "AM;Last name;First name;New course code;New course name;" <<
+			f << "ID;Last name;First name;New course code;New course name;" <<
 				 "Old course code;Old course name;Grade" << std::endl;
 			for (const auto& m : missing) f << m << std::endl;
 			f.close();
@@ -202,7 +202,7 @@ DataHandler::summary() const
 bool
 DataHandler::valid_path(const char *fpath) const
 {
-	return (strstr(fpath, ".csv") != nullptr);
+	return (std::strstr(fpath, ".csv") != nullptr);
 }
 
 const lab::xstring 

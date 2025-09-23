@@ -40,12 +40,12 @@ class DataHandler
 		
 	private:
 		bool analyze(
-				const lab::xstring& currAM,
-				lab::xstring& AM,
+				const lab::xstring& currid,
+				lab::xstring& id,
 				lab::xstring& code,
 				float grade);
-		void miss(lab::xstring AM, lab::xstring code, float grade);
-		void diffr(lab::xstring AM, lab::xstring code, float grade);
+		void miss(lab::xstring id, lab::xstring code, float grade);
+		void diffr(lab::xstring id, lab::xstring code, float grade);
 		bool valid_path(const char *fpath) const;
 		const lab::xstring err_csv	(const char *fpath)	const;
 		const lab::xstring err_read	(const char *fpath)	const;
@@ -80,12 +80,12 @@ DataHandler::import_data(const char *fpath)
 				}
 				else if constexpr (std::is_same<T, Student>::value)
 				{
-					lab::xstring AM, lname, fname;
-					lab::getline(f, AM, ';');
+					lab::xstring id, lname, fname;
+					lab::getline(f, id, ';');
 					lab::getline(f, lname, ';');
 					lab::getline(f, fname);
 					if (f.eof()) break;
-					studs.insert(std::make_pair(AM, new Student(AM, lname, fname)));
+					studs.insert(std::make_pair(id, new Student(id, lname, fname)));
 				}
 				else if constexpr (std::is_same<T, equivalencies>::value)
 				{

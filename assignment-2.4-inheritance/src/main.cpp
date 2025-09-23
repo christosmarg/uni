@@ -88,9 +88,10 @@ void
 edit(AppSystem& sys)
 {
 	sys.newrev("minecurses", new Review(5, "gamer", "Good game"));
-	sys.newrevs("LibreOffice",
+	sys.newrevs("Vim",
 			{new Review(2, "user1", "Not so good"),
-			 new Review(4, "user2", "Good app")});
+			 new Review(4, "user2", "Good app"),
+			 new Review(5, "user3", "Very good :)")});
 	sys.chserialnum("zathura", "1254");
 	sys.chname("minecurses", "minesweeper");
 	sys.chos("Vim", "GoodOS");
@@ -99,7 +100,7 @@ edit(AppSystem& sys)
 	sys.chprice("LoL", 155);
 	sys.chgenre("CS:GO", "Shooter");
 	sys.chonline("minesweeper", true);
-	sys.chexts("zathura", {".exe", ".bin", ".dat"});
+	sys.chexts("zathura", {".tex", ".epub", ".ms"});
 }
 
 void
@@ -117,7 +118,7 @@ getapps(const AppSystem& sys)
 	for (const auto& fapp : fapps)
 		std::cout << fapp->get_name() << std::endl;
 	std::cout << std::endl;
-	std::cout << "Games with >5 rating: " << std::endl << std::endl;
+	std::cout << "Games with >4 rating: " << std::endl << std::endl;
 	for (const auto& ggame : ggames)
 		std::cout << ggame->get_name() << std::endl;
 }
