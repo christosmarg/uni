@@ -1,6 +1,7 @@
 #ifndef _ENGINE_HPP_
 #define _ENGINE_HPP_
 
+#include <csignal>
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
@@ -29,15 +30,20 @@ private:
 	std::vector<int> colors;
 	Potter *player;
 	Score score;
+	WINDOW *gw;
 	int xmax;
 	int ymax;
-	int f_running;
+	int wxmax;
+	int wymax;
+	int w;
+	int h;
+	int nenemies = 5;
+	volatile sig_atomic_t f_running;
 
 public:
-	Engine();
+	explicit Engine(const char *mapfile, const char *scorefile);
 	~Engine();
 
-	void init(const char *mapfile, const char *scorefile);
 	void kbd_input();
 	void collisions();
 	void upd_score();
@@ -49,6 +55,7 @@ private:
 	bool init_curses();
 	bool init_entities();
 	bool init_score(const char *scorefile);
+	void calc_pos(int *x, int *y);
 	void menuopts();
 };
 

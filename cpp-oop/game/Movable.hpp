@@ -12,8 +12,7 @@ public:
 	enum Direction { LEFT, RIGHT, UP, DOWN };
 
 public:
-	Movable();
-	Movable(int x, int y, int dir, char sym);
+	explicit Movable(int x, int y, int dir, char sym);
 	virtual ~Movable();
 
 	void set_newpos(int dir, int xmax, int ymax);
