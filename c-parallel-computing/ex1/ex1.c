@@ -8,8 +8,7 @@
 #define TAG_MENU        4
 #define TAG_SORTED      5
 #define TAG_VAL         6
-#define TAG_POS         7
-#define TAG_PREV        8
+#define TAG_PREV        7
 
 int
 main(int argc, char *argv[])

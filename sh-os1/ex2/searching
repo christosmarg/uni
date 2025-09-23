@@ -1,7 +1,7 @@
 #!/bin/sh
 
 main() {
-        test $# -eq 0 && usage
+        test $# -eq 2 || usage
         isnumber $1
         isnumber $2
 
