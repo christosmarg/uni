@@ -97,7 +97,7 @@ main(int argc, char *argv[])
 
 
 	if (argc < 3) {
-		fprintf(stderr, "usage: %s nthreads n\n", getprogname());
+		fprintf(stderr, "usage: %s nthreads n\n", *argv);
 		return (1);
 	}
 	if ((ntd = atoi(argv[1])) < 1)
