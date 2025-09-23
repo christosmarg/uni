@@ -202,6 +202,7 @@ Instruction set architecture.
 	GDB & GNU Debugger \\
 	ISA & Instruction Set Architecture \\
 	PC & Program Counter \\
+	eBPF & Extended Berkley Packet Filter \\
 \end{tabular}
 
 \section{Εισαγωγή στην παρακολούθηση (tracing)}
@@ -247,7 +248,7 @@ Instruction set architecture.
 	\hline
 	\lstinline{procstat(1)} & Αναλυτικές πληροφορίες διεργασιών. \\
 	\hline
-	\lstinline{vmstat(1)} & Πληροφορίες εικονικής μνήμης (virtual memory).
+	\lstinline{vmstat(8)} & Πληροφορίες εικονικής μνήμης (virtual memory).
 	\\
 	\hline
 	\lstinline{systat(1)} & Στατιστικά συστήματος. \\
@@ -317,47 +318,28 @@ tracing). Στο FreeBSD, το DTrace μαζί με διάφορα προεγκ�
 
 Το DTrace είναι ένα framework δυναμικής παρακολούθησης (dynamic tracing
 framework), το οποίο προήλθε από το λειτουργικό σύστημα Solaris το 2005 και
-έπειτα μεταφέρθηκε στο FreeBSD. Μεταξύ άλλων, χρησιμοποιείται για μετρήσεις
-επιδόσεων, αποσφαλμάτωση και παρακολούθηση σε πραγματικό χρόνο, καθώς και
-παρατήρηση συμπεριφοράς συγκεκριμένων υποσυστημάτων του λειτουργικού
+έπειτα μεταφέρθηκε στο FreeBSD το 2006-2008. Μεταξύ άλλων, χρησιμοποιείται για
+μετρήσεις επιδόσεων, αποσφαλμάτωση και παρακολούθηση σε πραγματικό χρόνο, καθώς
+και παρατήρηση συμπεριφοράς συγκεκριμένων υποσυστημάτων του λειτουργικού
 συστήματος. Το DTrace είναι ιδιαίτερα ισχυρό χάρη στην γλώσσα D (βλέπε ενότητα
-\ref{dlang}) --- μία γλώσσα scripting που παρομοιάζει την C και την AWK, η
-οποία περιέχει μεγάλη γκάμα λειτουργιών και συναρτήσεων και χρησιμοποιείται για
-την σύνταξη DTrace scripts.
+\ref{dlang}), η οποία περιέχει μεγάλη γκάμα δυνατοτήτων και χρησιμοποιείται για
+την σύνταξη D scripts, \textit{τα οποία φορτώνονται δνυαμικά στον πυρήνα} του
+λειτουργικού συστήματος, εκτελούν όποια λειτουργία τούς δόθηκε, και έπειτα
+αποφορτώνονται.
 
-<++>
-
-\subsection{Providers}
-
-% TODO
-% Providers
-%	mark 00:29:00
-
-Στην ορολογία του DTrace, ώς provider ορίζεται
-
-<++>
-
-\subsubsection{FBT} \label{fbt}
-
-% TODO
-%	fbt
-%		entry and return points of a func (with args) only
-%		Breakpoint instructions
-%		caveats: tail calls, inline funcs
-%		pid -> fbt for userspace
-%			00:57:00
-<++>
-
-% TODO <++> more providers (explain at least all the basic ones?)
-
-\subsection{Probes}
-
-% TODO
-%		name: the probe itself: point of instrumentation (entry, return, instruction)
-%			"piece of kernel code that gets executed" -> piece of code we care about
-%			when the probe is enabled, dtrace is called when the code hits
-%			that point, does whatever actions we asked it to do, and then
-%			hands execution back to the program.
+Πάνω στο θέμα των D scripts, είναι σημαντικό να σημειωθεί ότι τα scripts αυτά,
+αν και φορτώνονται και εκτελούνται στον πυρήνα, \textit{δεν μπορούν} να
+αλλάξουν την λογική/ροή της εκτέλεσης του ή τον ίδιο τον κώδικά του πυρήνα
+\footnote{
+	Μόνη εξαίρεση σε αυτό είναι ορισμένες «καταστροφικές», όπως
+	ονομάζονται, συναρτήσεις (βλέπε ενότητα \ref{actions}), οι οποίες όμως
+	χρησιμοποιούνται μόνο \textit{σκόπιμα} .
+}.
+Στην ουσία, αυτό που κάνει ένα D script αφού φορτωθεί στον πυρήνα, είναι να
+συλλέξει πληροφορίες από τον πυρήνα δυναμικά, να τις επεξεργαστεί, και να τις
+μεταφέρει πίσω στον χρήστη. Αυτό σημαίνει ότι τα D scripts \textit{είναι
+ασφαλή} για χρήση σε συστήματα που χρησιμοποιούνται σε παραγωγή, το οποίο είναι
+και αυτό που κάνει το DTrace ιδιαίτερα εύχρηστο.
 
 <++>
 
@@ -397,13 +379,118 @@ framework), το οποίο προήλθε από το λειτουργικό σ
 %		module, function, name can take wildcarding
 %	d.7
 
-Η D είναι η γλώσσα scripting που χρησιμοποιείται για την σύνταξη DTrace scripts
-και εντολών, η οποία παρομοιάζει την C και την AWK. Η βασική δομή ενός D script
-είναι η εξής:
+Η D είναι η γλώσσα προγραμματισμού που χρησιμοποιείται για την σύνταξη DTrace
+scripts και εντολών, η οποία παρομοιάζει την C και την AWK. Η δομή ενός D
+script είναι αντίστοιχη με αυτή της AWK:
 
 \begin{lstlisting}
-<++>
+	<options>
+
+	BEGIN
+	{
+		<actions>
+	}
+
+	<provider>:<module>:<function>:<name>
+	/<predicate>/
+	{
+		<actions>
+	}
+
+	...
+
+	END
+	{
+		<actions>
+	}
 \end{lstlisting}
+
+% TODO
+% https://docs.oracle.com/cd/E18752_01/html/819-5488/gcfqr.html
+% mark 00:17:00
+<++>
+
+Αξίζει να σημειωθεί ότι δεν είναι απαραίτητο να ορίζονται όλα τα πεδία --- το
+παραπάνω κομμάτι κώδικα απλώς δείχνει την γενική δομή ενός D script.
+
+<++>
+
+\subsubsection{Probes}
+
+% TODO
+%		name: the probe itself: point of instrumentation (entry, return, instruction)
+%			"piece of kernel code that gets executed" -> piece of code we care about
+%			when the probe is enabled, dtrace is called when the code hits
+%			that point, does whatever actions we asked it to do, and then
+%			hands execution back to the program.
+
+Στην ορολογία του DTrace, probe ονομάζεται κάθε σημείο ή κομμάτι κώδικα προς
+παρακολούθηση. Αυτά τα σημεία μπορούν να αντιστοιχούν σε συμβάντα (events) ή
+κατηγορίες συμβάντων σε κάποιο υποσύστημα του kernel ή του userpsace,
+συγκεκριμένα σημεία εντός συναρτήσεων, και άλλα. Τα probes επιλέγονται και
+ενεργοποιούνται από τον χρήστη κατά την εκτέλεση του προγράμματος
+\lstinline{dtrace(1)}, το οποίο στην συνέχεια φορτώνει το D script στον
+πυρήνα, και στο οποίο επιστρέφονται --- από το thread που εκτέλεσε τον κώδικα
+προς παρακολούθηση --- οι πληροφορίες που συλλέχθηκαν για κάθε probe,
+προκειμένου να τυπωθούν και να αξιοποιηθούν από τον χρήστη.
+
+<++>
+
+\subsubsection{Providers}
+
+Ως providers ορίζονται τα διάφορα modules που είναι υπεύθυνα για συγκεκριμένες
+κατηγορίες παρακολούθησης --- με άλλα λόγια, μπορούμε να ορίσουμε έναν provider
+ως ένα σύνολο ή namespace λογικά συνδεδεμένων probes. Πρακτικά, οι DTrace
+providers είναι είτε συνηθισμένα kernel modules όταν η παρακολούθηση αφορά τον
+πυρήνα, είτε userpsace modules όταν αφορούν παρακολούθηση υποσυστημάτων του
+userspace.
+
+Στο FreeBSD υπάρχουν αρκετοί providers που καλύπτουν διάφορα υποσυστήματα του
+kernel και του userspace αντίστοιχα, ένας εκ των οποίων είναι και ο
+\lstinline{kinst} (βλέπε ενότητα \ref{kinst}), στον οποίο έχει βασιστεί το
+αντικείμενο της παρούσας εργασίας. Ενδεικτικά, \textit{μερικοί} από τους
+σημαντικούς providers που βρίσκονται στο FreeBSD:
+
+\begin{center}
+\begin{tabular}{|l|l|p{12cm}|}
+	\hline
+	\textbf{Provider} & \textbf{Κατηγορία} & \textbf{Είδος/τομέας
+		παρακολούθησης} \\
+	\hline
+	\lstinline{syscall} & Kernel & Κλήσεις συστήματος \\
+	\hline
+	\lstinline{dtmalloc} & Kernel & Δεσμεύσεις μνήμης στον πυρήνα \\
+	\hline
+	\lstinline{proc} & Kernel & Συμβάντα σχετικά με διεργασίες \\
+	\hline
+	\lstinline{ip} & Kernel & Συμβάντα σχετικά με τα προτόκολλα IPv4 και
+		IPv6 \\
+	\hline
+	\lstinline{tcp}/\lstinline{udp} & Kernel & Συμβάντα TCP ή UDP \\
+	\hline
+	\lstinline{sched} & Kernel & Συμβάντα χρονοπρογραμματισμού (scheduling)
+		\\
+	\hline
+	\lstinline{fbt} & Kernel & Αρχή ή/και τέλος συναρτήσεων πυρήνα \\
+	\hline
+	\lstinline{kinst} & Kernel & Οποιαδήποτε εντολή assembly εντός
+		συναρτήσεων πυρήνα, καθώς και inline συναρτήσεις \\
+	\hline
+	\lstinline{lockstat} & Kernel & Locking εντός του πυρήνα \\
+	\hline
+	\lstinline{io} & Kernel & I/O δίσκων \\
+	\hline
+	\lstinline{sdt} & Kernel & Στατικά probes εντός του πηγαίου κώδικα του
+		πυρήνα \\
+	\hline
+	\lstinline{usdt} & Userspace & Όπως ο \lstinline{sdt} αλλά για το
+		userspace \\
+	\hline
+	\lstinline{pid} & Userspace & Όπως ο FBT αλλά για το userpsace \\
+	% TODO markj 00:58:00
+	\hline
+\end{tabular}
+\end{center}
 
 <++>
 
@@ -418,7 +505,7 @@ framework), το οποίο προήλθε από το λειτουργικό σ
 \begin{center}
 \begin{tabular}{|p{4cm}|p{13cm}|}
 	\hline
-	\textbf{Μεταβλητή} & \textbf{Λειτουργία} \\ 	
+	\textbf{Μεταβλητή} & \textbf{Περιγραφή} \\
 	\hline
 	\lstinline{args[]} & Πίνακας ορισμάτων παρακολουθούμενου probe
 		κωδικοποιημένα με CTF. \\
@@ -460,19 +547,24 @@ framework), το οποίο προήλθε από το λειτουργικό σ
 % TODO examples
 <++>
 
-\subsubsection{Συναρτήσεις}
+\subsubsection{Συναρτήσεις} \label{actions}
 
 % TODO
 %	dtrace book
+% https://docs.oracle.com/cd/E18752_01/html/819-5488/gcfbn.html
+% https://docs.oracle.com/cd/E19253-01/819-5488/gcfsm/index.html
+
+<++>
 
 Μερικές συνηθισμένες και χρήσιμες συναρτήσεις είναι οι παρακάτω:
 
 \begin{center}
 \begin{tabular}{|p{4cm}|p{13cm}|}
 	\hline
-	\textbf{Συνάρτηση} & \textbf{Λειτουργία} \\ 	
+	\textbf{Συνάρτηση} & \textbf{Περιγραφή} \\
 	\hline
-	\lstinline{printf(...)} & Εκτύπωση κειμένου. \\
+	\lstinline{printf(...), printa(...), print(...)} & Εκτύπωση κειμένου.
+		\\
 	\hline
 	\lstinline{quantize(val)} & Κβαντισμός συχνότητας σε δυνάμεις του 2. \\
 	\hline
@@ -488,6 +580,9 @@ framework), το οποίο προήλθε από το λειτουργικό σ
 	\hline
 	\lstinline{stddev(val)} & Τυπική απόκλιση. \\
 	\hline
+	\lstinline{stack(), ustack()} & Στοίβα κλήσεων kernel/userspace του
+		thread που εκτελεί το τρέχον probe. \\
+	\hline
 	\lstinline{breakpoint()} & Ορισμός kernel breakpoint και μεταφορά
 		ελέγχου στον kernel debugger \lstinline{ddb(4)}. \\
 	\hline
@@ -496,29 +591,63 @@ framework), το οποίο προήλθε από το λειτουργικό σ
 \end{tabular}
 \end{center}
 
+\subsubsection{Φίλτρα (Predicates)}
+
+<++>
+
+\subsubsection{Συσσωματώσεις (Aggregations)}
+
+% TODO mark 00:38:00
+
+<++>
+
 % TODO examples
 <++>
 
 \subsubsection{CTF}
 
+Υπάρχουν πολλές περιπτώσεις που ο χρήστης θέλει να εξάγει από το κομμάτι που
+παρακολουθείται πληροφορίες σχετικά με κάποια δομή δεδομένων, ορίσματα
+συναρτήσεων, και ούτω καθεξής. Προκειμένου όμως να μπορέσει ένα probe να
+συλλέξει αυτές τις πληροφορίες από τον πυρήνα και να είναι χρήσιμες για τον
+χρήστη, πρέπει επίσης να γνωρίζει τον τύπο και την αναπαράστασή τους.
+Αντίστοιχο πρόβλημα αντιμετωπίζουν και τα πρόγραμματα αποσφαλμάτωσης
+(debuggers). Στην περίπτωση πολλών debuggers (όπως του GDB) χρησιμοποιείται ένα
+πρότυπο κωδικοποίησης αυτών των πληροφοριών που ονομάζεται «DWARF», καθώς
+επίσης χρησιμοποιείται και για την υλοποίηση της παρούσας εργασίας και στο
+οποίο γίνεται αναφορά στην ενότητα \ref{dwarf}. Ωστόσο αυτό το πρότυπο είναι
+αρκετά περίπλοκο και «μεγάλο» για την περίπτωση του DTrace, το οποίο χρειάζεται
+μόνο να αναπαριστά τύπους δεδομένων (integers, structs, unions, κλπ.) της
+γλώσσας C.
+
+Το πρότυπο που χρησιμοποείται από το DTrace είναι το CTF, το οποίο μπορεί να
+θεωρηθεί ως ένα υποσύνολο του DWARF, και στο FreeBSD χρησιμοποιείται κάτα κύριο
+λόγο από το DTrace.
+
+Το τεχνικό κομμάτι του CTF δεν αφορά το κομμάτι της εργασίας, οπότε δεν
+χρειάζεται να γίνει αναλυτική αναφορά σε αυτό. Η εμφάνιση του γραφήματος τύπων
+CTF μπορεί να γίνει με την εντολή \lstinline{ctfdump(1)}. Για παράδειγμα, η
+παρακάτω εντολή θα τυπώσει το γράφημα τύπων CTF για τον πυρήνα του FreeBSD:
+
+\begin{lstlisting}
+	ctfdump -t /boot/kernel/kernel
+
+	- Types ----------------------------------------------------------------------
+
+	  <1> INTEGER char encoding=SIGNED CHAR offset=0 bits=8
+	  <2> INTEGER long encoding=SIGNED offset=0 bits=64
+	  [3]
+	  <4> INTEGER unsigned int encoding=0x0 offset=0 bits=32
+	  <5> TYPEDEF uInt refers to 4
+	  [6] INTEGER unsigned char encoding=CHAR offset=0 bits=8
+	  ...
+\end{lstlisting}
+
 % TODO
-%	CTF
 %	ctf(5)
 %	link to docs
-%	diagrams
-%		dwarf
-%			gdb (and inline tracing) uses it to unwind stack, find
-%			function names, arguments, types, variable locations,
-%			
-%			dwarf metadata is generated at compile time
-%
-%			dwarfdump
-%		ctf is a simplified representation of C types so that we can
-%		fetch them in D
-%			ctfdump -t /boot/kernel/kernel | less
-%				see opts in ctfdump.1
-%			probe arguments are defined using ctf, roughly like C types
-%				dtrace_ip.4
+%	probe arguments are defined using ctf, roughly like C types (dtrace_ip.4)
+%		dtrace -n 'probe' -lv -> print(*args[0]);
 
 <++>
 
@@ -530,13 +659,14 @@ framework), το οποίο προήλθε από το λειτουργικό σ
 %		https://www.usenix.org/legacy/event/usenix04/tech/general/full_papers/cantrill/cantrill_html/
 %		diagram
 %		dtrace -S -> dump bytecode for a given d script
+%	mark 00:25:00
 
 Για να εισαχθεί ένα D script στον πυρήνα του λειτουργικού συστήματος,
 χρησιμοποιείται η κωδικοποίηση DIF. Η κωδικοποίηση αυτή έχει ως στόχο την
 μεταγλώττιση του D script σε μία ενδιάμεση byte κωδικοποίηση (byte code), η
-οποία μπορεί να εκτελεστεί από το DTrace εντός του kernel. Αφού το script έχει
-μεταγλωττιστεί, φορτώνεται στο kernel από το DTrace, και εκτελείται για τα
-probes που έχουν οριστεί όταν αυτά ενεργοποιηθούν.
+οποία μπορεί να εκτελεστεί από το kernel. Αφού το script έχει μεταγλωττιστεί,
+φορτώνεται στο kernel από το DTrace, και εκτελείται για τα probes που έχουν
+οριστεί όταν αυτά ενεργοποιηθούν.
 
 Αντίστοιχα στο Linux, χρησιμοποείται η κωδικοποίηση \lstinline{eBPF}.
 
@@ -566,6 +696,19 @@ buffer. Με άλλα λόγια, το kernel γράφει στον ενεργό
 
 <++>
 
+\subsection{FBT} \label{fbt}
+
+% TODO
+%	fbt
+%		entry and return points of a func (with args) only
+%		Breakpoint instructions
+%		caveats: tail calls, inline funcs
+%		pid -> fbt for userspace
+%			00:57:00
+<++>
+
+% TODO <++> more providers (explain at least all the basic ones?)
+
 \subsection{Scripts υψηλότερου επιπέδου} \label{highscripts}
 
 % TODO
@@ -573,6 +716,7 @@ buffer. Με άλλα λόγια, το kernel γράφει στον ενεργό
 %	lockstat
 %	flamegraphs
 %	dwatch
+%	truss, ...
 
 <++>
 
@@ -584,13 +728,14 @@ buffer. Με άλλα λόγια, το kernel γράφει στον ενεργό
 %	mark 00:36:00
 %	mark 00:39:00-00:54:00
 %	/usr/share/examples/dtrace
+%	/usr/lib/dtrace
 %	flamegraphs
 %		mark 01:11:00
 %	writing a provider
 
 <++>
 
-\section{kinst}
+\section{kinst} \label{kinst}
 
 % TODO
 % See commits, manpage
@@ -1023,6 +1168,60 @@ program counter στην διεύθυνση του τραμπολίνου. Στ�
 
 \subsection{Παρακολούθηση inline συναρτήσεων}
 
+\subsubsection{Τι είναι inline συναρτήσεις και γιατί είναι δύσκολη η
+παρακολούθησή τους;}
+
+Inline συναρτήσεις είναι συναρτήσεις τις οποίες ο μεταγλωττιστής μετατρέπει σε
+απλά κομμάτια κώδικα τα οποία εκτελούνται \textit{εντός} της καλούσας
+συνάρτησης. Για παράδειγμα, ας υποθέσουμε το παρακάτω:
+
+\begin{lstlisting}[language=C]
+	static inline void
+	foo(void)
+	{
+		printf("Hello world\n");
+	}
+
+	static void
+	bar(void)
+	{
+		foo();
+	}
+\end{lstlisting}
+
+Εφόσον η συνάρτηση \lstinline{foo()} έχει οριστεί ως \lstinline{inline}
+\footnote{
+	Αν δεν οριστεί ρητά, ο μεταγλωττιστής αν κρίνει κατάλληλο, πολλές φορές
+	μπορεί να μετατρέψει μία συνάρτηση σε inline ακόμα και αν αυτή δεν έχει
+	οριστεί ως τέτοια.
+},
+ο μεταγλωττιστής θα μετατρέψει τον κώδικα στην παρακάτω μορφή:
+
+\begin{lstlisting}[language=C]
+	static void
+	bar(void)
+	{
+		printf("Hello world\n");
+	}
+\end{lstlisting}
+
+Αυτή η βελτιστοποίηση ωστόσο δημιουργεί πρόβλημα για το DTrace στην περίπτωση
+που θέλουμε να παρακολουθήσουμε την συνάρτηση \lstinline{foo()}, διότι η
+συνάρτηση αυτή, παρόλο που έχει οριστεί στον κώδικα, δεν υπάρχει στο τελικό
+εκτελέσιμο πρόγραμμα, με αποτέλεσμα το DTrace να μην μπορεί να βρει πληροφορίες
+για το σύμβολο \lstinline{foo()}. Αυτός είναι ένας από τους μεγάλους
+περιορισμούς του FBT, τον οποίο λύνει ο \lstinline{kinst}.
+
+\subsubsection{Πως λύνει ο kinst αυτό το πρόβλημα}
+
+% TODO
+% link to patch? post code?
+
+Στην πραγματικότητα, ο \lstinline{kinst} \textit{δεν} διαθέτει επιπλέον λογική
+όσον αφορά τις inline συναρτήσεις --- η λύση αυτού του προβλήματος βρίσκεται
+σε προηγούμενο στάδιο, σε αυτό της συντακτικής ανάλυσης του D script από την
+βιβλιοθήκη DTrace (\lstinline{libdtrace}).
+
 Η παρακολούθηση inline συναρτήσεων στον \lstinline{kinst} δεν είναι τίποτα
 παραπάνω από ένα συντακτικό στρώμα που έχει προστεθεί στην libdtrace. Όταν ο
 χρήστης ζητάει ένα probe της μορφής
@@ -1118,26 +1317,6 @@ probes για τα inline αντίγραφα, δημιουργεί και ένα
 
 % TODO
 % See links to docs
-
-<++>
-
-\subsubsection{Τι είναι inline συναρτήσεις}
-
-<++>
-
-\subsubsection{Γιατί είναι δύσκολη η παρακολούθηση inline συναρτήσεων}
-
-<++>
-
-\subsubsection{Πως λύνει ο kinst αυτό το πρόβλημα}
-
-% TODO
-% link to patch? post code?
-
-Στην πραγματικότητα, ο \lstinline{kinst} \textit{δεν} διαθέτει επιπλέον λογική
-όσον αφορά τις inline συναρτήσεις --- η λύση αυτού του προβλήματος βρίσκεται
-σε προηγούμενο στάδιο, αυτό της συντακτικής ανάλυσης του D script από την
-βιβλιοθήκη DTrace (\lstinline{libdtrace}). <++> % TODO link to section about d lang
 
 <++>
 
