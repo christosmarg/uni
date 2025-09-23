@@ -75,3 +75,15 @@ void swap(int *a, int *b)
     *a = *b;
     *b = temp;
 }
+
+
+int find_pos(int *arr, int numIter, int val)
+{
+	int pos, i;
+
+	for (i = 0; i < numIter; i++)
+		if (val == *(arr + i))
+			pos = i;
+
+	return pos;
+}

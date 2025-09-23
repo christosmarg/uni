@@ -10,4 +10,6 @@ void quicksort(int *, int, int);
 int partition(int *, int, int);
 void swap(int *, int *);
 
+int find_pos(int *, int, int);
+
 #endif
