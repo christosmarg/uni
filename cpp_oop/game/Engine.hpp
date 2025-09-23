@@ -73,8 +73,8 @@ public:
 private:
 	void free_entities();
 	void reset_entities();
-	bool init_curses();
-	bool init_gamewin();
+	void init_curses();
+	void init_gamewin();
 	void load_map(const char *mapfile);
 	void calc_pos(int *x, int *y);
 	void init_entities();

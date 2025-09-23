@@ -14,22 +14,21 @@ enum Color {
 Engine::Engine(const char *mapfile, const char *scorefile, const char *name)
 {
 	/* 
-	 * Initialize curses(3) first so we can get the terminal's dimensions
-	 * and use them in `load_map`.
-	 */
-	if (!init_curses())
-		throw std::runtime_error("init_curses failed");
-
-	/* 
 	 * We'll use std::runtime_error exceptions here because we 
-	 * want to display a useful error message since `load_map` 
-	 * and `Score`'s constructor have many points of failure. 
+	 * want to display a useful error message since there are
+	 * many points of failure.
 	 * If we do catch an exception, we'll just "forward" it
 	 * to `main`.
 	 */
 	try {
+		/* 
+		 * Initialize curses(3) first so we can get the terminal's
+		 * dimensions and use them in `load_map`.
+		 */
+		init_curses();
 		load_map(mapfile);
 		score = new Score(scorefile, name);
+		init_gamewin();
 	} catch (const std::ios_base::failure& e) {
 		/* 
 		 * Kill the curses window, otherwise the terminal output
@@ -40,10 +39,6 @@ Engine::Engine(const char *mapfile, const char *scorefile, const char *name)
 	} catch (const std::runtime_error& e) {
 		(void)endwin();
 		throw std::runtime_error("error: " + std::string(e.what()));
-	}
-	if (!init_gamewin()) {
-		(void)endwin();
-		throw std::runtime_error("init_gamewin failed");
 	}
 	reset_entities();
 
@@ -94,13 +89,13 @@ Engine::reset_entities()
 /* 
  * Initialize curses(3) environment 
  */
-bool
+void
 Engine::init_curses()
 {
 	std::vector<int> colors;
 
 	if (!initscr())
-		return false;
+		throw std::runtime_error("init_curses failed");
 	/* Don't echo keypresses. */
 	noecho();
 	/* Disable line buffering. */
@@ -139,15 +134,13 @@ Engine::init_curses()
 	use_default_colors();
 	for (int i = 1; i < Color::LAST; i++)
 		(void)init_pair(i, colors[i-1], -1);
-
-	return true;
 }
 
 /*
  * Initiliaze the game window. Having a seperate window for the game
  * will make it easier to handle the map and player input.
  */
-bool
+void
 Engine::init_gamewin()
 {
 	int wr, wc, wy, wx;
@@ -157,11 +150,9 @@ Engine::init_gamewin()
 	wy = CENTER(ymax, wr);
 	wx = CENTER(xmax, wc);
 	if ((gw = newwin(wr, wc, wy, wx)) == NULL)
-		return false;
+		throw std::runtime_error("init_gamewin failed");
 	box(gw, 0, 0);
 	(void)getmaxyx(gw, wymax, wxmax);
-
-	return true;
 }
 
 void
