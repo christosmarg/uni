@@ -92,7 +92,7 @@ void combinations(int *arr, int *currComb, int *freqArr, int start, int end, int
                 printf("%d ", *(currComb + j));
                 if (j == K - 1)
 				{
-					frequency(freqArr, currComb, arr, N);
+					frequency(freqArr, currComb, arr, N, K);
 					(*printed)++;
 					printf("\n");
 				}
@@ -133,11 +133,11 @@ bool sum_comb_calc(int *arr, int K, int y1, int y2)
 }
 
 
-int frequency(int *freqArr, int *currComb, int *arr, int N)
+void frequency(int *freqArr, int *currComb, int *arr, int N, int K)
 {
 	int pos, i;
 
-	for (i = 0; i < N; i++)
+	for (i = 0; i < K; i++)
 	{
 		pos = find_pos(arr, N, *(currComb + i));
 		(*(freqArr + pos))++;
