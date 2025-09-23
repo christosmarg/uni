@@ -55,7 +55,11 @@ calc(void *foo)
 	int tid, n, i;
 
 	f = (struct foo *)foo;
-	tid = f->tid;
+	if (pthread_mutex_lock(&f->mutex) != 0)
+		err(1, "pthread_mutex_lock");
+	tid = f->tid++;
+	if (pthread_mutex_unlock(&f->mutex) != 0)
+		err(1, "pthread_mutex_unlock");
 	n = f->n / f->ntd;
 	f->sums[tid] = 0;
 	localsum = 0;
@@ -93,7 +97,6 @@ main(int argc, char *argv[])
 {
 	struct foo *f;	/* Each callback will receive this */
 	pthread_t *tds; /* Threads */
-	pthread_t fin;	/* Will calculate the total sum */
 	int totalsum;	/* What its name says */
 	int i;		/* Counter */
 
@@ -134,13 +137,12 @@ main(int argc, char *argv[])
 	 * and we pass it the `foo` struct as an argument to avoid
 	 * declaring globals.
 	 */
-	for (i = 0; i < f->ntd; i++) {
-		f->tid = i;
+	for (i = 0; i < f->ntd; i++)
 		if (pthread_create(&tds[i], NULL, calc, (void *)f) != 0)
 			err(1, "pthread_create");
+	for (i = 0; i < f->ntd; i++)
 		if (pthread_join(tds[i], NULL) != 0)
 			err(1, "pthread_join");
-	}
 	totalsum = 0;
 	while (f->ntd--)
 		totalsum += *f->sums++;

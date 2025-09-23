@@ -131,8 +131,8 @@ static void
 usage(void)
 {
 	fprintf(stderr, "usage: %1$s [-b backlog] [-s sockfile]\n"
-	    "       %1$s [-i [-p port]] [-b backlog] [-s sockfile] hostname\n"
-	    "       %1$s [-i [-p port]] [-b backlog] [-s sockfile] ipv4_addr\n", argv0);
+	    "       %1$s -i [-p port] [-b backlog] [-s sockfile] hostname\n"
+	    "       %1$s -i [-p port] [-b backlog] [-s sockfile] ipv4_addr\n", argv0);
 	exit(1);
 }
 
@@ -152,7 +152,7 @@ main(int argc, char *argv[])
 	char ch;
 
 	argv0 = *argv;
-	/* Run on the UNIX domain by default. */
+	/* Run in the UNIX domain by default. */
 	uflag = 1;
 	iflag = 0;
 
@@ -168,7 +168,7 @@ main(int argc, char *argv[])
 			 * sense, so we don't allow it either.
 			 */
 			if ((backlog = atoi(optarg)) < 1)
-				usage();
+				errx(1, "backlog value must be greater than 1");
 			break;
 		case 'i':
 			/* Run the server on the internet domain. */
@@ -217,6 +217,7 @@ main(int argc, char *argv[])
 		sin.sin_family = AF_INET;
 		/* Convert the port number to network bytes. */
 		sin.sin_port = htons(port);
+
 		/* 
 		 * We'll try and see if the input is an IPv4 address. If
 		 * inet_aton(3) does not fail, the user passed an IPv4 address.
@@ -225,10 +226,12 @@ main(int argc, char *argv[])
 		 * addresses as arguments.
 		 */
 		if (!inet_aton(*argv, &sin.sin_addr)) {
-			/* Get host info */
+			/* 
+			 * Get host info by hostname. The host's IPv4 address
+			 * will be written to `hp->h_addr`.
+			 */
 			if ((hp = gethostbyname(*argv)) == NULL)
 				errx(1, "gethostbyname(%s) failed", *argv);
-			/* `hp->h_addr` has the host's IPv4 address. */
 			(void)memcpy(&sin.sin_addr, hp->h_addr, hp->h_length);
 		}
 		if (bind(sfd, (struct sockaddr *)&sin, sizeof(sin)) < 0)

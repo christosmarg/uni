@@ -12,16 +12,17 @@
  * Εργαστήριο ΛΣ2 (Δ6) / Εργασία 2: Άσκηση 1.1 / 2020-2021
  * Ονοματεπώνυμο: Χρήστος Μαργιώλης
  * ΑΜ: 19390133
- * Τρόπος μεταγλώττισης: `cc ex1_1.c -lpthread -o ex1_1`
+ * Τρόπος μεταγλώττισης: `cc ex1_1.c -lpthread -lrt -o ex1_1`
  */
 
 struct foo {
 	char *str;
+	int tid;
 	sem_t sem;
 };
 
 /* Function declarations */
-static void *tdprint(void *);
+static void *thread_callback(void *);
 static void *emalloc(size_t);
 static void usage(void);
 
@@ -38,15 +39,16 @@ static const char *nums[] = {
 };
 
 static void *
-tdprint(void *foo)
+thread_callback(void *foo)
 {
 	struct foo *f;
 	
 	f = (struct foo *)foo;
 	if (sem_wait(&f->sem) < 0)
 		err(1, "sem_wait");
-	printf("%s", f->str);
-	/* Prevent memory leak from strdup(2). */
+	if ((f->str = strdup(nums[f->tid++])) == NULL)
+		err(1, "strdup");
+	fputs(f->str, stdout);
 	free(f->str);
 	if (sem_post(&f->sem) < 0)
 		err(1, "sem_post");
@@ -85,7 +87,7 @@ main(int argc, char *argv[])
 		switch (ch) {
 		case 'n':
 			if ((n = atoi(optarg)) < 1)
-				usage();
+				errx(1, "value must be greater than 1");
 			break;
 		case '?':
 		default:
@@ -105,17 +107,24 @@ main(int argc, char *argv[])
 	tds = emalloc(len * sizeof(pthread_t));
 	f = emalloc(sizeof(struct foo));
 
+	/* 
+	 * sem_init(3)'s second argument defines whether the semaphore
+	 * should be shared by multiple processes or not. This is done
+	 * by passing a non-zero value, but in this case we want the
+	 * semaphore to be shared only by this process.
+	 */
 	if (sem_init(&f->sem, 0, 1) < 0)
 		err(1, "sem_init");
+
 	while (n--) {
-		for (i = 0; i < len; i++) {
-			if ((f->str = strdup(nums[i])) == NULL)
-				err(1, "strdup");
-			if (pthread_create(&tds[i], NULL, tdprint, (void *)f) != 0)
+		f->tid = 0;
+		for (i = 0; i < len; i++)
+			if (pthread_create(&tds[i], NULL,
+			    thread_callback, (void *)f) != 0)
 				err(1, "pthread_create");
+		for (i = 0; i < len; i++)
 			if (pthread_join(tds[i], NULL) != 0)
 				err(1, "pthread_join");
-		}
 	}
 	printf("\n");
 

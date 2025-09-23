@@ -12,10 +12,20 @@ enum Color {
 /* TODO: intro message and stuff? */
 Engine::Engine(const char *mapfile, const char *scorefile)
 {
-	if (!load_map(mapfile))
-		throw "load_map failed: " + std::string(mapfile);
 	if (!init_curses())
 		throw "init_curses failed";
+	/* 
+	 * We'll use exceptions here because we want to display a useful
+	 * error message since `load_map` has many points of failure.
+	 * If we do catch an exception, we'll just "forward" it to `main`.
+	 */
+	try {
+		load_map(mapfile);
+	} catch (std::runtime_error& e) {
+		throw "load_map failed: " + std::string(mapfile) + ": " + e.what();
+	}
+	if (!init_gamewin())
+		throw "init_gamewin failed";
 	if (!init_entities())
 		throw "init_entities failed";
 	if (!init_score(scorefile))
@@ -38,41 +48,10 @@ Engine::~Engine()
 
 /* Private methods */
 
-/* XXX: getline? */
-bool
-Engine::load_map(const char *mapfile)
-{
-	std::ifstream f;
-	std::vector<char> row;
-	char c;
-
-	f.exceptions(std::ifstream::badbit);
-	f.open(mapfile);
-	if (!f.is_open())
-		return false;
-	while (f.get(c)) {
-		if (f.eof())
-			break;
-		row.push_back(c);
-		if (c == '\n') {
-			/* XXX: h != hprev */
-			w = row.size();
-			map.push_back(row);
-			row.clear();
-		}
-	}
-	f.close();
-	h = map.size();
-
-	return true;
-}
-
 /* Initialize curses(3) environment */
 bool
 Engine::init_curses()
 {
-	int wr, wc, wy, wx;
-
 	if (!initscr())
 		return false;
 	noecho();
@@ -84,19 +63,7 @@ Engine::init_curses()
 	set_escdelay(0);
 	/* Don't wait for a keypress, just continue if there's nothing. */
 	timeout(1000);
-
-	xmax = getmaxx(stdscr);
-	ymax = getmaxy(stdscr);
-
-	wr = h;
-	wc = w;
-	wy = CENTER(ymax, wr);
-	wx = CENTER(xmax, wc);
-	if ((gw = newwin(wr, wc, wy, wx)) == NULL)
-		return false;
-	box(gw, 0, 0);
-	wxmax = getmaxx(gw);
-	wymax = getmaxy(gw);
+	(void)getmaxyx(stdscr, ymax, xmax);
 
 	colors.push_back(COLOR_BLUE);	/* Wall */
 	colors.push_back(COLOR_RED);	/* Path */
@@ -110,6 +77,69 @@ Engine::init_curses()
 		(void)init_pair(i, colors[i-1], -1);
 
 	return true;
+}
+
+bool
+Engine::init_gamewin()
+{
+	int wr, wc, wy, wx;
+
+	wr = h;
+	wc = w;
+	wy = CENTER(ymax, wr);
+	wx = CENTER(xmax, wc);
+	if ((gw = newwin(wr, wc, wy, wx)) == NULL)
+		return false;
+	box(gw, 0, 0);
+	(void)getmaxyx(gw, wymax, wxmax);
+
+	return true;
+}
+
+void
+Engine::load_map(const char *mapfile)
+{
+	std::ifstream f;
+	std::string str;
+	std::size_t l;
+	int curline = 1;
+
+	f.exceptions(std::ifstream::badbit);
+	f.open(mapfile);
+	if (!f.is_open())
+		throw std::runtime_error("cannot open file");
+	/* 
+	 * Read first row outside the loop so we can get an initial 
+	 * row length.
+	 */
+	if (!std::getline(f, str))
+		throw "cannot read first row";
+	map.push_back(str);
+	l = str.length();
+	while (std::getline(f, str)) {
+		/* 
+		 * If a row happens to have a different length, the map hasn't
+		 * been written properly, so we exit. All rows have be
+		 * have the same length.
+		 */
+		if (l != str.length())
+			throw std::runtime_error("rows must have an equal "
+			    "length: line " + std::to_string(curline));
+		map.push_back(str);
+		curline++;
+	}
+	f.close();
+	/* 
+	 * Since we got here, we know that number of columns is the same for
+	 * every row, so we can now just take a random string and calculate its
+	 * size in order to get the map's width.
+	 */
+	w = map[0].length();
+	h = map.size();
+
+	/* The map has to fit in the screen. */
+	if (w > xmax || h > ymax - 2)
+		throw std::runtime_error("the map doesn't fit to screen");
 }
 
 bool
@@ -337,7 +367,7 @@ Engine::redraw()
 			if (c == '*')
 				color = COLOR_PAIR(Color::WALL);
 			else if (c == ' ')
-				color  = COLOR_PAIR(Color::PATH);
+				color = COLOR_PAIR(Color::PATH);
 			wattron(gw, color);
 			waddch(gw, c);
 			wattroff(gw, color);
