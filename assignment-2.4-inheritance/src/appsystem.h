@@ -32,7 +32,7 @@ class AppSystem
                 const std::string& appname,
                 const T element,
                 void (U::*func)(T));
-        void removebad(const Manufacturer *man);
+        void removebad(const Manufacturer *manf);
         void removebad(const char *manfname);
         
         constexpr const std::vector<App *>& get_apps() const {return apps;}
