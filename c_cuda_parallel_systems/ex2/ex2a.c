@@ -11,7 +11,7 @@ static void	merge(int *, int *, int *, int *, int *);
 static void	multisort(int *, int *, int);
 
 /*
- * Print the contents of a 2D array like:
+ * Print the contents of an array like:
  *
  * array = [x, y, z]
  */
@@ -35,6 +35,9 @@ cmpfunc(const void *a, const void *b)
 	return (*(int *)a - *(int *)b);
 }
 
+/*
+ * Merge sort
+ */
 static void
 merge(int *a, int *enda, int *b, int *endb, int *res)
 {
@@ -55,6 +58,10 @@ multisort(int *arr, int *space, int n)
 {
 	int quarter, *sta, *spa, *stb, *spb, *stc, *spc, *std, *spd;
 
+	/*
+	 * Sort with qsort(3) directly if we can't split the array into 4
+	 * quarters.
+	 */
 	if ((quarter = n / 4) < 4)
 		qsort(arr, n, sizeof(int), cmpfunc);
 	else {
@@ -67,6 +74,7 @@ multisort(int *arr, int *space, int n)
 		spc = spb + quarter;
 		std = stc + quarter;
 		spd = spc + quarter;
+		/* Sort each quarter */
 #pragma omp task
 		multisort(sta, spa, quarter);
 #pragma omp task
@@ -115,6 +123,7 @@ main(int argc, char *argv[])
 	for (i = 0; i < n; i++)
 		a[i] = rand() % 100;
 
+	/* Calculate speed up */
 	start = omp_get_wtime();
 
 	pretty_print(a, n, "A_unsorted");

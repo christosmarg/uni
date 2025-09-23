@@ -3,8 +3,14 @@
 
 #define N	(1 << 2)
 #define DIM	(N * N)
+/*
+ * This formula for calculating the number of blocks is mentioned at "out of
+ * the blocks" section in:
+ *
+ * https://developer.nvidia.com/blog/even-easier-introduction-cuda/
+ */
 #define BLKSIZE	(1 << 8)
-#define NBLK	((N + BLKSIZE - 1) / BLKSIZE)
+#define NBLK	((DIM + BLKSIZE - 1) / BLKSIZE)
 
 __global__ void
 convolution(float *a, float *aconv)
@@ -12,10 +18,16 @@ convolution(float *a, float *aconv)
 	float c11, c12, c13, c21, c22, c23, c31, c32, c33;
 	int i, j, x, stridex;
 
-	/* each thread gets a slice of the rows to work with */
+	/*
+	 * Each thread gets a slice of the rows to work with. Grid-stride idiom
+	 * mentioned at section "out of the blocks" in:
+	 *
+	 * https://developer.nvidia.com/blog/even-easier-introduction-cuda/
+	 */
 	x = blockIdx.x * blockDim.x + threadIdx.x;
 	stridex = blockDim.x * gridDim.x;
 
+	/* Random weight values */
 	c11 = +0.2;  c21 = +0.5;  c31 = -0.8;
 	c12 = -0.3;  c22 = +0.6;  c32 = -0.9;
 	c13 = +0.4;  c23 = +0.7;  c33 = +0.10;
@@ -24,6 +36,7 @@ convolution(float *a, float *aconv)
 		return;
 	for (i = x; i < N - 1; i += stridex) {
 		for (j = 1; j < N - 1; j++) {
+			/* Taken from the lab's example code. */
 			aconv[i * N + j] = 
 			    c11 * a[(i - 1)	* N + (j - 1)] +
 			    c12 * a[i		* N + (j - 1)] +
@@ -48,7 +61,7 @@ min_diagonal(float *arr, float *min_arr)
 
 	if (x >= N)
 		return;
-	/* calculate local minimums */
+	/* Calculate local minimums */
 	min_arr[x] = arr[x * N + x];
 	for (i = x; i < N; i += stridex)
 		if (arr[i * N + i] < min_arr[x])
@@ -79,26 +92,31 @@ main(int argc, char *argv[])
 
 	srand(time(NULL));
 
-	/* 
-	 * use unified memory to avoid having additional device arrays and
-	 * memcpying from host to device and vice versa
+	/*
+	 * Use unified memory to avoid having additional device arrays and
+	 * memcpying from host to device and vice versa.
+	 *
+	 * https://developer.nvidia.com/blog/unified-memory-cuda-beginners/
 	 */
 	cudaMallocManaged(&a, DIM * sizeof(float));
 	cudaMallocManaged(&aconv, DIM * sizeof(float));
 	cudaMallocManaged(&min_arr, DIM * sizeof(float));
 
-	/* initialize array */
+	/* Initialize array */
 	for (i = 0; i < DIM; i++)
 		a[i] = (float)(rand() % 100);
 
 	convolution<<<NBLK, BLKSIZE>>>(a, aconv);
-	/* wait for all devices to finish */
+	/* Wait for all devices to finish */
 	cudaDeviceSynchronize();
 
 	min_diagonal<<<NBLK, BLKSIZE>>>(aconv, min_arr);
 	cudaDeviceSynchronize();
 
-	/* find global minimum */
+	/*
+	 * Find global minimum using the local minimums calculated in
+	 * min_diagonal().
+	 */
 	min = min_arr[0];
 	for (i = 0; i < N; i++)
 		if (min_arr[i] < min)
