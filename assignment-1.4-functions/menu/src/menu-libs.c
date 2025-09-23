@@ -85,5 +85,5 @@ int factorial(int a)
 
 int combinations(int a, int b)
 {
-    return factorial(b) / (factorial (a) * factorial(abs(b-a)));
+    return factorial(a) / (factorial (b) * factorial(a - b));
 }
