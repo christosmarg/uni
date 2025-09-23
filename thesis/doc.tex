@@ -9,6 +9,7 @@
 \usepackage{hyperref}
 \usepackage{tikz}
 \usepackage{csquotes}
+\usepackage{amsmath,amssymb,amsfonts}
 \usetikzlibrary{shapes.geometric, shapes.multipart, arrows}
 \usepackage[margin=0.5in]{geometry}
 \usepackage[nottoc,numbib]{tocbibind}
@@ -18,7 +19,6 @@
 
 % XXX https://polynoe.lib.uniwa.gr/xmlui/handle/11400/55
 % XXX https://polynoe.lib.uniwa.gr/xmlui/bitstream/handle/11400/8820/Vangelis_18390008.pdf?sequence=1&isAllowed=y
-% TODO μεταφορά τα πάντα από άρθρα και paper
 % TODO https://ice.uniwa.gr/wp-content/uploads/2022/12/%CE%9A%CE%B1%CE%BD%CE%BF%CE%BD%CE%B9%CF%83%CE%BC%CF%8C%CF%82-%CE%95%CE%BA%CF%80%CF%8C%CE%BD%CE%B7%CF%83%CE%B7%CF%82-%CE%94%CE%B9%CF%80%CE%BB%CF%89%CE%BC%CE%B1%CF%84%CE%B9%CE%BA%CF%8E%CE%BD-%CE%95%CF%81%CE%B3%CE%B1%CF%83%CE%B9%CF%8E%CE%BD-%CE%A4%CE%9C%CE%A0%CE%A5.pdf
 
 \lstset {
@@ -148,7 +148,7 @@
 
 Ακόμα θα ήθελα να ευχαριστήσω την οικογένειά μου για τη συμπαράσταση κατά τη
 διάρκεια των σπουδών μου, καθώς και τους Mark Johnston, Mitchell Horne και
-FreeBSD Foundation, για την πολύτιμη βοήθειά τους.
+το FreeBSD Foundation, για την πολύτιμη βοήθειά τους.
 
 \pagebreak
 \shipout\null
@@ -215,6 +215,8 @@ FreeBSD Foundation, για την πολύτιμη βοήθειά τους.
 % https://myaut.github.io/dtrace-stap-book/dtrace-stap-book.pdf
 % https://freebsdfoundation.org/wp-content/uploads/2019/01/Debugging-the-FreeBSD-Kernel.pdf
 
+<++>
+
 \section{Εισαγωγή στο DTrace}
 
 % TODO
@@ -222,10 +224,8 @@ FreeBSD Foundation, για την πολύτιμη βοήθειά τους.
 % https://www.youtube.com/watch?v=E06GVdH-LX0
 % https://www.youtube.com/watch?v=ctTyYlDbAIM
 % gsoc emails with mark
-% See paper, slides, articles
 % https://www.bsdcan.org/2017/schedule/attachments/432_dtrace_internals.pdf
 %
-% origins: illumos -> freebsd
 % performance overhead from dtrace
 % kernel module
 %	what is a kmod
@@ -238,10 +238,11 @@ FreeBSD Foundation, για την πολύτιμη βοήθειά τους.
 framework), το οποίο προήλθε από το λειτουργικό σύστημα Solaris το 2005 και
 έπειτα μεταφέρθηκε στο FreeBSD. Μεταξύ άλλων, χρησιμοποιείται για μετρήσεις
 επιδόσεων, αποσφαλμάτωση και παρακολούθηση σε πραγματικό χρόνο, καθώς και
-παρατήρηση συμπεριφοράς συγκεκριμένων υποσυστημάτων. Το DTrace είναι ιδιαίτερα
-ισχυρό χάρη στην γλώσσα D (βλέπε ενότητα \ref{dlang}) --- μία γλώσσα scripting
-που παρομοιάζει την C και την AWK, η οποία περιέχει μεγάλη γκάμα λειτουργιών
-και συναρτήσεων και χρησιμοποιείται για την σύνταξη DTrace scripts.
+παρατήρηση συμπεριφοράς συγκεκριμένων υποσυστημάτων του λειτουργικού
+συστήματος. Το DTrace είναι ιδιαίτερα ισχυρό χάρη στην γλώσσα D (βλέπε ενότητα
+\ref{dlang}) --- μία γλώσσα scripting που παρομοιάζει την C και την AWK, η
+οποία περιέχει μεγάλη γκάμα λειτουργιών και συναρτήσεων και χρησιμοποιείται για
+την σύνταξη DTrace scripts.
 
 <++>
 
@@ -251,7 +252,7 @@ framework), το οποίο προήλθε από το λειτουργικό σ
 % Providers
 %	mark 00:29:00
 
-Στην ορολογία του DTrace, provider ορίζεται 
+Στην ορολογία του DTrace, ώς provider ορίζεται
 
 <++>
 
@@ -429,12 +430,13 @@ buffer. Με άλλα λόγια, το kernel γράφει στον ενεργό
 \section{kinst}
 
 % TODO
-% See paper, slides, articles, commits, manpage
+% See commits, manpage
 %	https://reviews.freebsd.org/D40874
 % Architecture dependent parts
 %	emulation
 % diagrams
 % tail-calls?
+% rip/pc-relative instrs
 %
 %kinst creates probes on-demand, meaning it searches for and parses the
 %function's instructions each time dtrace(1) is run, and not at module
@@ -584,9 +586,77 @@ GDB \cite{gdb}. Στα συγκεκριμένα παραδείγματα χρη�
 %Ο \lstinline{kinst} διαθέτει ένα αρχείο συσκευής στο
 %\lstinline{/dev/dtrace/kinst}, το οποίο χρησιμοποιείται για <++>
 
+Οι πληροφορίες των probes στέλνονται από το \lstinline{dtrace(1)} στο
+\lstinline{kinst(4)} μέσω της libdtrace, χρησιμοποιώντας την συσκευή χαρακτήρων
+(character device) \lstinline{/dev/dtrace/kinst}. Το \lstinline{kinst(4)} είναι
+υπεύθυνο για τον εντοπισμό της συνάρτησης στο kernel, το disassembly της και
+την δημιουργία μιάς εσωτερικής δομής δεδομένων με πληροφορίες σχετικά με την
+εντολή και το probe. Έπειτα δημιουργεί DTrace probes για κάθε μία από τις
+εντολές προς παρακολούθηση. Η εντολή προς παρακολούθηση αποθηκεύεται στην δομή
+δεδομένων του probe για μετέπειτα χρήση και αντικαθιστάται με μία εντολή
+breakpoint. Μόλις ο CPU κατά την εκτέλεσή του, φτάσει στο breakpoint που έχει
+εγκατασταθεί από το DTrace, το kernel εισέρχεται στο DTrace μέσω του trap
+handler (\lstinline{sys/$ARCH/$TARGET_ARCH/trap.c}) του kernel και εφόσον το
+breakpoint έχει εγκατασταθεί από τον \lstinline{kinst} συγκεκριμένα, το kernel
+εν τέλει θα εισέλθει στην συνάρτηση \lstinline{kinst_invop()}. Αυτή η συνάρτηση
+είναι υπεύθυνη για την παρακολούθηση της εντολής, είτε με την υλοποίηση της σε
+λογισμικό (emulation), είτε με την εκτέλεσή της σε «τραμπολίνο» (βλέπε ενότητα
+\ref{tramp}.
+
+\begin{figure}[H]
+\begin{center}
+\begin{tikzpicture}[every node/.style={transform shape}, node distance=1cm]
+	\node (header) [header] {\lstinline{func}};
+	\node (stack1) [box, below of=header] {\lstinline{instr}};
+	\node (stack2) [box, below of=stack1] {\lstinline{instr -> breakpoint}};
+	\node (stack3) [box, below of=stack2] {\lstinline{instr}};
+	\node (stack4) [box, below of=stack3] {\lstinline{...}};
+	\node (stack5) [box, below of=stack4] {\lstinline{...}};
+	\node (stack6) [box, below of=stack5] {\lstinline{instr -> breakpoint}};
+	\node (stack7) [box, below of=stack6] {\lstinline{instr}};
+
+	\node (dtrace) [func, right of=header, xshift=4cm, yshift=2cm]
+		{\lstinline{dtrace(1)} command};
+	\node (libdtrace) [func, right of=dtrace, xshift=4cm]
+		{libdtrace: \lstinline{ioctl} with probe info to
+		\lstinline{/dev/dtrace/kinst}};
+	\node (kinst) [func, right of=libdtrace, xshift=4cm]
+		{\lstinline{kinst(4)}: create probe(s), overwrite
+		instruction(s) with breakpoints};
+
+	\node (trap1) [func, right of=stack2, xshift=4cm] {breakpoint handler};
+	\node (dinvop1) [func, right of=trap1, xshift=4cm]
+		{\lstinline{dtrace_invop()}};
+	\node (kinvop1) [func, right of=dinvop1, xshift=4cm]
+		{\lstinline{kinst_invop()}};
+
+	\node (trap2) [func, right of=stack6, xshift=4cm] {breakpoint handler};
+	\node (dinvop2) [func, right of=trap2, xshift=4cm]
+		{\lstinline{dtrace_invop()}};
+	\node (kinvop2) [func, right of=dinvop2, xshift=4cm]
+		{\lstinline{kinst_invop()}};
+
+	\draw [arrow] (dtrace) -- (libdtrace);
+	\draw [arrow] (libdtrace) -- (kinst);
+
+	\draw [arrow] (stack2) -- (trap1);
+	\draw [arrow] (trap1) -- (dinvop1);
+	\draw [arrow] (dinvop1) -- (kinvop1);
+	\draw [arrow] (kinvop1) |- (stack3);
+
+	\draw [arrow] (stack6) -- (trap2);
+	\draw [arrow] (trap2) -- (dinvop2);
+	\draw [arrow] (dinvop2) -- (kinvop2);
+	\draw [arrow] (kinvop2) |- (stack7);
+\end{tikzpicture}
+\caption{Γενική ροή.}
+\label{genpipeline}
+\end{center}
+\end{figure}
+
 <++>
 
-\subsection{«Τραμπολίνο»}
+\subsection{«Τραμπολίνο»} \label{tramp}
 
 % TODO improve wording
 
@@ -791,7 +861,9 @@ program counter στην διεύθυνση του τραμπολίνου. Στ�
 \subsection{Παρακολούθηση inline συναρτήσεων}
 
 % TODO
-% See paper, slides, articles, links to docs
+% done for each loaded kernel module, painfully slow
+% can handle nested inline funcs
+% See links to docs
 
 Η παρακολούθηση inline συναρτήσεων στον \lstinline{kinst} δεν είναι τίποτα
 παραπάνω από ένα συντακτικό στρώμα που έχει προστεθεί στην libdtrace. Όταν ο
@@ -869,6 +941,18 @@ fbt::malloc:entry
 \label{sugar}
 \end{figure}
 
+Υπάρχει περίπτωση να υπάρχουν inline αλλά και μη-inline ορισμοί της ίδιας
+συνάρτησης. Σε αυτήν την περίπτωση, η libdtrace, πέρα από τα \lstinline{kinst}
+probes για τα inline αντίγραφα, δημιουργεί και ένα επιπλέον FBT probe για την
+μη-inline συνάρτηση.
+
+Για την παραγωγή των εξόδων που παρουσίαζονται στο σχήμα \ref{sugar},
+χρησιμοποείται η επιλογή \lstinline{-d} στην εντολή \lstinline{dtrace(1)}, η
+οποία τυπώνει το D script αφού έχουν εφαρμοστεί όλοι οι συντακτικοί
+μετασχηματισμοί. Η επιλογή αυτή προστέθηκε με το
+\href{https://cgit.freebsd.org/src/commit/?id=1e136a9cbd3a9d137037e47a53c1dba3be7f6925}{commit
+1e136a9cbd3a}.
+
 <++>
 
 \subsubsection{Τι είναι inline συναρτήσεις}
@@ -882,7 +966,6 @@ fbt::malloc:entry
 \subsubsection{Πως λύνει ο kinst αυτό το πρόβλημα}
 
 % TODO
-% https://margiolis.net/w/kinst_inline/
 % link to patch? post code?
 
 Στην πραγματικότητα, ο \lstinline{kinst} \textit{δεν} διαθέτει επιπλέον λογική
@@ -895,7 +978,6 @@ fbt::malloc:entry
 \subsubsection{Πρότυπο DWARF} \label{dwarf}
 
 % TODO
-% https://margiolis.net/w/dwarf_inline/
 % how to compile kernel/stuff with dwarf
 
 Το πρότυπο αποσφαλμάτωσης DWARF \cite{dwarfstd} είναι ένα πρότυπο το οποίο
@@ -928,25 +1010,27 @@ fbt::malloc:entry
 \lstinline{-g} (παραγωγή πληροφοριών αποσφαλμάτωσης):
 
 \begin{lstlisting}
-	$ cc <file>.c -g -o <file>
+	cc <file>.c -g -o <file>
 \end{lstlisting}
 
 Οι πληροφορίες DWARF μπορούν έπειτα να διαβαστούν είτε με το πρόγραμμα
-\lstinline{readelf} (με την επιλογή \lstinline{-wi}), είτε με το
-\lstinline{dwarfdump}:
+\lstinline{readelf} (με την επιλογή \lstinline{-wi}):
 
 \begin{lstlisting}
-	$ readelf -wi <file>
-	$ dwarfdump <file>
+	readelf -wi <file>
 \end{lstlisting}
 
-<++>
+Είτε με το \lstinline{dwarfdump}:
+
+\begin{lstlisting}
+	dwarfdump <file>
+\end{lstlisting}
 
 Οι δηλώσεις των inline συναρτήσεων στο πρότυπο DWARF αναπαριστώνται με την
 ετικέτα \lstinline{DW_TAG_subprogram}, σε συνδυασμό με την ιδιότητα
 \lstinline{DW_AT_inline}. Ωστόσο για κάθε δήλωση μίας inline συνάρτησης,
-υπάρχουν και αντίγραφο της, ένα για κάθε σημείο στο οποίο η συνάρτηση έχει
-μετατραπεί σε inline, εντός μίας άλλης συνάρτησης. Τα αντίγραφα αυτά
+υπάρχουν και αντίγραφά της, ένα για κάθε σημείο στο οποίο η συνάρτηση έχει
+μετατραπεί σε inline εντός μίας άλλης συνάρτησης. Τα αντίγραφα αυτά
 αναπαριστώνται με την ετικέτα \lstinline{DW_TAG_inlined_subroutine} και μπορούν
 να περιέχουν τις παρακάτω ιδιότητες:
 
@@ -954,7 +1038,7 @@ fbt::malloc:entry
 
 \begin{itemize}
 	\item \lstinline{DW_AT_abstract_origin}: Offset του DIE σε σχέση με την
-		δήλωση της inline συνάρτησης.
+		δήλωση της inline συνάρτησης. % FIXME true?
 	\item \lstinline{DW_AT_call_file}: Ακέραιος αριθμός που δηλώνει το
 		αρχείο στο οποίο καλαίτει η συνάρτηση. % TODO how do we match to file?
 	\item \lstinline{DW_AT_call_line}: Γραμμή κώδικα εντός του αρχείου, στο
@@ -968,6 +1052,62 @@ fbt::malloc:entry
 		το αντίγραφο, σε περίπτωση που το αντίγραφο δεν βρίσκεται σε
 		ενιαίες θέσεις μνήμης.
 \end{itemize}
+
+Όσον αφορά τις inline συναρτήσεις, ας υποθέσουμε την παρακάτω εντολή DTrace:
+
+\begin{lstlisting}
+	# dtrace -n 'kinst::vfs_freevnodes_dec:entry'
+\end{lstlisting}
+
+Εφόσον η συνάρτηση \lstinline{vfs_freevnodes_dec()} είναι μέρος του FreeBSD
+kernel, η libdtrace πρέπει αρχικά να αναλύσει τα δεδομένα DWARF του kernel, τα
+οποία βρίσκονται στο αρχείο
+\lstinline{/usr/lib/debug/boot/kernel/kernel.debug}, και να βρει αν η
+\lstinline{vfs_freevnodes_dec()} είναι inline. Αν και όλα αυτά γίνονται εντός
+της libdtrace, χάριν κατανόησης και απεικόνισης της διαδικασίας που
+ακολουθείται, θα χρησιμοποιήσουμε την παρακάτω εντολή για να εμφανίσουμε τα
+δεδομένα DWARF του kernel:
+
+\begin{lstlisting}
+	readelf -wi /usr/lib/debug/boot/kernel/kernel.debug
+\end{lstlisting}
+
+Και έπειτα θα ψάξουμε για το παρακάτω DIE:
+
+\begin{lstlisting}[caption={DIE δήλωησης inline συνάρτησης}, captionpos=b, label=inlinedecl]
+ <1><1dfa144>: Abbrev Number: 94 (DW_TAG_subprogram)
+    <1dfa145>   DW_AT_name        : (indirect string) vfs_freevnodes_dec
+    <1dfa149>   DW_AT_decl_file   : 1
+    <1dfa14a>   DW_AT_decl_line   : 1447
+    <1dfa14c>   DW_AT_prototyped  : 1
+    <1dfa14c>   DW_AT_inline      : 1
+\end{lstlisting}
+
+% FIXME exceeds columns
+Η ετικέτα \lstinline{DW_TAG_subprogram} υποδηλώνει ότι το DIE αναφέρεται σε
+συνάρτηση, και η ιδιότητα \lstinline{DW_AT_inline} ότι η συνάρτηση είναι
+inlined. Τώρα που η libdtrace ξέρει ότι η συνάρτηση είναι πράγματι inlined,
+πρέπει να βρει τα DIE που αντιστοιχούν στο κάθε inline αντίγραφο, όπως το
+παρακάτω:
+
+\begin{lstlisting}[caption={DIE αντιγράφου inline συνάρτησης}, captionpos=b]
+ <3><1dfe45e>: Abbrev Number: 24 (DW_TAG_inlined_subroutine)
+    <1dfe45f>   DW_AT_abstract_origin: <0x1dfa144>
+    <1dfe463>   DW_AT_low_pc      : 0xffffffff80cf701d
+    <1dfe46b>   DW_AT_high_pc     : 0x38
+    <1dfe46f>   DW_AT_call_file   : 1
+    <1dfe470>   DW_AT_call_line   : 3458
+    <1dfe472>   DW_AT_call_column : 5
+\end{lstlisting}
+
+% FIXME linebreak
+
+Όπως αναφέρθηκε παραπάνω, τα inline αντίγραφα μίας συνάρτησης υποδηλώνονται με
+την ετικέτα \lstinline{DW_TAG_inlined_subroutine}. Η ιδιότητα
+\lstinline{DW_AT_abstract_origin} ορίζει το offset στο οποίο βρίσκεται η δήλωση
+της δήλωσης της συνάρτησης, σε αυτή την περίπτωση $\mathtt{0x1dfa144}$, το
+οποίο αντιστοιχεί στο DIE της δήλωσης της \lstinline{vfs_freevnodes_dec()}
+(βλέπε Listing \ref{inlinedecl}).
 
 <++>
 
@@ -984,21 +1124,189 @@ fbt::malloc:entry
 % TODO
 %	inlinecall, omitrbp
 
+Το DWARF καθορίζει τα όρια κλήσεων με έναν από τους δύο τρόπους:
+
+\begin{itemize}
+	\item Ορίζοντας τις ιδιότητες \lstinline{DW_AT_low_pc} και
+		\lstinline{DW_AT_high_pc}.
+	\item Ορίζοντας την ιδιότητα \lstinline{DW_AT_ranges} όταν το εύρος
+		διευθύνσεων του inline αντιγράφου δεν είναι συνεχόμενο.
+\end{itemize}
+
+Στην πρώτη περίπτωση, το κάτω όριο της θέσης του inline αντιγράφου ορίζεται στο
+\lstinline{DW_AT_low_pc} και το άνω όριο υπολογίζεται προσθέτοντας το
+\lstinline{DW_AT_high_pc} στο \lstinline{DW_AT_low_pc}. Χρησιμοποιώντας ως
+παράδειγμα την συνάρτηση \lstinline{vfs_freevnodes_dec()}, ως συνέχεια της
+ενότητας \ref{dwarf}:
+
+\begin{lstlisting}[caption={DIE με κάτω και άνω όρια PC}, captionpos=b]
+ <3><1dfe45e>: Abbrev Number: 24 (DW_TAG_inlined_subroutine)
+    <1dfe45f>   DW_AT_abstract_origin: <0x1dfa144>
+    <1dfe463>   DW_AT_low_pc      : 0xffffffff80cf701d
+    <1dfe46b>   DW_AT_high_pc     : 0x38
+    <1dfe46f>   DW_AT_call_file   : 1
+    <1dfe470>   DW_AT_call_line   : 3458
+    <1dfe472>   DW_AT_call_column : 5
+\end{lstlisting}
+
+Χρησιμοποιώντας τον τύπο που αναφέρθηκε στην προηγούμενη παράγραφο, έχουμε τα
+παρακάτω όρια:
+
+\begin{equation}
+\begin{split}
+	Bound_{low} =  PC_{low} = \mathtt{0xffffffff80cf701d} \\
+	Bound_{high} = PC_{low} + PC_{high} = \mathtt{0xffffffff80cf701d} +
+	\mathtt{0x38} = \\ \mathtt{0xffffffff80cf7055}
+\end{split}
+\end{equation}
+
+Η δεύτερη περίπτωση είναι λίγο πιο περίπλοκη. Ας υποθέσουμε το παρακάτω DIE
+ενός inline αντιγράφου της \lstinline{vfs_freevnodes_dec()} που έχει την
+ιδιότητα \lstinline{DW_AT_ranges}:
+
+\begin{lstlisting}[caption={DIE με όρια \lstinline{DW_AT_ranges}}, captionpos=b]
+ <3><1dfd2e2>: Abbrev Number: 58 (DW_TAG_inlined_subroutine)
+    <1dfd2e3>   DW_AT_abstract_origin: <0x1dfa144>
+    <1dfd2e7>   DW_AT_ranges      : 0x1f1290
+    <1dfd2eb>   DW_AT_call_file   : 1
+    <1dfd2ec>   DW_AT_call_line   : 3405
+    <1dfd2ee>   DW_AT_call_column : 3
+\end{lstlisting}
+
+Η ιδιότητα \lstinline{DW_AT_ranges} αναφέρεται στην ενότητα
+\lstinline{.debug_ranges} που βρίσκεται εντός των debug αρχείων και μπορεί να
+εμφανισθεί τρέχοντας την εντολή \lstinline{dwarfdump -N <file>}. Αναζητώντας
+για την παραπάνω τιμή \lstinline{DW_AT_ranges} $\mathtt{0x1f1290}$, βρίσκουμε
+την αντίστοιχη ομάδα εύρους:
+
+\begin{lstlisting}[caption={Παράδειγμα \lstinline{DW_AT_ranges}}, captionpos=b]
+Ranges group 38809:
+ranges: 3 at .debug_ranges offset 2036368 (0x001f1290) (48 bytes)
+[ 0] range entry    0x000025c8 0x000025f9
+[ 1] range entry    0x0000261a 0x00002621
+[ 2] range end      0x00000000 0x00000000
+\end{lstlisting}
+
+Όλες οι γραμμές «range entry» αντιστοιχούν σε διαφορετικά εύρη διευθύνσεων στα
+οποία έχει χωριστεί το inline αντίγραφο, συνήθως ως αποτέλεσμα πρόωρων return.
+Τα όρια κλήσεων υπολογίζονται προσθέτοντας κάθε τιμή των «range entries» στο
+κάτω όριο (\lstinline{DW_AT_low_pc}) του root DIE, δηλαδή του DIE ανώτατου
+επιπέδου, που αντιστοιχεί στο αρχείο εντός του οποίου είναι υλοποιημένη η
+inline συνάρτηση:
+
+\begin{lstlisting}[caption={DIE μονάδας μεταγλώττισης}, captionpos=b]
+ <0><1dee9fb>: Abbrev Number: 1 (DW_TAG_compile_unit)
+    <1dee9fc>   DW_AT_producer    : (indirect string) FreeBSD clang version 13.0.0 (git@github.com:llvm/llvm-project.git llvmorg-13.0.0-0-gd7b669b3a303)
+    <1deea00>   DW_AT_language    : 12	(C99)
+    <1deea02>   DW_AT_name        : (indirect string) /usr/src/sys/kern/vfs_subr.c
+    <1deea06>   DW_AT_stmt_list   : 0x6cb448
+    <1deea0a>   DW_AT_comp_dir    : (indirect string) /usr/obj/usr/src/amd64.amd64/sys/GENERIC
+    <1deea0e>   DW_AT_low_pc      : 0xffffffff80cf4020
+    <1deea16>   DW_AT_high_pc     : 0xde3d
+\end{lstlisting}
+
+Προσθέτοντας τα range entries στο κάτω όριο του root DIE
+($\mathtt{0xffffffff80cf4020}$), έχουμε τα παρακάτω όρια κλήσης του inline
+αντιγράφου:
+
+Πρώτο range entry:
+
+\begin{equation}
+\begin{split}
+	Bound0_{low} = Root_{lowpc} + Range0_{low} =
+	\mathtt{0xffffffff80cf4020} + \mathtt{0x000025c8} = \\
+	\mathtt{0xffffffff80cf65e8} \\
+	Bound0_{high} = Root_{lowpc} + Range0_{high} =
+	\mathtt{0xffffffff80cf4020} + \mathtt{0x000025f9} = \\
+	\mathtt{0xffffffff80cf6619}
+\end{split}
+\end{equation}
+
+Δεύτερο range entry:
+
+\begin{equation}
+\begin{split}
+	Bound1_{low} = Root_{lowpc} + Range1_{low} =
+	\mathtt{0xffffffff80cf4020} + \mathtt{0x0000261a} = \\
+	\mathtt{0xffffffff80cf663a} \\
+	Bound1_{high} = Root_{lowpc} + Range1_{high} =
+	\mathtt{0xffffffff80cf4020} + \mathtt{0x00002621} = \\
+	\mathtt{0xffffffff80cf6641}
+\end{split}
+\end{equation}
+
+Το $Bound0_{low}$ είναι το σημείο \lstinline{entry}, και τα $Bound0_{high}$ και
+$Bound1_{high}$ τα σημεία \lstinline{return}.
+
 <++>
 
 \subsubsection{Εύρεση καλούσας συνάρτησης}
+
+Αφού έχουν υπολογισθεί τα όρια κλήσεων των inline αντιγράφων, η libdtrace
+μπορεί να προχωρήσει στην εύρεση του ονόματος των καλούντων συναρτήσεων αυτών
+των αντιγράφων. Τα ονόματα αυτά χρειάζονται για την δημιουργία
+\lstinline{kinst} probes. Αυτό γίνεται βρίσκοντας εντός ποιού συμβόλου ELF
+βρίσκονται τα όρια κλήσεων, όπως εκφράζεται από την παρακάτω συνθήκη:
+
+\[
+	Sym_{low} \leq Inline_{low} \leq Inline_{high} \leq Sym_{high}
+\]
+
+% TODO https://margiolis.net/en/w/dwarf_inline/#inlinecall
 
 <++>
 
 \subsubsection{Υπολογισμός των offsets \lstinline{entry} και \lstinline{return}}
 
+Αυτό είναι το τελευταίο βήμα που πρέπει να ακολουθήσει η libdtrace προκειμένου
+να μετατρέψει το probe inline συνάρτησης σε \lstinline{kinst} probe. Εδώ
+βρίσκει τα όρια των καλούνων συναρτήσεων μέσω των πληροφοριών ELF και,
+χρησιμοποιώντας τα όρια των inline αντιγράφων, υπολογίζει τα ακριβή
+\lstinline{entry} ή \lstinline{return} offsets.
+
+Θεωρητικά, τα \lstinline{entry} και \lstinline{return} offsets θα υπολογίζονταν
+απλώς ως εξής:
+
+\[
+	Entry = Inline_{low} - Caller_{low}
+\]
+\[
+	Return = Inline_{high} - Caller_{low}
+\]
+
+Ωστόσο, προκύπτει ότι υπάρχουν πολλαπλά προβλήματα που περιπλέκουν τους
+υπολογισμούς.
+
+% TODO https://margiolis.net/en/w/kinst_inline/#heuristic-entry-return
+
 <++>
+
+Τέλος, τα offsets που υπολογίσθηκαν χρησιμοποιούνται για την δημιουργία
+κανονικών \lstinline{kinst} probes της μορφής
+\lstinline{kinst::<function>:<instruction>}:
+
+\begin{lstlisting}[caption={Μετατροπή inline probe σε κανονικό}, captionpos=b]
+# dtrace -dn 'kinst::cam_iosched_has_more_trim:entry'
+kinst::cam_iosched_get_trim:13,
+kinst::cam_iosched_next_bio:13,
+kinst::cam_iosched_schedule:40
+{
+}
+
+dtrace: description 'kinst::cam_iosched_has_more_trim:entry ' matched 4 probes
+CPU     ID                    FUNCTION:NAME
+  0  81502          cam_iosched_schedule:40
+  0  81501          cam_iosched_next_bio:13
+  2  81502          cam_iosched_schedule:40
+  1  81502          cam_iosched_next_bio:13
+  1  81503          cam_iosched_schedule:40
+^C
+\end{lstlisting}
 
 \section{Πειράματα}
 
 % TODO
 % Περιβάλλον εκτέλεσης
-% See paper, slides, articles
 % how to compile (buildtrace)
 
 <++>
@@ -1008,7 +1316,7 @@ fbt::malloc:entry
 <++>
 
 % TODO
-% Sort and cleanup
+% Sort, cleanup, add more for everything that can be cited and cite them
 
 \pagebreak
 \renewcommand{\refname}{Βιβλιογραφία}

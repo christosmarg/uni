@@ -17,20 +17,20 @@
 \contentsline {subsection}{\numberline {4.1}Χρήση}{8}{subsection.4.1}%
 \contentsline {subsection}{\numberline {4.2}Γιατί είναι χρήσιμο κάτι τέτοιο;}{9}{subsection.4.2}%
 \contentsline {subsection}{\numberline {4.3}Ενορχήστρωση εντολών assembly}{9}{subsection.4.3}%
-\contentsline {subsection}{\numberline {4.4}«Τραμπολίνο»}{9}{subsection.4.4}%
-\contentsline {subsubsection}{\numberline {4.4.1}Εσωτερική διάταξη}{10}{subsubsection.4.4.1}%
-\contentsline {subsubsection}{\numberline {4.4.2}Σημειώσεις υλοποίησης για x86-64}{10}{subsubsection.4.4.2}%
-\contentsline {subsubsection}{\numberline {4.4.3}Σημειώσεις υλοποίησης για ARM64 και RISC-V}{11}{subsubsection.4.4.3}%
-\contentsline {subsection}{\numberline {4.5}Παρακολούθηση inline συναρτήσεων}{12}{subsection.4.5}%
-\contentsline {subsubsection}{\numberline {4.5.1}Τι είναι inline συναρτήσεις}{13}{subsubsection.4.5.1}%
-\contentsline {subsubsection}{\numberline {4.5.2}Γιατί είναι δύσκολη η παρακολούθηση inline συναρτήσεων}{13}{subsubsection.4.5.2}%
-\contentsline {subsubsection}{\numberline {4.5.3}Πως λύνει ο kinst αυτό το πρόβλημα}{13}{subsubsection.4.5.3}%
-\contentsline {subsubsection}{\numberline {4.5.4}Πρότυπο DWARF}{13}{subsubsection.4.5.4}%
-\contentsline {subsubsection}{\numberline {4.5.5}Πρότυπο ELF}{14}{subsubsection.4.5.5}%
-\contentsline {subsubsection}{\numberline {4.5.6}Υπολογισμός ορίων κλήσεων}{14}{subsubsection.4.5.6}%
-\contentsline {subsubsection}{\numberline {4.5.7}Εύρεση καλούσας συνάρτησης}{14}{subsubsection.4.5.7}%
-\contentsline {subsubsection}{\numberline {4.5.8}Υπολογισμός των offsets \lstinline {entry} και \lstinline {return}}{14}{subsubsection.4.5.8}%
-\contentsline {section}{\numberline {5}Πειράματα}{15}{section.5}%
-\contentsline {section}{\numberline {6}Συμπεράσματα}{15}{section.6}%
-\contentsline {section}{\numberline {7}Βιβλιογραφία}{16}{section.7}%
-\contentsline {section}{\numberline {8}Παράρτημα}{17}{section.8}%
+\contentsline {subsection}{\numberline {4.4}«Τραμπολίνο»}{10}{subsection.4.4}%
+\contentsline {subsubsection}{\numberline {4.4.1}Εσωτερική διάταξη}{11}{subsubsection.4.4.1}%
+\contentsline {subsubsection}{\numberline {4.4.2}Σημειώσεις υλοποίησης για x86-64}{11}{subsubsection.4.4.2}%
+\contentsline {subsubsection}{\numberline {4.4.3}Σημειώσεις υλοποίησης για ARM64 και RISC-V}{12}{subsubsection.4.4.3}%
+\contentsline {subsection}{\numberline {4.5}Παρακολούθηση inline συναρτήσεων}{13}{subsection.4.5}%
+\contentsline {subsubsection}{\numberline {4.5.1}Τι είναι inline συναρτήσεις}{14}{subsubsection.4.5.1}%
+\contentsline {subsubsection}{\numberline {4.5.2}Γιατί είναι δύσκολη η παρακολούθηση inline συναρτήσεων}{14}{subsubsection.4.5.2}%
+\contentsline {subsubsection}{\numberline {4.5.3}Πως λύνει ο kinst αυτό το πρόβλημα}{14}{subsubsection.4.5.3}%
+\contentsline {subsubsection}{\numberline {4.5.4}Πρότυπο DWARF}{14}{subsubsection.4.5.4}%
+\contentsline {subsubsection}{\numberline {4.5.5}Πρότυπο ELF}{16}{subsubsection.4.5.5}%
+\contentsline {subsubsection}{\numberline {4.5.6}Υπολογισμός ορίων κλήσεων}{16}{subsubsection.4.5.6}%
+\contentsline {subsubsection}{\numberline {4.5.7}Εύρεση καλούσας συνάρτησης}{18}{subsubsection.4.5.7}%
+\contentsline {subsubsection}{\numberline {4.5.8}Υπολογισμός των offsets \lstinline {entry} και \lstinline {return}}{18}{subsubsection.4.5.8}%
+\contentsline {section}{\numberline {5}Πειράματα}{19}{section.5}%
+\contentsline {section}{\numberline {6}Συμπεράσματα}{19}{section.6}%
+\contentsline {section}{\numberline {7}Βιβλιογραφία}{20}{section.7}%
+\contentsline {section}{\numberline {8}Παράρτημα}{21}{section.8}%
