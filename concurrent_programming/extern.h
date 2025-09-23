@@ -20,18 +20,14 @@ static inline const char *move2str(int);
 static inline int
 str2move(const char *str)
 {
-	int move;
-
 	if (strcmp(str, "rock") == 0)
-		move = MOVE_ROCK;
+		return (MOVE_ROCK);
 	else if (strcmp(str, "paper") == 0)
-		move = MOVE_PAPER;
+		return (MOVE_PAPER);
 	else if (strcmp(str, "scissor") == 0)
-		move = MOVE_SCISSOR;
+		return (MOVE_SCISSOR);
 	else
-		move = -1;
-
-	return (move);
+		return (-1);
 }
 
 static inline const char *

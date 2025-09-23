@@ -1,0 +1,139 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[greek,english]{babel}
+\usepackage{alphabeta}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{mathtools}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{siunitx}
+\usepackage[nottoc,numbib]{tocbibind}
+\usepackage[margin=0.5in]{geometry}
+\usepackage[backend=bibtex]{biblatex}
+
+\lstset {
+        basicstyle=\ttfamily,
+        columns=fullflexible,
+        breaklines=true,
+        keepspaces=true,
+	showstringspaces=false
+}
+
+\title{Διπλωματική Εργασία
+\linebreak
+\linebreak
+Μελέτη και ανάπτυξη τεχνικών για την παρακολούθηση και την αποσφαλμάτωση της
+εκτέλεσης εντολών σε υπολογιστικά συστήματα}
+\author{Χρήστος Μαργιώλης \\ Α.Μ. 19390133}
+\date{}
+
+\begin{document}
+
+\begin{titlepage}
+        \maketitle
+        \begin{figure}[t!]
+        \begin{center}
+        \includegraphics[scale=0.3]{./res/uniwalogo.png} \\
+        \Large
+	\textbf{Πανεπιστήμιο Δυτικής Αττικής} \\
+        \large
+	Σχολή Μηχανικών \\
+        Τμήμα Μηχανικών Πληροφορικής και Υπολογιστών \\
+        \end{center}
+        \end{figure}
+        \begin{center}
+	Εισηγητής: Παναγιώτης Καρκαζής % TODO βαθμίδα
+        \end{center}
+\end{titlepage}
+
+\shipout\null
+
+\begin{center}
+Διπλωματική Εργασία
+\linebreak
+\linebreak
+Μελέτη και ανάπτυξη τεχνικών για την παρακολούθηση και την αποσφαλμάτωση της
+εκτέλεσης εντολών σε υπολογιστικά συστήματα
+\linebreak
+\linebreak
+Χρήστος Μαργιώλης
+\linebreak
+Α.Μ. 19390133
+\end{center}
+
+Εισηγητής:
+
+\begin{center}
+Παναγιώτης Καρκαζής % TODO βαθμίδα
+\end{center}
+
+Εξεταστική επιτροπή:
+
+\begin{center}
+FILLME % TODO
+\linebreak
+\linebreak
+Ημερομηνία εξέτασης: FILLME % TODO
+\end{center}
+
+\pagebreak
+\shipout\null
+
+\begin{center}
+\textbf{Δήλωση συγγραφέα διπλωματικής εργασίας}
+\end{center}
+
+% TODO
+
+\begin{center}
+Ο Δηλών
+
+% TODO υπογραφή
+\end{center}
+
+\pagebreak
+\shipout\null
+
+\begin{center}
+\textbf{Ευχαριστίες}
+\end{center}
+
+% TODO
+
+\pagebreak
+\shipout\null
+
+\begin{center}
+\textbf{Περίληψη}
+\end{center}
+
+Η εργασία αποσκοπεί στην μελέτη τεχνικών που χρησιμοποιούνται στην ανάλυση και
+αποσφαλμάτωση λογισμικού μέσω της καταγραφής και παρακολούθησης των εντολών που
+εκτελούνται σε ένα επεξεργαστή. Στο πλαίσιο της διπλωματικής θα σχεδιαστεί και
+θα αναπτυχθεί επέκταση του εργαλείου DTrace η οποία θα παρέχει την δυνατότητα
+παρακολούθησης οποιασδήποτε μεμονωμένης εντολής assembly εντός μιας δεδομένης
+συνάρτησης του πυρήνα του λειτουργικού συστήματος FreeBSD.
+% TODO improve
+
+\begin{center}
+\textbf{Abstract}
+\end{center}
+
+% TODO
+
+\pagebreak
+
+\renewcommand{\contentsname}{Περιεχόμενα}
+\tableofcontents
+\pagebreak
+
+\section{Εισαγωγή}
+
+% TODO
+
+\renewcommand{\refname}{Βιβλιογραφία}
+\begin{thebibliography}{00}
+\end{thebibliography}
+
+\end{document}
