@@ -11,60 +11,66 @@ enum Color {
 	LAST
 };
 
-/* TODO get player name */
-Engine::Engine(const char *mapfile, const char *scorefile)
+Engine::Engine(const char *mapfile, const char *scorefile, const char *name)
 {
+	/* 
+	 * Initialize curses(3) first so we can get the terminal's dimensions
+	 * and use them in `load_map`.
+	 */
 	if (!init_curses())
 		throw std::runtime_error("init_curses failed");
+
 	/* 
-	 * We'll use exceptions here because we want to display a useful
-	 * error message since `load_map` and `Score`'s constructor
-	 * have many points of failure. If we do catch an exception,
-	 * we'll just "forward" it to `main`.
+	 * We'll use std::runtime_error exceptions here because we 
+	 * want to display a useful error message since `load_map` 
+	 * and `Score`'s constructor have many points of failure. 
+	 * If we do catch an exception, we'll just "forward" it
+	 * to `main`.
 	 */
 	try {
 		load_map(mapfile);
-		score = new Score(scorefile);
+		score = new Score(scorefile, name);
 	} catch (const std::ios_base::failure& e) {
+		/* 
+		 * Kill the curses window, otherwise the terminal output
+		 * will be messed up.
+		 */
+		(void)endwin();
 		throw std::runtime_error("error: " + std::string(e.what()));
 	} catch (const std::runtime_error& e) {
+		(void)endwin();
 		throw std::runtime_error("error: " + std::string(e.what()));
 	}
-
-	if (!init_gamewin())
+	if (!init_gamewin()) {
+		(void)endwin();
 		throw std::runtime_error("init_gamewin failed");
-	init_entities();
-	prch = nullptr;
+	}
+	reset_entities();
 
-	/* Initialize messages for the popup windows. */
-	ctrls = {
-		"Up       Move up",
-		"Down     Move down",
-		"Left     Move left",
-		"Right    Move right",
-		"ESC      Quit",
-		"s        High Scores",
-		"c        Controls menu",
-		"Press any key to quit the menu",
-	};
-	rules = {
-		"                      Babis Potter",
-		"--------------------------------------------------------",
-		"The objective is to collect all the gems without getting",
-		"caught by the Gnomes and Traals!",
-		"",
-		"You can always see what controls are available by",
-		"pressing the 'c' key.",
-		"               Press any key to continue",
-	};
-
+	init_popup_msgs();
 	/* Display a welcome message. */
-	popup(rules);
+	popup(p_rules);
 	f_running = 1;
 }
 
-
 Engine::~Engine()
+{
+	delete score;
+	free_entities();
+	map.clear();
+	p_ctrls.clear();
+	p_rules.clear();
+	p_win.clear();
+	p_lose.clear();
+	(void)delwin(gw);
+	(void)endwin();
+}
+
+/*
+ * Clean up all moving entities and gems.
+ */
+void
+Engine::free_entities()
 {
 	player = nullptr;
 	for (auto&& e : entities)
@@ -73,16 +79,17 @@ Engine::~Engine()
 		delete g;
 	if (prch != nullptr)
 		delete prch;
-	delete score;
-	map.clear();
-	colors.clear();
-	ctrls.clear();
-	rules.clear();
-	(void)delwin(gw);
-	(void)endwin();
+	entities.clear();
+	gems.clear();
 }
 
-/* Private methods */
+void
+Engine::reset_entities()
+{
+	free_entities();
+	init_entities();
+	prch = nullptr;
+}
 
 /* 
  * Initialize curses(3) environment 
@@ -90,28 +97,45 @@ Engine::~Engine()
 bool
 Engine::init_curses()
 {
+	std::vector<int> colors;
+
 	if (!initscr())
 		return false;
+	/* Don't echo keypresses. */
 	noecho();
+	/* Disable line buffering. */
 	cbreak();
+	/* Hide the cursor. */
 	curs_set(false);
-	/* Allow arrow key presses. */
+	/* Allow arrow-key usage. */
 	keypad(stdscr, true);
-	/* ESC has a small delay after it's pressed, so remove it. */
+	/* ESC has a small delay after it's pressed, so we'll remove it. */
 	set_escdelay(0);
-	/* Don't wait for a keypress, just continue if there's nothing. */
+	/* 
+	 * Don't wait for a keypress -- just continue if there's no keypress
+	 * within 1000 milliseconds. We could set the delay to 0 milliseconds,
+	 * but this will most likely burn the CPU.
+	 */
 	timeout(1000);
 	(void)getmaxyx(stdscr, ymax, xmax);
 
-	colors.push_back(COLOR_BLUE);	/* Wall */
-	colors.push_back(COLOR_RED);	/* Path */
-	colors.push_back(COLOR_CYAN);	/* Potter */
-	colors.push_back(COLOR_GREEN);	/* Gnome */
-	colors.push_back(COLOR_YELLOW);	/* Traal */
-	colors.push_back(COLOR_WHITE);	/* Stone */
-	colors.push_back(COLOR_BLACK);	/* Parchment */
+	/* 
+	 * This has to follow the same order as the enum declaration at 
+	 * the top of the file. Sadly, we cannot use C99's designated 
+	 * initialization.
+	 */
+	colors = {
+		COLOR_BLUE,	/* Wall */
+		COLOR_RED,	/* Path */
+		COLOR_CYAN,	/* Potter */
+		COLOR_GREEN,	/* Gnome */
+		COLOR_YELLOW,	/* Traal */
+		COLOR_WHITE,	/* Stone */
+		COLOR_BLACK,	/* Parchment */
+	};
 
 	start_color();
+	/* Use the terminal's colorscheme. */
 	use_default_colors();
 	for (int i = 1; i < Color::LAST; i++)
 		(void)init_pair(i, colors[i-1], -1);
@@ -119,6 +143,10 @@ Engine::init_curses()
 	return true;
 }
 
+/*
+ * Initiliaze the game window. Having a seperate window for the game
+ * will make it easier to handle the map and player input.
+ */
 bool
 Engine::init_gamewin()
 {
@@ -186,7 +214,7 @@ Engine::load_map(const char *mapfile)
 	f.close();
 	/* 
 	 * Since we got here, we know that number of columns is the same for
-	 * every row, so we can now just take a random string and calculate its
+	 * every row -- we can now just take a random string and calculate its
 	 * size in order to get the map's width.
 	 */
 	w = map[0].length();
@@ -209,6 +237,9 @@ Engine::collides_with_wall(int x, int y) const
 	return true;
 }
 
+/*
+ * Calculate a new position for an entity or gem.
+ */
 void
 Engine::calc_pos(int *x, int *y)
 {
@@ -216,8 +247,8 @@ Engine::calc_pos(int *x, int *y)
 		*x = rand() % w;
 		*y = rand() % h;
 		/*
-		 * Don't spawn an enemy at the same coordinates with 
-		 * another entity.
+		 * Don't spawn at the same coordinates with another entity 
+		 * or gem.
 		 */
 		for (const auto& e : entities)
 			if (*x == e->get_x() && *y == e->get_y())
@@ -257,6 +288,8 @@ Engine::init_entities()
 		calc_pos(&x, &y);
 		gems.push_back(new Gem(x, y, SYM_STONE));
 	}
+
+	/* Potter is *always* the first entry in `entities`. */
 	player = (Potter *)entities[0];
 }
 
@@ -272,7 +305,7 @@ Engine::spawn_parchment()
 /* 
  * Draw a popup window with the `lines` argument as contents.
  */
-void
+int
 Engine::popup(const std::vector<std::string>& lines) const
 {
 	WINDOW *win;
@@ -281,6 +314,7 @@ Engine::popup(const std::vector<std::string>& lines) const
 	};
 	std::size_t vecsz;
 	int wr, wc, wy, wx;
+	int ch;
 
 	vecsz = lines.size();
 	/* 
@@ -296,7 +330,7 @@ Engine::popup(const std::vector<std::string>& lines) const
 	wx = CENTER(xmax, wc);
 	wy = CENTER(ymax, wr);
 	if ((win = newwin(wr, wc, wy, wx)) == NULL)
-		return;
+		return ERR;
 	werase(win);
 	box(win, 0, 0);
 	for (std::size_t i = 0; i < vecsz; i++) {
@@ -310,35 +344,25 @@ Engine::popup(const std::vector<std::string>& lines) const
 			mvwprintw(win, i + 2, 1, lines[i].c_str());
 	}
 	wrefresh(win);
-	(void)wgetch(win);
+
+	/* Save the key we pressed -- it's useful in `round_end`. */
+	ch = wgetch(win);
 	werase(win);
 	wrefresh(win);
 	(void)delwin(win);
+
+	return ch;
 }
-
-void
-Engine::calc_dist(std::map<int, int>& dists, int ex, int ey, int dir) const
-{
-	int px, py, dx, dy, d;
-
-	px = player->get_x();
-	py = player->get_y();
-	dx = ex - px;
-	dy = ey - py;
-	d = floor(sqrt(dx * dx + dy * dy));
-	dists.insert(std::pair<int, int>(d, dir));
-}
-
-/* Public methods */
 
 void
 Engine::kbd_input()
 {
 	int key, dir, newx, newy;
 
-	dir = 0;
 	newx = player->get_x();
 	newy = player->get_y();
+	/* g++ was complaining `dir` wasn't initialized. */
+	dir = 0;
 	
 	switch (key = getch()) {
 	case KEY_LEFT:
@@ -358,15 +382,23 @@ Engine::kbd_input()
 		dir = Movable::Direction::DOWN;
 		break;
 	case 'c':
-		popup(ctrls);
+		(void)popup(p_ctrls);
 		return;
 	case 's':
-		popup(score->scores_strfmt());
+		(void)popup(score->scores_strfmt());
+		break;
+	case 'r':
+		/* Reset the score as well. */
+		upd_score(-score->get_curscore());
+		reset_entities();
 		break;
 	case ESC: /* FALLTHROUGH */
-		/* FIXME: what? */
 		f_running = 0;
 	default:
+		/* 
+		 * If no key was pressed, just return -- we
+		 * don't want to move the player.
+		 */
 		return;
 	}
 
@@ -374,7 +406,38 @@ Engine::kbd_input()
 		player->set_newpos(dir, wxmax, wymax);
 }
 
-/* FIXME: move asynchronously */
+/* 
+ * Calculate the Eucledean 2D distance from an enemy to the player.
+ *
+ * Each new distance calculated is added to the `dists` map, which
+ * contains the distance and also a direction associated with it.
+ */
+void
+Engine::calc_dist(std::map<int, int>& dists, int ex, int ey, int dir) const
+{
+	int px, py, dx, dy, d;
+
+	px = player->get_x();
+	py = player->get_y();
+	dx = ex - px;
+	dy = ey - py;
+	d = floor(sqrt(dx * dx + dy * dy));
+	dists.insert(std::pair<int, int>(d, dir));
+}
+
+/*
+ * Definitely not a sophisticated pathfinding algorithm, but the way it
+ * works is this:
+ *
+ * 1. For each possible direction (west, east, north, south), see if
+ *    a movement is possible in the first place -- i.e we won't hit a
+ *    wall.
+ * 2. Calculate the Eucledean distance for each possible direction
+ *    and save it in a map (distance, direction).
+ * 3. Sort the map, and get the minimum distance, this is the shortest
+ *    path to the player.
+ * 4. Get the direction from the minimum pair in the map and go there.
+ */
 void
 Engine::enemies_move()
 {
@@ -389,6 +452,7 @@ Engine::enemies_move()
 			continue;
 		ex = e->get_x();
 		ey = e->get_y();
+		/* Clear previous entity's data. */
 		dists.clear();
 		/* West */
 		if (!collides_with_wall(ex - 1, ey))
@@ -403,6 +467,10 @@ Engine::enemies_move()
 		if (!collides_with_wall(ex, ey + 1))
 			calc_dist(dists, ex, ey + 1, Movable::Direction::DOWN);
 
+		/* 
+		 * If `dists` is not empty, it means we have found at
+		 * least one valid movement.
+		 */
 		if (!dists.empty()) {
 			auto min = std::min_element(dists.begin(),
 			    dists.end(), distcmp);
@@ -411,7 +479,9 @@ Engine::enemies_move()
 	}
 }
 
-/* TODO: define constants for scores */
+/*
+ * See if the player collides with either an enemy, gem or the parchment. 
+ */
 void
 Engine::collisions()
 {
@@ -420,38 +490,89 @@ Engine::collisions()
 	px = player->get_x();
 	py = player->get_y();
 
+	/* Collision with an enemy. */
 	for (const auto& e : entities) {
 		x = e->get_x();
 		y = e->get_y();
-		if (e != player && px == x && py == y) {
-			/* TODO: Handle this. */
-		}
+		if (e != player && px == x && py == y)
+			round_end(false);
 	}
+
+	/* Collision with a gem. */
 	for (auto& g : gems) {
 		x = g->get_x();
 		y = g->get_y();
 		if (px == x && py == y) {
-			upd_score(10);
+			upd_score(SCORE_STONE);
 			delete g;
+			/* If we hit a gem, remove it from the vector. */
 			gems.erase(std::remove(gems.begin(), gems.end(), g),
 			    gems.end());
 		}
 	}
+
+	/* 
+	 * The parchment has been spawned, if we collide with
+	 * it, we won the round.
+	 */
 	if (gems.empty() && prch != nullptr) {
 		x = prch->get_x();
 		y = prch->get_y();
 		if (px == x && py == y) {
-			upd_score(100);
-			/* TODO: YOU WON + delete + reset */
+			upd_score(SCORE_PARCHMENT);
+			delete prch;
+			round_end(true);
 		}
+	/*
+	 * If the `gems` vector is empty, we need to spawn the
+	 * parchment.
+	 */
 	} else if (gems.empty() && prch == nullptr)
 		spawn_parchment();
 }
 
+/*
+ * Update the score after each round.
+ */
 void
 Engine::upd_score(int n)
 {
 	*score << score->get_curname() << score->get_curscore() + n;
+}
+
+/*
+ * Let the user choose if he wants to start a new round or exit the game.
+ */
+void
+Engine::round_end(bool is_win)
+{
+	int ch;
+
+	/* 
+	 * If we lost, reset the score in case the user starts a new
+	 * round. We keep the score only if the player wins the round.
+	 */
+	if (!is_win)
+		upd_score(-score->get_curscore());
+	/* If we won, increase the number of enemies. */
+	else
+		nenemies++;
+
+	/* 
+	 * Get out of here only if the user presses 'n' or 'q'
+	 * because it's very easy to accidentally mislick and
+	 * exit the game.
+	 */
+	for (;;) {
+		switch (ch = popup(is_win ? p_win : p_lose)) {
+		case 'n':
+			reset_entities();
+			return;
+		case 'q':
+			f_running = 0;
+			return;
+		}
+	}
 }
 
 void
@@ -471,7 +592,7 @@ Engine::redraw() const
 	mvprintw(0, xmax - strlen(msg_opts), msg_opts);
 	mvhline(1, 0, ACS_HLINE, xmax);
 
-	/* Draw everything */
+	/* Draw everything. */
 	wattron(gw, A_REVERSE);
 	draw_map();
 	draw_entities();
@@ -488,6 +609,11 @@ Engine::draw_map() const
 {
 	int color;
 
+	/* 
+	 * Even though the map is stored as a `std::vector<std::string>`,
+	 * we'll loop through it character by character so we can set
+	 * the colors.
+	 */
 	for (const auto& row : map) {
 		for (const auto& c : row) {
 			if (c == SYM_WALL)
@@ -548,4 +674,39 @@ bool
 Engine::is_running() const
 {
 	return f_running;
+}
+
+/* Initialize messages for the popup windows. */
+void
+Engine::init_popup_msgs()
+{
+	p_ctrls = {
+		"Up       Move up",
+		"Down     Move down",
+		"Left     Move left",
+		"Right    Move right",
+		"ESC      Quit",
+		"s        High Scores",
+		"c        Controls menu",
+		"r        Restart game",
+		"Press any key to quit the menu",
+	};
+	p_rules = {
+		"                      Babis Potter",
+		"--------------------------------------------------------",
+		"The objective is to collect all the gems without getting",
+		"caught by the Gnomes and Traals!",
+		"",
+		"You can always see what controls are available by",
+		"pressing the 'c' key.",
+		"               Press any key to continue",
+	};
+	p_win = {
+		"                  You won!",
+		"Press 'n' to play a new round or 'q' to quit.",
+	};
+	p_lose = {
+		"                 You lost!",
+		"Press 'n' to play a new round or 'q' to quit.",
+	};
 }

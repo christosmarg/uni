@@ -1,11 +1,8 @@
-# compiler
-CC = c++
+.POSIX:
 
-# includes and libs
+CC = c++
 INCS = -Iinclude 
 LIBS = -Llib -lncursesw -lm
-
-# flags
 CFLAGS = -std=c++14 -pedantic -Wall -Os ${INCS}
 LDFLAGS = ${LIBS}
 
@@ -36,10 +33,7 @@ ${BIN}: ${OBJ}
 .cc.o:
 	${CC} -c ${CFLAGS} $<
 
-run:
-	./${BIN}
-
 clean:
 	rm -f ${BIN} ${OBJ} *.core
 
-.PHONY: all options clean run
+.PHONY: all options clean

@@ -15,11 +15,11 @@ public class ExcelParser {
 	private final int TARGET_TYPE_CELL = 5;
 	private final int COUNTRIES_ROW = 43;
 	private List<Country> countries;
-	private XSSFRow row;
 	
 	ExcelParser(String path) throws Exception {
 		XSSFWorkbook wbook;
 		XSSFSheet sheet;
+		XSSFRow row;
 		FileInputStream fis;
 		Iterator<Row> rit;
 		String cv = "";
@@ -35,7 +35,7 @@ public class ExcelParser {
 			row = (XSSFRow)rit.next();
 			rownum = row.getRowNum();
 			cv = row.getCell(TARGET_TYPE_CELL).getStringCellValue();
-			if (rownum>= COUNTRIES_ROW && cv.equals(TARGET_TYPE))
+			if (rownum >= COUNTRIES_ROW && cv.equals(TARGET_TYPE))
 				countries.add(read_country(row));
 		}
 		wbook.close();
@@ -65,12 +65,6 @@ public class ExcelParser {
 					fields[i++] = cell.getStringCellValue(); 
 					break;
 				case NUMERIC:
-					/* 
-					 * We'll need another conversion back to
-					 * Integer, but it's easier to do it that
-					 * way than to keep lots of variables
-					 * and hardcode everything.
-					 */
 					n = dtoi(cell.getNumericCellValue());
 					fields[i++] = Integer.toString(n);
 					break;
