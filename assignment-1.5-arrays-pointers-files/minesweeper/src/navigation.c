@@ -37,10 +37,6 @@ void getmv(WINDOW *gameWin, char *move, int *yLoc, int *xLoc, int yMax, int xMax
         case 'd': case 'D':
             mvright(yLoc, xLoc, yMax, xMax);
             break;
-        case 'f': case 'F':
-            break;
-        case '\n': 
-            break;
         default: break;
     }
 }
