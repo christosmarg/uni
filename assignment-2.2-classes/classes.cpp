@@ -41,8 +41,6 @@ class Student
 			delete[] this->grades;
 		}
 
-		friend std::ostream& operator<< (std::ostream& stream, const Student& s); 
-
 		inline const char *get_AM() const {return this->AM;}
 		inline const std::string& get_name() const {return this->name;}
 		inline unsigned int get_semester() const {return this->semester;}

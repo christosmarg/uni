@@ -11,13 +11,13 @@
 class Student
 {
 	private:
-		char *AM;
-		std::string name;
-		Subject **submittedSubjects;
-		unsigned int numSubmittedSubjects;
-		unsigned int semester;
-		unsigned int psubj;
-		float *grades;
+		char *AM;				// AM
+		std::string name;		// Name
+		Subject **ssubj;		// Submitted subjects
+		unsigned int nssubj;	// Number of submitted subjects
+		unsigned int semester;	// Current semester
+		unsigned int psubj;		// Passed subjects
+		float *grades;			// Grades
 		int size;
 
 	public:
@@ -28,7 +28,6 @@ class Student
 		Student(const Student& s);
 		~Student();
 
-		friend std::ostream& operator<< (std::ostream& stream, const Student& s);
 		void operator+= (Subject *s);
 		Student operator= (const Student& s);
 
@@ -44,17 +43,17 @@ class Student
 		inline unsigned int get_semester(void) const {return this->semester;}
 		inline unsigned int get_psubj(void) const {return this->psubj;}
 		inline float *get_grades(void) const {return (this->psubj > 0) ? this->grades : nullptr;}
-		inline Subject **get_submitted_subjects(void) const {return this->submittedSubjects;}
-		inline unsigned int get_num_submitted_subjects(void) const {return this->numSubmittedSubjects;}
+		inline Subject **get_submitted_subjects(void) const {return this->ssubj;}
+		inline unsigned int get_num_submitted_subjects(void) const {return this->nssubj;}
 
 		inline void set_AM(const char *AM) {this->AM = convert_AM(AM);}
 		inline void set_name(const std::string& name) {this->name = name;}
 		inline void set_semester(unsigned int semester) {this->semester = semester;}
 		inline void set_psubj(unsigned int psubj) {this->psubj = psubj;}
 		inline void set_grades(float *grades) {this->grades = convert_PSG(grades);}
-		inline void set_num_submitted_subjects(unsigned int numSubmittedSubjects) {this->numSubmittedSubjects = numSubmittedSubjects;}
+		inline void set_num_submitted_subjects(unsigned int nssubj) {this->nssubj = nssubj;}
 
-		void set_submitted_subjects(Subject **submittedSubjects);
+		void set_submitted_subjects(Subject **ssubj);
 		char *convert_AM(const char *AM);
 		float *convert_PSG(const float *grades);
 		void add_grade(float grade);
