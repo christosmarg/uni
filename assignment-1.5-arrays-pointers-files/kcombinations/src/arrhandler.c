@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "arrhandler.h"
-#include "fcombinations.h"
+#include "kcombinations.h"
 
 
 int *fill_array(int N)

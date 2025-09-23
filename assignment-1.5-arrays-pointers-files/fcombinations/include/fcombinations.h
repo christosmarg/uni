@@ -3,31 +3,22 @@
 
 #include <stdbool.h>
 
-void read_file();
+#define COMBSN 6
 
-int get_n();
-int get_k();
-int *fill_array(int);
-bool exists_in_array(int *, int, int);
-int *sort(int *);
+void read_file();
 
 void x_pair(int *, int *);
 void y_pair(int *, int *);
 
-void combinations(int *, int, int, int, int);
-int even_calc(int *);
-bool belongs_x(int, int, int);
-int sum_calc(int *);
-bool belongs_y(int, int, int);
-void print_combs(int *);
-int combinations_count(int);
-int factorial(int);
-int sum_comb_calc();
+void print_combs(int *, int, int, int, int, int);
+void combinations(int *, int *, int, int, int, int *, int *, int *, int, int, int, int);
 
-void print();
-int not_printed();
-int not_first_condition();
-int not_second_condition_only();
+bool even_calc(int *, int, int);
+bool sum_comb_calc(int *, int, int);
+
 int frequency();
+long int combinations_count(int);
+long double factorial(int);
+void print_other(int, int, int, int); // add freq
 
 #endif

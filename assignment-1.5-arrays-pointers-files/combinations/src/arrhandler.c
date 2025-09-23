@@ -1,21 +1,17 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include "arrhandler.h"
-#include "ccolors.h"
-
-#define COMBSN 6
+#include "combinations.h"
 
 
 int *fill_array(int N)
 {
-    int *arr, num, i = 0;
-
-    arr = (int *)malloc(N * sizeof(int));
+    int num, i = 0;
+    int *arr = (int *)malloc(N * sizeof(int));
 
     if (arr == NULL)
     {
-        set_color(BOLD_RED);
         printf("Error! Not enough memory, exiting...\n");
-        set_color(STANDARD);
         exit(EXIT_FAILURE);
     }
     else
@@ -80,81 +76,4 @@ void swap(int *a, int *b)
     int temp = *a;
     *a = *b;
     *b = temp;
-}
-
-
-void printarray(int *arr, int N)
-{
-    for (int i = 0; i < N; i++)
-        printf("arr[%d] = %d\n", i, *(arr + i));
-}
-
-int even_calc(int *arr)
-{
-
-}
-
-
-bool belongs_x(int numEven, int x1, int x2)
-{
-
-}
-
-
-int sum_calc(int *arr)
-{
-
-}
-
-
-bool belongs_y(int sumNums, int y1, int y2)
-{
-
-}
-
-
-void print_combs(int *arr)
-{
-    int i;
-
-    for (i = 0; i < COMBSN; i++)
-        printf("%d ", *(arr + i));
-    printf("\n");
-}
-
-
-void print(int N)
-{
-
-}
-
-
-
-int sum_comb_calc()
-{
-
-}
-
-
-int not_printed()
-{
-
-}
-
-
-int not_first_condition()
-{
-
-}
-
-
-int not_second_condition_only()
-{
-
-}
-
-
-int frequency()
-{
-
 }
