@@ -26,7 +26,7 @@ struct foo {
 	pthread_barrier_t bar;
 };
 
-static void *threaded_stuff(void *);
+static void *threaded_callback(void *);
 static void *emalloc(size_t);
 static void usage(void);
 

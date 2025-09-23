@@ -44,10 +44,9 @@ public class ExcelParser {
 	
 	private Country read_country(XSSFRow row) throws Exception {
 		final int MIN_CELLNUM = 7;
-		Country ctry;
 		Iterator<Cell> cit;
 		Cell cell;
-		Integer year = Main.STARTING_YEAR;
+		Integer year = Country.STARTING_YEAR;
 		String[] fields = new String[MIN_CELLNUM];
 		HashMap<Integer, Integer> population = new HashMap<Integer, Integer>();
 		Integer n;
@@ -98,17 +97,13 @@ public class ExcelParser {
 				population.put(year++,
 				    dtoi(cell.getNumericCellValue() * 1000));
 		}
-		ctry = new Country(fields[0], fields[1], fields[2], fields[3],
+		
+		return new Country(fields[0], fields[1], fields[2], fields[3],
 		    fields[4], fields[5], fields[6], population);
-
-		return ctry;
 	}
 	
 	private Integer dtoi(double n) {
-		Double d;
-		
-		d = Double.valueOf(n);
-		return Integer.valueOf(d.intValue());
+		return Integer.valueOf(Double.valueOf(n).intValue());
 	}
 	
 	public List<Country> get_countries() {
