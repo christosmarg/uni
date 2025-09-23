@@ -2,8 +2,8 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 entity fa is port (
-        a, b, cin: in bit;
-        s, cout: out bit
+        a, b, cin: in std_logic;
+        s, cout: out std_logic
 );
 end fa;
 
