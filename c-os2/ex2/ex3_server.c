@@ -33,6 +33,7 @@ static void *emalloc(size_t);
 static void die(const char *);
 
 static char *argv0;
+/* Only gets set if a termination signal is caught. */
 static volatile sig_atomic_t f_quit = 0;
 
 static int
@@ -113,10 +114,11 @@ emalloc(size_t nb)
 	return p;
 }
 
+/* FIXME: clean up resources as well. */
 static void
 die(const char *str)
 {
-	(void)fprintf(stderr, "%s: ", argv0);
+	fprintf(stderr, "%s: ", argv0);
 	perror(str);
 	exit(1);
 }
@@ -124,15 +126,15 @@ die(const char *str)
 static void
 usage(void)
 {
-	(void)fprintf(stderr, "usage: %s [-b backlog] [-s sockfile]\n", argv0);
+	fprintf(stderr, "usage: %s [-b backlog] [-s sockfile]\n", argv0);
 	exit(1);
 }
 
 int
 main(int argc, char *argv[])
 {
-	struct sockaddr_un sun;
 	struct foo *f;
+	struct sockaddr_un sun;
 	struct sigaction sa;
 	char *sockfile = "/tmp/cool.sock";
 	int sfd;
@@ -142,7 +144,15 @@ main(int argc, char *argv[])
 	argv0 = *argv;
 	if ((ch = getopt(argc, argv, "b:s:")) != -1) {
 		switch (ch) {
-		case 'b';
+		case 'b':
+			/* 
+			 * Negative `backlog` value normally requests the
+			 * maximum allowable value (HISTORY section of
+			 * listen(2)'s FreeBSD man page), but it's better to
+			 * not allow it in case the user passes a negative
+			 * value accidentally. Also a value of 0 doesn't make
+			 * any sense, so we don't allow it either.
+			 */
 			if ((backlog = atoi(optarg)) < 1)
 				usage();
 			break;
@@ -188,7 +198,7 @@ main(int argc, char *argv[])
 	f->ntotal = 0;
 
 	for (;;) {
-		/* FIXME: blocked by accept */
+		/* FIXME: blocked by accept(2) */
 		if (f_quit)
 			break;
 		/*
@@ -217,7 +227,8 @@ main(int argc, char *argv[])
 	free(f);
 	/*
 	 * bind(2)'s man page states that the socket should be deleted when
-	 * it's no longer needed.
+	 * it's no longer needed, otherwise it'll stay there even after
+	 * we exit.
 	 */
 	(void)unlink(sockfile);
 

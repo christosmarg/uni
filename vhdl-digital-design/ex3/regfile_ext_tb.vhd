@@ -53,10 +53,15 @@ begin
 
 	process begin
 		s_we <= '1';
+		s_clk <= '1';
+		s_rst <= '1';
+		wait for 250 ns;
+
+		s_we <= '1';
 		s_clk <= '0';
 		s_rst <= '0';
 		s_raddr1 <= "00";
-		s_raddr2 <= "01";
+		s_raddr2 <= "00";
 		s_waddr <= "00";
 		s_a <= "0101";
 		wait for 250 ns;
@@ -70,37 +75,37 @@ begin
 		s_clk <= '0';
 		s_rst <= '0';
 		s_raddr1 <= "01";
-		s_raddr2 <= "10";
+		s_raddr2 <= "01";
 		s_waddr <= "01";
-		s_a <= "1101";
+		s_a <= "1010";
 		wait for 250 ns;
 
 		s_we <= '1';
 		s_clk <= '1';
-		s_rst <= '0';
+		s_rst <= '1';
 		wait for 250 ns;
 
-		s_we <= '0';
+		s_we <= '1';
 		s_clk <= '0';
 		s_rst <= '0';
 		s_raddr1 <= "10";
-		s_raddr2 <= "11";
+		s_raddr2 <= "10";
 		s_waddr <= "10";
-		s_a <= "0010";
+		s_a <= "0000";
 		wait for 250 ns;
 
 		s_we <= '1';
 		s_clk <= '1';
-		s_rst <= '0';
+		s_rst <= '1';
 		wait for 250 ns;
 
 		s_we <= '1';
 		s_clk <= '0';
 		s_rst <= '0';
 		s_raddr1 <= "11";
-		s_raddr2 <= "01";
+		s_raddr2 <= "11";
 		s_waddr <= "11";
-		s_a <= "1001";
+		s_a <= "1111";
 		wait for 250 ns;
 	end process;
 end behav;

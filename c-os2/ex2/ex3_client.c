@@ -39,7 +39,7 @@ emalloc(size_t nb)
 static void
 die(const char *str)
 {
-	(void)fprintf(stderr, "%s: ", argv0);
+	fprintf(stderr, "%s: ", argv0);
 	perror(str);
 	exit(1);
 }
