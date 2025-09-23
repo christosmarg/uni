@@ -30,38 +30,7 @@ AppSystem& AppSystem::operator+= (Manufacturer *man)
 }
 
 template<>
-bool AppSystem::import_data<Manufacturer>(const char *fpath)
-{
-	std::ifstream f;
-	f.exceptions(std::ifstream::badbit);
-	try
-	{
-		std::string strpath(fpath);
-		if (!valid_path(strpath)) throw strpath;
-
-		f.open(fpath);
-		if (f.is_open())
-		{
-			std::string skip;
-			std::getline(f, skip);
-			while (f.good())
-				if (!read_manf(f)) break;
-		}
-		f.close();
-	}
-	catch (const std::string& strpath)
-	{
-		throw std::runtime_error(err_csv(strpath));
-	}
-	catch (const std::ifstream::failure& e)
-	{
-		std::cerr << err_read(fpath) << std::endl << e.what() << std::endl;
-		return false;
-	}
-	return true;
-}
-
-bool AppSystem::read_manf(std::ifstream& f)
+bool AppSystem::parse<Manufacturer>(std::ifstream& f)
 {
 	try
 	{
@@ -82,7 +51,7 @@ bool AppSystem::read_manf(std::ifstream& f)
 }
 
 template<>
-bool AppSystem::import_data<App>(const char *fpath)
+bool AppSystem::import_data<Manufacturer>(const char *fpath)
 {
 	std::ifstream f;
 	f.exceptions(std::ifstream::badbit);
@@ -97,14 +66,7 @@ bool AppSystem::import_data<App>(const char *fpath)
 			std::string skip;
 			std::getline(f, skip);
 			while (f.good())
-			{
-				std::string type;
-				std::getline(f, type, ',');
-				if (type == "Game")
-					if (!read_game(f)) break;
-				if (type == "Office")
-					if (!read_office(f)) break;
-			}
+				if (!parse<Manufacturer>(f)) break;
 		}
 		f.close();
 	}
@@ -120,7 +82,45 @@ bool AppSystem::import_data<App>(const char *fpath)
 	return true;
 }
 
-bool AppSystem::read_game(std::ifstream& f)
+template<>
+bool AppSystem::parse<Office>(std::ifstream& f)
+{
+	try
+	{
+		std::string sn, name, os, manf, price, skip1, skip2;
+		std::getline(f, sn, ',');
+		std::getline(f, name, ',');
+		std::getline(f, os, ',');
+		std::getline(f, manf, ',');
+		std::getline(f, price, ',');
+		std::getline(f, skip1, ',');
+		std::getline(f, skip2, ',');
+		std::vector<std::string> exts =	parse_office_exts(f);
+		
+		if (!manfs.empty())
+		{
+			for (auto& man : manfs)
+			{
+				if (man->get_name() == manf)
+				{
+					apps.push_back(new Office(sn.c_str(), name, os,
+								man, std::stoi(price), exts));
+					break;
+				}
+			}
+		}
+	}
+	catch (const std::ifstream::failure& e)
+	{
+		std::cerr << "Error reading office data." << std::endl <<
+			e.what() << std::endl;
+		return false;
+	}
+	return true;
+}
+
+template<>
+bool AppSystem::parse<Game>(std::ifstream& f)
 {
 	try
 	{
@@ -158,43 +158,46 @@ bool AppSystem::read_game(std::ifstream& f)
 	return true;
 }
 
-bool AppSystem::read_office(std::ifstream& f)
+template<>
+bool AppSystem::import_data<App>(const char *fpath)
 {
+	std::ifstream f;
+	f.exceptions(std::ifstream::badbit);
 	try
 	{
-		std::string sn, name, os, manf, price, skip1, skip2;
-		std::getline(f, sn, ',');
-		std::getline(f, name, ',');
-		std::getline(f, os, ',');
-		std::getline(f, manf, ',');
-		std::getline(f, price, ',');
-		std::getline(f, skip1, ',');
-		std::getline(f, skip2, ',');
-		std::vector<std::string> exts =	read_office_exts(f);
-		
-		if (!manfs.empty())
+		std::string strpath(fpath);
+		if (!valid_path(strpath)) throw strpath;
+
+		f.open(fpath);
+		if (f.is_open())
 		{
-			for (auto& man : manfs)
+			std::string skip;
+			std::getline(f, skip);
+			while (f.good())
 			{
-				if (man->get_name() == manf)
-				{
-					apps.push_back(new Office(sn.c_str(), name, os,
-								man, std::stoi(price), exts));
-					break;
-				}
+				std::string type;
+				std::getline(f, type, ',');
+				if (type == "Game")
+					if (!parse<Game>(f)) break;
+				if (type == "Office")
+					if (!parse<Office>(f)) break;
 			}
 		}
+		f.close();
+	}
+	catch (const std::string& strpath)
+	{
+		throw std::runtime_error(err_csv(strpath));
 	}
 	catch (const std::ifstream::failure& e)
 	{
-		std::cerr << "Error reading office data." << std::endl <<
-			e.what() << std::endl;
+		std::cerr << err_read(fpath) << std::endl << e.what() << std::endl;
 		return false;
 	}
 	return true;
 }
 
-const std::vector<std::string> AppSystem::read_office_exts(std::ifstream& f)
+const std::vector<std::string> AppSystem::parse_office_exts(std::ifstream& f)
 {
 	std::vector<std::string> exts;
 	std::string ext;
