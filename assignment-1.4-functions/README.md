@@ -1,23 +1,30 @@
 # Assignment 1.4: Functions
 
+## Programs
+
+* hanoi-tower
+* menu
+* sine-cos-taylor
+
 ## Execution
 
 * ```program_name``` = program's name
 * ```full_path/``` = full path
-* ```$``` = terminal command (__don't__ copy it)
 
 ### Linux
 
 ```shell
-$ cd full_path/assignment-1.4-functions/program_name # hanoi-tower / menu / sine-cos-taylor
+$ cd full_path/assignment-1.4-functions/program_name
 $ make
 $ make run
 $ make clean # optional
 ```
 
-### Windows
+### Windows (not tested)
 
-__Requirements:__ MinGW gcc compiler
+**Dependencies:**   
+* MinGW gcc compiler
+* ```make```
 
 In CMD, do the following:
 
