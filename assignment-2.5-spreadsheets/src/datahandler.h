@@ -22,7 +22,7 @@ class DataHandler
 		std::map<lab::xstring, Student *> studs;
 		std::map<Course *, float> grds;
 		std::map<Student *, std::map<Course *, float>> data;
-		std::vector<lab::xstring> missing; // bad?
+		std::vector<lab::xstring> missing;
 		equivalencies eqvs;
 		ErrLog errlog;
 		int misscount, errcount;
@@ -41,13 +41,9 @@ class DataHandler
 				const lab::xstring& currAM,
 				lab::xstring& AM,
 				lab::xstring& code,
-				lab::xstring& grade);
+				float grade);
 		void miss(lab::xstring AM, lab::xstring code, float grade);
-		void diffr(lab::xstring AM, lab::xstring code, const lab::xstring& grade);
-		void dupl(
-				const lab::xstring& AM,
-				const lab::xstring& code,
-				const lab::xstring& grade);
+		void diffr(lab::xstring AM, lab::xstring code, float grade);
 		bool valid_path(const char *fpath) const;
 		const lab::xstring err_csv	(const char *fpath)	const;
 		const lab::xstring err_read	(const char *fpath)	const;
