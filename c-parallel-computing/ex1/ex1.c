@@ -18,9 +18,9 @@ main(int argc, char *argv[])
         int nproc, rank, rc;
         int *t, n, prev;
         int bufsize, offset, remaining;
-        int val, sorted;                /* results from each process */
-        int f_val, f_sorted;            /* final results */
-        int found = 0;                  /* indicates that the first unsorted element has been found */
+        int val, sorted;        /* results from each process */
+        int f_val, f_sorted;    /* final results */
+        int found = 0;          /* indicates that the first unsorted element has been found */
         int i, ch = 1;
 
         /* just in case an error occurs during initialization */
@@ -36,7 +36,7 @@ main(int argc, char *argv[])
         /* main loop */
         while (ch != 2) {
                 if (rank == 0) {
-                        printf("Enter N: ");
+                        printf("Enter N: \n");
                         scanf("%d", &n);
                         getchar();
 
@@ -44,7 +44,7 @@ main(int argc, char *argv[])
 
                         /* read whole array */
                         for (i = 0; i < n; i++) {
-                                printf("t[%d]: ", i);
+                                printf("t[%d]: \n", i);
                                 scanf("%d", &t[i]);
                         }
                         getchar();
@@ -123,6 +123,8 @@ main(int argc, char *argv[])
                         /* collect results from proc 0 first */
                         f_sorted = sorted;
                         f_val = val;
+                        /* if f_sorted is false already, don't bother searching below */
+                        found = f_sorted == 0;
 
                         /* receive results from the rest */
                         for (i = 1; i < nproc; i++) {
@@ -147,7 +149,7 @@ main(int argc, char *argv[])
                         if (f_sorted)
                                 puts("Array is sorted.");
                         else
-                                printf("Array is not sorted (val: %d)\n", f_val);
+                                printf("Array is not sorted: first unsorted element: %d\n", f_val);
 
                         puts("Press [ENTER] to continue. . .");
                         getchar();
@@ -160,7 +162,7 @@ main(int argc, char *argv[])
                 /* menu */
                 if (rank == 0) {
                         system("clear || cls");
-                        printf("1. Continue\n2. Exit\nYour choice: ");
+                        printf("1. Continue\n2. Exit\nYour choice: \n\n");
                         scanf("%d", &ch);
                         /* everyone has to know what the choice is */
                         for (i = 1; i < nproc; i++)
