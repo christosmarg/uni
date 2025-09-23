@@ -6,6 +6,7 @@
 #include <netinet/in.h>
 
 #include <err.h>
+#include <libgen.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,6 +24,9 @@ static void	usage(void);
 
 static char	*argv0;
 
+/*
+ * Error checking send(2).
+ */
 static void
 esend(int fd, void *msg, size_t len, int flags)
 {
@@ -30,6 +34,9 @@ esend(int fd, void *msg, size_t len, int flags)
 		err(1, "send");
 }
 
+/*
+ * Error checking recv(2).
+ */
 static void
 erecv(int fd, void *msg, size_t len, int flags)
 {
@@ -37,6 +44,9 @@ erecv(int fd, void *msg, size_t len, int flags)
 		err(1, "recv");
 }
 
+/*
+ * Error checking malloc(3).
+ */
 static void *
 emalloc(size_t nb)
 {
@@ -47,6 +57,11 @@ emalloc(size_t nb)
 	return (p);
 }
 
+/*
+ * The server might break if we give it incorrent input, so we have to make
+ * sure we'll always read proper input from scanf() before we send it to the
+ * server.
+ */
 static void
 safe_scanf(void *n, char *type, char *fmt, ...)
 {
@@ -98,7 +113,7 @@ calc_minmax(int fd)
 	esend(fd, arr, n * sizeof(int), 0);
 
 	erecv(fd, &res, 2 * sizeof(int), 0);
-	printf("[%s] server response: min: %d\tmax: %d\n",
+	printf("[%s] server response: min: %d, max: %d\n",
 	    argv0, res[0], res[1]);
 
 	free(arr);
@@ -147,7 +162,7 @@ main(int argc, char *argv[])
 	int fd, n;
 	char *host, ch;
 
-	argv0 = *argv;
+	argv0 = basename(*argv);
 	while ((ch = getopt(argc, argv, "p:")) != -1) {
 		switch (ch) {
 		case 'p':
@@ -185,6 +200,10 @@ main(int argc, char *argv[])
 
 		switch (n) {
 		case 1:
+			/* 
+			 * Send our choice to the server so that it can read at
+			 * the appropriate RPC.
+			 */
 			esend(fd, &n, sizeof(int), 0);
 			calc_avg(fd);
 			break;

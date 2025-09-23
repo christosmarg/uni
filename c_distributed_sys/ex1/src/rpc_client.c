@@ -6,6 +6,7 @@
 #include <netinet/in.h>
 
 #include <err.h>
+#include <libgen.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,6 +20,7 @@ static void	sighandler(int);
 static void	*emalloc(size_t);
 static void	usage(void);
 
+/* program name */
 static char	*argv0;
 /* becomes true when a termination signal is caught */
 static volatile sig_atomic_t f_quit = 0;
@@ -108,8 +110,8 @@ calc_minmax_prog_1(char *host, int sock)
 		clnt_perror(clnt, "call failed");
 	}
 
-	printf("[%s] server response: min: %d\tmax: %d\n",
-	    argv0, result_1->arr.arr_val[0], result_1->arr.arr_val[1]);
+	printf("[%s] sock: %d\tserver response: min: %d, max: %d\n",
+	    argv0, sock, result_1->arr.arr_val[0], result_1->arr.arr_val[1]);
 	if (send(sock, result_1->arr.arr_val, 2 * sizeof(int), 0) < 0)
 		goto fail;
 	return;
@@ -160,7 +162,7 @@ calc_prod_prog_1(char *host, int sock)
 		clnt_perror(clnt, "call failed");
 	}
 
-	printf("[%s] server response: [", argv0);
+	printf("[%s] sock: %d\tserver response: [", argv0, sock);
 	for (i = 0; i < calc_prod_1_arg.arr.n; i++) {
 		printf("%.3f%s", result_1->arr.arr_val[i],
 		    i == calc_prod_1_arg.arr.n - 1 ? "" : ", ");
@@ -171,7 +173,6 @@ calc_prod_prog_1(char *host, int sock)
 		goto fail;
 	return;
 fail:
-	/* we failed... */
 	fprintf(stderr, "[%s] connection with client %d dropped\n", argv0, sock);
 	close(sock);
 	if (arrp != NULL)
@@ -189,6 +190,7 @@ serve_client(char *host, int cfd)
 	for (;;) {
 		/* receive option */
 		if (recv(cfd, &n, sizeof(int), 0) < 0) {
+			/* something went wrong, we cant continue */
 			fprintf(stderr, "[%s] connection with %d dropped\n",
 			    argv0, cfd);
 			close(cfd);
@@ -212,12 +214,18 @@ serve_client(char *host, int cfd)
 	}
 }
 
+/*
+ * Gets called in case of a SIGINT or SIGTERM.
+ */
 static void
 sighandler(int sig)
 {
 	f_quit = 1;
 }
 
+/*
+ * Error checking malloc(3).
+ */
 static void *
 emalloc(size_t nb)
 {
@@ -231,7 +239,7 @@ emalloc(size_t nb)
 static void
 usage(void)
 {
-	fprintf(stderr, "usage: %s [-p port] hostname\n", argv0);
+	fprintf(stderr, "usage: %s [-b backlog] [-p port] hostname\n", argv0);
 	exit(0);
 }
 
@@ -246,7 +254,7 @@ main(int argc, char *argv[])
 	int sfd, cfd;
 	char *host, ch;
 
-	argv0 = *argv;
+	argv0 = basename(*argv);
 	while ((ch = getopt(argc, argv, "b:p:")) != -1) {
 		switch (ch) {
 		case 'b':
@@ -272,6 +280,7 @@ main(int argc, char *argv[])
 	memset(&sa, 0, sizeof(sa));
 	sigfillset(&sa.sa_mask);
 	sa.sa_handler = sighandler;
+
 	/* be sensitive to termination signals */
 	if (sigaction(SIGINT, &sa, NULL) < 0)
 		err(1, "sigaction(SIGINT)");
