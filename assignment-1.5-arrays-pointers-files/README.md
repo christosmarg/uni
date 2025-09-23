@@ -1,7 +1,5 @@
 # Assignment 1.5: Arrays - Pointers - Files
 
-**UNDER CONSTRUCTION, THE PROGRAMS DON'T WORK WELL YET**
-
 ## Programs
 
 * combinations
@@ -21,15 +19,29 @@
 * Move with `w`/`s`/`a`/`d` or Vim keys (`k`/`j`/`h`/`l`)
 * Open cell with `[ENTER]` or `o`
 * Flag cell with `f`
-* Defuse mine (if flagged) with `g`
+* Defuse mine (only if flagged) with `g`
+* You win if you defuse all the mines
+* You lose in case you open a mine or you try to defuse a flagged cell not containing a mine
 * Quit with `q`
+
+### To Do
+
+* Fix screen bug with big dimensions
+* Add colors
+
+## Combinations / KCombinations / FCombinations
+
+Combination printing programs
 
 ## Execution
 
-* ```program_name``` = program's name
-* ```full_path/``` = full path
+* `program_name` = program's name
+* `full_path/` = full path
 
 ### Linux
+
+**Dependencies**
+* `ncurses`
 
 ```shell
 $ cd full_path/assignment-1.5-arrays-pointers-files/program_name
@@ -42,7 +54,8 @@ $ make clean # optional
 
 **Dependencies:**   
 * MinGW gcc compiler
-* ```make```
+* `make`
+* `PDCurses` library (for minesweeper)
 
 In CMD, do the following:
 
