@@ -1,11 +1,11 @@
 #include <string.h>
 #include "minesweeper.h"
-#include "gamelogic.h"
+#include "gameplay.h"
 
 void selection(WINDOW *gameWin, char **dispboard, char **mineboard, int WIDTH, int HEIGHT)
 {
     int chrow, chcol;
-    bool gameOver = true;
+    bool gameOver;
     int yMax, xMax, yMiddle, xMiddle;
     getmaxyx(gameWin, yMax, xMax);
     yMiddle = yMax / 2;
@@ -20,16 +20,17 @@ void selection(WINDOW *gameWin, char **dispboard, char **mineboard, int WIDTH, i
         mvprintw(1, strlen("Choice (row, col): ") + 1, "(%d,%d)", chrow-1, chcol-1);
         refresh();
         mvprintw(1, 1, CLEAR);
-        transfer(dispboard, mineboard, chrow, chcol);
-        reveal(gameWin, dispboard, chrow, chcol);   
+        gameOver = transfer(dispboard, mineboard, chrow, chcol);
+        reveal(gameWin, dispboard, chrow, chcol);
         getchar();
-    } while ((chrow < 0 || chrow > WIDTH-1 || chcol < 0 || chcol > HEIGHT-1) && !gameOver);
+    } while ((chrow < 0 || chrow > WIDTH-1 || chcol < 0 || chcol > HEIGHT-1) || !gameOver);
     
-    if (gameOver)
+    if (gameOver == true)
     {
         game_over(gameWin, mineboard, yMiddle, xMiddle);
-        print(gameWin, mineboard, WIDTH, HEIGHT);
-        filewrite(mineboard, WIDTH, HEIGHT);
+        getchar();
+        print_board(gameWin, mineboard, WIDTH, HEIGHT);
+        filewrite(mineboard, WIDTH, HEIGHT, chrow, chcol);
     }
 }
 
