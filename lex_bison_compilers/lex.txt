@@ -1,0 +1,53 @@
+START=SZ
+
+SZ:		+ \-		-> NUM
+		0		-> FLOAT_NORM
+		1-9		-> INT
+		\?		-> VAR
+		A-Z a-z		-> DEF
+		;		-> CMT
+		\s		-> SEP
+		"		-> STR
+
+NUM:		0		-> FLOAT
+		1-9		-> INT
+		*		-> BAD
+
+INT:		0-9		-> INT
+		.		-> FLOAT_DEC
+		\n		-> GOOD
+		*		-> BAD
+
+FLOAT_NORM:	0-9		-> FLOAT_NORM
+		e E		-> FLOAT_EXP
+		.		-> FLOAT_DEC
+		*		-> BAD
+FLOAT_DEC:	0-9		-> FLOAT_DEC
+		e E		-> FLOAT_EXP
+		\n		-> GOOD
+		*		-> BAD
+FLOAT_EXP:	0-9 + \-	-> FLOAT_EXP_N
+		*		-> BAD
+FLOAT_EXP_N:	0-9		-> FLOAT_EXP_N
+		\n		-> GOOD
+		*		-> BAD
+
+STR:		\\		-> STR_BSLASH
+		"		-> GOOD
+		*		-> STR
+STR_BSLASH:	" n \\		-> STR
+		*		-> BAD
+
+DEF:		A-Z a-z 0-9 _ \-	-> DEF
+		*		-> GOOD
+
+VAR:		A-Z a-z 0-9	-> VAR
+		*		-> GOOD
+
+CMT:		\n		-> GOOD
+		*		-> CMT
+
+SEP:		\s		-> SEP
+		*		-> GOOD
+
+GOOD(OK):	\n		-> GOOD
