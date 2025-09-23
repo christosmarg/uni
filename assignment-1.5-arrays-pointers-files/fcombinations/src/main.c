@@ -8,7 +8,6 @@ int main(int argc, char **argv)
     int N, K;
     int *arr;
     int x1, x2, y1, y2;
-    char *fileName;
 
     read_file(argv);
 

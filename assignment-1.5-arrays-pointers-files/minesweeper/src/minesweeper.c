@@ -49,7 +49,7 @@ void start()
 }
 
 
-void set_mode(WINDOW *menuWin)
+void set_mode(WINDOW *menuWin) // later
 {
     char mode;
     mvwprintw(menuWin, 1, 1, "Keyboard or text mode (k/t): ");
@@ -87,7 +87,7 @@ int set_width(WINDOW *menuWin, int xMax)
         scanw("%d", &WIDTH);
         mvwprintw(menuWin, 1, strlen("Width: ") + 1, "%d", WIDTH);
         wrefresh(menuWin);
-    } while (WIDTH < 5 || WIDTH > 114 /*WIDTH > xMax*/);
+    } while (WIDTH < 5 || WIDTH > 114 /*WIDTH > xMax*/); // fix limits
 
     return WIDTH;    
 }
@@ -104,7 +104,7 @@ int set_height(WINDOW *menuWin, int yMax)
         scanw("%d", &HEIGHT);
         mvwprintw(menuWin, 2, strlen("Height: ") + 1, "%d", HEIGHT);
         wrefresh(menuWin);
-    } while (HEIGHT < 5 || HEIGHT > 41 /*HEIGHT > yMax*/);
+    } while (HEIGHT < 5 || HEIGHT > 41 /*HEIGHT > yMax*/); // fix limits
     
     return HEIGHT;
 }
@@ -191,7 +191,8 @@ void init_mineboard(WINDOW *gameWin, int WIDTH, int HEIGHT, int NMINES)
     {
         fill_spaces(mineboard, WIDTH, HEIGHT, NMINES);
         place_mines(mineboard, WIDTH, HEIGHT, NMINES);
-        //add_adj(mineboard, WIDTH, HEIGHT);
+        add_adj(mineboard, WIDTH, HEIGHT);
+        
 
         print(gameWin, mineboard, WIDTH, HEIGHT);
         filewrite(mineboard, WIDTH, HEIGHT);
@@ -223,7 +224,7 @@ void add_adj(char **mineboard, int WIDTH, int HEIGHT)
     for (i = 0; i < WIDTH; i++)
         for (j = 0; j < HEIGHT; j++)
             if (!is_mine(mineboard, i, j))
-                *(*(mineboard + i) + j) = adj_mines(mineboard, i, j) + '0';
+                *(*(mineboard + i) + j) = adj_mines(mineboard, i, j, WIDTH, HEIGHT) + '0';                
 }
 
 
@@ -236,18 +237,27 @@ bool is_mine(char **mineboard, int row, int col)
 }
 
 
-uint8_t adj_mines(char **mineboard, int row, int col)
+bool outof_bounds(int row, int col, int WIDTH, int HEIGHT)
 {
-    uint8_t numAdj = 0;
+    if (row < 0 || row > WIDTH || col < 0 || col > HEIGHT)
+        return true;
+    else
+        return false;
+}
 
-    if ((*(*(mineboard + row) + col - 1)        != MINE)) numAdj++; // North
-    if ((*(*(mineboard + row) + col + 1)        != MINE)) numAdj++; // South
-    if ((*(*(mineboard + (row + 1)) + col)      != MINE)) numAdj++; // East
-    if ((*(*(mineboard + (row - 1)) + col)      != MINE)) numAdj++; // West
-    if ((*(*(mineboard + (row + 1)) + col - 1)  != MINE)) numAdj++; // North-East
-    if ((*(*(mineboard + (row - 1)) + col - 1)  != MINE)) numAdj++; // North-West
-    if ((*(*(mineboard + (row + 1)) + col + 1)  != MINE)) numAdj++; // South-East
-    if ((*(*(mineboard + (row - 1)) + col + 1)  != MINE)) numAdj++; // South-West
+
+int8_t adj_mines(char **mineboard, int row, int col, int WIDTH, int HEIGHT)
+{
+    int8_t numAdj = 0;
+
+    if (!outof_bounds(row, col - 1, WIDTH, HEIGHT)      && *(*(mineboard + row) + (col - 1))        == MINE) numAdj++; // North
+    if (!outof_bounds(row, col + 1, WIDTH, HEIGHT)      && *(*(mineboard + row) + (col + 1))        == MINE) numAdj++; // South
+    if (!outof_bounds(row + 1, col, WIDTH, HEIGHT)      && *(*(mineboard + (row + 1)) + col)        == MINE) numAdj++; // East
+    if (!outof_bounds(row - 1, col, WIDTH, HEIGHT)      && *(*(mineboard + (row - 1)) + col)        == MINE) numAdj++; // West
+    if (!outof_bounds(row + 1, col - 1, WIDTH, HEIGHT)  && *(*(mineboard + (row + 1)) + (col - 1))  == MINE) numAdj++; // North-East
+    if (!outof_bounds(row - 1, col - 1, WIDTH, HEIGHT)  && *(*(mineboard + (row - 1)) + (col - 1))  == MINE) numAdj++; // North-West
+    if (!outof_bounds(row + 1, col + 1, WIDTH, HEIGHT)  && *(*(mineboard + (row + 1)) + (col + 1))  == MINE) numAdj++; // South-East
+    if (!outof_bounds(row - 1, col + 1, WIDTH, HEIGHT)  && *(*(mineboard + (row - 1)) + (col + 1))  == MINE) numAdj++; // South-West
 
     return numAdj;
 }
@@ -258,13 +268,9 @@ void fill_spaces(char **mineboard, int WIDTH, int HEIGHT, int NMINES)
     int i, j;
 
     for (i = 0; i < WIDTH; i++)
-    {
         for (j = 0; j < HEIGHT; j++)
-        {
             if ((*(*mineboard + i) + j) != MINE)
                 *(*(mineboard + i) + j) = '-';
-        }
-    }
 }
 
 
@@ -295,7 +301,7 @@ void filewrite(char **mineboard, int WIDTH, int HEIGHT)
     }
     else
     {
-        fprintf(mnsOut, "Mine hit at position (%d, %d)\n\n", 1, 2);
+        fprintf(mnsOut, "Mine hit at position (%d, %d)\n\n", 1, 2); // add actual position
 
         fprintf(mnsOut, "Board overview\n\n");
         for (i = 0; i < WIDTH; i++)
