@@ -13,8 +13,9 @@ int main(int argc, char **argv)
     K = get_val("K");
     arr = fill_array(N);
     x_pair(&x1, &x2);
+
     y_pair(&y1, &y2);
-    combinations(arr);
+    combinations(arr, x1, x2, y1, y2);
 
     
     free(arr);
