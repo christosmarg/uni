@@ -1,0 +1,42 @@
+\babel@toc {english}{}
+\contentsline {section}{\numberline {1}Δομή προγραμμάτων και οδηγίες εκτέλεσης}{2}% 
+\contentsline {subsection}{\numberline {1.1}Εκτέλεση από Linux}{2}% 
+\contentsline {subsection}{\numberline {1.2}Δομή φακέλων}{2}% 
+\contentsline {section}{\numberline {2}combinations - συνδυασμοί}{2}% 
+\contentsline {subsection}{\numberline {2.1}main.c}{2}% 
+\contentsline {subsection}{\numberline {2.2}combinations.c}{2}% 
+\contentsline {subsection}{\numberline {2.3}combinations.h}{6}% 
+\contentsline {subsection}{\numberline {2.4}arrhandler.c}{6}% 
+\contentsline {subsection}{\numberline {2.5}arrhandler.h}{8}% 
+\contentsline {subsection}{\numberline {2.6}Διάγραμμα ροής}{8}% 
+\contentsline {subsection}{\numberline {2.7}Περιγραφή υλοποιήσης}{8}% 
+\contentsline {section}{\numberline {3}kcombinations - συνδυασμοί με K}{8}% 
+\contentsline {subsection}{\numberline {3.1}main.c}{8}% 
+\contentsline {subsection}{\numberline {3.2}kcombinations.c}{9}% 
+\contentsline {subsection}{\numberline {3.3}kcombinations.h}{12}% 
+\contentsline {subsection}{\numberline {3.4}arrhandler.c}{13}% 
+\contentsline {subsection}{\numberline {3.5}arrhandler.h}{14}% 
+\contentsline {subsection}{\numberline {3.6}Διάγραμμα ροής}{15}% 
+\contentsline {subsection}{\numberline {3.7}Περιγραφή υλοποιήσης}{15}% 
+\contentsline {section}{\numberline {4}fcombinations - συνδυασμοί από αρχείο}{15}% 
+\contentsline {subsection}{\numberline {4.1}main.c}{15}% 
+\contentsline {subsection}{\numberline {4.2}fcombinations.c}{15}% 
+\contentsline {subsection}{\numberline {4.3}fcombinations.h}{18}% 
+\contentsline {subsection}{\numberline {4.4}arrhandler.c}{19}% 
+\contentsline {subsection}{\numberline {4.5}arrhandler.h}{21}% 
+\contentsline {subsection}{\numberline {4.6}Διάγραμμα ροής}{21}% 
+\contentsline {subsection}{\numberline {4.7}Περιγραφή υλοποιήσης}{21}% 
+\contentsline {section}{\numberline {5}minesweeper - ναρκαλιευτής}{21}% 
+\contentsline {subsection}{\numberline {5.1}main.c}{21}% 
+\contentsline {subsection}{\numberline {5.2}minesweeper.c}{21}% 
+\contentsline {subsection}{\numberline {5.3}minesweeper.h}{26}% 
+\contentsline {subsection}{\numberline {5.4}gameplay.c}{27}% 
+\contentsline {subsection}{\numberline {5.5}gameplay.h}{31}% 
+\contentsline {subsection}{\numberline {5.6}settings.c}{31}% 
+\contentsline {subsection}{\numberline {5.7}settings.h}{33}% 
+\contentsline {subsection}{\numberline {5.8}outputs.c}{33}% 
+\contentsline {subsection}{\numberline {5.9}outputs.h}{35}% 
+\contentsline {subsection}{\numberline {5.10}Διάγραμμα ροής}{35}% 
+\contentsline {subsection}{\numberline {5.11}Περιγραφή υλοποιήσης}{35}% 
+\contentsline {section}{\numberline {6}Διευκρινήσεις}{35}% 
+\contentsline {section}{\numberline {7}Εργαλεία}{35}% 

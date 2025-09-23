@@ -1,10 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
 #include "combinations.h"
-#include "arrhandler.h"
-#include "ccolors.h"
-
 
 int get_n()
 {

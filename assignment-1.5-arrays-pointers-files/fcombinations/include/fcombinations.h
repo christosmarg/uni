@@ -1,7 +1,13 @@
 #ifndef COMBINATIONS_H
 #define COMBINATIONS_H
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
+
+#include "arrhandler.h"
+#include "ccolors.h"
 
 #define COMBSN 6
 

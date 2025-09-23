@@ -1,7 +1,7 @@
 #ifndef ARRHANDLER_H
 #define ARRHANDLER_H
 
-#include <stdbool.h>
+#include "combinations.h"
 
 int *fill_array(int);
 bool exists_in_array(int *, int, int);

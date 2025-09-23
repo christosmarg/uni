@@ -1,3 +1,2 @@
 * meter function
 * kcombinations
-* ccolors
