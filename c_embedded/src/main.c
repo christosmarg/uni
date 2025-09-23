@@ -9,17 +9,21 @@ static __code uint16_t __at (_CONFIG) __configword =
     _FOSC_HS & _WDTE_OFF & _PWRTE_ON & _LVP_OFF & _WRT_OFF & _BOREN_ON &
     _CPD_OFF & _CP_OFF;
 
+/*
+ * TODO: turn off unneeded modules (e.g tmr1..) to minimize consumption.
+ */
+
 static void	ctx_main(void);
 static void	ctx_uptime_maxtp(void);
 static void	print_tp(int32_t);
 static void	led_blink(void);
-
 static void	button_debounce(void);
+
 static uint32_t	timecnt = 0;	/* Seconds passed since start */
 static int	f_ctx = 0;	/* Change context */
 static uint32_t	humid;		/* Current humidity */
 static int32_t	tp;		/* Current temperature */
-static int32_t	maxtp = -100;	/* Max temperature */
+static int32_t	maxtp = -99999;	/* Max temperature */
 static char	buf[BUFSIZ+1] = {0}; /* Generic buffer */
 
 #define LCD_PUTS_INT(buf, v) do {		\
@@ -30,12 +34,15 @@ static char	buf[BUFSIZ+1] = {0}; /* Generic buffer */
 static void
 ctx_main(void)
 {
-	lcd_cmd(LCD_CURS_ROW1);
-	lcd_puts("19390133");
+	/*lcd_cmd(LCD_CURS_ROW1);*/
+	/*lcd_puts("ID: 19390133");*/
 
-	lcd_cmd(LCD_CURS_ROW2);
+	lcd_cmd(LCD_CURS_ROW1);
+	lcd_puts("Temp: ");
 	print_tp(tp);
 
+	lcd_cmd(LCD_CURS_ROW2);
+	lcd_puts("Humid: ");
 	LCD_PUTS_INT(buf, humid / 1024);
 	lcd_putc('.');
 	LCD_PUTS_INT(buf, ((humid * 100) / 1024) % 100);
@@ -57,7 +64,10 @@ ctx_uptime_maxtp(void)
 static void
 print_tp(int32_t tp)
 {
-	/* TODO: handle negative */
+	if (tp < 0) {
+		tp = -tp;
+		lcd_putc('-');
+	}
 	LCD_PUTS_INT(buf, tp / 100);
 	lcd_putc('.');
 	LCD_PUTS_INT(buf, tp % 100);
@@ -80,7 +90,7 @@ led_blink(void)
 static void
 button_debounce(void)
 {
-	static uint16_t cnt = 0;
+	static uint8_t cnt = 0;
 
 	/* Button is pressed */
 	if (BTN_PORT == 0) {
@@ -103,7 +113,7 @@ main(void)
 	tmr0_set_event(&led_blink, 1000);
 	tmr0_set_event(&button_debounce, 1);
 	lcd_init();
-	i2c_init(I2C_MASTER, I2C_SLEW_OFF, 1000000);
+	i2c_init(I2C_MASTER, I2C_SLEW_OFF, I2C_CLK_1MHZ);
 	if (bme280_init() < 0) {
 		lcd_puts("BME280 error");
 		for (;;); /* Hang */

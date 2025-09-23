@@ -13,7 +13,7 @@ i2c_init(uint8_t mode, uint8_t slew, uint32_t freq)
 	SSPCON2 = 0;
 	SSPADD = (_XTAL_FREQ / (4 * freq)) - 1; /* Bus clock speed */
 	SSPSTAT &= 0x3f;
-	SSPSTAT |= slew;
+	SSPSTAT = slew;
 }
 
 void

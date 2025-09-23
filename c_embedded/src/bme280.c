@@ -12,6 +12,7 @@
 #define BME280_FILTER_OFF	0x00
 #define BME280_STANDBY_0_5	0x00
 #define BME280_MODE_NORMAL	0x03
+#define BME280_RESET_POWERON	0xb6
 
 #define BME280_ADDR		0xee
 #define BME280_CHIPID		0x60
@@ -125,8 +126,8 @@ bme280_update(void)
 
 	r.a[2] = 0x00;
 	r.a[1] = i2c_read(1);
-	r.a[0] = i2c_read(1);
-	adc_h = (r.v >> 4) & 0xffff;
+	r.a[0] = i2c_read(0);
+	adc_h = r.v & 0xffff;
 
 	i2c_stop();
 }
@@ -136,7 +137,7 @@ bme280_init(void)
 {
 	if (bme280_read8(BME280_REG_CHIPID) != BME280_CHIPID)
 		return (-1);
-	bme280_write(BME280_REG_SOFTRESET, 0xb6);
+	bme280_write(BME280_REG_SOFTRESET, BME280_RESET_POWERON);
 	tmr0_delay_ms(BME280_DELAY);
 	while ((bme280_read8(BME280_REG_STATUS) & 0x01) == 0x01)
 		tmr0_delay_ms(BME280_DELAY);
@@ -163,21 +164,24 @@ bme280_init(void)
 	    (BME280_FILTER_OFF << 2)) & 0xfc);
 	bme280_write(BME280_REG_CTL, ((BME280_SAMPLE_X1 << 5) |
 	    (BME280_SAMPLE_SKIP << 2)) | BME280_MODE_NORMAL);
-	
+
+	tmr0_delay_ms(BME280_DELAY);
+
 	return (0);
 }
 
+/* Black magic taken (stolen) from BME280's datasheet. */
 int32_t
 bme280_read_temp(void)
 {
 	int32_t v1, v2;
 
 	bme280_update();
-	v1 = ((((adc_t / 8) - ((int32_t)cal.dig_t1 * 2))) *
-	    ((int32_t)cal.dig_t2)) / 2048;
-	v2 = (((((adc_t / 16) - ((int32_t)cal.dig_t1)) *
-	    ((adc_t / 16) - ((int32_t)cal.dig_t1))) / 4096) *
-	    ((int32_t)cal.dig_t3)) / 16384;
+	v1 = ((((adc_t >> 3) - ((int32_t)cal.dig_t1 << 1))) *
+	    ((int32_t)cal.dig_t2)) >> 11;
+	v2 = (((((adc_t >> 4) - ((int32_t)cal.dig_t1)) *
+	    ((adc_t >> 4) - ((int32_t)cal.dig_t1))) >> 12) *
+	    ((int32_t)cal.dig_t3)) >> 14;
 
 	t_fine = v1 + v2;
 
@@ -187,20 +191,20 @@ bme280_read_temp(void)
 uint32_t
 bme280_read_humid(void)
 {
-	return (0);
-	/*int32_t v;*/
+	int32_t v = 0;
 
-	/*v = (t_fine - ((int32_t)76800));*/
+	bme280_update();
+	v = (t_fine - ((int32_t)76800));
+ 
+	v = (((((adc_h << 14) - (((int32_t)cal.dig_h4) << 20) -
+	    (((int32_t)cal.dig_h5) * v)) + ((int32_t)16384)) >> 15) *
+	    (((((((v * ((int32_t)cal.dig_h6)) >> 10) *
+	    (((v * ((int32_t)cal.dig_h3)) >> 11) + ((int32_t)32768))) >> 10) +
+	    ((int32_t)2097152)) * ((int32_t)cal.dig_h2) + 8192) >> 14));
 
-	/*v = (((((adc_h * 16384) - (((int32_t)cal.dig_h4) * 1048576) -*/
-	    /*(((int32_t)cal.dig_h5) * v)) + ((int32_t)16384)) / 32768) **/
-	    /*(((((((v * ((int32_t)cal.dig_h6)) / 1024) **/
-	    /*(((v * ((int32_t)cal.dig_h3)) / 2048) + ((int32_t)32768))) / 1024) +*/
-	    /*((int32_t)2097152)) * ((int32_t)cal.dig_h2) + 8192) / 16384));*/
-
-	/*v = (v - (((((v / 32768) * (v / 32768)) / 128) * ((int32_t)cal.dig_h1)) / 16));*/
-	/*v = (v < 0 ? 0 : v);*/
-	/*v = (v > 419430400 ? 419430400 : v);*/
+	v = (v - (((((v >> 15) * (v >> 15)) >> 7) * ((int32_t)cal.dig_h1)) >> 4));
+	v = (v < 0 ? 0 : v);
+	v = (v > 419430400 ? 419430400 : v);
    
-	/*return ((uint32_t)(v / 4096));*/
+	return ((uint32_t)(v >> 12));
 }

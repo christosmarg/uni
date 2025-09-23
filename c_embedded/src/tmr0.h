@@ -24,7 +24,7 @@
 typedef void (*ev_handler)(void);
 
 void	tmr0_init(void);
-void	tmr0_delay_ms(uint32_t);
-int	tmr0_set_event(ev_handler, uint32_t);
+void	tmr0_delay_ms(uint16_t);
+int	tmr0_set_event(ev_handler, uint16_t);
 
 #endif /* _TMR0_H_ */

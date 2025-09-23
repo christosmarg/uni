@@ -37,4 +37,4 @@ erase: all
 clean:
 	rm -f *.hex *.asm *.cod *.hex *.lst *.o *.core
 
-.PHONY: all options clean flash clean
+.PHONY: all options clean erase flash
