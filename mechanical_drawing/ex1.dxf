@@ -1115,9 +1115,9 @@ AcDbViewportTableRecord
  21
 1
  12
-235.916164053076
+320.0680123551425
  22
-145.6338962605549
+215.9321968170071
  13
 0
  23
@@ -1143,9 +1143,9 @@ AcDbViewportTableRecord
  37
 0
  40
-304.1652593486128
+605.6634788769711
  41
-1.851590106007067
+1.366798418972332
  42
 50
  43
@@ -2523,13 +2523,7 @@ Standard
 289
     3
 340
-STANDARD
-341
-
-371
-   -2
-372
-   -2
+4B
   0
 ENDTAB
   0
@@ -3331,50 +3325,6 @@ ByLayer
 100
 AcDbText
  10
-129.5060819493596
- 20
-2.321491865929621
- 30
-0
- 40
-5
-  1
-CH. KABOURIS
- 50
-0
- 41
-1
- 51
-0
-  7
-standard
- 71
-    0
-210
-0
-220
-0
-230
-1
-100
-AcDbText
-  0
-TEXT
-  5
-69
-100
-AcDbEntity
-  8
-legend
-  6
-ByLayer
- 62
-  256
-370
-   -1
-100
-AcDbText
- 10
 195.1711375856546
  20
 22.55163526903061
@@ -3405,7 +3355,7 @@ AcDbText
   0
 TEXT
   5
-6A
+69
 100
 AcDbEntity
   8
@@ -3449,7 +3399,7 @@ AcDbText
   0
 TEXT
   5
-6B
+6A
 100
 AcDbEntity
   8
@@ -3493,7 +3443,7 @@ AcDbText
   0
 TEXT
   5
-6C
+6B
 100
 AcDbEntity
   8
@@ -3537,7 +3487,7 @@ AcDbText
   0
 TEXT
   5
-6D
+6C
 100
 AcDbEntity
   8
@@ -3581,7 +3531,7 @@ AcDbText
   0
 TEXT
   5
-6E
+6D
 100
 AcDbEntity
   8
@@ -3625,51 +3575,7 @@ AcDbText
   0
 TEXT
   5
-6F
-100
-AcDbEntity
-  8
-legend
-  6
-ByLayer
- 62
-  256
-370
-   -1
-100
-AcDbText
- 10
-335.6213954743967
- 20
-2.487312713496023
- 30
-0
- 40
-5
-  1
-9th
- 50
-0
- 41
-1
- 51
-0
-  7
-standard
- 71
-    0
-210
-0
-220
-0
-230
-1
-100
-AcDbText
-  0
-TEXT
-  5
-70
+6E
 100
 AcDbEntity
   8
@@ -3713,51 +3619,7 @@ AcDbText
   0
 TEXT
   5
-71
-100
-AcDbEntity
-  8
-legend
-  6
-ByLayer
- 62
-  256
-370
-   -1
-100
-AcDbText
- 10
-351.5401968407712
- 20
-22.55163526903061
- 30
-0
- 40
-5
-  1
-05/12/2023
- 50
-0
- 41
-1
- 51
-0
-  7
-standard
- 71
-    0
-210
-0
-220
-0
-230
-1
-100
-AcDbText
-  0
-TEXT
-  5
-72
+6F
 100
 AcDbEntity
   8
@@ -3801,7 +3663,7 @@ AcDbText
   0
 TEXT
   5
-73
+70
 100
 AcDbEntity
   8
@@ -3824,6 +3686,138 @@ AcDbText
 5
   1
 1:1 RATIO
+ 50
+0
+ 41
+1
+ 51
+0
+  7
+standard
+ 71
+    0
+210
+0
+220
+0
+230
+1
+100
+AcDbText
+  0
+TEXT
+  5
+71
+100
+AcDbEntity
+  8
+legend
+  6
+ByLayer
+ 62
+  256
+370
+   -1
+100
+AcDbText
+ 10
+351.5401968407712
+ 20
+22.55163526903061
+ 30
+0
+ 40
+5
+  1
+09/11/2025
+ 50
+0
+ 41
+1
+ 51
+0
+  7
+standard
+ 71
+    0
+210
+0
+220
+0
+230
+1
+100
+AcDbText
+  0
+TEXT
+  5
+72
+100
+AcDbEntity
+  8
+legend
+  6
+ByLayer
+ 62
+  256
+370
+   -1
+100
+AcDbText
+ 10
+129.8424031366978
+ 20
+12.66866829413755
+ 30
+0
+ 40
+5
+  1
+CH. KABOURIS
+ 50
+0
+ 41
+1
+ 51
+0
+  7
+standard
+ 71
+    0
+210
+0
+220
+0
+230
+1
+100
+AcDbText
+  0
+TEXT
+  5
+73
+100
+AcDbEntity
+  8
+legend
+  6
+ByLayer
+ 62
+  256
+370
+   -1
+100
+AcDbText
+ 10
+335.6213954743967
+ 20
+2.487312713496023
+ 30
+0
+ 40
+5
+  1
+11th
  50
 0
  41
